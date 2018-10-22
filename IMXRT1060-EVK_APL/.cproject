@@ -903,4 +903,5 @@
 		<package>MIMXRT1062DVL6A</package>
 		<core>cm7</core>
 	</storageModule>
+	<storageModule moduleId="refreshScope"/>
 </cproject>
