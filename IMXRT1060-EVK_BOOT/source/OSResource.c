@@ -17,7 +17,6 @@
 
 /* Other Tasks */
 #include "Task/InitialTask.h"
-#include "Task/LedTask/LedTask.h"
 #include "Task/ConsoleTask/ConsoleTask.h"
 #include "Task/StorageTask/StorageTask.h"
 
@@ -67,13 +66,6 @@ static const stOSdefTable_t s_stTaskTable[] = {
 		(osThreadFunc_t)ConsoleTask,
 		NULL,
 		{"ConsoleTask", osThreadDetached, &s_ConsoleTaskTCB, sizeof(s_ConsoleTaskTCB), s_ConsoleTaskStack, sizeof(s_ConsoleTaskStack), osPriorityBelowNormal, 0, 0},
-	},
-	{
-		&g_LEDTaskHandle,
-		(osThreadFunc_t)LEDTask,
-		NULL,
-		{"LEDTask", osThreadDetached, &s_LEDTaskTCB, sizeof(s_LEDTaskTCB), s_LEDTaskStack, sizeof(s_LEDTaskStack), osPriorityBelowNormal, 0, 0},
-
 	},
 	{	/** StorageTask1 */
 		&g_StorageTaskHandle,
@@ -208,6 +200,13 @@ typedef struct{
 	uint8_t	             *pu8Buffer;
 	StaticStreamBuffer_t *pxStreamBufferStruct;
 }stStreamBuffer_t;
+
+ALLOCATE_IN_DTCM alignas(32) StreamBufferHandle_t g_sbhLPUARTTx[1+enLPUART_MAX] = {NULL};
+ALLOCATE_IN_DTCM alignas(32) static uint8_t s_u8StorageLPUARTTx[1+enLPUART_MAX][1024+1];	/** +1 はマニュアルの指示 */
+ALLOCATE_IN_DTCM alignas(32) static StaticStreamBuffer_t s_ssbLPUARTTx[1+enLPUART_MAX];
+ALLOCATE_IN_DTCM alignas(32) StreamBufferHandle_t g_sbhLPUARTRx[1+enLPUART_MAX] = {NULL};
+ALLOCATE_IN_DTCM alignas(32) static uint8_t s_u8StorageLPUARTRx[1+enLPUART_MAX][1024+1];	/** +1 はマニュアルの指示 */
+ALLOCATE_IN_DTCM alignas(32) static StaticStreamBuffer_t s_ssbLPUARTRx[1+enLPUART_MAX];
 
 ALLOCATE_IN_DTCM alignas(32) StreamBufferHandle_t g_sbhStorageTask[enNumOfSD] = {NULL, NULL};
 ALLOCATE_IN_DTCM alignas(32) static uint8_t s_StorageTaskStorage[enNumOfSD][sizeof(stTaskMsgBlock_t) * 32 + 1];	/** +1 はマニュアルの指示 */

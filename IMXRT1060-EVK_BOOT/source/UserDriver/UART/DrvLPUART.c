@@ -85,6 +85,50 @@ void LPUART8HandleIRQ(void){
 	LPUARTXHandleIRQ(enLPUART8);
 }
 
+
+static _Bool GetTxData(enLPUART_t enLPUARTNo, uint8_t *pu8val){
+
+	stTaskMsgBlock_t stTaskMsg;
+	if((enLPUARTNo < enLPUART_MIN) || (enLPUARTNo > enLPUART_MIN)){
+		return false;
+	}
+
+	memset(&stTaskMsg, 0, sizeof(stTaskMsgBlock_t));
+	
+	if(pdFALSE != xPortIsInsideInterrupt()){
+		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+		if(1u != xStreamBufferReceiveFromISR(g_sbhLPUARTTx[enLPUARTNo], &u8val, 1, &xHigherPriorityTaskWoken)){
+			return false;
+		}
+		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+	}else{
+		if(1u != xStreamBufferReceive(g_sbhLPUARTTx[enLPUARTNo], &u8val, 1, 10){
+			return false;
+		}
+	}
+	return true;
+}
+static void PutRxData(enLPUART_t enLPUARTNo, uint8_t u8val){
+
+	stTaskMsgBlock_t stTaskMsg;
+	if((enLPUARTNo < enLPUART_MIN) || (enLPUARTNo > enLPUART_MIN)){
+		return;
+	}
+
+	memset(&stTaskMsg, 0, sizeof(stTaskMsgBlock_t));
+	
+	if(pdFALSE != xPortIsInsideInterrupt()){
+		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+		xStreamBufferSendFromISR(g_sbhLPUARTRx[enLPUARTNo], &u8val, 1, &xHigherPriorityTaskWoken);
+		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+	}else{
+		xStreamBufferSend(g_sbhLPUARTRx[enLPUARTNo], &u8val, 1, 10);
+	}
+}
+
+
 /**
  * @brief Actual Interrupt Handler
  * @param [in]  enLPUARTNo PortNumber
@@ -95,16 +139,12 @@ static void LPUARTXHandleIRQ(enLPUART_t enLPUARTNo)
     uint8_t count;
 
 	LPUART_Type *base;
-	stu8RingBuffer_t *pRxRB;
-	stu8RingBuffer_t *pTxRB;
 
 	if((enLPUARTNo < enLPUART_MIN) || (enLPUARTNo > enLPUART_MIN)){
 		return;
 	}
 	
 	base = s_LPUARTBaseTable[enLPUARTNo];
-	pRxRB = &g_stLPUARTRxBuf[enLPUARTNo];
-	pTxRB = &g_stLPUARTTxBuf[enLPUARTNo];
 
     /* If RX overrun. */
     if (LPUART_STAT_OR_MASK & base->STAT)
@@ -124,7 +164,7 @@ static void LPUARTXHandleIRQ(enLPUART_t enLPUARTNo)
 		/* Using non block API to read the data from the registers. */
 		for(uint32_t i=0u;i<(uint32_t)count;i++){
 			/** TODO : オーバー欄チェックは必要なら入れる */
-			PushRBu8(pRxRB, base->DATA);
+			PutRxData(enLPUARTNo, base->DATA);
 		}
 
 		
@@ -146,7 +186,7 @@ static void LPUARTXHandleIRQ(enLPUART_t enLPUARTNo)
         /* If handle->rxDataSize is not 0, first save data to handle->rxData. */
         for(uint32_t i=0u;i<(uint32_t)count;i++){
 			/** TODO : オーバー欄チェックは必要なら入れる */
-			PushRBu8(pRxRB, base->DATA);
+			PutRxData(enLPUARTNo, base->DATA);
 		}
 
 		//LPUART_DisableInterrupts(base, kLPUART_IdleLineInterruptEnable);
@@ -164,7 +204,7 @@ static void LPUARTXHandleIRQ(enLPUART_t enLPUARTNo)
         while(count > 0u)
         {
 			uint8_t u8Data;
-			if(GetRBu8(pTxRB, &u8Data) != false){
+			if(GetTxData(enLPUARTNo, &u8Data) != false){
 				base->DATA = u8Data;
 			}else{
 				/* Disable TX register empty interrupt. */
@@ -190,7 +230,7 @@ static void LPUARTXHandleIRQ(enLPUART_t enLPUARTNo)
  * @return true Success
  * @return false NG
  */
-_Bool DrvLPUART_InitWithOSResource(enLPUART_t enLPUARTNo, const lpuart_config_t *config)
+_Bool DrvLPUARTInit(enLPUART_t enLPUARTNo, const lpuart_config_t *config)
 {
 	_Bool bret = false;
 	uint32_t uartClkSrcFreq = BOARD_DebugConsoleSrcFreq();
@@ -208,8 +248,6 @@ _Bool DrvLPUART_InitWithOSResource(enLPUART_t enLPUARTNo, const lpuart_config_t 
 			/* Initialize OS resource */
 			xSemaphoreGive(g_xLPUARTTxSemaphore[enLPUARTNo]);
 			xSemaphoreGive(g_xLPUARTRxSemaphore[enLPUARTNo]);
-			ClearRBu8(&g_stLPUARTRxBuf[enLPUARTNo]);
-			ClearRBu8(&g_stLPUARTTxBuf[enLPUARTNo]);
 
 			LPUART_EnableTx(base, true);
 			LPUART_EnableRx(base, true);
