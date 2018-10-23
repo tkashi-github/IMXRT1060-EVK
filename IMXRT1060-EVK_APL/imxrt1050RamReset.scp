@@ -1,0 +1,14 @@
+100 REM cmresetvectorcatchset this
+110 REM cmsysresetreq this
+120 REM wireswdconnect this
+130 REM cmclearerrors this
+140 REM cminitapdp this 
+150 b% = peek32 this 0x80000000
+160 a% = peek32 this 0x80000004
+170 d% = 0x80000000
+180 print "Vector table SP/PC is the reset context."
+190 print "PC = "; ~a%
+200 print "SP = "; ~b%
+210 print "XPSR = "; ~c%
+220 print "VTOR = "; ~d%
+230 end 
