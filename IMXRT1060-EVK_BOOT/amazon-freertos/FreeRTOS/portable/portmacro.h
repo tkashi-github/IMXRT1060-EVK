@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.0.1
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.1.0
+ * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -195,9 +195,11 @@ uint32_t ulNewBASEPRI;
 	__asm volatile
 	(
 		"	mov %0, %1												\n"	\
+		"	cpsid i													\n" \
 		"	msr basepri, %0											\n" \
 		"	isb														\n" \
 		"	dsb														\n" \
+		"	cpsie i													\n" \
 		:"=r" (ulNewBASEPRI) : "i" ( configMAX_SYSCALL_INTERRUPT_PRIORITY ) : "memory"
 	);
 }
@@ -212,9 +214,11 @@ uint32_t ulOriginalBASEPRI, ulNewBASEPRI;
 	(
 		"	mrs %0, basepri											\n" \
 		"	mov %1, %2												\n"	\
+		"	cpsid i													\n" \
 		"	msr basepri, %1											\n" \
 		"	isb														\n" \
 		"	dsb														\n" \
+		"	cpsie i													\n" \
 		:"=r" (ulOriginalBASEPRI), "=r" (ulNewBASEPRI) : "i" ( configMAX_SYSCALL_INTERRUPT_PRIORITY ) : "memory"
 	);
 
