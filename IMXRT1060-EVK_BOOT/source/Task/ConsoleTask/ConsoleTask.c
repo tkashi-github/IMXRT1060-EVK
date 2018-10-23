@@ -20,7 +20,7 @@
 #include "mimiclib/mimiclib.h"
 #include "UART/DrvLPUART.h"
 
-#define DEF_PROMPT "IMXRT1062-EVK BOOT > "
+#define DEF_PROMPT "IMXRT1060-EVK BOOT > "
 
 /**
  * @brief ConsoleTask

@@ -11,7 +11,7 @@
  */
 #include "version.h"
 
-#define DEF_PROGRAM "IMXRT1050-EVKB-APL"
+#define DEF_PROGRAM "IMXRT1060-EVK_BOOT"
 #define DEF_VERSION "Ver 0.1.0 "
 
 const char g_szProgram[] = {DEF_PROGRAM};
