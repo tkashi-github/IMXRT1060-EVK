@@ -43,6 +43,8 @@ extern osMessageQueueId_t g_StorageTaskQueueId;
 
 
 /** Stream Buffer */
+extern StreamBufferHandle_t g_sbhLPUARTTx[1+enLPUART_MAX];
+extern StreamBufferHandle_t g_sbhLPUARTRx[1+enLPUART_MAX];
 extern StreamBufferHandle_t g_sbhStorageTask[enNumOfSD];
 extern StreamBufferHandle_t g_sbhUpdateTask;
 

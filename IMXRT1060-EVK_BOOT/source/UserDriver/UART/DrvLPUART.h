@@ -26,11 +26,6 @@ extern "C"
 
 #include "fsl_lpuart.h"
 
-
-
-extern stu8RingBuffer_t g_stLPUARTRxBuf[];
-extern stu8RingBuffer_t g_stLPUARTTxBuf[];
-
 extern void LPUART1HandleIRQ(void);
 extern void LPUART2HandleIRQ(void);
 extern void LPUART3HandleIRQ(void);
@@ -40,7 +35,8 @@ extern void LPUART6HandleIRQ(void);
 extern void LPUART7HandleIRQ(void);
 extern void LPUART8HandleIRQ(void);
 
-extern _Bool DrvLPUART_InitWithOSResource(enLPUART_t enLPUARTNo, const lpuart_config_t *config);
+extern _Bool DrvLPUARTInit(enLPUART_t enLPUARTNo, const lpuart_config_t *config);
+
 #ifdef __cplusplus
 }
 #endif
