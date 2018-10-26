@@ -289,6 +289,7 @@ status_t BOARD_Camera_I2C_ReceiveSCCB(
 }
 #endif /* SDK_I2C_BASED_COMPONENT_USED */
 
+#define SDRAM_IS_SHAREABLE
 /* MPU configuration. */
 void BOARD_ConfigMPU(void)
 {
@@ -329,67 +330,109 @@ void BOARD_ConfigMPU(void)
      */
 
     /* Region 0 setting: Memory with Device type, not shareable, non-cacheable. */
-    MPU->RBAR = ARM_MPU_RBAR(0, 0xC0000000U);
-    MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 2, 0, 0, 0, 0, ARM_MPU_REGION_SIZE_512MB);
+    MPU->RBAR = ARM_MPU_RBAR(0, 0x40000000U);
+    MPU->RASR = ARM_MPU_RASR(1, ARM_MPU_AP_FULL, 2, 0, 0, 0, 0, ARM_MPU_REGION_SIZE_512MB);
 
-    /* Region 1 setting: Memory with Device type, not shareable,  non-cacheable. */
-    MPU->RBAR = ARM_MPU_RBAR(1, 0x80000000U);
-    MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 2, 0, 0, 0, 0, ARM_MPU_REGION_SIZE_1GB);
-
-    /* Region 2 setting */
+    /* Region 1 setting */
 #if defined(XIP_EXTERNAL_FLASH) && (XIP_EXTERNAL_FLASH == 1)
     /* Setting Memory with Normal type, not shareable, outer/inner write back. */
-    MPU->RBAR = ARM_MPU_RBAR(2, 0x60000000U);
-    MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_RO, 0, 0, 1, 1, 0, ARM_MPU_REGION_SIZE_8MB);
+    MPU->RBAR = ARM_MPU_RBAR(1, 0x60000000U);
+    MPU->RASR = ARM_MPU_RASR(1, ARM_MPU_AP_FULL, 0, 0, 1, 1, 0, ARM_MPU_REGION_SIZE_512MB);
 #else
     /* Setting Memory with Device type, not shareable, non-cacheable. */
-    MPU->RBAR = ARM_MPU_RBAR(2, 0x60000000U);
-    MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_RO, 2, 0, 0, 0, 0, ARM_MPU_REGION_SIZE_8MB);
+    MPU->RBAR = ARM_MPU_RBAR(1, 0x60000000U);
+    MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 2, 0, 0, 0, 0, ARM_MPU_REGION_SIZE_512MB);
 #endif
 
-    /* Region 3 setting: Memory with Device type, not shareable, non-cacheable. */
-    MPU->RBAR = ARM_MPU_RBAR(3, 0x00000000U);
-    MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 2, 0, 0, 0, 0, ARM_MPU_REGION_SIZE_1GB);
+    /* Region 2 setting: Memory with Normal type, shareable, outer and inner noncache */
+    MPU->RBAR = ARM_MPU_RBAR(2, 0x00000000U);
+    MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 1, 1, 0, 0, 0, ARM_MPU_REGION_SIZE_256KB);
 
-    /* Region 4 setting: Memory with Normal type, not shareable, outer/inner write back */
-    MPU->RBAR = ARM_MPU_RBAR(4, 0x00000000U);
-    MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 0, 0, 1, 1, 0, ARM_MPU_REGION_SIZE_128KB);
-
-    /* Region 5 setting: Memory with Normal type, not shareable, outer/inner write back */
-    MPU->RBAR = ARM_MPU_RBAR(5, 0x20000000U);
-    MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 0, 0, 1, 1, 0, ARM_MPU_REGION_SIZE_128KB);
-
-    /* Region 6 setting: Memory with Normal type, not shareable, outer/inner write back */
-    MPU->RBAR = ARM_MPU_RBAR(6, 0x20200000U);
-    MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 0, 0, 1, 1, 0, ARM_MPU_REGION_SIZE_512KB);
-
-    /* Region 7 setting: Memory with Normal type, not shareable, outer/inner write back */
-    MPU->RBAR = ARM_MPU_RBAR(7, 0x20280000U);
-    MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 0, 0, 1, 1, 0, ARM_MPU_REGION_SIZE_256KB);
+    /* Region 3 setting: Memory with Normal, shareable, outer and inner noncache*/
+    MPU->RBAR = ARM_MPU_RBAR(3, 0x20000000U);
+    MPU->RASR = ARM_MPU_RASR(1, ARM_MPU_AP_FULL, 1, 1, 0, 0, 0, ARM_MPU_REGION_SIZE_256KB);
     
-    /* The define sets the cacheable memory to shareable, 
-     * this suggestion is referred from chapter 2.2.1 Memory regions, 
-     * types and attributes in Cortex-M7 Devices, Generic User Guide */
-#if defined(SDRAM_IS_SHAREABLE)
-    /* Region 8 setting: Memory with Normal type, not shareable, outer/inner write back */
-    MPU->RBAR = ARM_MPU_RBAR(8, 0x80000000U);
-    MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 0, 1, 1, 1, 0, ARM_MPU_REGION_SIZE_32MB);
-#else
-    /* Region 8 setting: Memory with Normal type, not shareable, outer/inner write back */
-    MPU->RBAR = ARM_MPU_RBAR(8, 0x80000000U);
-    MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 0, 0, 1, 1, 0, ARM_MPU_REGION_SIZE_32MB);
-#endif
-    
-    /* Region 9 setting, set last 2MB of SDRAM can't be accessed by cache, glocal variables which are not expected to be
-     * accessed by cache can be put here */
-    /* Memory with Normal type, not shareable, non-cacheable */
-    MPU->RBAR = ARM_MPU_RBAR(9, 0x81E00000U);
-    MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 1, 0, 0, 0, 0, ARM_MPU_REGION_SIZE_2MB);
+	/* Region 3 setting: Memory with Normal, shareable, outer and inner noncache*/
+    MPU->RBAR = ARM_MPU_RBAR(3, 0x20200000U);
+    MPU->RASR = ARM_MPU_RASR(1, ARM_MPU_AP_FULL, 1, 1, 1, 1, 0, ARM_MPU_REGION_SIZE_512KB);
 
+    /* Region 4 setting: Memory with Normal type, shareable, outer and inner write back write/read acllocate */
+    MPU->RBAR = ARM_MPU_RBAR(5, 0x80000000U);
+    MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 1, 1, 1, 1, 0, ARM_MPU_REGION_SIZE_32MB);
+
+    /* Region 5 setting: Memory with Normal type, shareable       outer and inner noncache  */
+    MPU->RBAR = ARM_MPU_RBAR(6, 0x80000000U);
+    MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 1, 1, 0, 0, 0, ARM_MPU_REGION_SIZE_16MB);	/** for Nocache section */
+    
+	/* Region 5 setting: Memory with Normal type, shareable   outer and inner write back write/read acllocate  */
+    MPU->RBAR = ARM_MPU_RBAR(7, 0x80000000U);
+    MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 1, 1, 1, 1, 0, ARM_MPU_REGION_SIZE_4MB);	/** for .text section */
     /* Enable MPU */
     ARM_MPU_Enable(MPU_CTRL_PRIVDEFENA_Msk);
 
     /* Enable I cache and D cache */
-    SCB_EnableDCache();
-    SCB_EnableICache();
+#if defined(__ICACHE_PRESENT) && __ICACHE_PRESENT
+    if (SCB_CCR_IC_Msk != (SCB_CCR_IC_Msk & SCB->CCR)) {
+        SCB_EnableICache();
+    }
+#endif
+#if defined(__DCACHE_PRESENT) && __DCACHE_PRESENT
+    if (SCB_CCR_DC_Msk != (SCB_CCR_DC_Msk & SCB->CCR)) {
+		SCB_EnableDCache();
+    }
+#endif
+
+	return;
+}
+
+
+/*******************************************************************************
+ * Definitions
+ ******************************************************************************/
+#define EXAMPLE_SEMC SEMC
+#define EXAMPLE_SEMC_START_ADDRESS (0x80000000U)
+#define EXAMPLE_SEMC_CLK_FREQ CLOCK_GetFreq(kCLOCK_SemcClk)
+
+/*******************************************************************************
+ * Prototypes
+ ******************************************************************************/
+extern status_t BOARD_InitSEMC(void);
+
+status_t BOARD_InitSEMC(void)
+{
+    semc_config_t config;
+    semc_sdram_config_t sdramconfig;
+    uint32_t clockFrq = EXAMPLE_SEMC_CLK_FREQ;
+
+    /* Initializes the MAC configure structure to zero. */
+    memset(&config, 0, sizeof(semc_config_t));
+    memset(&sdramconfig, 0, sizeof(semc_sdram_config_t));
+
+    /* Initialize SEMC. */
+    SEMC_GetDefaultConfig(&config);
+    config.dqsMode = kSEMC_Loopbackdqspad;  /* For more accurate timing. */
+    SEMC_Init(SEMC, &config);
+
+    /* Configure SDRAM. */
+    sdramconfig.csxPinMux = kSEMC_MUXCSX0;
+    sdramconfig.address = 0x80000000;
+    sdramconfig.memsize_kbytes = 32 * 1024; /* 32MB = 32*1024*1KBytes*/
+    sdramconfig.portSize = kSEMC_PortSize16Bit;
+    sdramconfig.burstLen = kSEMC_Sdram_BurstLen8;
+    sdramconfig.columnAddrBitNum = kSEMC_SdramColunm_9bit;
+    sdramconfig.casLatency = kSEMC_LatencyThree;
+    sdramconfig.tPrecharge2Act_Ns = 18;   /* Trp 18ns */
+    sdramconfig.tAct2ReadWrite_Ns = 18;   /* Trcd 18ns */
+    sdramconfig.tRefreshRecovery_Ns = 67; /* Use the maximum of the (Trfc , Txsr). */
+    sdramconfig.tWriteRecovery_Ns = 12;   /* 12ns */
+    sdramconfig.tCkeOff_Ns = 42;  /* The minimum cycle of SDRAM CLK off state. CKE is off in self refresh at a minimum period tRAS.*/
+    sdramconfig.tAct2Prechage_Ns = 42; /* Tras 42ns */
+    sdramconfig.tSelfRefRecovery_Ns = 67;
+    sdramconfig.tRefresh2Refresh_Ns = 60;
+    sdramconfig.tAct2Act_Ns = 60;
+    sdramconfig.tPrescalePeriod_Ns = 160 * (1000000000 / clockFrq);
+    sdramconfig.refreshPeriod_nsPerRow = 64 * 1000000 / 8192; /* 64ms/8192 */
+    sdramconfig.refreshUrgThreshold = sdramconfig.refreshPeriod_nsPerRow;
+    sdramconfig.refreshBurstLen = 1;
+    return SEMC_ConfigureSDRAM(SEMC, kSEMC_SDRAM_CS0, &sdramconfig, clockFrq);
 }
