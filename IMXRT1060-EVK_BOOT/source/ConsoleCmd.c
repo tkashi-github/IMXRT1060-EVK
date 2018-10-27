@@ -10,6 +10,7 @@
  * - 2018/10/23: Takashi Kashiwagi: for IMXRT1060-EVK
  */
 #include "ConsoleCmd.h"
+#include "board.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -18,7 +19,9 @@
 #include "task.h"
 #include "CPUFunc.h"
 
+#include "FileCmd.h"
 #include "mimiclib/mimiclib.h"
+
 
 #ifdef __cplusplus
 extern "C"
@@ -132,7 +135,7 @@ static void CmdTick(uint32_t argc, const char *argv[])
 	mimic_printf("Tick Test\r\n");
 
 	tick = xTaskGetTickCount();
-	while (bsp_kbhit() == false)
+	while (mimic_kbhit() == false)
 	{
 		mimic_printf("tick = %lu msec\r\n", tick);
 		vTaskDelayUntil((TickType_t *const) & tick, 1000);
@@ -152,11 +155,10 @@ static void CmdLoad(uint32_t argc, const char *argv[])
 	mimic_printf("CPU Load\r\n");
 
 	tick = xTaskGetTickCount();
-	while (bsp_kbhit() == false)
+	while (mimic_kbhit() == false)
 	{
 		GetRunCount(&LastRun, &MaxRun);
 		mimic_printf("Load = %f [%lu, %lu](%lu msec)\r\n", 1.0 - (double)LastRun / (double)MaxRun, LastRun, MaxRun, tick);
-		DebugTraceX("DEBUG", dbgMINOR, "Load = %f [%lu, %lu](%lu msec)", 1.0 - (double)LastRun / (double)MaxRun, LastRun, MaxRun, tick);
 		vTaskDelayUntil((TickType_t *const) & tick, 1000);
 	}
 }
@@ -186,7 +188,7 @@ static void CmdClock(uint32_t argc, const char *argv[])
 	mimic_printf("kCLOCK_EnetPll1Clk    = %12lu\r\n", CLOCK_GetFreq(kCLOCK_EnetPll1Clk));
 	mimic_printf("kCLOCK_AudioPllClk    = %12lu\r\n", CLOCK_GetFreq(kCLOCK_AudioPllClk));
 	mimic_printf("kCLOCK_VideoPllClk    = %12lu\r\n", CLOCK_GetFreq(kCLOCK_VideoPllClk));
-	mimic_printf("SD_HOST_CLK_FREQ      = %12lu\r\n", SD_HOST_CLK_FREQ);
+	mimic_printf("SD_HOST_CLK_FREQ      = %12lu\r\n", BOARD_SD_HOST_CLK_FREQ);
 }
 
 static void CmdTask(uint32_t argc, const char *argv[])
@@ -199,7 +201,7 @@ static void CmdTask(uint32_t argc, const char *argv[])
 }
 
 static void CmdNvic(uint32_t argc, const char *argv[]){
-	for(uint32_t i=0;i<MAX_IRQn;i++){
+	for(uint32_t i=0;i<NUMBER_OF_INT_VECTORS;i++){
 		mimic_printf("IRQ%03d = %lu:%lu, pend = %lu, pri = %lu\r\n", i, 
 			NVIC_GetActive((IRQn_Type)i), NVIC_GetEnableIRQ((IRQn_Type)i), NVIC_GetPendingIRQ((IRQn_Type)i), NVIC_GetPriority((IRQn_Type)i));
 		vTaskDelay(10);

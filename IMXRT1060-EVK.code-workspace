@@ -23,7 +23,8 @@
 			"${workspaceFolder}/IMXRT1060-EVK_BOOT/amazon-freertos",
 		],
 		"files.associations": {
-			"mimiclib.h": "c"
+			"mimiclib.h": "c",
+			"mimxrt1062.h": "c"
 		},
 	}
 }

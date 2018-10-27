@@ -54,14 +54,14 @@ void ConsoleTask(void const *argument){
 		char *ctx = NULL;
 
 		/** Waiting Return Code */
-		bsp_gets(szBuf, 512);
+		mimic_gets(szBuf, 512);
 		
 		/** Split Command and argments */
 		argc = 0u;
-		argv[argc] = bsp_strtok(szBuf, " ", &ctx);
+		argv[argc] = mimic_strtok(szBuf, " ", &ctx);
     	while (argv[argc] != NULL) {
 			argc++;
-			argv[argc] = bsp_strtok(NULL, " ", &ctx);
+			argv[argc] = mimic_strtok(NULL, " ", &ctx);
 			if(argc >= 15u){
 				break;
 			}

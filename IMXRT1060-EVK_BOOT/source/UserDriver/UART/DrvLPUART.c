@@ -93,12 +93,12 @@ static _Bool GetTxData(enLPUART_t enLPUARTNo, uint8_t *pu8val){
 	if(pdFALSE != xPortIsInsideInterrupt()){
 		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-		if(1u != xStreamBufferReceiveFromISR(g_sbhLPUARTTx[enLPUARTNo], &u8val, 1, &xHigherPriorityTaskWoken)){
+		if(1u != xStreamBufferReceiveFromISR(g_sbhLPUARTTx[enLPUARTNo], pu8val, 1, &xHigherPriorityTaskWoken)){
 			return false;
 		}
 		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 	}else{
-		if(1u != xStreamBufferReceive(g_sbhLPUARTTx[enLPUARTNo], &u8val, 1, 10)){
+		if(1u != xStreamBufferReceive(g_sbhLPUARTTx[enLPUARTNo], pu8val, 1, 10)){
 			return false;
 		}
 	}

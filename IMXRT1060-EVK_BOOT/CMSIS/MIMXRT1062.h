@@ -44,7 +44,7 @@
 
 #ifndef _MIMXRT1062_H_
 #define _MIMXRT1062_H_                           /**< Symbol preventing repeated inclusion */
-
+#include "MIMXRT1062_features.h"
 /** Memory map major version (memory maps with equal major version number are
  * compatible) */
 #define MCU_MEM_MAP_VERSION 0x0000U

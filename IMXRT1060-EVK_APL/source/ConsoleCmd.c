@@ -132,7 +132,7 @@ static void CmdTick(uint32_t argc, const char *argv[])
 	mimic_printf("Tick Test\r\n");
 
 	tick = xTaskGetTickCount();
-	while (bsp_kbhit() == false)
+	while (mimic_kbhit() == false)
 	{
 		mimic_printf("tick = %lu msec\r\n", tick);
 		vTaskDelayUntil((TickType_t *const) & tick, 1000);
@@ -152,7 +152,7 @@ static void CmdLoad(uint32_t argc, const char *argv[])
 	mimic_printf("CPU Load\r\n");
 
 	tick = xTaskGetTickCount();
-	while (bsp_kbhit() == false)
+	while (mimic_kbhit() == false)
 	{
 		GetRunCount(&LastRun, &MaxRun);
 		mimic_printf("Load = %f [%lu, %lu](%lu msec)\r\n", 1.0 - (double)LastRun / (double)MaxRun, LastRun, MaxRun, tick);

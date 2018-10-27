@@ -38,19 +38,16 @@ typedef struct{
 /** Task Handle */
 ALLOCATE_IN_DTCM alignas(32) osThreadId_t g_InitialTaskHandle;
 ALLOCATE_IN_DTCM alignas(32) osThreadId_t g_ConsoleTaskHandle;
-ALLOCATE_IN_DTCM alignas(32) osThreadId_t g_LEDTaskHandle;
 ALLOCATE_IN_DTCM alignas(32) osThreadId_t g_StorageTaskHandle;
 
 /** Task Control Block (STATIC ALLOCATION)*/
 ALLOCATE_IN_DTCM alignas(32) static StaticTask_t s_InitialTaskTCB;
 ALLOCATE_IN_DTCM alignas(32) static StaticTask_t s_ConsoleTaskTCB;
-ALLOCATE_IN_DTCM alignas(32) static StaticTask_t s_LEDTaskTCB;
 ALLOCATE_IN_DTCM alignas(32) static StaticTask_t s_StorageTaskTCB;
 
 /** Task Stack (STATIC ALLOCATION)*/
 ALLOCATE_IN_DTCM alignas(32) static uint32_t s_InitialTaskStack[8192/sizeof(uint32_t)];
 ALLOCATE_IN_DTCM alignas(32) static uint32_t s_ConsoleTaskStack[8192/sizeof(uint32_t)];
-ALLOCATE_IN_DTCM alignas(32) static uint32_t s_LEDTaskStack[1024/sizeof(uint32_t)];
 ALLOCATE_IN_DTCM alignas(32) static uint32_t s_StorageTaskStack[8192/sizeof(uint32_t)];
 
 /** Task Table */

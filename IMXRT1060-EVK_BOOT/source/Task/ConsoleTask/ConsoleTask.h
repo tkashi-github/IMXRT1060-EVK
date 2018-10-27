@@ -19,9 +19,8 @@
 extern "C"
 {
 #endif
-#include "FreeRTOS.h"
-#include "task.h"
-#include "cmsis_os.h"
+/** User Typedefine */
+#include "UserTypedef.h"
 
 extern void ConsoleTask(void const *argument);
 #ifdef __cplusplus

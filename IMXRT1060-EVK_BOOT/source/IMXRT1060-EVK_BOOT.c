@@ -38,7 +38,10 @@
 #include "pin_mux.h"
 #include "clock_config.h"
 #include "MIMXRT1062.h"
-#include "fsl_debug_console.h"
+#include "UserTypedef.h"
+#include "OSResource.h"
+
+#include "UART/DrvLPUART.h"
 /* TODO: insert other include files here. */
 
 /* TODO: insert other definitions and declarations here. */
@@ -57,6 +60,7 @@ static void BOARD_USDHCClockConfiguration(void)
 extern "C"
 {
 #endif
+extern status_t BOARD_InitSEMC(void);
 extern void CMSIS_OS2_SysTick_Handler (void);
 extern void vPortSVCHandler( void );
 extern void xPortPendSVHandler( void );
