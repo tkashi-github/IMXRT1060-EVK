@@ -56,7 +56,7 @@ TCHAR *GetFileExt(TCHAR szExt[], const TCHAR szFilePath[], size_t SizeExt)
 	size_t i;
 	TCHAR *pret = szExt;
 	szExt[0] = (TCHAR)'\0';
-	slen = bsp_tcslen(szFilePath);
+	slen = mimic_tcslen(szFilePath);
 	if (slen > 0)
 	{
 		i = slen - 1;
@@ -64,7 +64,7 @@ TCHAR *GetFileExt(TCHAR szExt[], const TCHAR szFilePath[], size_t SizeExt)
 		{
 			if (szFilePath[i] == (TCHAR)'.')
 			{
-				bsp_tcscpy(szExt, &szFilePath[i + 1], SizeExt);
+				mimic_tcscpy(szExt, &szFilePath[i + 1], SizeExt);
 				break;
 			}
 			if (i == 0)

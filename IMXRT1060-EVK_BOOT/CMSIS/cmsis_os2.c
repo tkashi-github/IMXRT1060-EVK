@@ -22,7 +22,7 @@
 
 #include <string.h>
 
-#include "RTE_Components.h"             // Component selection
+//#include "RTE_Components.h"             // Component selection
 
 #include "cmsis_os2.h"                  // ::CMSIS:RTOS2
 #include "cmsis_compiler.h"

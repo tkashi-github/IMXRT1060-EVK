@@ -38,7 +38,7 @@ void MemDump(uintptr_t addr, size_t ByteCnt)
 		mimic_printf(" : ");
 		for (j = 0; j < 16; j++)
 		{
-			mimic_printf("%c", bsp_isprint(pu8[index + j]) ? pu8[index + j] : '.');
+			mimic_printf("%c", mimic_isprint(pu8[index + j]) ? pu8[index + j] : '.');
 		}
 		mimic_printf("\r\n");
 		vTaskDelay(10);
@@ -55,7 +55,7 @@ TCHAR *GetFileExt(TCHAR szExt[], const TCHAR szFilePath[], size_t SizeExt)
 	size_t i;
 	TCHAR *pret = szExt;
 	szExt[0] = (TCHAR)'\0';
-	slen = bsp_tcslen(szFilePath);
+	slen = mimic_tcslen(szFilePath);
 	if (slen > 0)
 	{
 		i = slen - 1;
@@ -63,7 +63,7 @@ TCHAR *GetFileExt(TCHAR szExt[], const TCHAR szFilePath[], size_t SizeExt)
 		{
 			if (szFilePath[i] == (TCHAR)'.')
 			{
-				bsp_tcscpy(szExt, &szFilePath[i + 1], SizeExt);
+				mimic_tcscpy(szExt, &szFilePath[i + 1], SizeExt);
 				break;
 			}
 			if (i == 0)

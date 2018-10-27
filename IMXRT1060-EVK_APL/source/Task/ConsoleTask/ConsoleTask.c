@@ -70,7 +70,7 @@ void ConsoleTask(void const *argument){
 		/** Execute Command */
 		u32 = 0u;
 		while(g_stCmdTable[u32].m_pszCmd != NULL){
-			bsp_strupper(argv[0]);
+			mimic_strupper(argv[0]);
 			if(strncmp(g_stCmdTable[u32].m_pszCmd, argv[0], 32) == 0){
 				g_stCmdTable[u32].m_pfnc(argc, (const char **)argv);
 				break;

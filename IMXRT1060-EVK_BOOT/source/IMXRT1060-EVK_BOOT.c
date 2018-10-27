@@ -40,7 +40,7 @@
 #include "MIMXRT1062.h"
 #include "UserTypedef.h"
 #include "OSResource.h"
-
+#include "CPUFunc.h"
 #include "UART/DrvLPUART.h"
 /* TODO: insert other include files here. */
 
@@ -174,12 +174,6 @@ extern void GetRunCount(uint32_t *p32Last, uint32_t *pu32Max);
 extern uint32_t g_u32CurrentRun;
 static uint32_t s_u32LastRun = 0u;
 static uint32_t s_u32RunMax = 0u;
-
-void vApplicationStackOverflowHook( TaskHandle_t xTask,
-                                    signed char *pcTaskName ){
-	mimic_printf("[%s (%d)] Stack Over Flow!!!\r\n", __FUNCTION__, __LINE__);
-	while(1);
-}
 
 _Bool g_bInitEnd = false;
 void vApplicationTickHook(void)

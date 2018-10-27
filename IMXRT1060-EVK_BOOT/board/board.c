@@ -400,6 +400,8 @@ void BOARD_ConfigMPU(void)
 #define EXAMPLE_SEMC_START_ADDRESS (0x80000000U)
 #define EXAMPLE_SEMC_CLK_FREQ CLOCK_GetFreq(kCLOCK_SemcClk)
 
+#include "fsl_semc.h"
+
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/

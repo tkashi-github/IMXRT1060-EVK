@@ -81,6 +81,9 @@
 									<listOptionValue builtIn="false" value="DEBUG"/>
 									<listOptionValue builtIn="false" value="__NEWLIB__"/>
 									<listOptionValue builtIn="false" value="ENABLE_RAM_VECTOR_TABLE"/>
+									<listOptionValue builtIn="false" value="ARM_MATH_CM7"/>
+									<listOptionValue builtIn="false" value="__VFP_FP__"/>
+									<listOptionValue builtIn="false" value="__FPU_PRESENT"/>
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.undef.symbol.1433866537" name="Undefined symbols (-U)" superClass="gnu.c.compiler.option.preprocessor.undef.symbol" useByScannerDiscovery="false"/>
 								<option id="gnu.c.compiler.option.include.paths.426143940" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
@@ -233,10 +236,7 @@
 								<option id="gnu.c.link.option.nostdlibs.1041220286" name="No startup or default libs (-nostdlib)" superClass="gnu.c.link.option.nostdlibs" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="gnu.c.link.option.strip.212718620" name="Omit all symbol information (-s)" superClass="gnu.c.link.option.strip" useByScannerDiscovery="false"/>
 								<option id="gnu.c.link.option.noshared.2110026456" name="No shared libraries (-static)" superClass="gnu.c.link.option.noshared" useByScannerDiscovery="false"/>
-								<option id="gnu.c.link.option.libs.1032484838" name="Libraries (-l)" superClass="gnu.c.link.option.libs" useByScannerDiscovery="false" valueType="libs">
-									<listOptionValue builtIn="false" value="arm_cortexM7lfdp_math"/>
-									<listOptionValue builtIn="false" value="arm_cortexM7lfsp_math"/>
-								</option>
+								<option id="gnu.c.link.option.libs.1032484838" name="Libraries (-l)" superClass="gnu.c.link.option.libs" useByScannerDiscovery="false" valueType="libs"/>
 								<option id="gnu.c.link.option.paths.2100530070" name="Library search path (-L)" superClass="gnu.c.link.option.paths" useByScannerDiscovery="false" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs}&quot;"/>
 								</option>
@@ -284,7 +284,7 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="CMSIS"/>
-						<entry excluding="FreeRTOS/portable/heap_1.c|FreeRTOS/portable/heap_2.c|FreeRTOS/portable/heap_3.c|FreeRTOS/portable/heap_5.c" flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="amazon-freertos"/>
+						<entry excluding="portable/heap_5.c|portable/heap_3.c|portable/heap_2.c|portable/heap_1.c|FreeRTOS/portable/heap_1.c|FreeRTOS/portable/heap_2.c|FreeRTOS/portable/heap_3.c|FreeRTOS/portable/heap_5.c" flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="amazon-freertos"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="board"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="drivers"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="source"/>
@@ -568,7 +568,7 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="CMSIS"/>
-						<entry excluding="FreeRTOS/portable/heap_1.c|FreeRTOS/portable/heap_2.c|FreeRTOS/portable/heap_3.c|FreeRTOS/portable/heap_5.c" flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="amazon-freertos"/>
+						<entry excluding="portable/heap_5.c|portable/heap_3.c|portable/heap_2.c|portable/heap_1.c|FreeRTOS/portable/heap_1.c|FreeRTOS/portable/heap_2.c|FreeRTOS/portable/heap_3.c|FreeRTOS/portable/heap_5.c" flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="amazon-freertos"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="board"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="drivers"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="source"/>
