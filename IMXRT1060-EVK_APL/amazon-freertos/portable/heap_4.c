@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.0.1
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.1.0
+ * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -34,6 +34,7 @@
  * memory management pages of http://www.FreeRTOS.org for more information.
  */
 #include <stdlib.h>
+#include <stdalign.h>
 
 /* Defining MPU_WRAPPERS_INCLUDED_FROM_API_FILE prevents task.h from redefining
 all the API functions to use the MPU wrappers.  That should only be done when
@@ -61,7 +62,11 @@ task.h is included from an application file. */
 	heap - probably so it can be placed in a special segment or address. */
 	extern uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
 #else
-	static uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
+#if (defined(__GNUC__))
+__attribute__((section(".bss.$BOARD_SDRAM*"))) 	alignas(256) static uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
+#else
+static volatile uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
+#endif
 #endif /* configAPPLICATION_ALLOCATED_HEAP */
 
 /* Define the linked list structure.  This is used to link free blocks in order
@@ -92,25 +97,29 @@ static void prvHeapInit( void );
 
 /* The size of the structure placed at the beginning of each allocated memory
 block must by correctly byte aligned. */
-static const size_t xHeapStructSize	= ( sizeof( BlockLink_t ) + ( ( size_t ) ( portBYTE_ALIGNMENT - 1 ) ) ) & ~( ( size_t ) portBYTE_ALIGNMENT_MASK );
+kKERNEL_SECTION_DTCM alignas(32) static const size_t xHeapStructSize	= ( sizeof( BlockLink_t ) + ( ( size_t ) ( portBYTE_ALIGNMENT - 1 ) ) ) & ~( ( size_t ) portBYTE_ALIGNMENT_MASK );
 
 /* Create a couple of list links to mark the start and end of the list. */
-static BlockLink_t xStart, *pxEnd = NULL;
+kKERNEL_SECTION_DTCM alignas(32) static BlockLink_t xStart = {0};
+kKERNEL_SECTION_DTCM alignas(32) static BlockLink_t *pxEnd = NULL;
 
 /* Keeps track of the number of free bytes remaining, but says nothing about
 fragmentation. */
-static size_t xFreeBytesRemaining = 0U;
-static size_t xMinimumEverFreeBytesRemaining = 0U;
+kKERNEL_SECTION_DTCM alignas(32) static size_t xFreeBytesRemaining = 0U;
+kKERNEL_SECTION_DTCM alignas(32) static size_t xMinimumEverFreeBytesRemaining = 0U;
 
 /* Gets set to the top bit of an size_t type.  When this bit in the xBlockSize
 member of an BlockLink_t structure is set then the block belongs to the
 application.  When the bit is free the block is still part of the free heap
 space. */
-static size_t xBlockAllocatedBit = 0;
+kKERNEL_SECTION_DTCM alignas(32) static size_t xBlockAllocatedBit = 0;
 
 /*-----------------------------------------------------------*/
 
-void *pvPortMalloc( size_t xWantedSize )
+void prvForceHeapInit(void){
+	pxEnd = NULL;
+}
+kKERNEL_SECTION_ITCM void *pvPortMalloc( size_t xWantedSize )
 {
 BlockLink_t *pxBlock, *pxPreviousBlock, *pxNewBlockLink;
 void *pvReturn = NULL;
@@ -260,7 +269,7 @@ void *pvReturn = NULL;
 }
 /*-----------------------------------------------------------*/
 
-void vPortFree( void *pv )
+kKERNEL_SECTION_ITCM void vPortFree( void *pv )
 {
 uint8_t *puc = ( uint8_t * ) pv;
 BlockLink_t *pxLink;
@@ -308,25 +317,25 @@ BlockLink_t *pxLink;
 }
 /*-----------------------------------------------------------*/
 
-size_t xPortGetFreeHeapSize( void )
+kKERNEL_SECTION_ITCM size_t xPortGetFreeHeapSize( void )
 {
 	return xFreeBytesRemaining;
 }
 /*-----------------------------------------------------------*/
 
-size_t xPortGetMinimumEverFreeHeapSize( void )
+kKERNEL_SECTION_ITCM size_t xPortGetMinimumEverFreeHeapSize( void )
 {
 	return xMinimumEverFreeBytesRemaining;
 }
 /*-----------------------------------------------------------*/
 
-void vPortInitialiseBlocks( void )
+kKERNEL_SECTION_ITCM void vPortInitialiseBlocks( void )
 {
 	/* This just exists to keep the linker quiet. */
 }
 /*-----------------------------------------------------------*/
 
-static void prvHeapInit( void )
+kKERNEL_SECTION_ITCM static void prvHeapInit( void )
 {
 BlockLink_t *pxFirstFreeBlock;
 uint8_t *pucAlignedHeap;
@@ -374,7 +383,7 @@ size_t xTotalHeapSize = configTOTAL_HEAP_SIZE;
 }
 /*-----------------------------------------------------------*/
 
-static void prvInsertBlockIntoFreeList( BlockLink_t *pxBlockToInsert )
+kKERNEL_SECTION_ITCM static void prvInsertBlockIntoFreeList( BlockLink_t *pxBlockToInsert )
 {
 BlockLink_t *pxIterator;
 uint8_t *puc;

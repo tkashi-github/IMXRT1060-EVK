@@ -61,24 +61,24 @@ DefALLOCATE_ITCM static void InitNetwork(_Bool bDHCP)
 		IP4_ADDR(&fsl_netif0_gw, 0, 0, 0, 0);
 
 		
-		mimiclib_printf("Static IP Mode\r\n");
+		mimic_printf("Static IP Mode\r\n");
 
 		netif_add(&fsl_netif0, &fsl_netif0_ipaddr, &fsl_netif0_netmask, &fsl_netif0_gw, &fsl_enet_config0, ethernetif0_init,
 				tcpip_input);
 		netif_set_default(&fsl_netif0);
 		netif_set_up(&fsl_netif0);
-		mimiclib_printf("************************************************\r\n");
-		mimiclib_printf(" IPv4 Address     : %u.%u.%u.%u\r\n", ((u8_t *)&fsl_netif0_ipaddr)[0], ((u8_t *)&fsl_netif0_ipaddr)[1],
+		mimic_printf("************************************************\r\n");
+		mimic_printf(" IPv4 Address     : %u.%u.%u.%u\r\n", ((u8_t *)&fsl_netif0_ipaddr)[0], ((u8_t *)&fsl_netif0_ipaddr)[1],
 			((u8_t *)&fsl_netif0_ipaddr)[2], ((u8_t *)&fsl_netif0_ipaddr)[3]);
-		mimiclib_printf(" IPv4 Subnet mask : %u.%u.%u.%u\r\n", ((u8_t *)&fsl_netif0_netmask)[0], ((u8_t *)&fsl_netif0_netmask)[1],
+		mimic_printf(" IPv4 Subnet mask : %u.%u.%u.%u\r\n", ((u8_t *)&fsl_netif0_netmask)[0], ((u8_t *)&fsl_netif0_netmask)[1],
 			((u8_t *)&fsl_netif0_netmask)[2], ((u8_t *)&fsl_netif0_netmask)[3]);
-		mimiclib_printf(" IPv4 Gateway     : %u.%u.%u.%u\r\n", ((u8_t *)&fsl_netif0_gw)[0], ((u8_t *)&fsl_netif0_gw)[1],
+		mimic_printf(" IPv4 Gateway     : %u.%u.%u.%u\r\n", ((u8_t *)&fsl_netif0_gw)[0], ((u8_t *)&fsl_netif0_gw)[1],
 			((u8_t *)&fsl_netif0_gw)[2], ((u8_t *)&fsl_netif0_gw)[3]);
-		mimiclib_printf("************************************************\r\n");
+		mimic_printf("************************************************\r\n");
 
 	}else{
 
-		mimiclib_printf("Getting IP address from DHCP ...\r\n");
+		mimic_printf("Getting IP address from DHCP ...\r\n");
 		dhcp_start(&fsl_netif0);
 
 		struct dhcp *dhcp;
@@ -91,14 +91,14 @@ DefALLOCATE_ITCM static void InitNetwork(_Bool bDHCP)
 
 		if (dhcp->state == DHCP_STATE_BOUND)
 		{
-			mimiclib_printf("\r\n IPv4 Address     : %u.%u.%u.%u\r\n", ((u8_t *)&fsl_netif0.ip_addr.addr)[0],
+			mimic_printf("\r\n IPv4 Address     : %u.%u.%u.%u\r\n", ((u8_t *)&fsl_netif0.ip_addr.addr)[0],
 				((u8_t *)&fsl_netif0.ip_addr.addr)[1], ((u8_t *)&fsl_netif0.ip_addr.addr)[2],
 				((u8_t *)&fsl_netif0.ip_addr.addr)[3]);
 		}
-		mimiclib_printf("DHCP OK\r\n");
+		mimic_printf("DHCP OK\r\n");
 	}
 #if 1	// UDP Echo Test
-	mimiclib_printf("Start UDP Echo\r\n");
+	mimic_printf("Start UDP Echo\r\n");
 	udpecho_raw_init();
 #endif
 }
@@ -136,10 +136,10 @@ DefALLOCATE_ITCM static void ResetPhy(void){
 DefALLOCATE_ITCM static void LinkUpDownProc(void){
 
 	if(IsLinkUP() == false){
-		mimiclib_printf("Link Down detected.\r\n");
+		mimic_printf("Link Down detected.\r\n");
 		netif_remove(&fsl_netif0);
 	}else{
-		mimiclib_printf("Link Up detected.\r\n");
+		mimic_printf("Link Up detected.\r\n");
 		InitNetwork(false);
 	}
 }
@@ -161,7 +161,7 @@ DefALLOCATE_ITCM static void LanTaskActual(void){
 			break;
 		case enLanRestart:
 			s_bInited = false;
-			mimiclib_printf("[%s (%d)] Restart!\r\n", __FUNCTION__, __LINE__);
+			mimic_printf("[%s (%d)] Restart!\r\n", __FUNCTION__, __LINE__);
 			ResetPhy();
 			tcpip_init(NULL, NULL);
 			InitNetwork(false);
@@ -169,7 +169,7 @@ DefALLOCATE_ITCM static void LanTaskActual(void){
 			s_bLastLinkStatus = true;
 			break;
 		default:
-			mimiclib_printf("[%s (%d)] Unkown Msg (%d)\r\n", __FUNCTION__, __LINE__, stTaskMsg.enMsgId);
+			mimic_printf("[%s (%d)] Unkown Msg (%d)\r\n", __FUNCTION__, __LINE__, stTaskMsg.enMsgId);
 			break;
 		}
 		
@@ -232,7 +232,7 @@ DefALLOCATE_ITCM _Bool PostMsgLanTaskRestart(void){
 	stTaskMsg.enMsgId = enLanRestart;
 
 	if(sizeof(stTaskMsg) != xStreamBufferSend(g_sbhLanTask, &stTaskMsg, sizeof(stTaskMsg), 50)){
-		mimiclib_printf("[%s (%d)] xStreamBufferSend NG\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] xStreamBufferSend NG\r\n", __FUNCTION__, __LINE__);
 		return false;
 	}
 	
@@ -253,7 +253,7 @@ DefALLOCATE_ITCM _Bool PostMsgLanTaskLinkChange(void){
 
 	if(pdFALSE == xPortIsInsideInterrupt()){
 		if(sizeof(stTaskMsg) != xStreamBufferSend(g_sbhLanTask, &stTaskMsg, sizeof(stTaskMsg), 50)){
-			mimiclib_printf("[%s (%d)] xStreamBufferSend NG\r\n", __FUNCTION__, __LINE__);
+			mimic_printf("[%s (%d)] xStreamBufferSend NG\r\n", __FUNCTION__, __LINE__);
 			return false;
 		}
 	}else{

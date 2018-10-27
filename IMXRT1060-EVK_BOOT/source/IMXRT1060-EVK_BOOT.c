@@ -173,7 +173,7 @@ static uint32_t s_u32RunMax = 0u;
 
 void vApplicationStackOverflowHook( TaskHandle_t xTask,
                                     signed char *pcTaskName ){
-	mimiclib_printf("[%s (%d)] Stack Over Flow!!!\r\n", __FUNCTION__, __LINE__);
+	mimic_printf("[%s (%d)] Stack Over Flow!!!\r\n", __FUNCTION__, __LINE__);
 	while(1);
 }
 

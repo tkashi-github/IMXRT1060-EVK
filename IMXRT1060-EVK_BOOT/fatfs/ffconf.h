@@ -1,6 +1,18 @@
 #ifndef _FFCONF_H_
 #define _FFCONF_H_
 
+/* CMSIS */
+#include "cmsis_os.h"
+#include "cmsis_os2.h"
+
+/* Amazon FreeRTOS */
+#include "FreeRTOS.h"
+#include "task.h"
+#include "event_groups.h"
+#include "timers.h"
+#include "semphr.h"
+#include "stream_buffer.h"
+
 /*---------------------------------------------------------------------------/
 /  FatFs - Configuration file
 /---------------------------------------------------------------------------*/
@@ -111,7 +123,7 @@
 */
 
 
-#define FF_USE_LFN		1
+#define FF_USE_LFN		3
 #define FF_MAX_LFN		255
 /* The FF_USE_LFN switches the support for LFN (long file name).
 /
@@ -258,7 +270,7 @@
 /  These options have no effect at read-only configuration (FF_FS_READONLY = 1). */
 
 
-#define FF_FS_LOCK		1
+#define FF_FS_LOCK		10
 /* The option FF_FS_LOCK switches file lock function to control duplicated file open
 /  and illegal operation to open objects. This option must be 0 when FF_FS_READONLY
 /  is 1.
@@ -272,7 +284,7 @@
 
 #define FF_FS_REENTRANT	1
 #define FF_FS_TIMEOUT	1000
-#define FF_SYNC_t		HANDLE
+#define FF_SYNC_t		QueueHandle_t
 /* The option FF_FS_REENTRANT switches the re-entrancy (thread safe) of the FatFs
 /  module itself. Note that regardless of this option, file access to different
 /  volume is always re-entrant and volume control functions, f_mount(), f_mkfs()

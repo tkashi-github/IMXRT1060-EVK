@@ -19,11 +19,6 @@
 #error
 #endif
 
-stu8RingBuffer_t g_stLPUARTRxBuf[1+enLPUART_MAX];	/** LPUART_BASE_PTRSの頭に0が入っている */
-stu8RingBuffer_t g_stLPUARTTxBuf[1+enLPUART_MAX];	/** LPUART_BASE_PTRSの頭に0が入っている */
-
-
-
 static LPUART_Type *s_LPUARTBaseTable[] = LPUART_BASE_PTRS;
 static void LPUARTXHandleIRQ(enLPUART_t enLPUARTNo);
 
@@ -103,7 +98,7 @@ static _Bool GetTxData(enLPUART_t enLPUARTNo, uint8_t *pu8val){
 		}
 		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 	}else{
-		if(1u != xStreamBufferReceive(g_sbhLPUARTTx[enLPUARTNo], &u8val, 1, 10){
+		if(1u != xStreamBufferReceive(g_sbhLPUARTTx[enLPUARTNo], &u8val, 1, 10)){
 			return false;
 		}
 	}

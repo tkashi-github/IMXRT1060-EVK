@@ -12,6 +12,7 @@
 
 #include "common/common.h"
 #include "board.h"
+#include "mimiclib/mimiclib.h"
 
 void MemDump(uintptr_t addr, size_t ByteCnt)
 {
@@ -31,19 +32,19 @@ void MemDump(uintptr_t addr, size_t ByteCnt)
 		size_t j;
 		for (j = 0; j < 16; j++)
 		{
-			mimiclib_printf("%02X ", pu8[index + j]);
+			mimic_printf("%02X ", pu8[index + j]);
 		}
 
 		vTaskDelay(10);
-		mimiclib_printf(" : ");
+		mimic_printf(" : ");
 		for (j = 0; j < 16; j++)
 		{
-			mimiclib_printf("%c", bsp_isprint(pu8[index + j]) ? pu8[index + j] : '.');
+			mimic_printf("%c", mimic_isprint(pu8[index + j]) ? pu8[index + j] : '.');
 		}
-		mimiclib_printf("\r\n");
+		mimic_printf("\r\n");
 		vTaskDelay(10);
 	}
-	mimiclib_printf("-------------------------------------------------------------------\r\n");
+	mimic_printf("-------------------------------------------------------------------\r\n");
 }
 
 #if 0
