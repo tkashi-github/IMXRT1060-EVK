@@ -30,8 +30,6 @@
 void ConsoleTask(void const *argument){
 	/*-- var --*/
 	char *szBuf;
-	lpuart_config_t lpuart_config;
-
 	/*-- begin --*/
 	szBuf = pvPortMalloc(2048);
 	

@@ -48,14 +48,6 @@ uint32_t BOARD_DebugConsoleSrcFreq(void)
     return freq;
 }
 
-/* Initialize debug console. */
-void BOARD_InitDebugConsole(void)
-{
-    uint32_t uartClkSrcFreq = BOARD_DebugConsoleSrcFreq();
-
-    DbgConsole_Init(BOARD_DEBUG_UART_BASEADDR, BOARD_DEBUG_UART_BAUDRATE, BOARD_DEBUG_UART_TYPE, uartClkSrcFreq);
-}
-
 #if defined(SDK_I2C_BASED_COMPONENT_USED) && SDK_I2C_BASED_COMPONENT_USED
 void BOARD_LPI2C_Init(LPI2C_Type *base, uint32_t clkSrc_Hz)
 {

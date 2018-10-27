@@ -25,7 +25,9 @@
 		"files.associations": {
 			"mimiclib.h": "c",
 			"mimxrt1062.h": "c",
-			"fsl_semc.h": "c"
+			"fsl_semc.h": "c",
+			"ff.h": "c",
+			"fsl_sd.h": "c"
 		},
 	}
 }

@@ -88,21 +88,18 @@
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.undef.symbol.1433866537" name="Undefined symbols (-U)" superClass="gnu.c.compiler.option.preprocessor.undef.symbol" useByScannerDiscovery="false"/>
 								<option id="gnu.c.compiler.option.include.paths.426143940" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="../"/>
 									<listOptionValue builtIn="false" value="../board"/>
 									<listOptionValue builtIn="false" value="../source"/>
-									<listOptionValue builtIn="false" value="../"/>
 									<listOptionValue builtIn="false" value="../amazon-freertos/FreeRTOS/portable"/>
 									<listOptionValue builtIn="false" value="../amazon-freertos/include"/>
 									<listOptionValue builtIn="false" value="../drivers"/>
 									<listOptionValue builtIn="false" value="../CMSIS"/>
 									<listOptionValue builtIn="false" value="../xip"/>
 									<listOptionValue builtIn="false" value="../drivers/freertos"/>
-									<listOptionValue builtIn="false" value="../CMSIS_driver"/>
-									<listOptionValue builtIn="false" value="../utilities"/>
 									<listOptionValue builtIn="false" value="../fatfs"/>
 									<listOptionValue builtIn="false" value="../fatfs/fatfs_include"/>
 									<listOptionValue builtIn="false" value="../sdmmc/inc"/>
-									<listOptionValue builtIn="false" value="../littlefs/littlefs_include"/>
 									<listOptionValue builtIn="false" value="../startup"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/source}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/source/include}&quot;"/>
@@ -154,13 +151,15 @@
 									<listOptionValue builtIn="false" value="../CMSIS"/>
 									<listOptionValue builtIn="false" value="../xip"/>
 									<listOptionValue builtIn="false" value="../drivers/freertos"/>
-									<listOptionValue builtIn="false" value="../CMSIS_driver"/>
-									<listOptionValue builtIn="false" value="../utilities"/>
 									<listOptionValue builtIn="false" value="../fatfs"/>
 									<listOptionValue builtIn="false" value="../fatfs/fatfs_include"/>
 									<listOptionValue builtIn="false" value="../sdmmc/inc"/>
-									<listOptionValue builtIn="false" value="../littlefs/littlefs_include"/>
 									<listOptionValue builtIn="false" value="../startup"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/source}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/source/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/source/common}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/source/Task}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/source/UserDriver}&quot;"/>
 								</option>
 								<option id="gnu.both.asm.option.warnings.nowarn.885811701" name="Suppress warnings (-W)" superClass="gnu.both.asm.option.warnings.nowarn" useByScannerDiscovery="false"/>
 								<option id="gnu.both.asm.option.version.46373650" name="Announce version (-v)" superClass="gnu.both.asm.option.version" useByScannerDiscovery="false"/>
@@ -237,7 +236,7 @@
 								<option id="gnu.c.link.option.nostdlibs.1041220286" name="No startup or default libs (-nostdlib)" superClass="gnu.c.link.option.nostdlibs" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="gnu.c.link.option.strip.212718620" name="Omit all symbol information (-s)" superClass="gnu.c.link.option.strip" useByScannerDiscovery="false"/>
 								<option id="gnu.c.link.option.noshared.2110026456" name="No shared libraries (-static)" superClass="gnu.c.link.option.noshared" useByScannerDiscovery="false"/>
-								<option id="gnu.c.link.option.libs.1032484838" name="Libraries (-l)" superClass="gnu.c.link.option.libs" useByScannerDiscovery="false" valueType="libs"/>
+								<option id="gnu.c.link.option.libs.1032484838" name="Libraries (-l)" superClass="gnu.c.link.option.libs" useByScannerDiscovery="false"/>
 								<option id="gnu.c.link.option.paths.2100530070" name="Library search path (-L)" superClass="gnu.c.link.option.paths" useByScannerDiscovery="false" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs}&quot;"/>
 								</option>
@@ -283,6 +282,49 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="com.crt.advproject.config.exe.debug.591182084.841196865" name="/" resourcePath="CMSIS/DSP">
+						<toolChain id="com.crt.advproject.toolchain.exe.debug.1468699876" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
+							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.GNU_ELF" id="com.crt.advproject.platform.exe.debug" name="ARM-based MCU (Debug)" superClass="com.crt.advproject.platform.exe.debug"/>
+							<tool id="com.crt.advproject.cpp.exe.debug.2097877790" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.1501466545"/>
+							<tool id="com.crt.advproject.gcc.exe.debug.1424272965" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.658337211">
+								<option id="gnu.c.compiler.option.warnings.allwarn.2068142257" name="All warnings (-Wall)" superClass="gnu.c.compiler.option.warnings.allwarn" useByScannerDiscovery="false" value="false" valueType="boolean"/>
+								<inputType id="com.crt.advproject.compiler.input.274634225" superClass="com.crt.advproject.compiler.input"/>
+							</tool>
+							<tool id="com.crt.advproject.gas.exe.debug.351617672" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.287337977">
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.465545081" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+								<inputType id="com.crt.advproject.assembler.input.1253714372" name="Additional Assembly Source Files" superClass="com.crt.advproject.assembler.input"/>
+							</tool>
+							<tool id="com.crt.advproject.link.cpp.exe.debug.1855408623" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1817781815"/>
+							<tool id="com.crt.advproject.link.exe.debug.943963035" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.129351138"/>
+						</toolChain>
+					</folderInfo>
+					<fileInfo id="com.crt.advproject.config.exe.debug.591182084.843207245" name="StorageTask.c" rcbsApplicability="disable" resourcePath="source/Task/StorageTask/StorageTask.c" toolsToInvoke="com.crt.advproject.gcc.exe.debug.658337211.932332381">
+						<tool id="com.crt.advproject.gcc.exe.debug.658337211.932332381" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.658337211">
+							<option id="gnu.c.compiler.option.include.paths.15008648" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+								<listOptionValue builtIn="false" value="../"/>
+								<listOptionValue builtIn="false" value="../board"/>
+								<listOptionValue builtIn="false" value="../source"/>
+								<listOptionValue builtIn="false" value="../amazon-freertos/FreeRTOS/portable"/>
+								<listOptionValue builtIn="false" value="../amazon-freertos/include"/>
+								<listOptionValue builtIn="false" value="../drivers"/>
+								<listOptionValue builtIn="false" value="../CMSIS"/>
+								<listOptionValue builtIn="false" value="../xip"/>
+								<listOptionValue builtIn="false" value="../drivers/freertos"/>
+								<listOptionValue builtIn="false" value="../fatfs"/>
+								<listOptionValue builtIn="false" value="../fatfs/fatfs_include"/>
+								<listOptionValue builtIn="false" value="../sdmmc/inc"/>
+								<listOptionValue builtIn="false" value="../startup"/>
+								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/source}&quot;"/>
+								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/source/include}&quot;"/>
+								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/source/common}&quot;"/>
+								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/source/Task}&quot;"/>
+								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/source/UserDriver}&quot;"/>
+								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/fatfs/fatfs_include}&quot;"/>
+								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/sdmmc/inc}&quot;"/>
+							</option>
+							<inputType id="com.crt.advproject.compiler.input.1673863230" superClass="com.crt.advproject.compiler.input"/>
+						</tool>
+					</fileInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="CMSIS"/>
 						<entry excluding="portable/heap_5.c|portable/heap_3.c|portable/heap_2.c|portable/heap_1.c|FreeRTOS/portable/heap_1.c|FreeRTOS/portable/heap_2.c|FreeRTOS/portable/heap_3.c|FreeRTOS/portable/heap_5.c" flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="amazon-freertos"/>
