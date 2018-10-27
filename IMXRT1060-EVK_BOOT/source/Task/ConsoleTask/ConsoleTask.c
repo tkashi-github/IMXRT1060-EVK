@@ -34,9 +34,7 @@ void ConsoleTask(void const *argument){
 
 	/*-- begin --*/
 	szBuf = pvPortMalloc(2048);
-	LPUART_GetDefaultConfig(&lpuart_config);
-	lpuart_config.baudRate_Bps = 115200;
-	DrvLPUART_InitWithOSResource(enLPUART1, &lpuart_config);
+	
 	
 	/** Welcome Message */
 	mimiclib_printf("\r\n\r\nVersion = %s\r\n", g_szProgramVersion);

@@ -20,16 +20,14 @@ extern "C"
 {
 #endif
 
-#include <string.h>
-#include <stdlib.h>
-
+/** OS */
 #include "FreeRTOS.h"
 #include "event_groups.h"
 #include "timers.h"
 #include "semphr.h"
-
 #include "OSResource.h"
 
+/** Board */
 #include "MIMXRT1062.h"
 #include "UART/DrvLPUART.h"
 
@@ -40,79 +38,10 @@ extern "C"
 #define kStdioPort enLPUART1
 
 
-uint32_t mimic_gets(char pszStr[], uint32_t u32Size);
-void mimic_printf(const char *format, ...);
+uint32_t mimic_gets(TCHAR pszStr[], uint32_t u32Size);
+void mimic_printf(const TCHAR *format, ...);
 _Bool mimic_kbhit(void);
 
-
-/**
- * @brief getc (Blocking)
- * @param [out] ch Received character
- * @return void
- */
-static inline void RTOS_GetChar(char *ch)
-{
-	uint8_t u8val;
-
-	if (ch != NULL)
-	{
-		while (GetRBu8(&g_stLPUARTRxBuf[kStdioPort], &u8val) == false)
-		{
-			osEventFlagsWait(g_xLPUARTEventGroup[kStdioPort], 1, osFlagsWaitAny, portMAX_DELAY);
-		}
-
-		*ch = (char)u8val;
-	}
-}
-/**
- * @brief putc (NonBlocking)
- * @param [in] ch character
- * @return void
- */
-static inline void RTOS_PutChar(char ch)
-{
-	if (PushRBu8(&g_stLPUARTTxBuf[kStdioPort], (uint8_t)ch) != false)
-	{
-		LPUART1->CTRL |=LPUART_CTRL_TIE_MASK;
-	}
-}
-/**
- * @brief puts (with Semapore)
- * @param [in] pszStr NULL Terminate String
- * @return void
- */
-static inline void RTOS_PutString(const char pszStr[])
-{
-	if (xSemaphoreTake(g_xLPUARTTxSemaphore[kStdioPort], portMAX_DELAY) == pdTRUE)
-	{
-		if (pszStr != NULL)
-		{
-			uint32_t u32 = 0u;
-			volatile uint32_t ctrl;
-
-			while ((pszStr[u32] != '\0') && (u32 != UINT32_MAX))
-			{
-				PushRBu8(&g_stLPUARTTxBuf[kStdioPort], (uint8_t)pszStr[u32]);
-				u32++;
-			}
-			ctrl = LPUART1->CTRL;
-			if ((ctrl & LPUART_CTRL_TIE_MASK) != LPUART_CTRL_TIE_MASK)
-			{
-				LPUART1->CTRL |= LPUART_CTRL_TIE_MASK;
-			}
-		}
-		xSemaphoreGive(g_xLPUARTTxSemaphore[kStdioPort]);
-	}
-}
-
-/**
- * @brief kbhits
- * @return true There are some characters in Buffer
- * @return false There are no characters in Buffer
- */
-static inline _Bool RTOS_kbhit(void){
-	return !IsRBu8Empty(&g_stLPUARTRxBuf[kStdioPort]);
-}
 
 /**
  * @brief toupper
@@ -176,6 +105,86 @@ static inline uint32_t mimic_tcslen(const TCHAR pszStr[]){
 	}
 	return u32Cnt;
 }
+
+/**
+ * @brief getc (Blocking)
+ * @param [out] ch Received character
+ * @return void
+ */
+static inline void RTOS_GetChar(TCHAR *ch)
+{
+	uint8_t u8val;
+
+	if (ch != NULL)
+	{
+		xStreamBufferReceive(g_sbhLPUARTRx[kStdioPort], ch, sizeof(TCHAR), portMAX_DELAY));
+	}
+}
+/**
+ * @brief putc (NonBlocking)
+ * @param [in] ch character
+ * @return void
+ */
+static inline void RTOS_PutChar(TCHAR ch)
+{
+
+	if(pdFALSE != xPortIsInsideInterrupt()){
+		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+		if(xStreamBufferSendFromISR(g_sbhLPUARTTx[kStdioPort], &ch, sizeof(TCHAR), &xHigherPriorityTaskWoken) >= 1){
+			LPUART1->CTRL |=LPUART_CTRL_TIE_MASK;
+		}
+		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+	}else{
+		if(xStreamBufferSend(g_sbhLPUARTTx[kStdioPort], &ch, sizeof(TCHAR), 10) >= 1){
+			LPUART1->CTRL |=LPUART_CTRL_TIE_MASK;
+		}
+	}
+}
+/**
+ * @brief puts (with Semapore)
+ * @param [in] pszStr NULL Terminate String
+ * @return void
+ */
+static inline void RTOS_PutString(const TCHAR pszStr[])
+{
+	if (xSemaphoreTake(g_xLPUARTTxSemaphore[kStdioPort], portMAX_DELAY) == pdTRUE)
+	{
+		if (pszStr != NULL)
+		{
+			uint32_t ByteCnt = mimic_tcslen(pszStr)*sizeof(TCHAR);
+
+			if(pdFALSE != xPortIsInsideInterrupt()){
+				BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+				if(xStreamBufferSendFromISR(g_sbhLPUARTTx[kStdioPort], pszStr, ByteCnt, &xHigherPriorityTaskWoken) >= ByteCnt){
+					LPUART1->CTRL |=LPUART_CTRL_TIE_MASK;
+				}
+				portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+			}else{
+				if(xStreamBufferSend(g_sbhLPUARTTx[kStdioPort], pszStr, ByteCnt, 10) >= ByteCnt){
+					LPUART1->CTRL |=LPUART_CTRL_TIE_MASK;
+				}
+			}
+			ctrl = LPUART1->CTRL;
+			if ((ctrl & LPUART_CTRL_TIE_MASK) != LPUART_CTRL_TIE_MASK)
+			{
+				LPUART1->CTRL |= LPUART_CTRL_TIE_MASK;
+			}
+		}
+		xSemaphoreGive(g_xLPUARTTxSemaphore[kStdioPort]);
+	}
+}
+
+/**
+ * @brief kbhits
+ * @return true There are some characters in Buffer
+ * @return false There are no characters in Buffer
+ */
+static inline _Bool RTOS_kbhit(void){
+	return (_Bool)xStreamBufferIsEmpty(g_sbhLPUARTTx[kStdioPort]);
+}
+
 /**
  * @brief memcmp
  * @param [in] p1 Target Pointer1
@@ -264,12 +273,12 @@ static inline char *mimic_tcstok(TCHAR szStr[], const TCHAR szDelm[], TCHAR **ct
 		}else{
 			pszTmp = szStr;
 		}
-		if(pszTmp[0] != '\0'){
+		if(pszTmp[0] != (TCHAR)'\0'){
 			pret = pszTmp;
-			while(pszTmp[u32] != '\0'){
+			while(pszTmp[u32] != (TCHAR)'\0'){
 				*ctx = &pszTmp[u32 + delmLen];
 				if(mimic_memcmp((uintptr_t)&pszTmp[u32], (uintptr_t)szDelm, sizeof(TCHAR)*delmLen) != false){
-					pszTmp[u32] = '\0';
+					pszTmp[u32] = (TCHAR)'\0';
 					pret = pszTmp;
 					break;
 				}

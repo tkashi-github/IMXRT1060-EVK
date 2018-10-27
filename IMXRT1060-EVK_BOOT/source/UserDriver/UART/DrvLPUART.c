@@ -9,7 +9,7 @@
  * @par Update:
  * - 2018/10/23: Takashi Kashiwagi: for IMXRT1060-EVK
  */
-#include "MIMXRT1052.h"
+
 #include "UART/DrvLPUART.h"
 #include "board.h"
 

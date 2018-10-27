@@ -42,7 +42,7 @@
  *----------------------------------------------------------*/
 
 #include <stdint.h>
-#include "MIMXRT1052.h"
+#include "MIMXRT1062.h"
 
 //-------- <<< Use Configuration Wizard in Context Menu >>> --------------------
 

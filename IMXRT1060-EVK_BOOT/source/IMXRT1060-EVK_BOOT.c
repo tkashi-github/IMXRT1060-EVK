@@ -107,7 +107,12 @@ int main(void) {
 	CreateEventGroup();
 	CreateStreamBuffer();
 
-	
+	{
+		lpuart_config_t lpuart_config;
+		LPUART_GetDefaultConfig(&lpuart_config);
+		lpuart_config.baudRate_Bps = 115200;
+		DrvLPUARTInit(enLPUART1, &lpuart_config);
+	}
 	osKernelStart();
 
 	for(;;);
