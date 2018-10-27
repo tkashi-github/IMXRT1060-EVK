@@ -1,6 +1,18 @@
 #ifndef _FFCONF_H_
 #define _FFCONF_H_
 
+/* CMSIS */
+#include "cmsis_os.h"
+#include "cmsis_os2.h"
+
+/* Amazon FreeRTOS */
+#include "FreeRTOS.h"
+#include "task.h"
+#include "event_groups.h"
+#include "timers.h"
+#include "semphr.h"
+#include "stream_buffer.h"
+
 /*---------------------------------------------------------------------------/
 /  FatFs - Configuration file
 /---------------------------------------------------------------------------*/
@@ -47,7 +59,7 @@
 /  2: Enable with LF-CRLF conversion. */
 
 
-#define FF_USE_FIND		0
+#define FF_USE_FIND		1
 /* This option switches filtered directory read functions, f_findfirst() and
 /  f_findnext(). (0:Disable, 1:Enable 2:Enable with matching altname[] too) */
 
@@ -56,25 +68,25 @@
 /* This option switches f_mkfs() function. (0:Disable or 1:Enable) */
 
 
-#define FF_USE_FASTSEEK	0
+#define FF_USE_FASTSEEK	1
 /* This option switches fast seek function. (0:Disable or 1:Enable) */
 
 
-#define FF_USE_EXPAND	0
+#define FF_USE_EXPAND	1
 /* This option switches f_expand function. (0:Disable or 1:Enable) */
 
 
-#define FF_USE_CHMOD	0
+#define FF_USE_CHMOD	1
 /* This option switches attribute manipulation functions, f_chmod() and f_utime().
 /  (0:Disable or 1:Enable) Also FF_FS_READONLY needs to be 0 to enable this option. */
 
 
-#define FF_USE_LABEL	0
+#define FF_USE_LABEL	1
 /* This option switches volume label functions, f_getlabel() and f_setlabel().
 /  (0:Disable or 1:Enable) */
 
 
-#define FF_USE_FORWARD	0
+#define FF_USE_FORWARD	1
 /* This option switches f_forward() function. (0:Disable or 1:Enable) */
 
 
@@ -111,7 +123,7 @@
 */
 
 
-#define FF_USE_LFN		0
+#define FF_USE_LFN		3
 #define FF_MAX_LFN		255
 /* The FF_USE_LFN switches the support for LFN (long file name).
 /
@@ -131,7 +143,7 @@
 /  ff_memfree() in ffsystem.c, need to be added to the project. */
 
 
-#define FF_LFN_UNICODE	0
+#define FF_LFN_UNICODE	2
 /* This option switches the character encoding on the API when LFN is enabled.
 /
 /   0: ANSI/OEM in current CP (TCHAR = char)
@@ -180,7 +192,7 @@
 /* Number of volumes (logical drives) to be used. (1-10) */
 
 
-#define FF_STR_VOLUME_ID	2
+#define FF_STR_VOLUME_ID	1
 #define FF_VOLUME_STRS		"RAM","NAND","CF","SD","SD2","USB","USB2","USB3"
 /* FF_STR_VOLUME_ID switches string support for volume ID.
 /  When FF_STR_VOLUME_ID is set to 1, also pre-defined strings can be used as drive
@@ -258,7 +270,7 @@
 /  These options have no effect at read-only configuration (FF_FS_READONLY = 1). */
 
 
-#define FF_FS_LOCK		1
+#define FF_FS_LOCK		10
 /* The option FF_FS_LOCK switches file lock function to control duplicated file open
 /  and illegal operation to open objects. This option must be 0 when FF_FS_READONLY
 /  is 1.
@@ -272,7 +284,7 @@
 
 #define FF_FS_REENTRANT	1
 #define FF_FS_TIMEOUT	1000
-#define FF_SYNC_t		HANDLE
+#define FF_SYNC_t		QueueHandle_t
 /* The option FF_FS_REENTRANT switches the re-entrancy (thread safe) of the FatFs
 /  module itself. Note that regardless of this option, file access to different
 /  volume is always re-entrant and volume control functions, f_mount(), f_mkfs()

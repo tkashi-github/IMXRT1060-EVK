@@ -39,30 +39,29 @@ uint32_t InstallIRQHandler(IRQn_Type irq, uint32_t irqHandler)
     extern uint32_t __VECTOR_TABLE[];
     extern uint32_t __VECTOR_RAM[];
 #elif defined(__GNUC__)
-    extern uint32_t __VECTOR_TABLE[];
-    extern uint32_t __VECTOR_RAM[];
-    extern uint32_t __RAM_VECTOR_TABLE_SIZE_BYTES[];
-    uint32_t __RAM_VECTOR_TABLE_SIZE = (uint32_t)(__RAM_VECTOR_TABLE_SIZE_BYTES);
+	/** Modified */
+extern void (* const g_pfnVectors[])(void);
 #endif /* defined(__CC_ARM) */
     uint32_t n;
     uint32_t ret;
     uint32_t irqMaskValue;
+	uint32_t *pRamVector = (uint32_t *)0x20000000;
 
     irqMaskValue = DisableGlobalIRQ();
-    if (SCB->VTOR != (uint32_t)__VECTOR_RAM)
+    if (SCB->VTOR != (uint32_t)pRamVector)
     {
         /* Copy the vector table from ROM to RAM */
-        for (n = 0; n < ((uint32_t)__RAM_VECTOR_TABLE_SIZE) / sizeof(uint32_t); n++)
+        for (n = 0; n < ((uint32_t)0x400) / sizeof(uint32_t); n++)
         {
-            __VECTOR_RAM[n] = __VECTOR_TABLE[n];
+            pRamVector[n] = (uint32_t)g_pfnVectors[n];
         }
         /* Point the VTOR to the position of vector table */
-        SCB->VTOR = (uint32_t)__VECTOR_RAM;
+        SCB->VTOR = (uint32_t)pRamVector;
     }
 
-    ret = __VECTOR_RAM[irq + 16];
+    ret = pRamVector[irq + 16];
     /* make sure the __VECTOR_RAM is noncachable */
-    __VECTOR_RAM[irq + 16] = irqHandler;
+    pRamVector[irq + 16] = irqHandler;
 
     EnableGlobalIRQ(irqMaskValue);
 

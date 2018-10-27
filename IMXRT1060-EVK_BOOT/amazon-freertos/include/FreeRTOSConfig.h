@@ -82,7 +82,7 @@
 #define configUSE_CO_ROUTINES                    0
 #define configMAX_CO_ROUTINE_PRIORITIES          ( 2 )
 
-#if (defined(__GNUC__)) && (defined(__ARM_ARCH_7M__))
+#if 0
 #define configALLOCATE_KERNEL_IN_ITCM			(1)		/** ITCMに配置したい */
 #define kKERNEL_SECTION_ITCM __attribute__((section(".ramfunc.$SRAM_ITC")))
 #define kKERNEL_SECTION_DTCM __attribute__((section(".data.$SRAM_DTC")))

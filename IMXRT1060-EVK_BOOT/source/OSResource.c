@@ -100,7 +100,7 @@ ALLOCATE_IN_DTCM alignas(32) EventGroupHandle_t g_xLPUARTEventGroup[1+enLPUART_M
 ALLOCATE_IN_DTCM alignas(32) EventGroupHandle_t g_xFSReadyEventGroup;
 /** Event Group Buffer */
 ALLOCATE_IN_DTCM alignas(32) static StaticEventGroup_t s_xLPUARTEventGroupBuffer[1+enLPUART_MAX];
-ALLOCATE_IN_DTCM alignas(32) static StaticEventGroup_t s_xFSReadyEventGroupBuffer[1+enLPUART_MAX];
+ALLOCATE_IN_DTCM alignas(32) static StaticEventGroup_t s_xFSReadyEventGroupBuffer;
 static stEventGroupTable_t s_stEventGroupTable[] = {
 	{&g_xLPUARTEventGroup[enLPUART1], &s_xLPUARTEventGroupBuffer[enLPUART1]},
 	{&g_xLPUARTEventGroup[enLPUART2], &s_xLPUARTEventGroupBuffer[enLPUART2]},
@@ -220,6 +220,25 @@ static stStreamBuffer_t s_stStreamBufferTable[] = {
 		sizeof(stTaskMsgBlock_t)*32+1, sizeof(stTaskMsgBlock_t), 
 		s_StorageTaskStorage[enUSDHC2], &s_ssbStorageTaskStreamBuffer[enUSDHC2]
 	},		/** 個数はちゃんと見積もること */
+
+	{&g_sbhLPUARTTx[enLPUART1], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTTx[enLPUART1], &s_ssbLPUARTTx[enLPUART1]},
+	{&g_sbhLPUARTTx[enLPUART2], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTTx[enLPUART2], &s_ssbLPUARTTx[enLPUART2]},
+	{&g_sbhLPUARTTx[enLPUART3], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTTx[enLPUART3], &s_ssbLPUARTTx[enLPUART3]},
+	{&g_sbhLPUARTTx[enLPUART4], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTTx[enLPUART4], &s_ssbLPUARTTx[enLPUART4]},
+	{&g_sbhLPUARTTx[enLPUART5], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTTx[enLPUART5], &s_ssbLPUARTTx[enLPUART5]},
+	{&g_sbhLPUARTTx[enLPUART6], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTTx[enLPUART6], &s_ssbLPUARTTx[enLPUART6]},
+	{&g_sbhLPUARTTx[enLPUART7], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTTx[enLPUART7], &s_ssbLPUARTTx[enLPUART7]},
+	{&g_sbhLPUARTTx[enLPUART8], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTTx[enLPUART8], &s_ssbLPUARTTx[enLPUART8]},
+
+	{&g_sbhLPUARTRx[enLPUART1], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTRx[enLPUART1], &s_ssbLPUARTRx[enLPUART1]},
+	{&g_sbhLPUARTRx[enLPUART2], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTRx[enLPUART2], &s_ssbLPUARTRx[enLPUART2]},
+	{&g_sbhLPUARTRx[enLPUART3], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTRx[enLPUART3], &s_ssbLPUARTRx[enLPUART3]},
+	{&g_sbhLPUARTRx[enLPUART4], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTRx[enLPUART4], &s_ssbLPUARTRx[enLPUART4]},
+	{&g_sbhLPUARTRx[enLPUART5], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTRx[enLPUART5], &s_ssbLPUARTRx[enLPUART5]},
+	{&g_sbhLPUARTRx[enLPUART6], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTRx[enLPUART6], &s_ssbLPUARTRx[enLPUART6]},
+	{&g_sbhLPUARTRx[enLPUART7], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTRx[enLPUART7], &s_ssbLPUARTRx[enLPUART7]},
+	{&g_sbhLPUARTRx[enLPUART8], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTRx[enLPUART8], &s_ssbLPUARTRx[enLPUART8]},
+
 	{NULL, 0, 0, NULL, NULL},
 };
 void CreateStreamBuffer(void){
