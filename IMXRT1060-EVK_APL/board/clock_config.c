@@ -184,7 +184,7 @@ void BOARD_BootClockRUN(void)
     /* In SDK projects, SDRAM (configured by SEMC) will be initialized in either debug script or dcd.
      * With this macro SKIP_SYSCLK_INIT, system pll (selected to be SEMC source clock in SDK projects) will be left unchanged.
      * Note: If another clock source is selected for SEMC, user may want to avoid changing that clock as well.*/
-#ifndef SKIP_SYSCLK_INIT
+#if 1
     /* Init System PLL. */
     CLOCK_InitSysPll(&sysPllConfig_BOARD_BootClockRUN);
     /* Init System pfd0. */

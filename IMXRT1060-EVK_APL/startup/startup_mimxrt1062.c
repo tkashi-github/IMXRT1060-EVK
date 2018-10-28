@@ -664,11 +664,7 @@ void ResetISR(void) {
 	IOMUXC_GPR->GPR16 &= ~IOMUXC_GPR_GPR16_FLEXRAM_BANK_CFG_SEL_MASK;
     IOMUXC_GPR->GPR16 |= IOMUXC_GPR_GPR16_FLEXRAM_BANK_CFG_SEL(kFLEXRAM_BankAllocateThroughBankCfg);
 
-	/** Set SP to OCRAM2 */
-	__set_MSP(0x2028000);
-	__set_PSP(0x2028000);
 
-	
 #if defined (__USE_CMSIS)
 // If __USE_CMSIS defined, then call CMSIS SystemInit code
     SystemInit();

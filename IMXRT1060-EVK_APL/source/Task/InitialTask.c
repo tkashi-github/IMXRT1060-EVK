@@ -21,6 +21,7 @@
 
 #include "OSResource.h"
 #include "common/update.h"
+#include "mimiclib/mimiclib.h"
 
 /**  */
 extern _Bool g_bInitEnd;
@@ -33,7 +34,7 @@ extern _Bool g_bInitEnd;
 void InitialTask(void const *argument)
 {
 		g_bInitEnd = true;
-		CheckROM();
+		mimic_printf("[%s (%d)] All Task Started! (%lu msec)\r\n", __FUNCTION__, __LINE__, xTaskGetTickCount());
 		xEventGroupWaitBits(
 					g_xFSReadyEventGroup, // The event group being tested.
 					0x00000001u,	  // The bits within the event group to wait for.
@@ -41,7 +42,7 @@ void InitialTask(void const *argument)
 					pdFALSE,		  // Don't wait for both bits, either bit will do.
 					portMAX_DELAY);   // Wait a maximum 
 
-		//CheckBinFile("IMXRT1050-EVKB_APL_crc16.bin");
+		mimic_printf("[%s (%d)] Storage Init Complete (%lu msec)\r\n", __FUNCTION__, __LINE__, xTaskGetTickCount());
 		osThreadSuspend(osThreadGetId());
 }
 

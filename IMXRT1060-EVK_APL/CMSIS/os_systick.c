@@ -28,7 +28,6 @@
 //#include "RTE_Components.h"
 //#include CMSIS_device_header
 
-
 #ifdef  SysTick
 
 #ifndef SYSTICK_IRQ_PRIORITY

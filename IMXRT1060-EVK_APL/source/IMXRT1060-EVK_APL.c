@@ -47,7 +47,7 @@
 extern "C"
 {
 #endif
-extern status_t BOARD_InitSEMC(void);
+
 extern void CMSIS_OS2_SysTick_Handler (void);
 extern void vPortSVCHandler( void );
 extern void xPortPendSVHandler( void );
@@ -73,9 +73,7 @@ int main(void) {
   	/* Init board hardware. */
     BOARD_InitBootClocks();
     BOARD_InitBootPins();
-	//BOARD_InitLED();
-	//BOARD_USDHCClockConfiguration();
-	BOARD_InitSEMC();
+
 	InitGpio();
 	SysTick_Config(SystemCoreClock / 1000u);
 	InstallIRQHandler(SysTick_IRQn, (uint32_t)CMSIS_OS2_SysTick_Handler);
