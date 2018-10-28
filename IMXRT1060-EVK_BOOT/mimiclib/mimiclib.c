@@ -1,20 +1,70 @@
 /**
- * @file TODO
- * @brief TODO
+ * @file mimiclib.c
+ * @brief mimiclib is insteadof stdio.h, stdlib.h and string.h
  * @author Takashi Kashiwagi
- * @date        2018/10/23
- * @version     0.1
- * @copyright   TODO
+ * @date 2018/7/5
+ * @version     0.2
+ * @details 
+ * --
+ * License Type <MIT License>
+ * --
+ * Copyright 2018 Takashi Kashiwagi
  * 
+ * Permission is hereby granted, free of charge, to any person obtaining a 
+ * copy of this software and associated documentation files (the "Software"), 
+ * to deal in the Software without restriction, including without limitation 
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the 
+ * Software is furnished to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included 
+ * in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+ * DEALINGS IN THE SOFTWARE.
+ *
  * @par Update:
- * - 2018/10/23: Takashi Kashiwagi: for IMXRT1060-EVK
+ * - 2018/07/05: Takashi Kashiwagi: v0.1
+ * - 2018/10/28: Takashi Kashiwagi: v0.2 for IMXRT1060-EVK
  */
 #include "mimiclib/mimiclib.h"
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
+#ifndef WIN_TEST
+#define DefBSP_IMXRT1060_EVK
+#else
+
+#include <string.h>
+void mimic_printf(const char* fmt, ...){
+	va_list arg;
+	char szBuffer[1024];
+
+	va_start(arg, fmt);
+	vsnprintf(szBuffer, sizeof(szBuffer), fmt, arg);
+	va_end(arg);
+
+	puts(szBuffer);
+}
+uint32_t mimic_gets(char pszStr[], uint32_t u32Size){
+	uint32_t ret = 0;
+	if (fgets(a, 20, stdin) != NULL) {
+		ret = strlen(pszStr);
+	}
+	return ret;
+}
+_Bool mimic_kbhit(void){
+	return kbhit();
+}
+#endif
+
+
+#ifdef DefBSP_IMXRT1060_EVK
 /**
  * @brief gets
  * @param [out] pszStr input buffer
@@ -27,7 +77,7 @@ uint32_t mimic_gets(char pszStr[], uint32_t u32Size){
 	if((pszStr != NULL) && (u32Size > 0u)){
 		_Bool bReturnCode = false;
 
-		memset(pszStr, 0, u32Size);
+		mimic_memset((uintptr_t)pszStr, 0, u32Size);
 		
 		while(bReturnCode == false){
 			char ch;
@@ -92,7 +142,7 @@ void mimic_printf(const char *format, ...){
 _Bool mimic_kbhit(void){
 	return RTOS_kbhit();
 }
-
+#endif
 
 /**
  * Retargeting printf/scanf(https://community.nxp.com/thread/389140)

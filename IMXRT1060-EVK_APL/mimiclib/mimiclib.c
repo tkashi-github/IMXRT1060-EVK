@@ -33,13 +33,13 @@
  */
 #include "mimiclib/mimiclib.h"
 #include <stdarg.h>
-
+#include <stdio.h>
+#include <stdlib.h>
 
 #ifndef WIN_TEST
 #define DefBSP_IMXRT1060_EVK
 #else
-#include <stdio.h>
-#include <stdlib.h>
+
 #include <string.h>
 void mimic_printf(const char* fmt, ...){
 	va_list arg;
@@ -77,7 +77,7 @@ uint32_t mimic_gets(char pszStr[], uint32_t u32Size){
 	if((pszStr != NULL) && (u32Size > 0u)){
 		_Bool bReturnCode = false;
 
-		mimic_memset(pszStr, 0, u32Size);
+		mimic_memset((uintptr_t)pszStr, 0, u32Size);
 		
 		while(bReturnCode == false){
 			char ch;

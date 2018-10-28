@@ -1,13 +1,35 @@
 /**
- * @file TODO
- * @brief TODO
+ * @file mimiclib.h
+ * @brief mimiclib is insteadof stdio.h, stdlib.h and string.h
  * @author Takashi Kashiwagi
- * @date        2018/10/23
- * @version     0.1
- * @copyright   TODO
+ * @date 2018/7/5
+ * @version     0.2
+ * @details 
+ * --
+ * License Type <MIT License>
+ * --
+ * Copyright 2018 Takashi Kashiwagi
  * 
+ * Permission is hereby granted, free of charge, to any person obtaining a 
+ * copy of this software and associated documentation files (the "Software"), 
+ * to deal in the Software without restriction, including without limitation 
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the 
+ * Software is furnished to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included 
+ * in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+ * DEALINGS IN THE SOFTWARE.
+ *
  * @par Update:
- * - 2018/10/23: Takashi Kashiwagi: for IMXRT1060-EVK
+ * - 2018/07/05: Takashi Kashiwagi: v0.1
+ * - 2018/10/28: Takashi Kashiwagi: v0.2 for IMXRT1060-EVK
  */
 #ifndef __cplusplus
 #if __STDC_VERSION__ < 201112L
@@ -20,6 +42,11 @@ extern "C"
 {
 #endif
 
+#ifndef WIN_TEST
+#define DefBSP_IMXRT1060_EVK
+#endif
+
+#ifdef DefBSP_IMXRT1060_EVK
 /** OS */
 #include "FreeRTOS.h"
 #include "event_groups.h"
@@ -30,12 +57,15 @@ extern "C"
 /** Board */
 #include "MIMXRT1062.h"
 #include "UART/DrvLPUART.h"
+#define kStdioPort enLPUART1
+
+#endif
 
 #ifndef NULL
 #define NULL (void*)NULL
 #endif
 
-#define kStdioPort enLPUART1
+
 
 
 uint32_t mimic_gets(TCHAR pszStr[], uint32_t u32Size);
@@ -106,6 +136,7 @@ static inline uint32_t mimic_tcslen(const TCHAR pszStr[]){
 	return u32Cnt;
 }
 
+#ifdef DefBSP_IMXRT1060_EVK
 /**
  * @brief getc (Blocking)
  * @param [out] ch Received character
@@ -183,6 +214,8 @@ static inline _Bool RTOS_kbhit(void){
 	return (_Bool)!xStreamBufferIsEmpty(g_sbhLPUARTRx[kStdioPort]);
 }
 
+#endif
+
 /**
  * @brief memcmp
  * @param [in] p1 Target Pointer1
@@ -216,7 +249,23 @@ static inline _Bool mimic_memcpy(uintptr_t p1, uintptr_t p2, uint32_t u32ByteCnt
 	for(uint32_t i=0u;i<u32ByteCnt;i++){
 		pu81[i] = pu82[i];
 	}
+#ifdef DefBSP_IMXRT1060_EVK
 	__DMB();
+#endif
+	return bret;
+}
+static inline _Bool mimic_memset(uintptr_t p1, uint8_t val, uint32_t u32ByteCnt){
+	/*-- var --*/
+	uint8_t *pu81 = (uint8_t*)p1;
+	_Bool bret = true;
+
+	/*-- begin --*/
+	for(uint32_t i=0u;i<u32ByteCnt;i++){
+		pu81[i] = val;
+	}
+#ifdef DefBSP_IMXRT1060_EVK
+	__DMB();
+#endif
 	return bret;
 }
 /**
