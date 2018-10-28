@@ -53,14 +53,11 @@ void FileCmd_ls(uint32_t argc, const char *argv[]){
 			if(stFInfo.fname[0] == '\0'){
 				break;
 			}
-			if(mimic_strcmp(stFInfo.fname, ".") &&
-				strcmp(stFInfo.fname, "..")){
-				mimic_printf("%-12llu[byte] %-40s\r\n",
-					stFInfo.fsize, stFInfo.fname);
-			}
-			vTaskDelay(20);
+			mimic_printf("%-12llu[byte] %-40s\r\n", stFInfo.fsize, stFInfo.fname);
 		}
 		f_closedir(&stDir);
+	}else{
+		mimic_printf("f_opendir NG <%s>\r\n", pszDir);
 	}
 	{	/** TODO */
 		f_getfree(u8"A:/", &free, &pfatfs);
