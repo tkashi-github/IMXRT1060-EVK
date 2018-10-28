@@ -6,7 +6,6 @@
  */
 
 #include "fsl_common.h"
-#include "fsl_debug_console.h"
 #include "board.h"
 #if defined(SDK_I2C_BASED_COMPONENT_USED) && SDK_I2C_BASED_COMPONENT_USED
 #include "fsl_lpi2c.h"
@@ -47,14 +46,6 @@ uint32_t BOARD_DebugConsoleSrcFreq(void)
     }
 
     return freq;
-}
-
-/* Initialize debug console. */
-void BOARD_InitDebugConsole(void)
-{
-    uint32_t uartClkSrcFreq = BOARD_DebugConsoleSrcFreq();
-
-    DbgConsole_Init(BOARD_DEBUG_UART_BASEADDR, BOARD_DEBUG_UART_BAUDRATE, BOARD_DEBUG_UART_TYPE, uartClkSrcFreq);
 }
 
 #if defined(SDK_I2C_BASED_COMPONENT_USED) && SDK_I2C_BASED_COMPONENT_USED
@@ -289,6 +280,7 @@ status_t BOARD_Camera_I2C_ReceiveSCCB(
 }
 #endif /* SDK_I2C_BASED_COMPONENT_USED */
 
+
 #define SDRAM_IS_SHAREABLE
 /* MPU configuration. */
 void BOARD_ConfigMPU(void)
@@ -393,10 +385,11 @@ void BOARD_ConfigMPU(void)
 #define EXAMPLE_SEMC_START_ADDRESS (0x80000000U)
 #define EXAMPLE_SEMC_CLK_FREQ CLOCK_GetFreq(kCLOCK_SemcClk)
 
+#include "fsl_semc.h"
+
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/
-extern status_t BOARD_InitSEMC(void);
 
 status_t BOARD_InitSEMC(void)
 {

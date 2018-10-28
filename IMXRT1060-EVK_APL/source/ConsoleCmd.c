@@ -10,6 +10,7 @@
  * - 2018/10/23: Takashi Kashiwagi: for IMXRT1060-EVK
  */
 #include "ConsoleCmd.h"
+#include "board.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -18,7 +19,10 @@
 #include "task.h"
 #include "CPUFunc.h"
 
+#include "FileCmd.h"
 #include "mimiclib/mimiclib.h"
+
+#include "task.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -81,8 +85,6 @@ static void CmdHelp(uint32_t argc, const char *argv[])
 	return;
 }
 
-extern const uint8_t FreeRTOSDebugConfig[];
-
 /**
  * @brief VERSION
  * @param [in]  argc Number of Argments
@@ -100,8 +102,7 @@ static void CmdVersion(uint32_t argc, const char *argv[])
 #else
 	mimic_printf("Unkown Compiler\r\n\r\n");
 #endif
-	mimic_printf("FREERTOS_DEBUG_CONFIG_VERSION = %d.%d\r\n", FreeRTOSDebugConfig[0], FreeRTOSDebugConfig[1]);
-	mimic_printf("FREERTOS_KERNEL_VERSION = %d.%d.%d\r\n", FreeRTOSDebugConfig[2], FreeRTOSDebugConfig[3], FreeRTOSDebugConfig[4]);
+	mimic_printf("FREERTOS_KERNEL_VERSION = %s\r\n", tskKERNEL_VERSION_NUMBER);
 }
 
 /**
@@ -156,7 +157,6 @@ static void CmdLoad(uint32_t argc, const char *argv[])
 	{
 		GetRunCount(&LastRun, &MaxRun);
 		mimic_printf("Load = %f [%lu, %lu](%lu msec)\r\n", 1.0 - (double)LastRun / (double)MaxRun, LastRun, MaxRun, tick);
-		DebugTraceX("DEBUG", dbgMINOR, "Load = %f [%lu, %lu](%lu msec)", 1.0 - (double)LastRun / (double)MaxRun, LastRun, MaxRun, tick);
 		vTaskDelayUntil((TickType_t *const) & tick, 1000);
 	}
 }
@@ -186,7 +186,7 @@ static void CmdClock(uint32_t argc, const char *argv[])
 	mimic_printf("kCLOCK_EnetPll1Clk    = %12lu\r\n", CLOCK_GetFreq(kCLOCK_EnetPll1Clk));
 	mimic_printf("kCLOCK_AudioPllClk    = %12lu\r\n", CLOCK_GetFreq(kCLOCK_AudioPllClk));
 	mimic_printf("kCLOCK_VideoPllClk    = %12lu\r\n", CLOCK_GetFreq(kCLOCK_VideoPllClk));
-	mimic_printf("SD_HOST_CLK_FREQ      = %12lu\r\n", SD_HOST_CLK_FREQ);
+	mimic_printf("SD_HOST_CLK_FREQ      = %12lu\r\n", BOARD_SD_HOST_CLK_FREQ);
 }
 
 static void CmdTask(uint32_t argc, const char *argv[])
@@ -199,7 +199,7 @@ static void CmdTask(uint32_t argc, const char *argv[])
 }
 
 static void CmdNvic(uint32_t argc, const char *argv[]){
-	for(uint32_t i=0;i<MAX_IRQn;i++){
+	for(uint32_t i=0;i<NUMBER_OF_INT_VECTORS;i++){
 		mimic_printf("IRQ%03d = %lu:%lu, pend = %lu, pri = %lu\r\n", i, 
 			NVIC_GetActive((IRQn_Type)i), NVIC_GetEnableIRQ((IRQn_Type)i), NVIC_GetPendingIRQ((IRQn_Type)i), NVIC_GetPriority((IRQn_Type)i));
 		vTaskDelay(10);

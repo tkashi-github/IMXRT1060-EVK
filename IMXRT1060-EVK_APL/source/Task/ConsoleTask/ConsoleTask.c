@@ -20,7 +20,7 @@
 #include "mimiclib/mimiclib.h"
 #include "UART/DrvLPUART.h"
 
-#define DEF_PROMPT "IMXRT1060-EVK BOOT > "
+#define DEF_PROMPT "IMXRT1060-EVK APL > "
 
 /**
  * @brief ConsoleTask
@@ -30,8 +30,6 @@
 void ConsoleTask(void const *argument){
 	/*-- var --*/
 	char *szBuf;
-	lpuart_config_t lpuart_config;
-
 	/*-- begin --*/
 	szBuf = pvPortMalloc(2048);
 	

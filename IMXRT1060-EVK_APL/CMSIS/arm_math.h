@@ -288,6 +288,7 @@
  */
 #ifndef _ARM_MATH_H
 #define _ARM_MATH_H
+#include <stdint.h>
 
 /* Compiler specific diagnostic adjustment */
 #if   defined ( __CC_ARM )

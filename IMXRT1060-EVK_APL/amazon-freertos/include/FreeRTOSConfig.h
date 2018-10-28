@@ -62,9 +62,10 @@
 #define configTICK_RATE_HZ                       ((TickType_t)1000)
 #define configMAX_PRIORITIES                     ( 7 )
 #define configMINIMAL_STACK_SIZE                 ((uint16_t)1024)
-#define configTOTAL_HEAP_SIZE                    ((size_t)16*1024*1024)
+#define configTOTAL_HEAP_SIZE                    ((size_t)10*1024*1024)
 #define configMAX_TASK_NAME_LEN                  ( 16 )
 #define configUSE_TRACE_FACILITY                 1
+#define configUSE_STATS_FORMATTING_FUNCTIONS	1
 #define configUSE_16_BIT_TICKS                   0
 #define configUSE_MUTEXES                        1
 #define configQUEUE_REGISTRY_SIZE                8
@@ -82,7 +83,7 @@
 #define configUSE_CO_ROUTINES                    0
 #define configMAX_CO_ROUTINE_PRIORITIES          ( 2 )
 
-#if 0
+#if 1
 #define configALLOCATE_KERNEL_IN_ITCM			(1)		/** ITCMに配置したい */
 #define kKERNEL_SECTION_ITCM __attribute__((section(".ramfunc.$SRAM_ITC")))
 #define kKERNEL_SECTION_DTCM __attribute__((section(".data.$SRAM_DTC")))

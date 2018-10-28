@@ -180,7 +180,7 @@ static inline void RTOS_PutString(const TCHAR pszStr[])
  * @return false There are no characters in Buffer
  */
 static inline _Bool RTOS_kbhit(void){
-	return (_Bool)xStreamBufferIsEmpty(g_sbhLPUARTTx[kStdioPort]);
+	return (_Bool)!xStreamBufferIsEmpty(g_sbhLPUARTRx[kStdioPort]);
 }
 
 /**
@@ -313,6 +313,57 @@ static inline TCHAR * mimic_tcscpy(TCHAR szDst[], const TCHAR pszSrc[], size_t D
 
 	return szDst;
 }
+
+static inline char *mimic_strcpy(char szDst[], const char szSrc[], uint32_t u32DstSize){
+	/*-- var --*/
+	uint32_t u32Cnt = 0u;
+
+	/*-- begin --*/
+	if((szDst != (char*)NULL) && (szSrc != (const char*)NULL)){
+		while(szSrc[u32Cnt] != '\0'){
+			szDst[u32Cnt] = szSrc[u32Cnt];
+			u32Cnt++;
+			if(u32Cnt >= u32DstSize){
+				szDst[u32Cnt - 1u] = '\0';
+				break;
+			}
+		}
+	}
+
+	return szDst;
+}
+
+
+/**
+* @brief strcmp
+* @param[in]const char szStr1[]
+* @param[in]const char szStr2[]
+* @return true str1 == str2
+* @return false str1 != str2
+*/
+static inline _Bool mimic_strcmp(const char szStr1[], const char szStr2[]){
+	/*-- var --*/
+	uint32_t u32Cnt = 0u;
+	_Bool bret = false;
+
+	/*-- begin --*/
+	if((szStr1 != (const char*)NULL) && (szStr2 != (const char*)NULL)){
+		bret = true;
+		for(;;){
+			if(szStr1[u32Cnt] != szStr2[u32Cnt]){
+				bret = false;
+				break;
+			}
+			if(szStr1[u32Cnt] == '\0'){
+				break;
+			}
+			u32Cnt++;
+		}
+	}
+
+	return bret;
+}
+
 #ifdef __cplusplus
 }
 #endif

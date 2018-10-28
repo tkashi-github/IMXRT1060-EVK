@@ -180,7 +180,7 @@ static inline void RTOS_PutString(const TCHAR pszStr[])
  * @return false There are no characters in Buffer
  */
 static inline _Bool RTOS_kbhit(void){
-	return (_Bool)xStreamBufferIsEmpty(g_sbhLPUARTTx[kStdioPort]);
+	return (_Bool)!xStreamBufferIsEmpty(g_sbhLPUARTRx[kStdioPort]);
 }
 
 /**

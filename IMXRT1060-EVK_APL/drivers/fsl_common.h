@@ -18,7 +18,8 @@
 #if defined(__ICCARM__)
 #include <stddef.h>
 #endif
-
+#include "MIMXRT1062_features.h"
+#include "MIMXRT1062.h"
 #include "fsl_device_registers.h"
 
 /*!

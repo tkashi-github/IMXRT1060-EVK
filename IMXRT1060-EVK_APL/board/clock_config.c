@@ -1,11 +1,4 @@
 /*
- * Copyright 2018 NXP
- * All rights reserved.
- *
- * SPDX-License-Identifier: BSD-3-Clause
- */
-
-/*
  * How to setup clock using clock driver functions:
  *
  * 1. Call CLOCK_InitXXXPLL() to configure corresponding PLL clock.
@@ -26,7 +19,7 @@ product: Clocks v4.1
 processor: MIMXRT1062xxxxA
 package_id: MIMXRT1062DVL6A
 mcu_data: ksdk2_0
-processor_version: 0.0.0
+processor_version: 4.0.0
 board: MIMXRT1060-EVK
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 
@@ -58,34 +51,35 @@ void BOARD_InitBootClocks(void)
 name: BOARD_BootClockRUN
 called_from_default_init: true
 outputs:
-- {id: AHB_CLK_ROOT.outFreq, value: 600 MHz}
+- {id: AHB_CLK_ROOT.outFreq, value: 600 MHz, locked: true, accuracy: '0.001'}
 - {id: CAN_CLK_ROOT.outFreq, value: 40 MHz}
 - {id: CKIL_SYNC_CLK_ROOT.outFreq, value: 32.768 kHz}
 - {id: CLK_1M.outFreq, value: 1 MHz}
 - {id: CLK_24M.outFreq, value: 24 MHz}
 - {id: CSI_CLK_ROOT.outFreq, value: 12 MHz}
+- {id: ENET2_125M_CLK.outFreq, value: 1.2 MHz}
 - {id: ENET_125M_CLK.outFreq, value: 2.4 MHz}
 - {id: ENET_25M_REF_CLK.outFreq, value: 1.2 MHz}
 - {id: FLEXIO1_CLK_ROOT.outFreq, value: 30 MHz}
 - {id: FLEXIO2_CLK_ROOT.outFreq, value: 30 MHz}
 - {id: FLEXSPI2_CLK_ROOT.outFreq, value: 2880/11 MHz}
 - {id: FLEXSPI_CLK_ROOT.outFreq, value: 2880/11 MHz}
-- {id: IPG_CLK_ROOT.outFreq, value: 150 MHz}
+- {id: IPG_CLK_ROOT.outFreq, value: 150 MHz, locked: true, accuracy: '0.001'}
 - {id: LCDIF_CLK_ROOT.outFreq, value: 67.5 MHz}
 - {id: LPI2C_CLK_ROOT.outFreq, value: 60 MHz}
 - {id: LPSPI_CLK_ROOT.outFreq, value: 105.6 MHz}
 - {id: LVDS1_CLK.outFreq, value: 1.2 GHz}
-- {id: PERCLK_CLK_ROOT.outFreq, value: 75 MHz}
+- {id: PERCLK_CLK_ROOT.outFreq, value: 75 MHz, locked: true, accuracy: '0.001'}
 - {id: PLL7_MAIN_CLK.outFreq, value: 24 MHz}
 - {id: SAI1_CLK_ROOT.outFreq, value: 1080/17 MHz}
 - {id: SAI2_CLK_ROOT.outFreq, value: 1080/17 MHz}
 - {id: SAI3_CLK_ROOT.outFreq, value: 1080/17 MHz}
-- {id: SEMC_CLK_ROOT.outFreq, value: 75 MHz}
+- {id: SEMC_CLK_ROOT.outFreq, value: 4752/29 MHz, locked: true, accuracy: '0.001'}
 - {id: SPDIF0_CLK_ROOT.outFreq, value: 30 MHz}
-- {id: TRACE_CLK_ROOT.outFreq, value: 352/3 MHz}
+- {id: TRACE_CLK_ROOT.outFreq, value: 132 MHz}
 - {id: UART_CLK_ROOT.outFreq, value: 80 MHz}
-- {id: USDHC1_CLK_ROOT.outFreq, value: 198 MHz}
-- {id: USDHC2_CLK_ROOT.outFreq, value: 198 MHz}
+- {id: USDHC1_CLK_ROOT.outFreq, value: 198 MHz, locked: true, accuracy: '0.001'}
+- {id: USDHC2_CLK_ROOT.outFreq, value: 198 MHz, locked: true, accuracy: '0.001'}
 settings:
 - {id: CCM.AHB_PODF.scale, value: '1', locked: true}
 - {id: CCM.ARM_PODF.scale, value: '2', locked: true}
@@ -95,8 +89,11 @@ settings:
 - {id: CCM.FLEXSPI_SEL.sel, value: CCM_ANALOG.PLL3_PFD0_CLK}
 - {id: CCM.LPSPI_PODF.scale, value: '5', locked: true}
 - {id: CCM.PERCLK_PODF.scale, value: '2', locked: true}
-- {id: CCM.SEMC_PODF.scale, value: '8'}
+- {id: CCM.SEMC_CLK_SEL.sel, value: CCM.SEMC_ALT_CLK_SEL}
+- {id: CCM.SEMC_PODF.scale, value: '2', locked: true}
 - {id: CCM.TRACE_PODF.scale, value: '3', locked: true}
+- {id: CCM.USDHC1_CLK_SEL.sel, value: CCM_ANALOG.PLL2_PFD0_CLK}
+- {id: CCM.USDHC2_CLK_SEL.sel, value: CCM_ANALOG.PLL2_PFD0_CLK}
 - {id: CCM_ANALOG.PLL1_BYPASS.sel, value: CCM_ANALOG.PLL1}
 - {id: CCM_ANALOG.PLL1_PREDIV.scale, value: '1', locked: true}
 - {id: CCM_ANALOG.PLL1_VDIV.scale, value: '50', locked: true}
@@ -105,8 +102,12 @@ settings:
 - {id: CCM_ANALOG.PLL2.num, value: '0', locked: true}
 - {id: CCM_ANALOG.PLL2_BYPASS.sel, value: CCM_ANALOG.PLL2_OUT_CLK}
 - {id: CCM_ANALOG.PLL2_PFD0_BYPASS.sel, value: CCM_ANALOG.PLL2_PFD0}
+- {id: CCM_ANALOG.PLL2_PFD0_DIV.scale, value: '24', locked: true}
+- {id: CCM_ANALOG.PLL2_PFD0_MUL.scale, value: '18', locked: true}
 - {id: CCM_ANALOG.PLL2_PFD1_BYPASS.sel, value: CCM_ANALOG.PLL2_PFD1}
 - {id: CCM_ANALOG.PLL2_PFD2_BYPASS.sel, value: CCM_ANALOG.PLL2_PFD2}
+- {id: CCM_ANALOG.PLL2_PFD2_DIV.scale, value: '29', locked: true}
+- {id: CCM_ANALOG.PLL2_PFD2_MUL.scale, value: '18', locked: true}
 - {id: CCM_ANALOG.PLL2_PFD3_BYPASS.sel, value: CCM_ANALOG.PLL2_PFD3}
 - {id: CCM_ANALOG.PLL3_BYPASS.sel, value: CCM_ANALOG.PLL3}
 - {id: CCM_ANALOG.PLL3_PFD0_BYPASS.sel, value: CCM_ANALOG.PLL3_PFD0}
@@ -150,6 +151,7 @@ const clock_usb_pll_config_t usb1PllConfig_BOARD_BootClockRUN =
 /*******************************************************************************
  * Code for BOARD_BootClockRUN configuration
  ******************************************************************************/
+#define SKIP_SYSCLK_INIT
 void BOARD_BootClockRUN(void)
 {
     /* Init RTC OSC clock frequency. */
@@ -171,8 +173,8 @@ void BOARD_BootClockRUN(void)
     /* Setting PeriphClk2Mux and PeriphMux to provide stable clock before PLLs are initialed */
     CLOCK_SetMux(kCLOCK_PeriphClk2Mux, 1); /* Set PERIPH_CLK2 MUX to OSC */
     CLOCK_SetMux(kCLOCK_PeriphMux, 1);     /* Set PERIPH_CLK MUX to PERIPH_CLK2 */
-    /* Setting the VDD_SOC to 1.5V. It is necessary to config AHB to 600Mhz. */
-    DCDC->REG3 = (DCDC->REG3 & (~DCDC_REG3_TRG_MASK)) | DCDC_REG3_TRG(0x12);
+    /* Setting the VDD_SOC to 1.275V. It is necessary to config AHB to 600Mhz. */
+    DCDC->REG3 = (DCDC->REG3 & (~DCDC_REG3_TRG_MASK)) | DCDC_REG3_TRG(0x13);
     /* Waiting for DCDC_STS_DC_OK bit is asserted */
     while (DCDC_REG0_STS_DC_OK_MASK != (DCDC_REG0_STS_DC_OK_MASK & DCDC->REG0))
     {
@@ -186,11 +188,11 @@ void BOARD_BootClockRUN(void)
     /* Init System PLL. */
     CLOCK_InitSysPll(&sysPllConfig_BOARD_BootClockRUN);
     /* Init System pfd0. */
-    CLOCK_InitSysPfd(kCLOCK_Pfd0, 27);
+    CLOCK_InitSysPfd(kCLOCK_Pfd0, 16);
     /* Init System pfd1. */
     CLOCK_InitSysPfd(kCLOCK_Pfd1, 16);
     /* Init System pfd2. */
-    CLOCK_InitSysPfd(kCLOCK_Pfd2, 24);
+    CLOCK_InitSysPfd(kCLOCK_Pfd2, 29);
     /* Init System pfd3. */
     CLOCK_InitSysPfd(kCLOCK_Pfd3, 16);
 #endif
@@ -236,6 +238,10 @@ void BOARD_BootClockRUN(void)
     CCM_ANALOG->PLL_ENET = (CCM_ANALOG->PLL_ENET & (~CCM_ANALOG_PLL_ENET_DIV_SELECT_MASK)) | CCM_ANALOG_PLL_ENET_DIV_SELECT(1);
     /* Enable Enet output. */
     CCM_ANALOG->PLL_ENET |= CCM_ANALOG_PLL_ENET_ENABLE_MASK;
+    /* Set Enet2 output divider. */
+    CCM_ANALOG->PLL_ENET = (CCM_ANALOG->PLL_ENET & (~CCM_ANALOG_PLL_ENET_ENET2_DIV_SELECT_MASK)) | CCM_ANALOG_PLL_ENET_ENET2_DIV_SELECT(0);
+    /* Enable Enet2 output. */
+    CCM_ANALOG->PLL_ENET |= CCM_ANALOG_PLL_ENET_ENET2_REF_EN_MASK;
     /* Enable Enet25M output. */
     CCM_ANALOG->PLL_ENET |= CCM_ANALOG_PLL_ENET_ENET_25M_REF_EN_MASK;
     /* DeInit Usb2 PLL. */
@@ -276,27 +282,34 @@ void BOARD_BootClockRUN(void)
     /* Disable USDHC1 clock gate. */
     CLOCK_DisableClock(kCLOCK_Usdhc1);
     /* Set USDHC1_PODF. */
-    CLOCK_SetDiv(kCLOCK_Usdhc1Div, 1);
+    CLOCK_SetDiv(kCLOCK_Usdhc1Div, 0);
     /* Set Usdhc1 clock source. */
-    CLOCK_SetMux(kCLOCK_Usdhc1Mux, 0);
+    CLOCK_SetMux(kCLOCK_Usdhc1Mux, 1);
     /* Disable USDHC2 clock gate. */
     CLOCK_DisableClock(kCLOCK_Usdhc2);
     /* Set USDHC2_PODF. */
-    CLOCK_SetDiv(kCLOCK_Usdhc2Div, 1);
+    CLOCK_SetDiv(kCLOCK_Usdhc2Div, 0);
     /* Set Usdhc2 clock source. */
-    CLOCK_SetMux(kCLOCK_Usdhc2Mux, 0);
+    CLOCK_SetMux(kCLOCK_Usdhc2Mux, 1);
+
+	CLOCK_EnableClock(kCLOCK_Usdhc1);
+	CLOCK_EnableClock(kCLOCK_Usdhc2);
     /* In SDK projects, SDRAM (configured by SEMC) will be initialized in either debug script or dcd.
      * With this macro SKIP_SYSCLK_INIT, system pll (selected to be SEMC source clock in SDK projects) will be left unchanged.
      * Note: If another clock source is selected for SEMC, user may want to avoid changing that clock as well.*/
 #ifndef SKIP_SYSCLK_INIT
     /* Disable Semc clock gate. */
     CLOCK_DisableClock(kCLOCK_Semc);
+    CLOCK_DisableClock(kCLOCK_SemcExsc);
     /* Set SEMC_PODF. */
-    CLOCK_SetDiv(kCLOCK_SemcDiv, 7);
+    CLOCK_SetDiv(kCLOCK_SemcDiv, 1);
     /* Set Semc alt clock source. */
     CLOCK_SetMux(kCLOCK_SemcAltMux, 0);
     /* Set Semc clock source. */
-    CLOCK_SetMux(kCLOCK_SemcMux, 0);
+    CLOCK_SetMux(kCLOCK_SemcMux, 1);
+
+	CLOCK_EnableClock(kCLOCK_Semc);
+    CLOCK_EnableClock(kCLOCK_SemcExsc);
 #endif
     /* In SDK projects, external flash (configured by FLEXSPI) will be initialized by dcd.
      * With this macro XIP_EXTERNAL_FLASH, usb1 pll (selected to be FLEXSPI clock source in SDK projects) will be left unchanged.
@@ -304,6 +317,7 @@ void BOARD_BootClockRUN(void)
 #if !(defined(XIP_EXTERNAL_FLASH) && (XIP_EXTERNAL_FLASH == 1))
     /* Disable Flexspi clock gate. */
     CLOCK_DisableClock(kCLOCK_FlexSpi);
+    CLOCK_DisableClock(kCLOCK_FlexSpiExsc);
     /* Set FLEXSPI_PODF. */
     CLOCK_SetDiv(kCLOCK_FlexspiDiv, 0);
     /* Set Flexspi clock source. */

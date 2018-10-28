@@ -63,7 +63,7 @@ task.h is included from an application file. */
 	extern uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
 #else
 #if (defined(__GNUC__))
-__attribute__((section(".bss.$BOARD_SDRAM*"))) 	alignas(256) static uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
+__attribute__((section(".bss.$HEAP"))) 	alignas(256) static uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
 #else
 static volatile uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
 #endif
@@ -97,22 +97,22 @@ static void prvHeapInit( void );
 
 /* The size of the structure placed at the beginning of each allocated memory
 block must by correctly byte aligned. */
-kKERNEL_SECTION_DTCM alignas(32) static const size_t xHeapStructSize	= ( sizeof( BlockLink_t ) + ( ( size_t ) ( portBYTE_ALIGNMENT - 1 ) ) ) & ~( ( size_t ) portBYTE_ALIGNMENT_MASK );
+alignas(32) static const size_t xHeapStructSize	= ( sizeof( BlockLink_t ) + ( ( size_t ) ( portBYTE_ALIGNMENT - 1 ) ) ) & ~( ( size_t ) portBYTE_ALIGNMENT_MASK );
 
 /* Create a couple of list links to mark the start and end of the list. */
-kKERNEL_SECTION_DTCM alignas(32) static BlockLink_t xStart = {0};
-kKERNEL_SECTION_DTCM alignas(32) static BlockLink_t *pxEnd = NULL;
+alignas(32) static BlockLink_t xStart = {0};
+alignas(32) static BlockLink_t *pxEnd = NULL;
 
 /* Keeps track of the number of free bytes remaining, but says nothing about
 fragmentation. */
-kKERNEL_SECTION_DTCM alignas(32) static size_t xFreeBytesRemaining = 0U;
-kKERNEL_SECTION_DTCM alignas(32) static size_t xMinimumEverFreeBytesRemaining = 0U;
+alignas(32) static size_t xFreeBytesRemaining = 0U;
+alignas(32) static size_t xMinimumEverFreeBytesRemaining = 0U;
 
 /* Gets set to the top bit of an size_t type.  When this bit in the xBlockSize
 member of an BlockLink_t structure is set then the block belongs to the
 application.  When the bit is free the block is still part of the free heap
 space. */
-kKERNEL_SECTION_DTCM alignas(32) static size_t xBlockAllocatedBit = 0;
+alignas(32) static size_t xBlockAllocatedBit = 0;
 
 /*-----------------------------------------------------------*/
 

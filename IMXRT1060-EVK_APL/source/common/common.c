@@ -12,6 +12,7 @@
 
 #include "common/common.h"
 #include "board.h"
+#include "mimiclib/mimiclib.h"
 
 void MemDump(uintptr_t addr, size_t ByteCnt)
 {

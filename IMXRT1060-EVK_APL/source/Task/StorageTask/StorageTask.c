@@ -11,10 +11,10 @@
  */
 #include "StorageTask/StorageTask.h"
 #include "board.h"
-#include "fsl_sd.h"
 #include "mimiclib/mimiclib.h"
-#include "ff.h"
 #include "common/common.h"
+#include "fsl_sd.h"
+#include "ff.h"
 
 
 static void StorageInserted(bool isInserted, void *userData);
@@ -101,7 +101,7 @@ DefALLOCATE_ITCM static _Bool StorageInit(enSD_t enSlotNo, sd_card_t *card)
 
 	if (sts == kStatus_Success)
 	{
-		mimic_printf("SD_HOST_CLK_FREQ       = %lu\r\n", SD_HOST_CLK_FREQ);
+		mimic_printf("SD_HOST_CLK_FREQ       = %lu\r\n", BOARD_SD_HOST_CLK_FREQ);
 		mimic_printf("card->busClock_Hz      = %lu\r\n", card->busClock_Hz);
 		mimic_printf("card->version          = %lu\r\n", card->version);
 		mimic_printf("card->currentTiming    = %lu\r\n", card->currentTiming);
@@ -228,8 +228,8 @@ DefALLOCATE_ITCM void StorageTask(void const *argument)
 	enIRQn = USDHC1_IRQn + enSlotNo;
 	mimic_printf("[%s (%d)] Start  (Slot = %d)!", __FUNCTION__, __LINE__, enSlotNo + 1);
 
-	s_stSD[enSlotNo].host.base = SD_HOST_BASEADDR;
-	s_stSD[enSlotNo].host.sourceClock_Hz = SD_HOST_CLK_FREQ;
+	s_stSD[enSlotNo].host.base = BOARD_SD_HOST_BASEADDR;
+	s_stSD[enSlotNo].host.sourceClock_Hz = BOARD_SD_HOST_CLK_FREQ;
 	/* card detect type */
 	s_stSD[enSlotNo].usrParam.cd = &s_sdCardDetect[enSlotNo];
 

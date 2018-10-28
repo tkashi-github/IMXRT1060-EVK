@@ -19,11 +19,6 @@
 #error
 #endif
 
-stu8RingBuffer_t g_stLPUARTRxBuf[1+enLPUART_MAX];	/** LPUART_BASE_PTRSの頭に0が入っている */
-stu8RingBuffer_t g_stLPUARTTxBuf[1+enLPUART_MAX];	/** LPUART_BASE_PTRSの頭に0が入っている */
-
-
-
 static LPUART_Type *s_LPUARTBaseTable[] = LPUART_BASE_PTRS;
 static void LPUARTXHandleIRQ(enLPUART_t enLPUARTNo);
 
@@ -32,56 +27,56 @@ static void LPUARTXHandleIRQ(enLPUART_t enLPUARTNo);
  * @brief LPUART1 IRQ Handler
  * @return void
  */
-void LPUART1HandleIRQ(void){
+void LPUART1_IRQHandler(void){
 	LPUARTXHandleIRQ(enLPUART1);
 }
 /**
  * @brief LPUART2 IRQ Handler
  * @return void
  */
-void LPUART2HandleIRQ(void){
+void LPUART2_IRQHandler(void){
 	LPUARTXHandleIRQ(enLPUART2);
 }
 /**
  * @brief LPUART3 IRQ Handler
  * @return void
  */
-void LPUART3HandleIRQ(void){
+void LPUART3_IRQHandler(void){
 	LPUARTXHandleIRQ(enLPUART3);
 }
 /**
  * @brief LPUART4 IRQ Handler
  * @return void
  */
-void LPUART4HandleIRQ(void){
+void LPUART4_IRQHandler(void){
 	LPUARTXHandleIRQ(enLPUART4);
 }
 /**
  * @brief LPUART5 IRQ Handler
  * @return void
  */
-void LPUART5HandleIRQ(void){
+void LPUART5_IRQHandler(void){
 	LPUARTXHandleIRQ(enLPUART5);
 }
 /**
  * @brief LPUART6 IRQ Handler
  * @return void
  */
-void LPUART6HandleIRQ(void){
+void LPUART6_IRQHandler(void){
 	LPUARTXHandleIRQ(enLPUART6);
 }
 /**
  * @brief LPUART7 IRQ Handler
  * @return void
  */
-void LPUART7HandleIRQ(void){
+void LPUART7_IRQHandler(void){
 	LPUARTXHandleIRQ(enLPUART7);
 }
 /**
  * @brief LPUART8 IRQ Handler
  * @return void
  */
-void LPUART8HandleIRQ(void){
+void LPUART8_IRQHandler(void){
 	LPUARTXHandleIRQ(enLPUART8);
 }
 
@@ -98,12 +93,12 @@ static _Bool GetTxData(enLPUART_t enLPUARTNo, uint8_t *pu8val){
 	if(pdFALSE != xPortIsInsideInterrupt()){
 		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-		if(1u != xStreamBufferReceiveFromISR(g_sbhLPUARTTx[enLPUARTNo], &u8val, 1, &xHigherPriorityTaskWoken)){
+		if(1u != xStreamBufferReceiveFromISR(g_sbhLPUARTTx[enLPUARTNo], pu8val, 1, &xHigherPriorityTaskWoken)){
 			return false;
 		}
 		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 	}else{
-		if(1u != xStreamBufferReceive(g_sbhLPUARTTx[enLPUARTNo], &u8val, 1, 10)){
+		if(1u != xStreamBufferReceive(g_sbhLPUARTTx[enLPUARTNo], pu8val, 1, 10)){
 			return false;
 		}
 	}
