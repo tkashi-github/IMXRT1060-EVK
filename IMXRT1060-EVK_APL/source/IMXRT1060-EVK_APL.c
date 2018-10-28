@@ -111,7 +111,7 @@ int main(void) {
 
 
 /** GPIOのチャタリング対策 */
-static void GPIOMonitor(void){
+DefALLOCATE_ITCM static void GPIOMonitor(void){
 	/** SD1 */
 	static uint32_t u32LastCDPin = 0;
 	static uint32_t u32CDPinCnt = 0;
@@ -161,7 +161,7 @@ static uint32_t s_u32LastRun = 0u;
 static uint32_t s_u32RunMax = 0u;
 
 _Bool g_bInitEnd = false;
-void vApplicationTickHook(void)
+DefALLOCATE_ITCM void vApplicationTickHook(void)
 {
 	static uint32_t cnt = 0u;
 	if(g_bInitEnd != false){

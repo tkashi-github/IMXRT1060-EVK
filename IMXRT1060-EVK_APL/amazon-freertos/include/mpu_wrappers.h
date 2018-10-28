@@ -28,6 +28,8 @@
 #ifndef MPU_WRAPPERS_H
 #define MPU_WRAPPERS_H
 
+/** for attr section */
+
 /* This file redefines API functions to be called through a wrapper macro, but
 only for ports that are using the MPU. */
 #ifdef portUSING_MPU_WRAPPERS
@@ -171,8 +173,8 @@ only for ports that are using the MPU. */
 
 #else /* portUSING_MPU_WRAPPERS */
 
-	#define PRIVILEGED_FUNCTION
-	#define PRIVILEGED_DATA
+	#define PRIVILEGED_FUNCTION __attribute__((section(".ramfunc.$SRAM_ITC")))  
+	#define PRIVILEGED_DATA __attribute__((section(".data.$SRAM_DTC")))
 	#define portUSING_MPU_WRAPPERS 0
 
 #endif /* portUSING_MPU_WRAPPERS */
