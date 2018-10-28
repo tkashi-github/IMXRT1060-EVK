@@ -17,30 +17,8 @@
 
 #include "ffconf.h"     /* FatFs configuration options */
 #include "diskio.h"     /* FatFs lower layer API */
-#ifdef RAM_DISK_ENABLE
-#include "fsl_ram_disk.h"
-#endif
 
-#ifdef USB_DISK_ENABLE
-#include "fsl_usb_disk.h"
-#endif
-
-#ifdef SD_DISK_ENABLE
-#include "fsl_sd_disk.h"
-#endif
-
-#ifdef MMC_DISK_ENABLE
-#include "fsl_mmc_disk.h"
-#endif
-
-#ifdef SDSPI_DISK_ENABLE
-#include "fsl_sdspi_disk.h"
-#endif
-
-#ifdef NAND_DISK_ENABLE
-#include "fsl_nand_disk.h"
-#endif
-
+#include "StorageTask/StorageTask.h"
 /*-----------------------------------------------------------------------*/
 /* Get Drive Status                                                      */
 /*-----------------------------------------------------------------------*/
@@ -54,12 +32,13 @@ DSTATUS disk_status (
     {
 		case 0:
 		case 1:
-			StorageStatus(pdrv);
+			stat = StorageStatus(pdrv);
 			break;
         default:
+        	stat = STA_NOINIT;
             break;
     }
-    return STA_NOINIT;
+    return stat;
 }
 
 
@@ -77,12 +56,13 @@ DSTATUS disk_initialize (
     {
 		case 0:
 		case 1:
-			StorageInitialize(pdrv);
+			stat = StorageInitialize(pdrv);
 			break;
         default:
+        	stat = STA_NOINIT;
             break;
     }
-    return STA_NOINIT;
+    return stat;
 }
 
 
@@ -103,13 +83,14 @@ DRESULT disk_read (
     {
 		case 0:
 		case 1:
-			StorageRead(pdrv, buff, sector, count);
+			res = StorageRead(pdrv, buff, sector, count);
 			break;
         default:
+        	res = RES_PARERR;
             break;
     }
 
-	return RES_PARERR;
+	return res;
 }
 
 
@@ -130,12 +111,13 @@ DRESULT disk_write (
     {
 		case 0:
 		case 1:
-			StorageWrite(pdrv, buff, sector, count);
+			res = StorageWrite(pdrv, buff, sector, count);
 			break;
         default:
+        	res = RES_PARERR;
             break;
     }
-    return RES_PARERR;
+    return res;
 }
 
 
@@ -154,11 +136,12 @@ DRESULT disk_ioctl (
     {
 		case 0:
 		case 1:
-			StorageIoctl(pdrv, cmd, buff);
+			res = StorageIoctl(pdrv, cmd, buff);
 			break;
         default:
+        	res = RES_PARERR;
             break;
     }
-    return RES_PARERR;
+    return res;
 }
 

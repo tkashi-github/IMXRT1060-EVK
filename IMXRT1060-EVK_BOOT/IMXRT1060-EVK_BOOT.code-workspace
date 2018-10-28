@@ -1,0 +1,65 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.encoding": "utf8",
+		"c-cpp-flylint.clang.standard": [
+			"c11"
+		],
+		"clang.cxxflags": [
+			"--std=c++11"
+		],
+		"clang.cflags": [
+			"--std=c11"
+		],
+		"C_Cpp.default.includePath": [
+			"${workspaceFolder}/",
+			"${workspaceFolder}/source",
+			"${workspaceFolder}/source/include",
+			"${workspaceFolder}/source/common",
+			"${workspaceFolder}/source/Task",
+			"${workspaceFolder}/source/UserDriver",
+			"${workspaceFolder}/sdmmc/inc",
+			"${workspaceFolder}/board",
+			"${workspaceFolder}/CMSIS",
+			"${workspaceFolder}/Drivers",
+			"${workspaceFolder}/fatfs/fatfs_include",
+			"${workspaceFolder}/amazon-freertos/include",
+			"${workspaceFolder}/xip",
+		],
+		"files.associations": {
+			"mimiclib.h": "c",
+			"mimxrt1062.h": "c",
+			"fsl_semc.h": "c",
+			"ff.h": "c",
+			"fsl_sd.h": "c",
+			"fsl_sdmmc_common.h": "c",
+			"fsl_common.h": "c",
+			"storagetask.h": "c",
+			"usertypedef.h": "c",
+			"filecmd.h": "c"
+		},
+		"C_Cpp.default.defines": [
+			"FSL_RTOS_FREE_RTOS",
+			"SDK_OS_FREE_RTOS",
+			"XIP_EXTERNAL_FLASH=1",
+			"XIP_BOOT_HEADER_ENABLE=1",
+			"XIP_BOOT_HEADER_DCD_ENABLE=1",
+			"CPU_MIMXRT1062DVL6A",
+			"CPU_MIMXRT1062DVL6A_cm7",
+			"__MCUXPRESSO",
+			"__USE_CMSIS",
+			"DEBUG",
+			"__NEWLIB__",
+			"ENABLE_RAM_VECTOR_TABLE",
+			"ARM_MATH_CM7",
+			"__VFP_FP__",
+			"__FPU_PRESENT",
+			"ENABLE_RAM_VECTOR_TABLE",
+			"FSL_SDK_ENABLE_DRIVER_CACHE_CONTROL",
+		],
+	}
+}

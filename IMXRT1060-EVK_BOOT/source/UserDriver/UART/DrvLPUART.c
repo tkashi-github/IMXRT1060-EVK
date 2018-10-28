@@ -27,56 +27,56 @@ static void LPUARTXHandleIRQ(enLPUART_t enLPUARTNo);
  * @brief LPUART1 IRQ Handler
  * @return void
  */
-void LPUART1HandleIRQ(void){
+void LPUART1_IRQHandler(void){
 	LPUARTXHandleIRQ(enLPUART1);
 }
 /**
  * @brief LPUART2 IRQ Handler
  * @return void
  */
-void LPUART2HandleIRQ(void){
+void LPUART2_IRQHandler(void){
 	LPUARTXHandleIRQ(enLPUART2);
 }
 /**
  * @brief LPUART3 IRQ Handler
  * @return void
  */
-void LPUART3HandleIRQ(void){
+void LPUART3_IRQHandler(void){
 	LPUARTXHandleIRQ(enLPUART3);
 }
 /**
  * @brief LPUART4 IRQ Handler
  * @return void
  */
-void LPUART4HandleIRQ(void){
+void LPUART4_IRQHandler(void){
 	LPUARTXHandleIRQ(enLPUART4);
 }
 /**
  * @brief LPUART5 IRQ Handler
  * @return void
  */
-void LPUART5HandleIRQ(void){
+void LPUART5_IRQHandler(void){
 	LPUARTXHandleIRQ(enLPUART5);
 }
 /**
  * @brief LPUART6 IRQ Handler
  * @return void
  */
-void LPUART6HandleIRQ(void){
+void LPUART6_IRQHandler(void){
 	LPUARTXHandleIRQ(enLPUART6);
 }
 /**
  * @brief LPUART7 IRQ Handler
  * @return void
  */
-void LPUART7HandleIRQ(void){
+void LPUART7_IRQHandler(void){
 	LPUARTXHandleIRQ(enLPUART7);
 }
 /**
  * @brief LPUART8 IRQ Handler
  * @return void
  */
-void LPUART8HandleIRQ(void){
+void LPUART8_IRQHandler(void){
 	LPUARTXHandleIRQ(enLPUART8);
 }
 

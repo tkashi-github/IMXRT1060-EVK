@@ -11,8 +11,8 @@
  */
 #include "common/FileCmd.h"
 
-#if 0
 #include "ff.h"
+#include "mimiclib/mimiclib.h"
 
 void FileCmd_ls(uint32_t argc, const char *argv[]){
 	DIR stDir;
@@ -32,7 +32,7 @@ void FileCmd_ls(uint32_t argc, const char *argv[]){
 			if(stFInfo.fname[0] == '\0'){
 				break;
 			}
-			if(strcmp(stFInfo.fname, ".") && 
+			if(mimic_strcmp(stFInfo.fname, ".") &&
 				strcmp(stFInfo.fname, "..")){
 				mimic_printf("%-12llu[byte] %-40s\r\n",
 					stFInfo.fsize, stFInfo.fname);
@@ -105,5 +105,4 @@ void FileCmd_cd(uint32_t argc, const char *argv[]){
 		}
 	}
 }
-#endif
 

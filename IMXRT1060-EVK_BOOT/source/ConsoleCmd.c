@@ -22,6 +22,7 @@
 #include "FileCmd.h"
 #include "mimiclib/mimiclib.h"
 
+#include "task.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -84,8 +85,6 @@ static void CmdHelp(uint32_t argc, const char *argv[])
 	return;
 }
 
-extern const uint8_t FreeRTOSDebugConfig[];
-
 /**
  * @brief VERSION
  * @param [in]  argc Number of Argments
@@ -103,8 +102,7 @@ static void CmdVersion(uint32_t argc, const char *argv[])
 #else
 	mimic_printf("Unkown Compiler\r\n\r\n");
 #endif
-	mimic_printf("FREERTOS_DEBUG_CONFIG_VERSION = %d.%d\r\n", FreeRTOSDebugConfig[0], FreeRTOSDebugConfig[1]);
-	mimic_printf("FREERTOS_KERNEL_VERSION = %d.%d.%d\r\n", FreeRTOSDebugConfig[2], FreeRTOSDebugConfig[3], FreeRTOSDebugConfig[4]);
+	mimic_printf("FREERTOS_KERNEL_VERSION = %s\r\n", tskKERNEL_VERSION_NUMBER);
 }
 
 /**

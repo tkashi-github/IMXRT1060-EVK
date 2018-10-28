@@ -227,6 +227,8 @@ pin_labels:
  * END ****************************************************************************************************************/
 void BOARD_InitBootPins(void) {
     BOARD_InitPins();
+	BOARD_InitSDRAM();
+	BOARD_InitUSDHC();
     BOARD_InitDEBUG_UART();
 }
 

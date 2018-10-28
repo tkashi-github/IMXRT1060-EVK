@@ -18,6 +18,7 @@
 		"C_Cpp.default.includePath": [
 			"${workspaceFolder}/IMXRT1060-EVK_BOOT",
 			"${workspaceFolder}/IMXRT1060-EVK_BOOT/source",
+			"${workspaceFolder}/IMXRT1060-EVK_BOOT/source/include",
 			"${workspaceFolder}/IMXRT1060-EVK_BOOT/Drivers",
 			"${workspaceFolder}/IMXRT1060-EVK_BOOT/boadrs",
 			"${workspaceFolder}/IMXRT1060-EVK_BOOT/amazon-freertos",
@@ -27,7 +28,9 @@
 			"mimxrt1062.h": "c",
 			"fsl_semc.h": "c",
 			"ff.h": "c",
-			"fsl_sd.h": "c"
+			"fsl_sd.h": "c",
+			"fsl_sdmmc_common.h": "c",
+			"fsl_common.h": "c"
 		},
 	}
 }

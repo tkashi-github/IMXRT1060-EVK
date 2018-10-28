@@ -26,14 +26,14 @@ extern "C"
 
 #include "fsl_lpuart.h"
 
-extern void LPUART1HandleIRQ(void);
-extern void LPUART2HandleIRQ(void);
-extern void LPUART3HandleIRQ(void);
-extern void LPUART4HandleIRQ(void);
-extern void LPUART5HandleIRQ(void);
-extern void LPUART6HandleIRQ(void);
-extern void LPUART7HandleIRQ(void);
-extern void LPUART8HandleIRQ(void);
+extern void LPUART1_IRQHandler(void);
+extern void LPUART2_IRQHandler(void);
+extern void LPUART3_IRQHandler(void);
+extern void LPUART4_IRQHandler(void);
+extern void LPUART5_IRQHandler(void);
+extern void LPUART6_IRQHandler(void);
+extern void LPUART7_IRQHandler(void);
+extern void LPUART8_IRQHandler(void);
 
 extern _Bool DrvLPUARTInit(enLPUART_t enLPUARTNo, const lpuart_config_t *config);
 
