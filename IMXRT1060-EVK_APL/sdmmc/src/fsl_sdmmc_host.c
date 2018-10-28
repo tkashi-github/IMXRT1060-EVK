@@ -234,6 +234,7 @@ static status_t SDMMCHOST_CardDetectInit(SDMMCHOST_TYPE *base, const sdmmchost_d
 
     if (cdType == kSDMMCHOST_DetectCardByGpioCD)
     {
+#if 0	/** Disable GPIO Interrupt */
         SDMMCHOST_CARD_DETECT_GPIO_INIT();
 
 /* set IRQ priority */
@@ -246,6 +247,7 @@ static status_t SDMMCHOST_CardDetectInit(SDMMCHOST_TYPE *base, const sdmmchost_d
         SDMMCHOST_ENABLE_IRQ(SDMMCHOST_CARD_DETECT_GPIO_IRQ);
         /* detect card status */
         SDMMCHOST_DetectCardByGpio(cd);
+#endif
     }
     else
     {

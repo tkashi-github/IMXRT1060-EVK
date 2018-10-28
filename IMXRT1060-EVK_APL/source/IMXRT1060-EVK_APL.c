@@ -108,7 +108,7 @@ int main(void) {
     return 0 ;
 }
 
-
+#define DefSDCardDetectTime	(100u)
 
 /** GPIOのチャタリング対策 */
 DefALLOCATE_ITCM static void GPIOMonitor(void){
@@ -120,9 +120,9 @@ DefALLOCATE_ITCM static void GPIOMonitor(void){
 	if(u32NowCDPin != u32LastCDPin){
 		u32CDPinCnt = 0;
 	}else{
-		if(u32CDPinCnt < 100){
+		if(u32CDPinCnt < DefSDCardDetectTime){
 			u32CDPinCnt++;
-		}else if(u32CDPinCnt == 100){	/** 100msec 続いたら */
+		}else if(u32CDPinCnt == DefSDCardDetectTime){
 			stTaskMsgBlock_t stTaskMsg;
 			BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 			memset(&stTaskMsg, 0, sizeof(stTaskMsg));

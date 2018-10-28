@@ -204,7 +204,7 @@ DefALLOCATE_ITCM static void StorageUnmount(enSD_t enSlotNo)
 DefALLOCATE_ITCM static void StorageTaskActual(enSD_t enSlotNo)
 {
 	stTaskMsgBlock_t stTaskMsg = {0};
-	if (sizeof(stTaskMsg) <= xStreamBufferReceive(g_sbhStorageTask[enSlotNo], &stTaskMsg, sizeof(stTaskMsg), portMAX_DELAY))
+	if (sizeof(stTaskMsg) == xStreamBufferReceive(g_sbhStorageTask[enSlotNo], &stTaskMsg, sizeof(stTaskMsg), portMAX_DELAY))
 	{
 		switch (stTaskMsg.enMsgId)
 		{
