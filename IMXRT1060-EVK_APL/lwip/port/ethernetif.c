@@ -363,6 +363,25 @@ static void enet_init(struct netif *netif, struct ethernetif *ethernetif,
         LWIP_ASSERT("\r\nCannot initialize PHY.\r\n", 0);
     }
 
+	mimic_printf("Waiting Autonegotiation...");
+	/* Check auto negotiation complete. */
+	for(;;)
+	{
+		vTaskDelay(100);
+		result = PHY_Read(base, phyAddr, PHY_BASICSTATUS_REG, &bssReg);
+		if ( result == kStatus_Success)
+		{
+			PHY_Read(base, phyAddr, PHY_CONTROL1_REG, &ctlReg);
+			if (((bssReg & PHY_BSTATUS_AUTONEGCOMP_MASK) != 0) && (ctlReg & PHY_LINK_READY_MASK))
+			{
+				
+				break;
+			}
+		}
+	}
+	mimic_printf("Done");
+
+
     while ((count < ENET_ATONEGOTIATION_TIMEOUT) && (!link))
     {
         PHY_GetLinkStatus(ethernetif->base, ethernetifConfig->phyAddress, &link);
