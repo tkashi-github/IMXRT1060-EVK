@@ -86,7 +86,7 @@ _Bool CheckROM(void)
 
 	{
 		/** !!!!(先頭4byteを含める) */
-		uint16_t RomCRC16 = SlowCrc16(0x1234, (uint8_t *)kROM_BIN_TOP, u32BinSize + 4);	
+		uint16_t RomCRC16 = SlowCrc16(0xFFFF, (uint8_t *)kROM_BIN_TOP, u32BinSize + 4);
 		uint16_t CalcCRC16;
 
 		memcpy(&CalcCRC16, (void*)(kROM_BIN_TOP + 4 + u32BinSize), 2);

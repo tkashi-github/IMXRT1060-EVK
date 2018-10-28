@@ -393,11 +393,10 @@ static inline char *mimic_strcpy(char szDst[], const char szSrc[], uint32_t u32D
 static inline _Bool mimic_strcmp(const char szStr1[], const char szStr2[]){
 	/*-- var --*/
 	uint32_t u32Cnt = 0u;
-	_Bool bret = false;
+	_Bool bret = true;
 
 	/*-- begin --*/
 	if((szStr1 != (const char*)NULL) && (szStr2 != (const char*)NULL)){
-		bret = true;
 		for(;;){
 			if(szStr1[u32Cnt] != szStr2[u32Cnt]){
 				bret = false;
