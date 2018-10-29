@@ -45,8 +45,22 @@ extern "C"
 #include "UserTypedef.h"
 
 /** Interrupt Priority */
-#define kIRQ_PRIORITY_LPUART    (10u)
+#define kIRQ_PRIORITY_LPUART    (14u)
+#define kIRQ_PRIORITY_LPI2C     (13u)
+#define kIRQ_PRIORITY_GPIO      (12u)
+#define kIRQ_PRIORITY_LCDIF    	(11u)
+#define kIRQ_PRIORITY_ENET    	(10u)
 #define kIRQ_PRIORITY_USDHC     (9u)
+#define kIRQ_PRIORITY_SAI     	(8u)
+#define kIRQ_PRIORITY_DMA0     	(6u)	/** Highest */
+
+#define ENET_PRIORITY       kIRQ_PRIORITY_ENET
+#define ENET_1588_PRIORITY  kIRQ_PRIORITY_ENET
+
+/** for Protcol Stack */
+#define TCPIP_MBOX_SIZE                 32
+#define TCPIP_THREAD_STACKSIZE	        8192
+#define TCPIP_THREAD_PRIO	            osPriorityBelowNormal
 
 /** Task Handle */
 extern osThreadId_t g_InitialTaskHandle;
