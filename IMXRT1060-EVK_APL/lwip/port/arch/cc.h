@@ -125,9 +125,9 @@ typedef u32_t          mem_ptr_t;
 
 // Platform specific diagnostic output
 #include "sys_arch.h"//FSL
-#include "bspio/bspio.h"
+#include "mimiclib/mimiclib.h"
 // non-fatal, print a message.
-#define LWIP_PLATFORM_DIAG(x)                     do {bsp_printf x ;} while(0)
+#define LWIP_PLATFORM_DIAG(x)                     do {mimic_printf x ;} while(0)
 // fatal, print message and abandon execution.
 #define LWIP_PLATFORM_ASSERT(x)                   sys_assert( x )
 

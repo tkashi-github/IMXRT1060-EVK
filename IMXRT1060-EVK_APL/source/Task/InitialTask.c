@@ -42,6 +42,7 @@
 #include "OSResource.h"
 #include "common/update.h"
 #include "mimiclib/mimiclib.h"
+#include "Task/LanTask/LanTask.h"
 
 /**  */
 extern _Bool g_bInitEnd;
@@ -54,6 +55,7 @@ extern _Bool g_bInitEnd;
 void InitialTask(void const *argument)
 {
 		g_bInitEnd = true;
+		PostMsgLanTaskRestart();
 		mimic_printf("[%s (%d)] All Task Started! (%lu msec)\r\n", __FUNCTION__, __LINE__, xTaskGetTickCount());
 		xEventGroupWaitBits(
 					g_xFSReadyEventGroup, // The event group being tested.

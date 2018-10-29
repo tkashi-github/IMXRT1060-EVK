@@ -95,8 +95,8 @@ void sys_assert( char *pcMessage )
 {
 //FSL:only needed for debugging
 #ifdef LWIP_DEBUG
-    bsp_printf(pcMessage);
-    bsp_printf("\n\r");
+    mimic_printf(pcMessage);
+    mimic_printf("\n\r");
 #endif
 #if !NO_SYS
     portENTER_CRITICAL();

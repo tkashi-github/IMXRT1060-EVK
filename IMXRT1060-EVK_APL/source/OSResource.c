@@ -40,7 +40,7 @@
 #include "Task/InitialTask.h"
 #include "Task/ConsoleTask/ConsoleTask.h"
 #include "Task/StorageTask/StorageTask.h"
-
+#include "Task/LanTask/LanTask.h"
 
 /** typedef Task Table */
 typedef struct{
@@ -60,16 +60,19 @@ typedef struct{
 ALLOCATE_IN_DTCM alignas(32) osThreadId_t g_InitialTaskHandle;
 ALLOCATE_IN_DTCM alignas(32) osThreadId_t g_ConsoleTaskHandle;
 ALLOCATE_IN_DTCM alignas(32) osThreadId_t g_StorageTaskHandle;
+ALLOCATE_IN_DTCM alignas(32) osThreadId_t g_LanTaskHandle;
 
 /** Task Control Block (STATIC ALLOCATION)*/
 ALLOCATE_IN_DTCM alignas(32) static StaticTask_t s_InitialTaskTCB;
 ALLOCATE_IN_DTCM alignas(32) static StaticTask_t s_ConsoleTaskTCB;
 ALLOCATE_IN_DTCM alignas(32) static StaticTask_t s_StorageTaskTCB;
+ALLOCATE_IN_DTCM alignas(32) static StaticTask_t s_LanTaskTCB;
 
 /** Task Stack (STATIC ALLOCATION)*/
 ALLOCATE_IN_DTCM alignas(32) static uint32_t s_InitialTaskStack[8192/sizeof(uint32_t)];
 ALLOCATE_IN_DTCM alignas(32) static uint32_t s_ConsoleTaskStack[8192/sizeof(uint32_t)];
 ALLOCATE_IN_DTCM alignas(32) static uint32_t s_StorageTaskStack[8192/sizeof(uint32_t)];
+ALLOCATE_IN_DTCM alignas(32) static uint32_t s_LanTaskStack[8192/sizeof(uint32_t)];
 
 /** Task Table */
 static const stOSdefTable_t s_stTaskTable[] = {
@@ -91,7 +94,12 @@ static const stOSdefTable_t s_stTaskTable[] = {
 		(void*)enUSDHC1,
 		{"StorageTask1", osThreadDetached, &s_StorageTaskTCB, sizeof(s_StorageTaskTCB), s_StorageTaskStack, sizeof(s_StorageTaskStack), osPriorityNormal, 0, 0},
 	},
-
+	{	/** LanTask */
+		&g_StorageTaskHandle,
+		(osThreadFunc_t)LanTask,
+		NULL,
+		{"LanTask", osThreadDetached, &s_LanTaskTCB, sizeof(s_LanTaskTCB), s_LanTaskStack, sizeof(s_LanTaskStack), osPriorityBelowNormal, 0, 0},
+	},
 	// Terminate
 	{	
 		NULL,
@@ -230,6 +238,10 @@ ALLOCATE_IN_DTCM alignas(32) StreamBufferHandle_t g_sbhStorageTask[enNumOfSD] = 
 ALLOCATE_IN_DTCM alignas(32) static uint8_t s_StorageTaskStorage[enNumOfSD][sizeof(stTaskMsgBlock_t) * 32 + 1];	/** +1 はマニュアルの指示 */
 ALLOCATE_IN_DTCM alignas(32) static StaticStreamBuffer_t s_ssbStorageTaskStreamBuffer[enNumOfSD];
 
+ALLOCATE_IN_DTCM alignas(32) StreamBufferHandle_t g_sbhLanTask = NULL;
+ALLOCATE_IN_DTCM alignas(32) static uint8_t s_LanTaskStorage[sizeof(stTaskMsgBlock_t) * 32 + 1];	/** +1 はマニュアルの指示 */
+ALLOCATE_IN_DTCM alignas(32) static StaticStreamBuffer_t s_ssbSLanTaskStreamBuffer;
+
 static stStreamBuffer_t s_stStreamBufferTable[] = {
 	{
 		&g_sbhStorageTask[enUSDHC1], 
@@ -259,6 +271,8 @@ static stStreamBuffer_t s_stStreamBufferTable[] = {
 	{&g_sbhLPUARTRx[enLPUART6], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTRx[enLPUART6], &s_ssbLPUARTRx[enLPUART6]},
 	{&g_sbhLPUARTRx[enLPUART7], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTRx[enLPUART7], &s_ssbLPUARTRx[enLPUART7]},
 	{&g_sbhLPUARTRx[enLPUART8], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTRx[enLPUART8], &s_ssbLPUARTRx[enLPUART8]},
+
+	{&g_sbhLanTask, sizeof(s_LanTaskStorage), sizeof(stTaskMsgBlock_t), s_LanTaskStorage, &s_ssbSLanTaskStreamBuffer},
 
 	{NULL, 0, 0, NULL, NULL},
 };

@@ -66,6 +66,7 @@ extern "C"
 extern osThreadId_t g_InitialTaskHandle;
 extern osThreadId_t g_ConsoleTaskHandle;
 extern osThreadId_t g_LEDTaskHandle;
+extern osThreadId_t g_LanTaskHandle;
 
 /** Event Group */
 extern EventGroupHandle_t g_xLPUARTEventGroup[];
@@ -82,6 +83,7 @@ extern StreamBufferHandle_t g_sbhLPUARTTx[1+enLPUART_MAX];
 extern StreamBufferHandle_t g_sbhLPUARTRx[1+enLPUART_MAX];
 extern StreamBufferHandle_t g_sbhStorageTask[enNumOfSD];
 extern StreamBufferHandle_t g_sbhUpdateTask;
+extern StreamBufferHandle_t g_sbhLanTask;
 
 extern void CreateTask(void);
 extern void CreateQueue(void);

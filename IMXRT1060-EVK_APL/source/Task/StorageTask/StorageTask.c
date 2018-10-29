@@ -148,7 +148,7 @@ DefALLOCATE_ITCM static void StorageDeinit(enSD_t enSlotNo, sd_card_t *card)
 {
 	/** begin */
 	SD_PowerOffCard(card->host.base, card->usrParam.pwr);
-
+	SD_HostDeinit(card);
 	mimic_printf("[%s (%d)] StorageDeinit OK (Slot = %d)!\r\n", __FUNCTION__, __LINE__, enSlotNo + 1);
 }
 

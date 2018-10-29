@@ -75,8 +75,8 @@ DefALLOCATE_ITCM static void InitNetwork(_Bool bDHCP)
     
 	if(bDHCP == false){
 		ip4_addr_t ip4PingTarget;
-		IP4_ADDR(&ip4PingTarget, 192, 168, 100, 50);
-		IP4_ADDR(&fsl_netif0_ipaddr, 192, 168, 100, 90);
+		IP4_ADDR(&ip4PingTarget, 192, 168, 10, 50);
+		IP4_ADDR(&fsl_netif0_ipaddr, 192, 168, 10, 90);
 		IP4_ADDR(&fsl_netif0_netmask, 255, 255, 255, 0);
 		IP4_ADDR(&fsl_netif0_gw, 0, 0, 0, 0);
 

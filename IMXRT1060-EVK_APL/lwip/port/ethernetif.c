@@ -320,7 +320,7 @@ static void enet_init(struct netif *netif, struct ethernetif *ethernetif,
     {
         LWIP_ASSERT("\r\nCannot initialize PHY.\r\n", 0);
     }else{
-		bsp_printf("\r\nWaiting Auto negotiation...");
+		mimic_printf("\r\nWaiting Auto negotiation...");
 		uint32_t bssReg;
 		uint32_t ctlReg;
 		/* Check auto negotiation complete. */
@@ -338,7 +338,7 @@ static void enet_init(struct netif *netif, struct ethernetif *ethernetif,
 			}
 			vTaskDelay(100);
 		}
-		bsp_printf("Done\r\n");
+		mimic_printf("Done\r\n");
 	}
 
     while ((count < ENET_ATONEGOTIATION_TIMEOUT) && (!link))
@@ -617,7 +617,7 @@ static err_t enet_send_frame(struct ethernetif *ethernetif, unsigned char *data,
         do
         {
             result = ENET_SendFrame(ethernetif->base, &ethernetif->handle, data, length);
-			//bsp_printf("[%s (%d)] result = %ld\r\n", __FUNCTION__, __LINE__, result);
+			//mimic_printf("[%s (%d)] result = %ld\r\n", __FUNCTION__, __LINE__, result);
             if (result == kStatus_ENET_TxFrameBusy)
             {
                 xEventGroupWaitBits(ethernetif->enetTransmitAccessEvent, ethernetif->txFlag, pdTRUE, (BaseType_t) false,
@@ -626,7 +626,7 @@ static err_t enet_send_frame(struct ethernetif *ethernetif, unsigned char *data,
 
         } while (result == kStatus_ENET_TxFrameBusy);
 
-		//bsp_printf("[%s (%d)] EXIT\r\n", __FUNCTION__, __LINE__);
+		//mimic_printf("[%s (%d)] EXIT\r\n", __FUNCTION__, __LINE__);
         return ERR_OK;
     }
 #elif defined(FSL_FEATURE_SOC_ENET_COUNT) && (FSL_FEATURE_SOC_ENET_COUNT > 0)
