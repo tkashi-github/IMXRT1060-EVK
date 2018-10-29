@@ -3,17 +3,45 @@
   * @file    lwipopts.h
   * This file is based on \src\include\lwip\opt.h
   ******************************************************************************
+   * The Clear BSD License
    * Copyright (c) 2013-2016, Freescale Semiconductor, Inc.
    * Copyright 2016-2017 NXP
    * All rights reserved.
    *
    * 
-   * SPDX-License-Identifier: BSD-3-Clause
+   * Redistribution and use in source and binary forms, with or without modification,
+   * are permitted (subject to the limitations in the disclaimer below) provided
+   *  that the following conditions are met:
+   *
+   * o Redistributions of source code must retain the above copyright notice, this list
+   *   of conditions and the following disclaimer.
+   *
+   * o Redistributions in binary form must reproduce the above copyright notice, this
+   *   list of conditions and the following disclaimer in the documentation and/or
+   *   other materials provided with the distribution.
+   *
+   * o Neither the name of the copyright holder nor the names of its
+   *   contributors may be used to endorse or promote products derived from this
+   *   software without specific prior written permission.
+   *
+   * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS LICENSE.
+   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+   * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+   * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+   * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+   * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+   * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+   * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+   * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+   * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
    */
 
 #ifndef __LWIPOPTS_H__
 #define __LWIPOPTS_H__
 
+#define USE_RTOS	(1)
+#define LWIP_RAW    (1)
 
 #if USE_RTOS
 
@@ -172,6 +200,13 @@
 #define LWIP_DHCP               1
 #endif
 
+/* ---------- IGMP options ---------- */
+
+/* LWIP_IGMP==1: Turn on IGMP module. */
+#ifndef LWIP_IGMP
+#define LWIP_IGMP                       1
+#endif
+
 /* ---------- UDP options ---------- */
 #ifndef LWIP_UDP
 #define LWIP_UDP                1
@@ -236,7 +271,7 @@ Some MCU allow computing and verifying the IP, UDP, TCP and ICMP checksums by ha
  * sys_thread_new() when the thread is created.
  */
 #ifndef DEFAULT_THREAD_STACKSIZE
-#define DEFAULT_THREAD_STACKSIZE        3000
+#define DEFAULT_THREAD_STACKSIZE        8192
 #endif
 
 /**
@@ -269,9 +304,8 @@ Some MCU allow computing and verifying the IP, UDP, TCP and ICMP checksums by ha
 #define SZT_F "u"
 #endif
 
-#define TCPIP_MBOX_SIZE                 32
-#define TCPIP_THREAD_STACKSIZE	        1024
-#define TCPIP_THREAD_PRIO	            8
+#include "OSResource.h"
+
 
 /**
  * DEFAULT_RAW_RECVMBOX_SIZE: The mailbox size for the incoming packets on a

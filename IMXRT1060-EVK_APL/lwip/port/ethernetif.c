@@ -35,7 +35,30 @@
  * Copyright 2016-2017 NXP
  * All rights reserved.
  *
- * SPDX-License-Identifier: BSD-3-Clause
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * o Redistributions of source code must retain the above copyright notice, this list
+ *   of conditions and the following disclaimer.
+ *
+ * o Redistributions in binary form must reproduce the above copyright notice, this
+ *   list of conditions and the following disclaimer in the documentation and/or
+ *   other materials provided with the distribution.
+ *
+ * o Neither the name of the copyright holder nor the names of its
+ *   contributors may be used to endorse or promote products derived from this
+ *   software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SDRVL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 #include "lwip/opt.h"
@@ -175,37 +198,7 @@ static void ethernet_callback(ENET_Type *base, enet_handle_t *handle, enet_event
 #endif
 
 #if LWIP_IPV4 && LWIP_IGMP
-static err_t ethernetif_igmp_mac_filter(struct netif *netif, const ip4_addr_t *group, enum netif_mac_filter_action action)
-#if defined(FSL_FEATURE_SOC_LPC_ENET_COUNT) && (FSL_FEATURE_SOC_LPC_ENET_COUNT > 0)
-{
-    struct ethernetif *ethernetif = netif->state;
-    err_t result;
-
-    switch (action)
-    {
-        case IGMP_ADD_MAC_FILTER:
-            /* LPC ENET does not accept multicast selectively,
-             * so all multicast has to be passed through. */
-            ENET_AcceptAllMulticast(ethernetif->base);
-            result = ERR_OK;
-            break;
-        case IGMP_DEL_MAC_FILTER:
-            /*
-             * Moves the ENET device from a multicast group.
-             * Since we don't keep track of which multicast groups
-             * are still to enabled, the call is commented out.
-             */
-            /* ENET_RejectAllMulticast(ethernetif->base); */
-            result = ERR_OK;
-            break;
-        default:
-            result = ERR_IF;
-            break;
-    }
-
-    return result;
-}
-#else
+static err_t ethernetif_igmp_mac_filter(struct netif *netif, const ip4_addr_t *group, u8_t action)
 {
     struct ethernetif *ethernetif = netif->state;
     uint8_t multicastMacAddr[6];
@@ -226,12 +219,10 @@ static err_t ethernetif_igmp_mac_filter(struct netif *netif, const ip4_addr_t *g
             result = ERR_OK;
             break;
         case IGMP_DEL_MAC_FILTER:
-            /*
-             * Moves the ENET device from a multicast group.
-             * Since the ENET_LeaveMulticastGroup() could filter out also other
-             * group addresses having the same hash, the call is commented out.
-             */
-            /* ENET_LeaveMulticastGroup(ethernetif->base, multicastMacAddr); */
+/* Moves the ENET device from a multicast group.*/
+#if 0
+      ENET_LeaveMulticastGroup(ethernetif->base, multicastMacAddr);
+#endif
             result = ERR_OK;
             break;
         default:
@@ -241,41 +232,10 @@ static err_t ethernetif_igmp_mac_filter(struct netif *netif, const ip4_addr_t *g
 
     return result;
 }
-#endif
 #endif
 
 #if LWIP_IPV6 && LWIP_IPV6_MLD
 static err_t ethernetif_mld_mac_filter(struct netif *netif, const ip6_addr_t *group, enum netif_mac_filter_action action)
-#if defined(FSL_FEATURE_SOC_LPC_ENET_COUNT) && (FSL_FEATURE_SOC_LPC_ENET_COUNT > 0)
-{
-    struct ethernetif *ethernetif = netif->state;
-    err_t result;
-
-    switch (action)
-    {
-        case NETIF_ADD_MAC_FILTER:
-            /* LPC ENET does not accept multicast selectively,
-             * so all multicast has to be passed through. */
-            ENET_AcceptAllMulticast(ethernetif->base);
-            result = ERR_OK;
-            break;
-        case NETIF_DEL_MAC_FILTER:
-            /*
-             * Moves the ENET device from a multicast group.
-             * Since we don't keep track of which multicast groups
-             * are still to enabled, the call is commented out.
-             */
-            /* ENET_RejectAllMulticast(ethernetif->base); */
-            result = ERR_OK;
-            break;
-        default:
-            result = ERR_IF;
-            break;
-    }
-
-    return result;
-}
-#else
 {
     struct ethernetif *ethernetif = netif->state;
     uint8_t multicastMacAddr[6];
@@ -296,12 +256,10 @@ static err_t ethernetif_mld_mac_filter(struct netif *netif, const ip6_addr_t *gr
             result = ERR_OK;
             break;
         case NETIF_DEL_MAC_FILTER:
-            /*
-             * Moves the ENET device from a multicast group.
-             * Since the ENET_LeaveMulticastGroup() could filter out also other
-             * group addresses having the same hash, the call is commented out.
-             */
-            /* ENET_LeaveMulticastGroup(ethernetif->base, multicastMacAddr); */
+/* Moves the ENET device from a multicast group.*/
+#if 0
+      ENET_LeaveMulticastGroup(ethernetif->base, multicastMacAddr);
+#endif
             result = ERR_OK;
             break;
         default:
@@ -311,7 +269,6 @@ static err_t ethernetif_mld_mac_filter(struct netif *netif, const ip6_addr_t *gr
 
     return result;
 }
-#endif
 #endif
 
 #if defined(FSL_FEATURE_SOC_LPC_ENET_COUNT) && (FSL_FEATURE_SOC_LPC_ENET_COUNT > 0)
@@ -355,32 +312,34 @@ static void enet_init(struct netif *netif, struct ethernetif *ethernetif,
     sysClock = CLOCK_GetFreq(ethernetifConfig->clockName);
 
     ENET_GetDefaultConfig(&config);
+	config.miiDuplex = kENET_MiiHalfDuplex;
     config.ringNum = ENET_RING_NUM;
 
     status = PHY_Init(ethernetif->base, ethernetifConfig->phyAddress, sysClock);
     if (kStatus_Success != status)
     {
         LWIP_ASSERT("\r\nCannot initialize PHY.\r\n", 0);
-    }
-
-	mimic_printf("Waiting Autonegotiation...");
-	/* Check auto negotiation complete. */
-	for(;;)
-	{
-		vTaskDelay(100);
-		result = PHY_Read(base, phyAddr, PHY_BASICSTATUS_REG, &bssReg);
-		if ( result == kStatus_Success)
+    }else{
+		bsp_printf("\r\nWaiting Auto negotiation...");
+		uint32_t bssReg;
+		uint32_t ctlReg;
+		/* Check auto negotiation complete. */
+		for(;;)
 		{
-			PHY_Read(base, phyAddr, PHY_CONTROL1_REG, &ctlReg);
-			if (((bssReg & PHY_BSTATUS_AUTONEGCOMP_MASK) != 0) && (ctlReg & PHY_LINK_READY_MASK))
+			if ( PHY_Read(ethernetif->base, ethernetifConfig->phyAddress, PHY_BASICSTATUS_REG, &bssReg) == kStatus_Success)
 			{
-				
-				break;
+				if ( PHY_Read(ethernetif->base, ethernetifConfig->phyAddress, PHY_CONTROL1_REG, &ctlReg) == kStatus_Success)
+				{
+					if (((bssReg & PHY_BSTATUS_AUTONEGCOMP_MASK) != 0) && (ctlReg & PHY_LINK_READY_MASK))
+					{			
+						break;
+					}
+				}
 			}
+			vTaskDelay(100);
 		}
+		bsp_printf("Done\r\n");
 	}
-	mimic_printf("Done");
-
 
     while ((count < ENET_ATONEGOTIATION_TIMEOUT) && (!link))
     {
@@ -535,6 +494,11 @@ static void enet_init(struct netif *netif, struct ethernetif *ethernetif,
 
     ENET_Init(ethernetif->base, &config, netif->hwaddr, sysClock);
 
+#if defined(LPC54018_SERIES)
+    /* Workaround for receive issue on lpc54018 */
+    ethernetif->base->MAC_FRAME_FILTER |= ENET_MAC_FRAME_FILTER_RA_MASK;
+#endif
+
 /* Create the handler. */
 #if USE_RTOS && defined(FSL_RTOS_FREE_RTOS)
     ENET_EnableInterrupts(ethernetif->base, kENET_DmaTx | kENET_DmaRx);
@@ -653,7 +617,7 @@ static err_t enet_send_frame(struct ethernetif *ethernetif, unsigned char *data,
         do
         {
             result = ENET_SendFrame(ethernetif->base, &ethernetif->handle, data, length);
-
+			//bsp_printf("[%s (%d)] result = %ld\r\n", __FUNCTION__, __LINE__, result);
             if (result == kStatus_ENET_TxFrameBusy)
             {
                 xEventGroupWaitBits(ethernetif->enetTransmitAccessEvent, ethernetif->txFlag, pdTRUE, (BaseType_t) false,
@@ -661,6 +625,8 @@ static err_t enet_send_frame(struct ethernetif *ethernetif, unsigned char *data,
             }
 
         } while (result == kStatus_ENET_TxFrameBusy);
+
+		//bsp_printf("[%s (%d)] EXIT\r\n", __FUNCTION__, __LINE__);
         return ERR_OK;
     }
 #elif defined(FSL_FEATURE_SOC_ENET_COUNT) && (FSL_FEATURE_SOC_ENET_COUNT > 0)
@@ -1183,10 +1149,10 @@ static err_t ethernetif_init(struct netif *netif, struct ethernetif *ethernetif,
 err_t ethernetif0_init(struct netif *netif)
 {
     static struct ethernetif ethernetif_0;
-    AT_NONCACHEABLE_SECTION_ALIGN(static enet_rx_bd_struct_t rxBuffDescrip_0[ENET_RXBD_NUM], FSL_ENET_BUFF_ALIGNMENT);
-    AT_NONCACHEABLE_SECTION_ALIGN(static enet_tx_bd_struct_t txBuffDescrip_0[ENET_TXBD_NUM], FSL_ENET_BUFF_ALIGNMENT);
-    SDK_ALIGN(static rx_buffer_t rxDataBuff_0[ENET_RXBD_NUM], FSL_ENET_BUFF_ALIGNMENT);
-    SDK_ALIGN(static tx_buffer_t txDataBuff_0[ENET_TXBD_NUM], FSL_ENET_BUFF_ALIGNMENT);
+    DefALLOCATE_BSS_DTCM alignas(FSL_ENET_BUFF_ALIGNMENT) static enet_rx_bd_struct_t rxBuffDescrip_0[ENET_RXBD_NUM];
+    DefALLOCATE_BSS_DTCM alignas(FSL_ENET_BUFF_ALIGNMENT) static enet_tx_bd_struct_t txBuffDescrip_0[ENET_TXBD_NUM];
+    DefALLOCATE_BSS_DTCM alignas(FSL_ENET_BUFF_ALIGNMENT) static rx_buffer_t rxDataBuff_0[ENET_RXBD_NUM];
+    DefALLOCATE_BSS_DTCM alignas(FSL_ENET_BUFF_ALIGNMENT) static tx_buffer_t txDataBuff_0[ENET_TXBD_NUM];
 
     ethernetif_0.RxBuffDescrip = &(rxBuffDescrip_0[0]);
     ethernetif_0.TxBuffDescrip = &(txBuffDescrip_0[0]);
