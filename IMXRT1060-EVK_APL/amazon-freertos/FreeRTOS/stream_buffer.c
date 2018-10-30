@@ -157,7 +157,7 @@ typedef struct StreamBufferDef_t /*lint !e9058 Style convention uses tag. */
 /*
  * The number of bytes available to be read from the buffer.
  */
-kKERNEL_SECTION_ITCM static size_t prvBytesInBuffer( const StreamBuffer_t * const pxStreamBuffer ) PRIVILEGED_FUNCTION;
+DefKERNEL_SECTION_ITCM static size_t prvBytesInBuffer( const StreamBuffer_t * const pxStreamBuffer ) PRIVILEGED_FUNCTION;
 
 /*
  * Add xCount bytes from pucData into the pxStreamBuffer message buffer.
@@ -165,7 +165,7 @@ kKERNEL_SECTION_ITCM static size_t prvBytesInBuffer( const StreamBuffer_t * cons
  * success case, or 0 if there was not enough space in the buffer (in which case
  * no data is written into the buffer).
  */
-kKERNEL_SECTION_ITCM static size_t prvWriteBytesToBuffer( StreamBuffer_t * const pxStreamBuffer, const uint8_t *pucData, size_t xCount ) PRIVILEGED_FUNCTION;
+DefKERNEL_SECTION_ITCM static size_t prvWriteBytesToBuffer( StreamBuffer_t * const pxStreamBuffer, const uint8_t *pucData, size_t xCount ) PRIVILEGED_FUNCTION;
 
 /*
  * If the stream buffer is being used as a message buffer, then reads an entire
@@ -174,7 +174,7 @@ kKERNEL_SECTION_ITCM static size_t prvWriteBytesToBuffer( StreamBuffer_t * const
  * prvReadBytesFromBuffer() is called to actually extract the bytes from the
  * buffer's data storage area.
  */
-kKERNEL_SECTION_ITCM static size_t prvReadMessageFromBuffer( StreamBuffer_t *pxStreamBuffer,
+DefKERNEL_SECTION_ITCM static size_t prvReadMessageFromBuffer( StreamBuffer_t *pxStreamBuffer,
 										void *pvRxData,
 										size_t xBufferLengthBytes,
 										size_t xBytesAvailable,
@@ -187,7 +187,7 @@ kKERNEL_SECTION_ITCM static size_t prvReadMessageFromBuffer( StreamBuffer_t *pxS
  * prvWriteBytestoBuffer() is called to actually send the bytes to the buffer's
  * data storage area.
  */
-kKERNEL_SECTION_ITCM static size_t prvWriteMessageToBuffer(  StreamBuffer_t * const pxStreamBuffer,
+DefKERNEL_SECTION_ITCM static size_t prvWriteMessageToBuffer(  StreamBuffer_t * const pxStreamBuffer,
 										const void * pvTxData,
 										size_t xDataLengthBytes,
 										size_t xSpace,
@@ -197,7 +197,7 @@ kKERNEL_SECTION_ITCM static size_t prvWriteMessageToBuffer(  StreamBuffer_t * co
  * Read xMaxCount bytes from the pxStreamBuffer message buffer and write them
  * to pucData.
  */
-kKERNEL_SECTION_ITCM static size_t prvReadBytesFromBuffer( StreamBuffer_t *pxStreamBuffer,
+DefKERNEL_SECTION_ITCM static size_t prvReadBytesFromBuffer( StreamBuffer_t *pxStreamBuffer,
 									  uint8_t *pucData,
 									  size_t xMaxCount,
 									  size_t xBytesAvailable ) PRIVILEGED_FUNCTION;
@@ -206,7 +206,7 @@ kKERNEL_SECTION_ITCM static size_t prvReadBytesFromBuffer( StreamBuffer_t *pxStr
  * Called by both pxStreamBufferCreate() and pxStreamBufferCreateStatic() to
  * initialise the members of the newly created stream buffer structure.
  */
-kKERNEL_SECTION_ITCM static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
+DefKERNEL_SECTION_ITCM static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
 										  uint8_t * const pucBuffer,
 										  size_t xBufferSizeBytes,
 										  size_t xTriggerLevelBytes,
@@ -216,7 +216,7 @@ kKERNEL_SECTION_ITCM static void prvInitialiseNewStreamBuffer( StreamBuffer_t * 
 
 #if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
 
-	kKERNEL_SECTION_ITCM StreamBufferHandle_t xStreamBufferGenericCreate( size_t xBufferSizeBytes, size_t xTriggerLevelBytes, BaseType_t xIsMessageBuffer )
+	DefKERNEL_SECTION_ITCM StreamBufferHandle_t xStreamBufferGenericCreate( size_t xBufferSizeBytes, size_t xTriggerLevelBytes, BaseType_t xIsMessageBuffer )
 	{
 	uint8_t *pucAllocatedMemory;
 	uint8_t ucFlags;
@@ -280,7 +280,7 @@ kKERNEL_SECTION_ITCM static void prvInitialiseNewStreamBuffer( StreamBuffer_t * 
 
 #if( configSUPPORT_STATIC_ALLOCATION == 1 )
 
-	kKERNEL_SECTION_ITCM StreamBufferHandle_t xStreamBufferGenericCreateStatic( size_t xBufferSizeBytes,
+	DefKERNEL_SECTION_ITCM StreamBufferHandle_t xStreamBufferGenericCreateStatic( size_t xBufferSizeBytes,
 														   size_t xTriggerLevelBytes,
 														   BaseType_t xIsMessageBuffer,
 														   uint8_t * const pucStreamBufferStorageArea,
@@ -356,7 +356,7 @@ kKERNEL_SECTION_ITCM static void prvInitialiseNewStreamBuffer( StreamBuffer_t * 
 #endif /* ( configSUPPORT_STATIC_ALLOCATION == 1 ) */
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM void vStreamBufferDelete( StreamBufferHandle_t xStreamBuffer )
+DefKERNEL_SECTION_ITCM void vStreamBufferDelete( StreamBufferHandle_t xStreamBuffer )
 {
 StreamBuffer_t * pxStreamBuffer = xStreamBuffer;
 
@@ -389,7 +389,7 @@ StreamBuffer_t * pxStreamBuffer = xStreamBuffer;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM BaseType_t xStreamBufferReset( StreamBufferHandle_t xStreamBuffer )
+DefKERNEL_SECTION_ITCM BaseType_t xStreamBufferReset( StreamBufferHandle_t xStreamBuffer )
 {
 StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
 BaseType_t xReturn = pdFAIL;
@@ -438,7 +438,7 @@ BaseType_t xReturn = pdFAIL;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM BaseType_t xStreamBufferSetTriggerLevel( StreamBufferHandle_t xStreamBuffer, size_t xTriggerLevel )
+DefKERNEL_SECTION_ITCM BaseType_t xStreamBufferSetTriggerLevel( StreamBufferHandle_t xStreamBuffer, size_t xTriggerLevel )
 {
 StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
 BaseType_t xReturn;
@@ -467,7 +467,7 @@ BaseType_t xReturn;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM size_t xStreamBufferSpacesAvailable( StreamBufferHandle_t xStreamBuffer )
+DefKERNEL_SECTION_ITCM size_t xStreamBufferSpacesAvailable( StreamBufferHandle_t xStreamBuffer )
 {
 const StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
 size_t xSpace;
@@ -491,7 +491,7 @@ size_t xSpace;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM size_t xStreamBufferBytesAvailable( StreamBufferHandle_t xStreamBuffer )
+DefKERNEL_SECTION_ITCM size_t xStreamBufferBytesAvailable( StreamBufferHandle_t xStreamBuffer )
 {
 const StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
 size_t xReturn;
@@ -503,7 +503,7 @@ size_t xReturn;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM size_t xStreamBufferSend( StreamBufferHandle_t xStreamBuffer,
+DefKERNEL_SECTION_ITCM size_t xStreamBufferSend( StreamBufferHandle_t xStreamBuffer,
 						  const void *pvTxData,
 						  size_t xDataLengthBytes,
 						  TickType_t xTicksToWait )
@@ -607,7 +607,7 @@ TimeOut_t xTimeOut;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM size_t xStreamBufferSendFromISR( StreamBufferHandle_t xStreamBuffer,
+DefKERNEL_SECTION_ITCM size_t xStreamBufferSendFromISR( StreamBufferHandle_t xStreamBuffer,
 								 const void *pvTxData,
 								 size_t xDataLengthBytes,
 								 BaseType_t * const pxHigherPriorityTaskWoken )
@@ -658,7 +658,7 @@ size_t xRequiredSpace = xDataLengthBytes;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static size_t prvWriteMessageToBuffer( StreamBuffer_t * const pxStreamBuffer,
+DefKERNEL_SECTION_ITCM static size_t prvWriteMessageToBuffer( StreamBuffer_t * const pxStreamBuffer,
 									   const void * pvTxData,
 									   size_t xDataLengthBytes,
 									   size_t xSpace,
@@ -710,7 +710,7 @@ kKERNEL_SECTION_ITCM static size_t prvWriteMessageToBuffer( StreamBuffer_t * con
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM size_t xStreamBufferReceive( StreamBufferHandle_t xStreamBuffer,
+DefKERNEL_SECTION_ITCM size_t xStreamBufferReceive( StreamBufferHandle_t xStreamBuffer,
 							 void *pvRxData,
 							 size_t xBufferLengthBytes,
 							 TickType_t xTicksToWait )
@@ -814,7 +814,7 @@ size_t xReceivedLength = 0, xBytesAvailable, xBytesToStoreMessageLength;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM size_t xStreamBufferNextMessageLengthBytes( StreamBufferHandle_t xStreamBuffer )
+DefKERNEL_SECTION_ITCM size_t xStreamBufferNextMessageLengthBytes( StreamBufferHandle_t xStreamBuffer )
 {
 StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
 size_t xReturn, xBytesAvailable, xOriginalTail;
@@ -858,7 +858,7 @@ configMESSAGE_BUFFER_LENGTH_TYPE xTempReturn;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM size_t xStreamBufferReceiveFromISR( StreamBufferHandle_t xStreamBuffer,
+DefKERNEL_SECTION_ITCM size_t xStreamBufferReceiveFromISR( StreamBufferHandle_t xStreamBuffer,
 									void *pvRxData,
 									size_t xBufferLengthBytes,
 									BaseType_t * const pxHigherPriorityTaskWoken )
@@ -915,7 +915,7 @@ size_t xReceivedLength = 0, xBytesAvailable, xBytesToStoreMessageLength;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static size_t prvReadMessageFromBuffer( StreamBuffer_t *pxStreamBuffer,
+DefKERNEL_SECTION_ITCM static size_t prvReadMessageFromBuffer( StreamBuffer_t *pxStreamBuffer,
 										void *pvRxData,
 										size_t xBufferLengthBytes,
 										size_t xBytesAvailable,
@@ -967,7 +967,7 @@ configMESSAGE_BUFFER_LENGTH_TYPE xTempNextMessageLength;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM BaseType_t xStreamBufferIsEmpty( StreamBufferHandle_t xStreamBuffer )
+DefKERNEL_SECTION_ITCM BaseType_t xStreamBufferIsEmpty( StreamBufferHandle_t xStreamBuffer )
 {
 const StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
 BaseType_t xReturn;
@@ -990,7 +990,7 @@ size_t xTail;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM BaseType_t xStreamBufferIsFull( StreamBufferHandle_t xStreamBuffer )
+DefKERNEL_SECTION_ITCM BaseType_t xStreamBufferIsFull( StreamBufferHandle_t xStreamBuffer )
 {
 BaseType_t xReturn;
 size_t xBytesToStoreMessageLength;
@@ -1025,7 +1025,7 @@ const StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM BaseType_t xStreamBufferSendCompletedFromISR( StreamBufferHandle_t xStreamBuffer, BaseType_t *pxHigherPriorityTaskWoken )
+DefKERNEL_SECTION_ITCM BaseType_t xStreamBufferSendCompletedFromISR( StreamBufferHandle_t xStreamBuffer, BaseType_t *pxHigherPriorityTaskWoken )
 {
 StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
 BaseType_t xReturn;
@@ -1055,7 +1055,7 @@ UBaseType_t uxSavedInterruptStatus;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM BaseType_t xStreamBufferReceiveCompletedFromISR( StreamBufferHandle_t xStreamBuffer, BaseType_t *pxHigherPriorityTaskWoken )
+DefKERNEL_SECTION_ITCM BaseType_t xStreamBufferReceiveCompletedFromISR( StreamBufferHandle_t xStreamBuffer, BaseType_t *pxHigherPriorityTaskWoken )
 {
 StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
 BaseType_t xReturn;
@@ -1085,7 +1085,7 @@ UBaseType_t uxSavedInterruptStatus;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static size_t prvWriteBytesToBuffer( StreamBuffer_t * const pxStreamBuffer, const uint8_t *pucData, size_t xCount )
+DefKERNEL_SECTION_ITCM static size_t prvWriteBytesToBuffer( StreamBuffer_t * const pxStreamBuffer, const uint8_t *pucData, size_t xCount )
 {
 size_t xNextHead, xFirstLength;
 
@@ -1137,7 +1137,7 @@ size_t xNextHead, xFirstLength;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static size_t prvReadBytesFromBuffer( StreamBuffer_t *pxStreamBuffer, uint8_t *pucData, size_t xMaxCount, size_t xBytesAvailable )
+DefKERNEL_SECTION_ITCM static size_t prvReadBytesFromBuffer( StreamBuffer_t *pxStreamBuffer, uint8_t *pucData, size_t xMaxCount, size_t xBytesAvailable )
 {
 size_t xCount, xFirstLength, xNextTail;
 
@@ -1192,7 +1192,7 @@ size_t xCount, xFirstLength, xNextTail;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static size_t prvBytesInBuffer( const StreamBuffer_t * const pxStreamBuffer )
+DefKERNEL_SECTION_ITCM static size_t prvBytesInBuffer( const StreamBuffer_t * const pxStreamBuffer )
 {
 /* Returns the distance between xTail and xHead. */
 size_t xCount;
@@ -1212,7 +1212,7 @@ size_t xCount;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
+DefKERNEL_SECTION_ITCM static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
 										  uint8_t * const pucBuffer,
 										  size_t xBufferSizeBytes,
 										  size_t xTriggerLevelBytes,
@@ -1240,7 +1240,7 @@ kKERNEL_SECTION_ITCM static void prvInitialiseNewStreamBuffer( StreamBuffer_t * 
 
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	kKERNEL_SECTION_ITCM UBaseType_t uxStreamBufferGetStreamBufferNumber( StreamBufferHandle_t xStreamBuffer )
+	DefKERNEL_SECTION_ITCM UBaseType_t uxStreamBufferGetStreamBufferNumber( StreamBufferHandle_t xStreamBuffer )
 	{
 		return xStreamBuffer->uxStreamBufferNumber;
 	}
@@ -1250,7 +1250,7 @@ kKERNEL_SECTION_ITCM static void prvInitialiseNewStreamBuffer( StreamBuffer_t * 
 
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	kKERNEL_SECTION_ITCM void vStreamBufferSetStreamBufferNumber( StreamBufferHandle_t xStreamBuffer, UBaseType_t uxStreamBufferNumber )
+	DefKERNEL_SECTION_ITCM void vStreamBufferSetStreamBufferNumber( StreamBufferHandle_t xStreamBuffer, UBaseType_t uxStreamBufferNumber )
 	{
 		xStreamBuffer->uxStreamBufferNumber = uxStreamBufferNumber;
 	}
@@ -1260,7 +1260,7 @@ kKERNEL_SECTION_ITCM static void prvInitialiseNewStreamBuffer( StreamBuffer_t * 
 
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	kKERNEL_SECTION_ITCM uint8_t ucStreamBufferGetStreamBufferType( StreamBufferHandle_t xStreamBuffer )
+	DefKERNEL_SECTION_ITCM uint8_t ucStreamBufferGetStreamBufferType( StreamBufferHandle_t xStreamBuffer )
 	{
 		return ( xStreamBuffer->ucFlags & sbFLAGS_IS_MESSAGE_BUFFER );
 	}

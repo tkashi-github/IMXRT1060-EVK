@@ -34,7 +34,7 @@
  * PUBLIC LIST API documented in list.h
  *----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM void vListInitialise( List_t * const pxList )
+DefKERNEL_SECTION_ITCM void vListInitialise( List_t * const pxList )
 {
 	/* The list structure contains a list item which is used to mark the
 	end of the list.  To initialise the list the list end is inserted
@@ -59,7 +59,7 @@ kKERNEL_SECTION_ITCM void vListInitialise( List_t * const pxList )
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM void vListInitialiseItem( ListItem_t * const pxItem )
+DefKERNEL_SECTION_ITCM void vListInitialiseItem( ListItem_t * const pxItem )
 {
 	/* Make sure the list item is not recorded as being on a list. */
 	pxItem->pxContainer = NULL;
@@ -71,7 +71,7 @@ kKERNEL_SECTION_ITCM void vListInitialiseItem( ListItem_t * const pxItem )
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM void vListInsertEnd( List_t * const pxList, ListItem_t * const pxNewListItem )
+DefKERNEL_SECTION_ITCM void vListInsertEnd( List_t * const pxList, ListItem_t * const pxNewListItem )
 {
 ListItem_t * const pxIndex = pxList->pxIndex;
 
@@ -100,7 +100,7 @@ ListItem_t * const pxIndex = pxList->pxIndex;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM void vListInsert( List_t * const pxList, ListItem_t * const pxNewListItem )
+DefKERNEL_SECTION_ITCM void vListInsert( List_t * const pxList, ListItem_t * const pxNewListItem )
 {
 ListItem_t *pxIterator;
 const TickType_t xValueOfInsertion = pxNewListItem->xItemValue;
@@ -167,7 +167,7 @@ const TickType_t xValueOfInsertion = pxNewListItem->xItemValue;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM UBaseType_t uxListRemove( ListItem_t * const pxItemToRemove )
+DefKERNEL_SECTION_ITCM UBaseType_t uxListRemove( ListItem_t * const pxItemToRemove )
 {
 /* The list item knows which list it is in.  Obtain the list from the list
 item. */

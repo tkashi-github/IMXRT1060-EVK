@@ -118,9 +118,15 @@ typedef char TCHAR;
 #define _TEXT(x) u8 ## x
 
 
+#if 1
 #define DefALLOCATE_ITCM  __attribute__((section(".ramfunc.$SRAM_ITC"))) 
 #define DefALLOCATE_BSS_DTCM  __attribute__((section(".bss.$SRAM_DTC"))) 
 #define DefALLOCATE_DATA_DTCM  __attribute__((section(".data.$SRAM_DTC"))) 
+#else
+#define DefALLOCATE_ITCM  
+#define DefALLOCATE_BSS_DTCM 
+#define DefALLOCATE_DATA_DTCM 
+#endif
 
 #ifdef __cplusplus
 }

@@ -84,13 +84,13 @@ typedef struct EventGroupDef_t
  * wait condition is met if any of the bits set in uxBitsToWait for are also set
  * in uxCurrentEventBits.
  */
-kKERNEL_SECTION_ITCM static BaseType_t prvTestWaitCondition( const EventBits_t uxCurrentEventBits, const EventBits_t uxBitsToWaitFor, const BaseType_t xWaitForAllBits ) PRIVILEGED_FUNCTION;
+DefKERNEL_SECTION_ITCM static BaseType_t prvTestWaitCondition( const EventBits_t uxCurrentEventBits, const EventBits_t uxBitsToWaitFor, const BaseType_t xWaitForAllBits ) PRIVILEGED_FUNCTION;
 
 /*-----------------------------------------------------------*/
 
 #if( configSUPPORT_STATIC_ALLOCATION == 1 )
 
-	kKERNEL_SECTION_ITCM EventGroupHandle_t xEventGroupCreateStatic( StaticEventGroup_t *pxEventGroupBuffer )
+	DefKERNEL_SECTION_ITCM EventGroupHandle_t xEventGroupCreateStatic( StaticEventGroup_t *pxEventGroupBuffer )
 	{
 	EventGroup_t *pxEventBits;
 
@@ -142,7 +142,7 @@ kKERNEL_SECTION_ITCM static BaseType_t prvTestWaitCondition( const EventBits_t u
 
 #if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
 
-	kKERNEL_SECTION_ITCM EventGroupHandle_t xEventGroupCreate( void )
+	DefKERNEL_SECTION_ITCM EventGroupHandle_t xEventGroupCreate( void )
 	{
 	EventGroup_t *pxEventBits;
 
@@ -188,7 +188,7 @@ kKERNEL_SECTION_ITCM static BaseType_t prvTestWaitCondition( const EventBits_t u
 #endif /* configSUPPORT_DYNAMIC_ALLOCATION */
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM EventBits_t xEventGroupSync( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet, const EventBits_t uxBitsToWaitFor, TickType_t xTicksToWait )
+DefKERNEL_SECTION_ITCM EventBits_t xEventGroupSync( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet, const EventBits_t uxBitsToWaitFor, TickType_t xTicksToWait )
 {
 EventBits_t uxOriginalBitValue, uxReturn;
 EventGroup_t *pxEventBits = xEventGroup;
@@ -308,7 +308,7 @@ BaseType_t xTimeoutOccurred = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM EventBits_t xEventGroupWaitBits( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToWaitFor, const BaseType_t xClearOnExit, const BaseType_t xWaitForAllBits, TickType_t xTicksToWait )
+DefKERNEL_SECTION_ITCM EventBits_t xEventGroupWaitBits( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToWaitFor, const BaseType_t xClearOnExit, const BaseType_t xWaitForAllBits, TickType_t xTicksToWait )
 {
 EventGroup_t *pxEventBits = xEventGroup;
 EventBits_t uxReturn, uxControlBits = 0;
@@ -458,7 +458,7 @@ BaseType_t xTimeoutOccurred = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM EventBits_t xEventGroupClearBits( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToClear )
+DefKERNEL_SECTION_ITCM EventBits_t xEventGroupClearBits( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToClear )
 {
 EventGroup_t *pxEventBits = xEventGroup;
 EventBits_t uxReturn;
@@ -500,7 +500,7 @@ EventBits_t uxReturn;
 #endif
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM EventBits_t xEventGroupGetBitsFromISR( EventGroupHandle_t xEventGroup )
+DefKERNEL_SECTION_ITCM EventBits_t xEventGroupGetBitsFromISR( EventGroupHandle_t xEventGroup )
 {
 UBaseType_t uxSavedInterruptStatus;
 EventGroup_t const * const pxEventBits = xEventGroup;
@@ -516,7 +516,7 @@ EventBits_t uxReturn;
 } /*lint !e818 EventGroupHandle_t is a typedef used in other functions to so can't be pointer to const. */
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM EventBits_t xEventGroupSetBits( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet )
+DefKERNEL_SECTION_ITCM EventBits_t xEventGroupSetBits( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet )
 {
 ListItem_t *pxListItem, *pxNext;
 ListItem_t const *pxListEnd;
@@ -610,7 +610,7 @@ BaseType_t xMatchFound = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM void vEventGroupDelete( EventGroupHandle_t xEventGroup )
+DefKERNEL_SECTION_ITCM void vEventGroupDelete( EventGroupHandle_t xEventGroup )
 {
 EventGroup_t *pxEventBits = xEventGroup;
 const List_t *pxTasksWaitingForBits = &( pxEventBits->xTasksWaitingForBits );
@@ -654,7 +654,7 @@ const List_t *pxTasksWaitingForBits = &( pxEventBits->xTasksWaitingForBits );
 
 /* For internal use only - execute a 'set bits' command that was pended from
 an interrupt. */
-kKERNEL_SECTION_ITCM void vEventGroupSetBitsCallback( void *pvEventGroup, const uint32_t ulBitsToSet )
+DefKERNEL_SECTION_ITCM void vEventGroupSetBitsCallback( void *pvEventGroup, const uint32_t ulBitsToSet )
 {
 	( void ) xEventGroupSetBits( pvEventGroup, ( EventBits_t ) ulBitsToSet ); /*lint !e9079 Can't avoid cast to void* as a generic timer callback prototype. Callback casts back to original type so safe. */
 }
@@ -662,13 +662,13 @@ kKERNEL_SECTION_ITCM void vEventGroupSetBitsCallback( void *pvEventGroup, const 
 
 /* For internal use only - execute a 'clear bits' command that was pended from
 an interrupt. */
-kKERNEL_SECTION_ITCM void vEventGroupClearBitsCallback( void *pvEventGroup, const uint32_t ulBitsToClear )
+DefKERNEL_SECTION_ITCM void vEventGroupClearBitsCallback( void *pvEventGroup, const uint32_t ulBitsToClear )
 {
 	( void ) xEventGroupClearBits( pvEventGroup, ( EventBits_t ) ulBitsToClear ); /*lint !e9079 Can't avoid cast to void* as a generic timer callback prototype. Callback casts back to original type so safe. */
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static BaseType_t prvTestWaitCondition( const EventBits_t uxCurrentEventBits, const EventBits_t uxBitsToWaitFor, const BaseType_t xWaitForAllBits )
+DefKERNEL_SECTION_ITCM static BaseType_t prvTestWaitCondition( const EventBits_t uxCurrentEventBits, const EventBits_t uxBitsToWaitFor, const BaseType_t xWaitForAllBits )
 {
 BaseType_t xWaitConditionMet = pdFALSE;
 
@@ -705,7 +705,7 @@ BaseType_t xWaitConditionMet = pdFALSE;
 
 #if ( ( configUSE_TRACE_FACILITY == 1 ) && ( INCLUDE_xTimerPendFunctionCall == 1 ) && ( configUSE_TIMERS == 1 ) )
 
-	kKERNEL_SECTION_ITCM BaseType_t xEventGroupSetBitsFromISR( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet, BaseType_t *pxHigherPriorityTaskWoken )
+	DefKERNEL_SECTION_ITCM BaseType_t xEventGroupSetBitsFromISR( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet, BaseType_t *pxHigherPriorityTaskWoken )
 	{
 	BaseType_t xReturn;
 
@@ -720,7 +720,7 @@ BaseType_t xWaitConditionMet = pdFALSE;
 
 #if (configUSE_TRACE_FACILITY == 1)
 
-	kKERNEL_SECTION_ITCM UBaseType_t uxEventGroupGetNumber( void* xEventGroup )
+	DefKERNEL_SECTION_ITCM UBaseType_t uxEventGroupGetNumber( void* xEventGroup )
 	{
 	UBaseType_t xReturn;
 	EventGroup_t const *pxEventBits = ( EventGroup_t * ) xEventGroup; /*lint !e9087 !e9079 EventGroupHandle_t is a pointer to an EventGroup_t, but EventGroupHandle_t is kept opaque outside of this file for data hiding purposes. */
@@ -742,7 +742,7 @@ BaseType_t xWaitConditionMet = pdFALSE;
 
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	kKERNEL_SECTION_ITCM void vEventGroupSetNumber( void * xEventGroup, UBaseType_t uxEventGroupNumber )
+	DefKERNEL_SECTION_ITCM void vEventGroupSetNumber( void * xEventGroup, UBaseType_t uxEventGroupNumber )
 	{
 		( ( EventGroup_t * ) xEventGroup )->uxEventGroupNumber = uxEventGroupNumber; /*lint !e9087 !e9079 EventGroupHandle_t is a pointer to an EventGroup_t, but EventGroupHandle_t is kept opaque outside of this file for data hiding purposes. */
 	}

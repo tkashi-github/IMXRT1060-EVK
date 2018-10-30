@@ -173,8 +173,8 @@ only for ports that are using the MPU. */
 
 #else /* portUSING_MPU_WRAPPERS */
 
-	#define PRIVILEGED_FUNCTION __attribute__((section(".ramfunc.$SRAM_ITC")))  
-	#define PRIVILEGED_DATA __attribute__((section(".data.$SRAM_DTC")))
+	#define PRIVILEGED_FUNCTION DefKERNEL_SECTION_ITCM
+	#define PRIVILEGED_DATA DefKERNEL_SECTION_DTCM
 	#define portUSING_MPU_WRAPPERS 0
 
 #endif /* portUSING_MPU_WRAPPERS */

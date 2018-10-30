@@ -119,7 +119,7 @@ alignas(32) static size_t xBlockAllocatedBit = 0;
 void prvForceHeapInit(void){
 	pxEnd = NULL;
 }
-kKERNEL_SECTION_ITCM void *pvPortMalloc( size_t xWantedSize )
+DefKERNEL_SECTION_ITCM void *pvPortMalloc( size_t xWantedSize )
 {
 BlockLink_t *pxBlock, *pxPreviousBlock, *pxNewBlockLink;
 void *pvReturn = NULL;
@@ -269,7 +269,7 @@ void *pvReturn = NULL;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM void vPortFree( void *pv )
+DefKERNEL_SECTION_ITCM void vPortFree( void *pv )
 {
 uint8_t *puc = ( uint8_t * ) pv;
 BlockLink_t *pxLink;
@@ -317,25 +317,25 @@ BlockLink_t *pxLink;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM size_t xPortGetFreeHeapSize( void )
+DefKERNEL_SECTION_ITCM size_t xPortGetFreeHeapSize( void )
 {
 	return xFreeBytesRemaining;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM size_t xPortGetMinimumEverFreeHeapSize( void )
+DefKERNEL_SECTION_ITCM size_t xPortGetMinimumEverFreeHeapSize( void )
 {
 	return xMinimumEverFreeBytesRemaining;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM void vPortInitialiseBlocks( void )
+DefKERNEL_SECTION_ITCM void vPortInitialiseBlocks( void )
 {
 	/* This just exists to keep the linker quiet. */
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static void prvHeapInit( void )
+DefKERNEL_SECTION_ITCM static void prvHeapInit( void )
 {
 BlockLink_t *pxFirstFreeBlock;
 uint8_t *pucAlignedHeap;
@@ -383,7 +383,7 @@ size_t xTotalHeapSize = configTOTAL_HEAP_SIZE;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static void prvInsertBlockIntoFreeList( BlockLink_t *pxBlockToInsert )
+DefKERNEL_SECTION_ITCM static void prvInsertBlockIntoFreeList( BlockLink_t *pxBlockToInsert )
 {
 BlockLink_t *pxIterator;
 uint8_t *puc;

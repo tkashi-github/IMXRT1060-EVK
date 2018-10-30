@@ -114,6 +114,7 @@ DefALLOCATE_ITCM static _Bool StorageInit(enSD_t enSlotNo, sd_card_t *card)
 	TickType_t StartTick = xTaskGetTickCount();
 
 	/** begin */
+	SD_HostInit(card);
 	SD_HostReset(&(card->host));
 	SD_PowerOffCard(card->host.base, NULL);
 	SD_PowerOnCard(card->host.base, NULL);
@@ -255,12 +256,6 @@ DefALLOCATE_ITCM void StorageTask(void const *argument)
 	s_stSD[enSlotNo].usrParam.cd = &s_sdCardDetect[enSlotNo];
 
 	NVIC_SetPriority(enIRQn, kIRQ_PRIORITY_USDHC);
-
-	if (kStatus_Success != SD_HostInit(&s_stSD[enSlotNo]))
-	{
-		mimic_printf("[%s (%d)] SD_HostInit NG (Slot = %d)!\r\n", __FUNCTION__, __LINE__, enSlotNo + 1);
-		vTaskSuspend(NULL);
-	}
 
 	for (;;)
 	{

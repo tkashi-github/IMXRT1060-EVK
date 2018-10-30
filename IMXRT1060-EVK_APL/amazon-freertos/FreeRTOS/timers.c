@@ -145,7 +145,7 @@ PRIVILEGED_DATA static TaskHandle_t xTimerTaskHandle = NULL;
 	following callback function - which enables the application to optionally
 	provide the memory that will be used by the timer task as the task's stack
 	and TCB. */
-	kKERNEL_SECTION_ITCM extern void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint32_t *pulTimerTaskStackSize );
+	DefKERNEL_SECTION_ITCM extern void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint32_t *pulTimerTaskStackSize );
 
 #endif
 
@@ -153,44 +153,44 @@ PRIVILEGED_DATA static TaskHandle_t xTimerTaskHandle = NULL;
  * Initialise the infrastructure used by the timer service task if it has not
  * been initialised already.
  */
-kKERNEL_SECTION_ITCM static void prvCheckForValidListAndQueue( void ) PRIVILEGED_FUNCTION;
+DefKERNEL_SECTION_ITCM static void prvCheckForValidListAndQueue( void ) PRIVILEGED_FUNCTION;
 
 /*
  * The timer service task (daemon).  Timer functionality is controlled by this
  * task.  Other tasks communicate with the timer service task using the
  * xTimerQueue queue.
  */
-kKERNEL_SECTION_ITCM static void prvTimerTask( void *pvParameters ) PRIVILEGED_FUNCTION;
+DefKERNEL_SECTION_ITCM static void prvTimerTask( void *pvParameters ) PRIVILEGED_FUNCTION;
 
 /*
  * Called by the timer service task to interpret and process a command it
  * received on the timer queue.
  */
-kKERNEL_SECTION_ITCM static void prvProcessReceivedCommands( void ) PRIVILEGED_FUNCTION;
+DefKERNEL_SECTION_ITCM static void prvProcessReceivedCommands( void ) PRIVILEGED_FUNCTION;
 
 /*
  * Insert the timer into either xActiveTimerList1, or xActiveTimerList2,
  * depending on if the expire time causes a timer counter overflow.
  */
-kKERNEL_SECTION_ITCM static BaseType_t prvInsertTimerInActiveList( Timer_t * const pxTimer, const TickType_t xNextExpiryTime, const TickType_t xTimeNow, const TickType_t xCommandTime ) PRIVILEGED_FUNCTION;
+DefKERNEL_SECTION_ITCM static BaseType_t prvInsertTimerInActiveList( Timer_t * const pxTimer, const TickType_t xNextExpiryTime, const TickType_t xTimeNow, const TickType_t xCommandTime ) PRIVILEGED_FUNCTION;
 
 /*
  * An active timer has reached its expire time.  Reload the timer if it is an
  * auto reload timer, then call its callback.
  */
-kKERNEL_SECTION_ITCM static void prvProcessExpiredTimer( const TickType_t xNextExpireTime, const TickType_t xTimeNow ) PRIVILEGED_FUNCTION;
+DefKERNEL_SECTION_ITCM static void prvProcessExpiredTimer( const TickType_t xNextExpireTime, const TickType_t xTimeNow ) PRIVILEGED_FUNCTION;
 
 /*
  * The tick count has overflowed.  Switch the timer lists after ensuring the
  * current timer list does not still reference some timers.
  */
-kKERNEL_SECTION_ITCM static void prvSwitchTimerLists( void ) PRIVILEGED_FUNCTION;
+DefKERNEL_SECTION_ITCM static void prvSwitchTimerLists( void ) PRIVILEGED_FUNCTION;
 
 /*
  * Obtain the current tick count, setting *pxTimerListsWereSwitched to pdTRUE
  * if a tick count overflow occurred since prvSampleTimeNow() was last called.
  */
-kKERNEL_SECTION_ITCM static TickType_t prvSampleTimeNow( BaseType_t * const pxTimerListsWereSwitched ) PRIVILEGED_FUNCTION;
+DefKERNEL_SECTION_ITCM static TickType_t prvSampleTimeNow( BaseType_t * const pxTimerListsWereSwitched ) PRIVILEGED_FUNCTION;
 
 /*
  * If the timer list contains any active timers then return the expire time of
@@ -198,19 +198,19 @@ kKERNEL_SECTION_ITCM static TickType_t prvSampleTimeNow( BaseType_t * const pxTi
  * timer list does not contain any timers then return 0 and set *pxListWasEmpty
  * to pdTRUE.
  */
-kKERNEL_SECTION_ITCM static TickType_t prvGetNextExpireTime( BaseType_t * const pxListWasEmpty ) PRIVILEGED_FUNCTION;
+DefKERNEL_SECTION_ITCM static TickType_t prvGetNextExpireTime( BaseType_t * const pxListWasEmpty ) PRIVILEGED_FUNCTION;
 
 /*
  * If a timer has expired, process it.  Otherwise, block the timer service task
  * until either a timer does expire or a command is received.
  */
-kKERNEL_SECTION_ITCM static void prvProcessTimerOrBlockTask( const TickType_t xNextExpireTime, BaseType_t xListWasEmpty ) PRIVILEGED_FUNCTION;
+DefKERNEL_SECTION_ITCM static void prvProcessTimerOrBlockTask( const TickType_t xNextExpireTime, BaseType_t xListWasEmpty ) PRIVILEGED_FUNCTION;
 
 /*
  * Called after a Timer_t structure has been allocated either statically or
  * dynamically to fill in the structure's members.
  */
-kKERNEL_SECTION_ITCM static void prvInitialiseNewTimer(	const char * const pcTimerName,			/*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+DefKERNEL_SECTION_ITCM static void prvInitialiseNewTimer(	const char * const pcTimerName,			/*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 									const TickType_t xTimerPeriodInTicks,
 									const UBaseType_t uxAutoReload,
 									void * const pvTimerID,
@@ -218,7 +218,7 @@ kKERNEL_SECTION_ITCM static void prvInitialiseNewTimer(	const char * const pcTim
 									Timer_t *pxNewTimer ) PRIVILEGED_FUNCTION;
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM BaseType_t xTimerCreateTimerTask( void )
+DefKERNEL_SECTION_ITCM BaseType_t xTimerCreateTimerTask( void )
 {
 BaseType_t xReturn = pdFAIL;
 
@@ -273,7 +273,7 @@ BaseType_t xReturn = pdFAIL;
 
 #if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
 
-	kKERNEL_SECTION_ITCM TimerHandle_t xTimerCreate(	const char * const pcTimerName,			/*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+	DefKERNEL_SECTION_ITCM TimerHandle_t xTimerCreate(	const char * const pcTimerName,			/*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 								const TickType_t xTimerPeriodInTicks,
 								const UBaseType_t uxAutoReload,
 								void * const pvTimerID,
@@ -305,7 +305,7 @@ BaseType_t xReturn = pdFAIL;
 
 #if( configSUPPORT_STATIC_ALLOCATION == 1 )
 
-	kKERNEL_SECTION_ITCM TimerHandle_t xTimerCreateStatic(	const char * const pcTimerName,		/*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+	DefKERNEL_SECTION_ITCM TimerHandle_t xTimerCreateStatic(	const char * const pcTimerName,		/*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 										const TickType_t xTimerPeriodInTicks,
 										const UBaseType_t uxAutoReload,
 										void * const pvTimerID,
@@ -348,7 +348,7 @@ BaseType_t xReturn = pdFAIL;
 #endif /* configSUPPORT_STATIC_ALLOCATION */
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static void prvInitialiseNewTimer(	const char * const pcTimerName,			/*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+DefKERNEL_SECTION_ITCM static void prvInitialiseNewTimer(	const char * const pcTimerName,			/*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 									const TickType_t xTimerPeriodInTicks,
 									const UBaseType_t uxAutoReload,
 									void * const pvTimerID,
@@ -377,7 +377,7 @@ kKERNEL_SECTION_ITCM static void prvInitialiseNewTimer(	const char * const pcTim
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM BaseType_t xTimerGenericCommand( TimerHandle_t xTimer, const BaseType_t xCommandID, const TickType_t xOptionalValue, BaseType_t * const pxHigherPriorityTaskWoken, const TickType_t xTicksToWait )
+DefKERNEL_SECTION_ITCM BaseType_t xTimerGenericCommand( TimerHandle_t xTimer, const BaseType_t xCommandID, const TickType_t xOptionalValue, BaseType_t * const pxHigherPriorityTaskWoken, const TickType_t xTicksToWait )
 {
 BaseType_t xReturn = pdFAIL;
 DaemonTaskMessage_t xMessage;
@@ -420,7 +420,7 @@ DaemonTaskMessage_t xMessage;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM TaskHandle_t xTimerGetTimerDaemonTaskHandle( void )
+DefKERNEL_SECTION_ITCM TaskHandle_t xTimerGetTimerDaemonTaskHandle( void )
 {
 	/* If xTimerGetTimerDaemonTaskHandle() is called before the scheduler has been
 	started, then xTimerTaskHandle will be NULL. */
@@ -429,7 +429,7 @@ kKERNEL_SECTION_ITCM TaskHandle_t xTimerGetTimerDaemonTaskHandle( void )
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM TickType_t xTimerGetPeriod( TimerHandle_t xTimer )
+DefKERNEL_SECTION_ITCM TickType_t xTimerGetPeriod( TimerHandle_t xTimer )
 {
 Timer_t *pxTimer = xTimer;
 
@@ -438,7 +438,7 @@ Timer_t *pxTimer = xTimer;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM TickType_t xTimerGetExpiryTime( TimerHandle_t xTimer )
+DefKERNEL_SECTION_ITCM TickType_t xTimerGetExpiryTime( TimerHandle_t xTimer )
 {
 Timer_t * pxTimer =  xTimer;
 TickType_t xReturn;
@@ -449,7 +449,7 @@ TickType_t xReturn;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM const char * pcTimerGetName( TimerHandle_t xTimer ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+DefKERNEL_SECTION_ITCM const char * pcTimerGetName( TimerHandle_t xTimer ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 {
 Timer_t *pxTimer = xTimer;
 
@@ -458,7 +458,7 @@ Timer_t *pxTimer = xTimer;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static void prvProcessExpiredTimer( const TickType_t xNextExpireTime, const TickType_t xTimeNow )
+DefKERNEL_SECTION_ITCM static void prvProcessExpiredTimer( const TickType_t xNextExpireTime, const TickType_t xTimeNow )
 {
 BaseType_t xResult;
 Timer_t * const pxTimer = ( Timer_t * ) listGET_OWNER_OF_HEAD_ENTRY( pxCurrentTimerList ); /*lint !e9087 !e9079 void * is used as this macro is used with tasks and co-routines too.  Alignment is known to be fine as the type of the pointer stored and retrieved is the same. */
@@ -498,7 +498,7 @@ Timer_t * const pxTimer = ( Timer_t * ) listGET_OWNER_OF_HEAD_ENTRY( pxCurrentTi
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static void prvTimerTask( void *pvParameters )
+DefKERNEL_SECTION_ITCM static void prvTimerTask( void *pvParameters )
 {
 TickType_t xNextExpireTime;
 BaseType_t xListWasEmpty;
@@ -534,7 +534,7 @@ BaseType_t xListWasEmpty;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static void prvProcessTimerOrBlockTask( const TickType_t xNextExpireTime, BaseType_t xListWasEmpty )
+DefKERNEL_SECTION_ITCM static void prvProcessTimerOrBlockTask( const TickType_t xNextExpireTime, BaseType_t xListWasEmpty )
 {
 TickType_t xTimeNow;
 BaseType_t xTimerListsWereSwitched;
@@ -594,7 +594,7 @@ BaseType_t xTimerListsWereSwitched;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static TickType_t prvGetNextExpireTime( BaseType_t * const pxListWasEmpty )
+DefKERNEL_SECTION_ITCM static TickType_t prvGetNextExpireTime( BaseType_t * const pxListWasEmpty )
 {
 TickType_t xNextExpireTime;
 
@@ -620,7 +620,7 @@ TickType_t xNextExpireTime;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static TickType_t prvSampleTimeNow( BaseType_t * const pxTimerListsWereSwitched )
+DefKERNEL_SECTION_ITCM static TickType_t prvSampleTimeNow( BaseType_t * const pxTimerListsWereSwitched )
 {
 TickType_t xTimeNow;
 PRIVILEGED_DATA static TickType_t xLastTime = ( TickType_t ) 0U; /*lint !e956 Variable is only accessible to one task. */
@@ -643,7 +643,7 @@ PRIVILEGED_DATA static TickType_t xLastTime = ( TickType_t ) 0U; /*lint !e956 Va
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static BaseType_t prvInsertTimerInActiveList( Timer_t * const pxTimer, const TickType_t xNextExpiryTime, const TickType_t xTimeNow, const TickType_t xCommandTime )
+DefKERNEL_SECTION_ITCM static BaseType_t prvInsertTimerInActiveList( Timer_t * const pxTimer, const TickType_t xNextExpiryTime, const TickType_t xTimeNow, const TickType_t xCommandTime )
 {
 BaseType_t xProcessTimerNow = pdFALSE;
 
@@ -684,7 +684,7 @@ BaseType_t xProcessTimerNow = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static void	prvProcessReceivedCommands( void )
+DefKERNEL_SECTION_ITCM static void	prvProcessReceivedCommands( void )
 {
 DaemonTaskMessage_t xMessage;
 Timer_t *pxTimer;
@@ -831,7 +831,7 @@ TickType_t xTimeNow;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static void prvSwitchTimerLists( void )
+DefKERNEL_SECTION_ITCM static void prvSwitchTimerLists( void )
 {
 TickType_t xNextExpireTime, xReloadTime;
 List_t *pxTemp;
@@ -890,7 +890,7 @@ BaseType_t xResult;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static void prvCheckForValidListAndQueue( void )
+DefKERNEL_SECTION_ITCM static void prvCheckForValidListAndQueue( void )
 {
 PRIVILEGED_DATA static List_t xActiveTimerList1;
 PRIVILEGED_DATA static List_t xActiveTimerList2;
@@ -944,7 +944,7 @@ PRIVILEGED_DATA static List_t xActiveTimerList2;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM BaseType_t xTimerIsTimerActive( TimerHandle_t xTimer )
+DefKERNEL_SECTION_ITCM BaseType_t xTimerIsTimerActive( TimerHandle_t xTimer )
 {
 BaseType_t xTimerIsInActiveList;
 Timer_t *pxTimer = xTimer;
@@ -972,7 +972,7 @@ Timer_t *pxTimer = xTimer;
 } /*lint !e818 Can't be pointer to const due to the typedef. */
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM void *pvTimerGetTimerID( const TimerHandle_t xTimer )
+DefKERNEL_SECTION_ITCM void *pvTimerGetTimerID( const TimerHandle_t xTimer )
 {
 Timer_t * const pxTimer = xTimer;
 void *pvReturn;
@@ -989,7 +989,7 @@ void *pvReturn;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM void vTimerSetTimerID( TimerHandle_t xTimer, void *pvNewID )
+DefKERNEL_SECTION_ITCM void vTimerSetTimerID( TimerHandle_t xTimer, void *pvNewID )
 {
 Timer_t * const pxTimer = xTimer;
 
@@ -1005,7 +1005,7 @@ Timer_t * const pxTimer = xTimer;
 
 #if( INCLUDE_xTimerPendFunctionCall == 1 )
 
-	kKERNEL_SECTION_ITCM BaseType_t xTimerPendFunctionCallFromISR( PendedFunction_t xFunctionToPend, void *pvParameter1, uint32_t ulParameter2, BaseType_t *pxHigherPriorityTaskWoken )
+	DefKERNEL_SECTION_ITCM BaseType_t xTimerPendFunctionCallFromISR( PendedFunction_t xFunctionToPend, void *pvParameter1, uint32_t ulParameter2, BaseType_t *pxHigherPriorityTaskWoken )
 	{
 	DaemonTaskMessage_t xMessage;
 	BaseType_t xReturn;
@@ -1029,7 +1029,7 @@ Timer_t * const pxTimer = xTimer;
 
 #if( INCLUDE_xTimerPendFunctionCall == 1 )
 
-	kKERNEL_SECTION_ITCM BaseType_t xTimerPendFunctionCall( PendedFunction_t xFunctionToPend, void *pvParameter1, uint32_t ulParameter2, TickType_t xTicksToWait )
+	DefKERNEL_SECTION_ITCM BaseType_t xTimerPendFunctionCall( PendedFunction_t xFunctionToPend, void *pvParameter1, uint32_t ulParameter2, TickType_t xTicksToWait )
 	{
 	DaemonTaskMessage_t xMessage;
 	BaseType_t xReturn;
@@ -1058,7 +1058,7 @@ Timer_t * const pxTimer = xTimer;
 
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	kKERNEL_SECTION_ITCM UBaseType_t uxTimerGetTimerNumber( TimerHandle_t xTimer )
+	DefKERNEL_SECTION_ITCM UBaseType_t uxTimerGetTimerNumber( TimerHandle_t xTimer )
 	{
 		return ( ( Timer_t * ) xTimer )->uxTimerNumber;
 	}
@@ -1068,7 +1068,7 @@ Timer_t * const pxTimer = xTimer;
 
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	kKERNEL_SECTION_ITCM void vTimerSetTimerNumber( TimerHandle_t xTimer, UBaseType_t uxTimerNumber )
+	DefKERNEL_SECTION_ITCM void vTimerSetTimerNumber( TimerHandle_t xTimer, UBaseType_t uxTimerNumber )
 	{
 		( ( Timer_t * ) xTimer )->uxTimerNumber = uxTimerNumber;
 	}

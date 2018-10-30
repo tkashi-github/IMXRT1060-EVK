@@ -40,7 +40,8 @@
 			"fsl_common.h": "c",
 			"storagetask.h": "c",
 			"usertypedef.h": "c",
-			"filecmd.h": "c"
+			"filecmd.h": "c",
+			"freertos.h": "c"
 		},
 		"C_Cpp.default.defines": [
 			"__GNUC__",

@@ -416,7 +416,7 @@ void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName ){
 
 #if( configUSE_IDLE_HOOK > 0 )
 uint32_t g_u32CurrentRun = 0u;
-kKERNEL_SECTION_ITCM void vApplicationIdleHook(void)
+DefKERNEL_SECTION_ITCM void vApplicationIdleHook(void)
 {
 	uint32_t primask;
 
@@ -436,7 +436,7 @@ kKERNEL_SECTION_ITCM void vApplicationIdleHook(void)
  */
 #if ( INCLUDE_vTaskSuspend == 1 )
 
-	kKERNEL_SECTION_ITCM static BaseType_t prvTaskIsTaskSuspended( const TaskHandle_t xTask ) PRIVILEGED_FUNCTION;
+	DefKERNEL_SECTION_ITCM static BaseType_t prvTaskIsTaskSuspended( const TaskHandle_t xTask ) PRIVILEGED_FUNCTION;
 
 #endif /* INCLUDE_vTaskSuspend */
 
@@ -444,7 +444,7 @@ kKERNEL_SECTION_ITCM void vApplicationIdleHook(void)
  * Utility to ready all the lists used by the scheduler.  This is called
  * automatically upon the creation of the first task.
  */
-kKERNEL_SECTION_ITCM static void prvInitialiseTaskLists( void ) PRIVILEGED_FUNCTION;
+DefKERNEL_SECTION_ITCM static void prvInitialiseTaskLists( void ) PRIVILEGED_FUNCTION;
 
 /*
  * The idle task, which as all tasks is implemented as a never ending loop.
@@ -457,7 +457,7 @@ kKERNEL_SECTION_ITCM static void prvInitialiseTaskLists( void ) PRIVILEGED_FUNCT
  * void prvIdleTask( void *pvParameters );
  *
  */
-kKERNEL_SECTION_ITCM static portTASK_FUNCTION_PROTO( prvIdleTask, pvParameters );
+DefKERNEL_SECTION_ITCM static portTASK_FUNCTION_PROTO( prvIdleTask, pvParameters );
 
 /*
  * Utility to free all memory allocated by the scheduler to hold a TCB,
@@ -468,7 +468,7 @@ kKERNEL_SECTION_ITCM static portTASK_FUNCTION_PROTO( prvIdleTask, pvParameters )
  */
 #if ( INCLUDE_vTaskDelete == 1 )
 
-	kKERNEL_SECTION_ITCM static void prvDeleteTCB( TCB_t *pxTCB ) PRIVILEGED_FUNCTION;
+	DefKERNEL_SECTION_ITCM static void prvDeleteTCB( TCB_t *pxTCB ) PRIVILEGED_FUNCTION;
 
 #endif
 
@@ -477,13 +477,13 @@ kKERNEL_SECTION_ITCM static portTASK_FUNCTION_PROTO( prvIdleTask, pvParameters )
  * in the list of tasks waiting to be deleted.  If so the task is cleaned up
  * and its TCB deleted.
  */
-kKERNEL_SECTION_ITCM static void prvCheckTasksWaitingTermination( void ) PRIVILEGED_FUNCTION;
+DefKERNEL_SECTION_ITCM static void prvCheckTasksWaitingTermination( void ) PRIVILEGED_FUNCTION;
 
 /*
  * The currently executing task is entering the Blocked state.  Add the task to
  * either the current or the overflow delayed task list.
  */
-kKERNEL_SECTION_ITCM static void prvAddCurrentTaskToDelayedList( TickType_t xTicksToWait, const BaseType_t xCanBlockIndefinitely ) PRIVILEGED_FUNCTION;
+DefKERNEL_SECTION_ITCM static void prvAddCurrentTaskToDelayedList( TickType_t xTicksToWait, const BaseType_t xCanBlockIndefinitely ) PRIVILEGED_FUNCTION;
 
 /*
  * Fills an TaskStatus_t structure with information on each task that is
@@ -495,7 +495,7 @@ kKERNEL_SECTION_ITCM static void prvAddCurrentTaskToDelayedList( TickType_t xTic
  */
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	kKERNEL_SECTION_ITCM static UBaseType_t prvListTasksWithinSingleList( TaskStatus_t *pxTaskStatusArray, List_t *pxList, eTaskState eState ) PRIVILEGED_FUNCTION;
+	DefKERNEL_SECTION_ITCM static UBaseType_t prvListTasksWithinSingleList( TaskStatus_t *pxTaskStatusArray, List_t *pxList, eTaskState eState ) PRIVILEGED_FUNCTION;
 
 #endif
 
@@ -505,7 +505,7 @@ kKERNEL_SECTION_ITCM static void prvAddCurrentTaskToDelayedList( TickType_t xTic
  */
 #if ( INCLUDE_xTaskGetHandle == 1 )
 
-	kKERNEL_SECTION_ITCM static TCB_t *prvSearchForNameWithinSingleList( List_t *pxList, const char pcNameToQuery[] ) PRIVILEGED_FUNCTION;
+	DefKERNEL_SECTION_ITCM static TCB_t *prvSearchForNameWithinSingleList( List_t *pxList, const char pcNameToQuery[] ) PRIVILEGED_FUNCTION;
 
 #endif
 
@@ -516,7 +516,7 @@ kKERNEL_SECTION_ITCM static void prvAddCurrentTaskToDelayedList( TickType_t xTic
  */
 #if ( ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark == 1 ) )
 
-	kKERNEL_SECTION_ITCM static configSTACK_DEPTH_TYPE prvTaskCheckFreeStackSpace( const uint8_t * pucStackByte ) PRIVILEGED_FUNCTION;
+	DefKERNEL_SECTION_ITCM static configSTACK_DEPTH_TYPE prvTaskCheckFreeStackSpace( const uint8_t * pucStackByte ) PRIVILEGED_FUNCTION;
 
 #endif
 
@@ -531,7 +531,7 @@ kKERNEL_SECTION_ITCM static void prvAddCurrentTaskToDelayedList( TickType_t xTic
  */
 #if ( configUSE_TICKLESS_IDLE != 0 )
 
-	kKERNEL_SECTION_ITCM static TickType_t prvGetExpectedIdleTime( void ) PRIVILEGED_FUNCTION;
+	DefKERNEL_SECTION_ITCM static TickType_t prvGetExpectedIdleTime( void ) PRIVILEGED_FUNCTION;
 
 #endif
 
@@ -547,7 +547,7 @@ static void prvResetNextTaskUnblockTime( void );
 	 * Helper function used to pad task names with spaces when printing out
 	 * human readable tables of task information.
 	 */
-	kKERNEL_SECTION_ITCM static char *prvWriteNameToBuffer( char *pcBuffer, const char *pcTaskName ) PRIVILEGED_FUNCTION;
+	DefKERNEL_SECTION_ITCM static char *prvWriteNameToBuffer( char *pcBuffer, const char *pcTaskName ) PRIVILEGED_FUNCTION;
 
 #endif
 
@@ -555,7 +555,7 @@ static void prvResetNextTaskUnblockTime( void );
  * Called after a Task_t structure has been allocated either statically or
  * dynamically to fill in the structure's members.
  */
-kKERNEL_SECTION_ITCM static void prvInitialiseNewTask( 	TaskFunction_t pxTaskCode,
+DefKERNEL_SECTION_ITCM static void prvInitialiseNewTask( 	TaskFunction_t pxTaskCode,
 									const char * const pcName, 		/*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 									const uint32_t ulStackDepth,
 									void * const pvParameters,
@@ -568,7 +568,7 @@ kKERNEL_SECTION_ITCM static void prvInitialiseNewTask( 	TaskFunction_t pxTaskCod
  * Called after a new task has been created and initialised to place the task
  * under the control of the scheduler.
  */
-kKERNEL_SECTION_ITCM static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION;
+DefKERNEL_SECTION_ITCM static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION;
 
 /*
  * freertos_tasks_c_additions_init() should only be called if the user definable
@@ -577,7 +577,7 @@ kKERNEL_SECTION_ITCM static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRI
  */
 #ifdef FREERTOS_TASKS_C_ADDITIONS_INIT
 
-	kKERNEL_SECTION_ITCM static void freertos_tasks_c_additions_init( void ) PRIVILEGED_FUNCTION;
+	DefKERNEL_SECTION_ITCM static void freertos_tasks_c_additions_init( void ) PRIVILEGED_FUNCTION;
 
 #endif
 
@@ -585,7 +585,7 @@ kKERNEL_SECTION_ITCM static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRI
 
 #if( configSUPPORT_STATIC_ALLOCATION == 1 )
 
-	kKERNEL_SECTION_ITCM TaskHandle_t xTaskCreateStatic(	TaskFunction_t pxTaskCode,
+	DefKERNEL_SECTION_ITCM TaskHandle_t xTaskCreateStatic(	TaskFunction_t pxTaskCode,
 									const char * const pcName,		/*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 									const uint32_t ulStackDepth,
 									void * const pvParameters,
@@ -642,7 +642,7 @@ kKERNEL_SECTION_ITCM static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRI
 
 #if( ( portUSING_MPU_WRAPPERS == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 1 ) )
 
-	kKERNEL_SECTION_ITCM BaseType_t xTaskCreateRestrictedStatic( const TaskParameters_t * const pxTaskDefinition, TaskHandle_t *pxCreatedTask )
+	DefKERNEL_SECTION_ITCM BaseType_t xTaskCreateRestrictedStatic( const TaskParameters_t * const pxTaskDefinition, TaskHandle_t *pxCreatedTask )
 	{
 	TCB_t *pxNewTCB;
 	BaseType_t xReturn = errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY;
@@ -688,7 +688,7 @@ kKERNEL_SECTION_ITCM static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRI
 
 #if( ( portUSING_MPU_WRAPPERS == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
 
-	kKERNEL_SECTION_ITCM BaseType_t xTaskCreateRestricted( const TaskParameters_t * const pxTaskDefinition, TaskHandle_t *pxCreatedTask )
+	DefKERNEL_SECTION_ITCM BaseType_t xTaskCreateRestricted( const TaskParameters_t * const pxTaskDefinition, TaskHandle_t *pxCreatedTask )
 	{
 	TCB_t *pxNewTCB;
 	BaseType_t xReturn = errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY;
@@ -737,7 +737,7 @@ kKERNEL_SECTION_ITCM static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRI
 
 #if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
 
-	kKERNEL_SECTION_ITCM BaseType_t xTaskCreate(	TaskFunction_t pxTaskCode,
+	DefKERNEL_SECTION_ITCM BaseType_t xTaskCreate(	TaskFunction_t pxTaskCode,
 							const char * const pcName,		/*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 							const configSTACK_DEPTH_TYPE usStackDepth,
 							void * const pvParameters,
@@ -828,7 +828,7 @@ kKERNEL_SECTION_ITCM static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRI
 #endif /* configSUPPORT_DYNAMIC_ALLOCATION */
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static void prvInitialiseNewTask( 	TaskFunction_t pxTaskCode,
+DefKERNEL_SECTION_ITCM static void prvInitialiseNewTask( 	TaskFunction_t pxTaskCode,
 									const char * const pcName,		/*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 									const uint32_t ulStackDepth,
 									void * const pvParameters,
@@ -1034,7 +1034,7 @@ UBaseType_t x;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
+DefKERNEL_SECTION_ITCM static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 {
 	/* Ensure interrupts don't access the task lists while the lists are being
 	updated. */
@@ -1119,7 +1119,7 @@ kKERNEL_SECTION_ITCM static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 
 #if ( INCLUDE_vTaskDelete == 1 )
 
-	kKERNEL_SECTION_ITCM void vTaskDelete( TaskHandle_t xTaskToDelete )
+	DefKERNEL_SECTION_ITCM void vTaskDelete( TaskHandle_t xTaskToDelete )
 	{
 	TCB_t *pxTCB;
 
@@ -1211,7 +1211,7 @@ kKERNEL_SECTION_ITCM static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 
 #if ( INCLUDE_vTaskDelayUntil == 1 )
 
-	kKERNEL_SECTION_ITCM void vTaskDelayUntil( TickType_t * const pxPreviousWakeTime, const TickType_t xTimeIncrement )
+	DefKERNEL_SECTION_ITCM void vTaskDelayUntil( TickType_t * const pxPreviousWakeTime, const TickType_t xTimeIncrement )
 	{
 	TickType_t xTimeToWake;
 	BaseType_t xAlreadyYielded, xShouldDelay = pdFALSE;
@@ -1295,7 +1295,7 @@ kKERNEL_SECTION_ITCM static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 
 #if ( INCLUDE_vTaskDelay == 1 )
 
-	kKERNEL_SECTION_ITCM void vTaskDelay( const TickType_t xTicksToDelay )
+	DefKERNEL_SECTION_ITCM void vTaskDelay( const TickType_t xTicksToDelay )
 	{
 	BaseType_t xAlreadyYielded = pdFALSE;
 
@@ -1340,7 +1340,7 @@ kKERNEL_SECTION_ITCM static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 
 #if( ( INCLUDE_eTaskGetState == 1 ) || ( configUSE_TRACE_FACILITY == 1 ) )
 
-	kKERNEL_SECTION_ITCM eTaskState eTaskGetState( TaskHandle_t xTask )
+	DefKERNEL_SECTION_ITCM eTaskState eTaskGetState( TaskHandle_t xTask )
 	{
 	eTaskState eReturn;
 	List_t const * pxStateList, *pxDelayedList, *pxOverflowedDelayedList;
@@ -1432,7 +1432,7 @@ kKERNEL_SECTION_ITCM static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 
 #if ( INCLUDE_uxTaskPriorityGet == 1 )
 
-	kKERNEL_SECTION_ITCM UBaseType_t uxTaskPriorityGet( const TaskHandle_t xTask )
+	DefKERNEL_SECTION_ITCM UBaseType_t uxTaskPriorityGet( const TaskHandle_t xTask )
 	{
 	TCB_t const *pxTCB;
 	UBaseType_t uxReturn;
@@ -1454,7 +1454,7 @@ kKERNEL_SECTION_ITCM static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 
 #if ( INCLUDE_uxTaskPriorityGet == 1 )
 
-	kKERNEL_SECTION_ITCM UBaseType_t uxTaskPriorityGetFromISR( const TaskHandle_t xTask )
+	DefKERNEL_SECTION_ITCM UBaseType_t uxTaskPriorityGetFromISR( const TaskHandle_t xTask )
 	{
 	TCB_t const *pxTCB;
 	UBaseType_t uxReturn, uxSavedInterruptState;
@@ -1494,7 +1494,7 @@ kKERNEL_SECTION_ITCM static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 
 #if ( INCLUDE_vTaskPrioritySet == 1 )
 
-	kKERNEL_SECTION_ITCM void vTaskPrioritySet( TaskHandle_t xTask, UBaseType_t uxNewPriority )
+	DefKERNEL_SECTION_ITCM void vTaskPrioritySet( TaskHandle_t xTask, UBaseType_t uxNewPriority )
 	{
 	TCB_t *pxTCB;
 	UBaseType_t uxCurrentBasePriority, uxPriorityUsedOnEntry;
@@ -1658,7 +1658,7 @@ kKERNEL_SECTION_ITCM static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 
 #if ( INCLUDE_vTaskSuspend == 1 )
 
-	kKERNEL_SECTION_ITCM void vTaskSuspend( TaskHandle_t xTaskToSuspend )
+	DefKERNEL_SECTION_ITCM void vTaskSuspend( TaskHandle_t xTaskToSuspend )
 	{
 	TCB_t *pxTCB;
 
@@ -1759,7 +1759,7 @@ kKERNEL_SECTION_ITCM static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 
 #if ( INCLUDE_vTaskSuspend == 1 )
 
-	kKERNEL_SECTION_ITCM static BaseType_t prvTaskIsTaskSuspended( const TaskHandle_t xTask )
+	DefKERNEL_SECTION_ITCM static BaseType_t prvTaskIsTaskSuspended( const TaskHandle_t xTask )
 	{
 	BaseType_t xReturn = pdFALSE;
 	const TCB_t * const pxTCB = xTask;
@@ -1805,7 +1805,7 @@ kKERNEL_SECTION_ITCM static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 
 #if ( INCLUDE_vTaskSuspend == 1 )
 
-	kKERNEL_SECTION_ITCM void vTaskResume( TaskHandle_t xTaskToResume )
+	DefKERNEL_SECTION_ITCM void vTaskResume( TaskHandle_t xTaskToResume )
 	{
 	TCB_t * const pxTCB = xTaskToResume;
 
@@ -1859,7 +1859,7 @@ kKERNEL_SECTION_ITCM static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 
 #if ( ( INCLUDE_xTaskResumeFromISR == 1 ) && ( INCLUDE_vTaskSuspend == 1 ) )
 
-	kKERNEL_SECTION_ITCM BaseType_t xTaskResumeFromISR( TaskHandle_t xTaskToResume )
+	DefKERNEL_SECTION_ITCM BaseType_t xTaskResumeFromISR( TaskHandle_t xTaskToResume )
 	{
 	BaseType_t xYieldRequired = pdFALSE;
 	TCB_t * const pxTCB = xTaskToResume;
@@ -1929,7 +1929,7 @@ kKERNEL_SECTION_ITCM static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 #endif /* ( ( INCLUDE_xTaskResumeFromISR == 1 ) && ( INCLUDE_vTaskSuspend == 1 ) ) */
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM void vTaskStartScheduler( void )
+DefKERNEL_SECTION_ITCM void vTaskStartScheduler( void )
 {
 BaseType_t xReturn;
 
@@ -2051,7 +2051,7 @@ BaseType_t xReturn;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM void vTaskEndScheduler( void )
+DefKERNEL_SECTION_ITCM void vTaskEndScheduler( void )
 {
 	/* Stop the scheduler interrupts and call the portable scheduler end
 	routine so the original ISRs can be restored if necessary.  The port
@@ -2062,7 +2062,7 @@ kKERNEL_SECTION_ITCM void vTaskEndScheduler( void )
 }
 /*----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM void vTaskSuspendAll( void )
+DefKERNEL_SECTION_ITCM void vTaskSuspendAll( void )
 {
 	/* A critical section is not required as the variable is of type
 	BaseType_t.  Please read Richard Barry's reply in the following link to a
@@ -2074,7 +2074,7 @@ kKERNEL_SECTION_ITCM void vTaskSuspendAll( void )
 
 #if ( configUSE_TICKLESS_IDLE != 0 )
 
-	kKERNEL_SECTION_ITCM static TickType_t prvGetExpectedIdleTime( void )
+	DefKERNEL_SECTION_ITCM static TickType_t prvGetExpectedIdleTime( void )
 	{
 	TickType_t xReturn;
 	UBaseType_t uxHigherPriorityReadyTasks = pdFALSE;
@@ -2135,7 +2135,7 @@ kKERNEL_SECTION_ITCM void vTaskSuspendAll( void )
 #endif /* configUSE_TICKLESS_IDLE */
 /*----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM BaseType_t xTaskResumeAll( void )
+DefKERNEL_SECTION_ITCM BaseType_t xTaskResumeAll( void )
 {
 TCB_t *pxTCB = NULL;
 BaseType_t xAlreadyYielded = pdFALSE;
@@ -2245,7 +2245,7 @@ BaseType_t xAlreadyYielded = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM TickType_t xTaskGetTickCount( void )
+DefKERNEL_SECTION_ITCM TickType_t xTaskGetTickCount( void )
 {
 TickType_t xTicks;
 
@@ -2260,7 +2260,7 @@ TickType_t xTicks;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM TickType_t xTaskGetTickCountFromISR( void )
+DefKERNEL_SECTION_ITCM TickType_t xTaskGetTickCountFromISR( void )
 {
 TickType_t xReturn;
 UBaseType_t uxSavedInterruptStatus;
@@ -2291,7 +2291,7 @@ UBaseType_t uxSavedInterruptStatus;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM UBaseType_t uxTaskGetNumberOfTasks( void )
+DefKERNEL_SECTION_ITCM UBaseType_t uxTaskGetNumberOfTasks( void )
 {
 	/* A critical section is not required because the variables are of type
 	BaseType_t. */
@@ -2299,7 +2299,7 @@ kKERNEL_SECTION_ITCM UBaseType_t uxTaskGetNumberOfTasks( void )
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM char *pcTaskGetName( TaskHandle_t xTaskToQuery ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+DefKERNEL_SECTION_ITCM char *pcTaskGetName( TaskHandle_t xTaskToQuery ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 {
 TCB_t *pxTCB;
 
@@ -2313,7 +2313,7 @@ TCB_t *pxTCB;
 
 #if ( INCLUDE_xTaskGetHandle == 1 )
 
-	kKERNEL_SECTION_ITCM static TCB_t *prvSearchForNameWithinSingleList( List_t *pxList, const char pcNameToQuery[] )
+	DefKERNEL_SECTION_ITCM static TCB_t *prvSearchForNameWithinSingleList( List_t *pxList, const char pcNameToQuery[] )
 	{
 	TCB_t *pxNextTCB, *pxFirstTCB, *pxReturn = NULL;
 	UBaseType_t x;
@@ -2381,7 +2381,7 @@ TCB_t *pxTCB;
 
 #if ( INCLUDE_xTaskGetHandle == 1 )
 
-	kKERNEL_SECTION_ITCM TaskHandle_t xTaskGetHandle( const char *pcNameToQuery ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+	DefKERNEL_SECTION_ITCM TaskHandle_t xTaskGetHandle( const char *pcNameToQuery ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 	{
 	UBaseType_t uxQueue = configMAX_PRIORITIES;
 	TCB_t* pxTCB;
@@ -2446,7 +2446,7 @@ TCB_t *pxTCB;
 
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	kKERNEL_SECTION_ITCM UBaseType_t uxTaskGetSystemState( TaskStatus_t * const pxTaskStatusArray, const UBaseType_t uxArraySize, uint32_t * const pulTotalRunTime )
+	DefKERNEL_SECTION_ITCM UBaseType_t uxTaskGetSystemState( TaskStatus_t * const pxTaskStatusArray, const UBaseType_t uxArraySize, uint32_t * const pulTotalRunTime )
 	{
 	UBaseType_t uxTask = 0, uxQueue = configMAX_PRIORITIES;
 
@@ -2520,7 +2520,7 @@ TCB_t *pxTCB;
 
 #if ( INCLUDE_xTaskGetIdleTaskHandle == 1 )
 
-	kKERNEL_SECTION_ITCM TaskHandle_t xTaskGetIdleTaskHandle( void )
+	DefKERNEL_SECTION_ITCM TaskHandle_t xTaskGetIdleTaskHandle( void )
 	{
 		/* If xTaskGetIdleTaskHandle() is called before the scheduler has been
 		started, then xIdleTaskHandle will be NULL. */
@@ -2537,7 +2537,7 @@ implementations require configUSE_TICKLESS_IDLE to be set to a value other than
 1. */
 #if ( configUSE_TICKLESS_IDLE != 0 )
 
-	kKERNEL_SECTION_ITCM void vTaskStepTick( const TickType_t xTicksToJump )
+	DefKERNEL_SECTION_ITCM void vTaskStepTick( const TickType_t xTicksToJump )
 	{
 		/* Correct the tick count value after a period during which the tick
 		was suppressed.  Note this does *not* call the tick hook function for
@@ -2552,7 +2552,7 @@ implementations require configUSE_TICKLESS_IDLE to be set to a value other than
 
 #if ( INCLUDE_xTaskAbortDelay == 1 )
 
-	kKERNEL_SECTION_ITCM BaseType_t xTaskAbortDelay( TaskHandle_t xTask )
+	DefKERNEL_SECTION_ITCM BaseType_t xTaskAbortDelay( TaskHandle_t xTask )
 	{
 	TCB_t *pxTCB = xTask;
 	BaseType_t xReturn;
@@ -2629,7 +2629,7 @@ implementations require configUSE_TICKLESS_IDLE to be set to a value other than
 extern void vApplicationTickHook(void);
 #endif
 
-kKERNEL_SECTION_ITCM BaseType_t xTaskIncrementTick( void )
+DefKERNEL_SECTION_ITCM BaseType_t xTaskIncrementTick( void )
 {
 TCB_t * pxTCB;
 TickType_t xItemValue;
@@ -2803,7 +2803,7 @@ BaseType_t xSwitchRequired = pdFALSE;
 
 #if ( configUSE_APPLICATION_TASK_TAG == 1 )
 
-	kKERNEL_SECTION_ITCM void vTaskSetApplicationTaskTag( TaskHandle_t xTask, TaskHookFunction_t pxHookFunction )
+	DefKERNEL_SECTION_ITCM void vTaskSetApplicationTaskTag( TaskHandle_t xTask, TaskHookFunction_t pxHookFunction )
 	{
 	TCB_t *xTCB;
 
@@ -2832,7 +2832,7 @@ BaseType_t xSwitchRequired = pdFALSE;
 
 #if ( configUSE_APPLICATION_TASK_TAG == 1 )
 
-	kKERNEL_SECTION_ITCM TaskHookFunction_t xTaskGetApplicationTaskTag( TaskHandle_t xTask )
+	DefKERNEL_SECTION_ITCM TaskHookFunction_t xTaskGetApplicationTaskTag( TaskHandle_t xTask )
 	{
 	TCB_t *xTCB;
 	TaskHookFunction_t xReturn;
@@ -2863,7 +2863,7 @@ BaseType_t xSwitchRequired = pdFALSE;
 
 #if ( configUSE_APPLICATION_TASK_TAG == 1 )
 
-	kKERNEL_SECTION_ITCM BaseType_t xTaskCallApplicationTaskHook( TaskHandle_t xTask, void *pvParameter )
+	DefKERNEL_SECTION_ITCM BaseType_t xTaskCallApplicationTaskHook( TaskHandle_t xTask, void *pvParameter )
 	{
 	TCB_t *xTCB;
 	BaseType_t xReturn;
@@ -2893,7 +2893,7 @@ BaseType_t xSwitchRequired = pdFALSE;
 #endif /* configUSE_APPLICATION_TASK_TAG */
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM void vTaskSwitchContext( void )
+DefKERNEL_SECTION_ITCM void vTaskSwitchContext( void )
 {
 	if( uxSchedulerSuspended != ( UBaseType_t ) pdFALSE )
 	{
@@ -2969,7 +2969,7 @@ kKERNEL_SECTION_ITCM void vTaskSwitchContext( void )
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM void vTaskPlaceOnEventList( List_t * const pxEventList, const TickType_t xTicksToWait )
+DefKERNEL_SECTION_ITCM void vTaskPlaceOnEventList( List_t * const pxEventList, const TickType_t xTicksToWait )
 {
 	configASSERT( pxEventList );
 
@@ -2986,7 +2986,7 @@ kKERNEL_SECTION_ITCM void vTaskPlaceOnEventList( List_t * const pxEventList, con
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM void vTaskPlaceOnUnorderedEventList( List_t * pxEventList, const TickType_t xItemValue, const TickType_t xTicksToWait )
+DefKERNEL_SECTION_ITCM void vTaskPlaceOnUnorderedEventList( List_t * pxEventList, const TickType_t xItemValue, const TickType_t xTicksToWait )
 {
 	configASSERT( pxEventList );
 
@@ -3012,7 +3012,7 @@ kKERNEL_SECTION_ITCM void vTaskPlaceOnUnorderedEventList( List_t * pxEventList, 
 
 #if( configUSE_TIMERS == 1 )
 
-	kKERNEL_SECTION_ITCM void vTaskPlaceOnEventListRestricted( List_t * const pxEventList, TickType_t xTicksToWait, const BaseType_t xWaitIndefinitely )
+	DefKERNEL_SECTION_ITCM void vTaskPlaceOnEventListRestricted( List_t * const pxEventList, TickType_t xTicksToWait, const BaseType_t xWaitIndefinitely )
 	{
 		configASSERT( pxEventList );
 
@@ -3043,7 +3043,7 @@ kKERNEL_SECTION_ITCM void vTaskPlaceOnUnorderedEventList( List_t * pxEventList, 
 #endif /* configUSE_TIMERS */
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM BaseType_t xTaskRemoveFromEventList( const List_t * const pxEventList )
+DefKERNEL_SECTION_ITCM BaseType_t xTaskRemoveFromEventList( const List_t * const pxEventList )
 {
 TCB_t *pxUnblockedTCB;
 BaseType_t xReturn;
@@ -3111,7 +3111,7 @@ BaseType_t xReturn;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM void vTaskRemoveFromUnorderedEventList( ListItem_t * pxEventListItem, const TickType_t xItemValue )
+DefKERNEL_SECTION_ITCM void vTaskRemoveFromUnorderedEventList( ListItem_t * pxEventListItem, const TickType_t xItemValue )
 {
 TCB_t *pxUnblockedTCB;
 
@@ -3145,7 +3145,7 @@ TCB_t *pxUnblockedTCB;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM void vTaskSetTimeOutState( TimeOut_t * const pxTimeOut )
+DefKERNEL_SECTION_ITCM void vTaskSetTimeOutState( TimeOut_t * const pxTimeOut )
 {
 	configASSERT( pxTimeOut );
 	taskENTER_CRITICAL();
@@ -3157,7 +3157,7 @@ kKERNEL_SECTION_ITCM void vTaskSetTimeOutState( TimeOut_t * const pxTimeOut )
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM void vTaskInternalSetTimeOutState( TimeOut_t * const pxTimeOut )
+DefKERNEL_SECTION_ITCM void vTaskInternalSetTimeOutState( TimeOut_t * const pxTimeOut )
 {
 	/* For internal use only as it does not use a critical section. */
 	pxTimeOut->xOverflowCount = xNumOfOverflows;
@@ -3165,7 +3165,7 @@ kKERNEL_SECTION_ITCM void vTaskInternalSetTimeOutState( TimeOut_t * const pxTime
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM BaseType_t xTaskCheckForTimeOut( TimeOut_t * const pxTimeOut, TickType_t * const pxTicksToWait )
+DefKERNEL_SECTION_ITCM BaseType_t xTaskCheckForTimeOut( TimeOut_t * const pxTimeOut, TickType_t * const pxTicksToWait )
 {
 BaseType_t xReturn;
 
@@ -3228,7 +3228,7 @@ BaseType_t xReturn;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM void vTaskMissedYield( void )
+DefKERNEL_SECTION_ITCM void vTaskMissedYield( void )
 {
 	xYieldPending = pdTRUE;
 }
@@ -3236,7 +3236,7 @@ kKERNEL_SECTION_ITCM void vTaskMissedYield( void )
 
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	kKERNEL_SECTION_ITCM UBaseType_t uxTaskGetTaskNumber( TaskHandle_t xTask )
+	DefKERNEL_SECTION_ITCM UBaseType_t uxTaskGetTaskNumber( TaskHandle_t xTask )
 	{
 	UBaseType_t uxReturn;
 	TCB_t const *pxTCB;
@@ -3259,7 +3259,7 @@ kKERNEL_SECTION_ITCM void vTaskMissedYield( void )
 
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	kKERNEL_SECTION_ITCM void vTaskSetTaskNumber( TaskHandle_t xTask, const UBaseType_t uxHandle )
+	DefKERNEL_SECTION_ITCM void vTaskSetTaskNumber( TaskHandle_t xTask, const UBaseType_t uxHandle )
 	{
 	TCB_t * pxTCB;
 
@@ -3283,7 +3283,7 @@ kKERNEL_SECTION_ITCM void vTaskMissedYield( void )
  * void prvIdleTask( void *pvParameters );
  *
  */
-kKERNEL_SECTION_ITCM static portTASK_FUNCTION( prvIdleTask, pvParameters )
+DefKERNEL_SECTION_ITCM static portTASK_FUNCTION( prvIdleTask, pvParameters )
 {
 	/* Stop warnings. */
 	( void ) pvParameters;
@@ -3336,7 +3336,7 @@ kKERNEL_SECTION_ITCM static portTASK_FUNCTION( prvIdleTask, pvParameters )
 
 		#if ( configUSE_IDLE_HOOK == 1 )
 		{
-			//kKERNEL_SECTION_ITCM extern void vApplicationIdleHook( void );
+			//DefKERNEL_SECTION_ITCM extern void vApplicationIdleHook( void );
 
 			/* Call the user defined function from within the idle task.  This
 			allows the application designer to add background functionality
@@ -3402,7 +3402,7 @@ kKERNEL_SECTION_ITCM static portTASK_FUNCTION( prvIdleTask, pvParameters )
 
 #if( configUSE_TICKLESS_IDLE != 0 )
 
-	kKERNEL_SECTION_ITCM eSleepModeStatus eTaskConfirmSleepModeStatus( void )
+	DefKERNEL_SECTION_ITCM eSleepModeStatus eTaskConfirmSleepModeStatus( void )
 	{
 	/* The idle task exists in addition to the application tasks. */
 	const UBaseType_t uxNonApplicationTasks = 1;
@@ -3442,7 +3442,7 @@ kKERNEL_SECTION_ITCM static portTASK_FUNCTION( prvIdleTask, pvParameters )
 
 #if ( configNUM_THREAD_LOCAL_STORAGE_POINTERS != 0 )
 
-	kKERNEL_SECTION_ITCM void vTaskSetThreadLocalStoragePointer( TaskHandle_t xTaskToSet, BaseType_t xIndex, void *pvValue )
+	DefKERNEL_SECTION_ITCM void vTaskSetThreadLocalStoragePointer( TaskHandle_t xTaskToSet, BaseType_t xIndex, void *pvValue )
 	{
 	TCB_t *pxTCB;
 
@@ -3458,7 +3458,7 @@ kKERNEL_SECTION_ITCM static portTASK_FUNCTION( prvIdleTask, pvParameters )
 
 #if ( configNUM_THREAD_LOCAL_STORAGE_POINTERS != 0 )
 
-	kKERNEL_SECTION_ITCM void *pvTaskGetThreadLocalStoragePointer( TaskHandle_t xTaskToQuery, BaseType_t xIndex )
+	DefKERNEL_SECTION_ITCM void *pvTaskGetThreadLocalStoragePointer( TaskHandle_t xTaskToQuery, BaseType_t xIndex )
 	{
 	void *pvReturn = NULL;
 	TCB_t *pxTCB;
@@ -3481,7 +3481,7 @@ kKERNEL_SECTION_ITCM static portTASK_FUNCTION( prvIdleTask, pvParameters )
 
 #if ( portUSING_MPU_WRAPPERS == 1 )
 
-	kKERNEL_SECTION_ITCM void vTaskAllocateMPURegions( TaskHandle_t xTaskToModify, const MemoryRegion_t * const xRegions )
+	DefKERNEL_SECTION_ITCM void vTaskAllocateMPURegions( TaskHandle_t xTaskToModify, const MemoryRegion_t * const xRegions )
 	{
 	TCB_t *pxTCB;
 
@@ -3495,7 +3495,7 @@ kKERNEL_SECTION_ITCM static portTASK_FUNCTION( prvIdleTask, pvParameters )
 #endif /* portUSING_MPU_WRAPPERS */
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static void prvInitialiseTaskLists( void )
+DefKERNEL_SECTION_ITCM static void prvInitialiseTaskLists( void )
 {
 UBaseType_t uxPriority;
 PRIVILEGED_DATA static List_t xDelayedTaskList1;	/*< Delayed tasks. */
@@ -3529,7 +3529,7 @@ PRIVILEGED_DATA static List_t xDelayedTaskList2;	/*< Delayed tasks (two lists ar
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static void prvCheckTasksWaitingTermination( void )
+DefKERNEL_SECTION_ITCM static void prvCheckTasksWaitingTermination( void )
 {
 
 	/** THIS FUNCTION IS CALLED FROM THE RTOS IDLE TASK **/
@@ -3560,7 +3560,7 @@ kKERNEL_SECTION_ITCM static void prvCheckTasksWaitingTermination( void )
 
 #if( configUSE_TRACE_FACILITY == 1 )
 
-	kKERNEL_SECTION_ITCM void vTaskGetInfo( TaskHandle_t xTask, TaskStatus_t *pxTaskStatus, BaseType_t xGetFreeStackSpace, eTaskState eState )
+	DefKERNEL_SECTION_ITCM void vTaskGetInfo( TaskHandle_t xTask, TaskStatus_t *pxTaskStatus, BaseType_t xGetFreeStackSpace, eTaskState eState )
 	{
 	TCB_t *pxTCB;
 
@@ -3656,7 +3656,7 @@ kKERNEL_SECTION_ITCM static void prvCheckTasksWaitingTermination( void )
 
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	kKERNEL_SECTION_ITCM static UBaseType_t prvListTasksWithinSingleList( TaskStatus_t *pxTaskStatusArray, List_t *pxList, eTaskState eState )
+	DefKERNEL_SECTION_ITCM static UBaseType_t prvListTasksWithinSingleList( TaskStatus_t *pxTaskStatusArray, List_t *pxList, eTaskState eState )
 	{
 	configLIST_VOLATILE TCB_t *pxNextTCB, *pxFirstTCB;
 	UBaseType_t uxTask = 0;
@@ -3689,7 +3689,7 @@ kKERNEL_SECTION_ITCM static void prvCheckTasksWaitingTermination( void )
 
 #if ( ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark == 1 ) )
 
-	kKERNEL_SECTION_ITCM static configSTACK_DEPTH_TYPE prvTaskCheckFreeStackSpace( const uint8_t * pucStackByte )
+	DefKERNEL_SECTION_ITCM static configSTACK_DEPTH_TYPE prvTaskCheckFreeStackSpace( const uint8_t * pucStackByte )
 	{
 	uint32_t ulCount = 0U;
 
@@ -3709,7 +3709,7 @@ kKERNEL_SECTION_ITCM static void prvCheckTasksWaitingTermination( void )
 
 #if ( INCLUDE_uxTaskGetStackHighWaterMark == 1 )
 
-	kKERNEL_SECTION_ITCM UBaseType_t uxTaskGetStackHighWaterMark( TaskHandle_t xTask )
+	DefKERNEL_SECTION_ITCM UBaseType_t uxTaskGetStackHighWaterMark( TaskHandle_t xTask )
 	{
 	TCB_t *pxTCB;
 	uint8_t *pucEndOfStack;
@@ -3737,7 +3737,7 @@ kKERNEL_SECTION_ITCM static void prvCheckTasksWaitingTermination( void )
 
 #if ( INCLUDE_vTaskDelete == 1 )
 
-	kKERNEL_SECTION_ITCM static void prvDeleteTCB( TCB_t *pxTCB )
+	DefKERNEL_SECTION_ITCM static void prvDeleteTCB( TCB_t *pxTCB )
 	{
 		/* This call is required specifically for the TriCore port.  It must be
 		above the vPortFree() calls.  The call is also used by ports/demos that
@@ -3791,7 +3791,7 @@ kKERNEL_SECTION_ITCM static void prvCheckTasksWaitingTermination( void )
 #endif /* INCLUDE_vTaskDelete */
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static void prvResetNextTaskUnblockTime( void )
+DefKERNEL_SECTION_ITCM static void prvResetNextTaskUnblockTime( void )
 {
 TCB_t *pxTCB;
 
@@ -3817,7 +3817,7 @@ TCB_t *pxTCB;
 
 #if ( ( INCLUDE_xTaskGetCurrentTaskHandle == 1 ) || ( configUSE_MUTEXES == 1 ) )
 
-	kKERNEL_SECTION_ITCM TaskHandle_t xTaskGetCurrentTaskHandle( void )
+	DefKERNEL_SECTION_ITCM TaskHandle_t xTaskGetCurrentTaskHandle( void )
 	{
 	TaskHandle_t xReturn;
 
@@ -3834,7 +3834,7 @@ TCB_t *pxTCB;
 
 #if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
 
-	kKERNEL_SECTION_ITCM BaseType_t xTaskGetSchedulerState( void )
+	DefKERNEL_SECTION_ITCM BaseType_t xTaskGetSchedulerState( void )
 	{
 	BaseType_t xReturn;
 
@@ -3862,7 +3862,7 @@ TCB_t *pxTCB;
 
 #if ( configUSE_MUTEXES == 1 )
 
-	kKERNEL_SECTION_ITCM BaseType_t xTaskPriorityInherit( TaskHandle_t const pxMutexHolder )
+	DefKERNEL_SECTION_ITCM BaseType_t xTaskPriorityInherit( TaskHandle_t const pxMutexHolder )
 	{
 	TCB_t * const pxMutexHolderTCB = pxMutexHolder;
 	BaseType_t xReturn = pdFALSE;
@@ -3949,7 +3949,7 @@ TCB_t *pxTCB;
 
 #if ( configUSE_MUTEXES == 1 )
 
-	kKERNEL_SECTION_ITCM BaseType_t xTaskPriorityDisinherit( TaskHandle_t const pxMutexHolder )
+	DefKERNEL_SECTION_ITCM BaseType_t xTaskPriorityDisinherit( TaskHandle_t const pxMutexHolder )
 	{
 	TCB_t * const pxTCB = pxMutexHolder;
 	BaseType_t xReturn = pdFALSE;
@@ -4029,7 +4029,7 @@ TCB_t *pxTCB;
 
 #if ( configUSE_MUTEXES == 1 )
 
-	kKERNEL_SECTION_ITCM void vTaskPriorityDisinheritAfterTimeout( TaskHandle_t const pxMutexHolder, UBaseType_t uxHighestPriorityWaitingTask )
+	DefKERNEL_SECTION_ITCM void vTaskPriorityDisinheritAfterTimeout( TaskHandle_t const pxMutexHolder, UBaseType_t uxHighestPriorityWaitingTask )
 	{
 	TCB_t * const pxTCB = pxMutexHolder;
 	UBaseType_t uxPriorityUsedOnEntry, uxPriorityToUse;
@@ -4131,7 +4131,7 @@ TCB_t *pxTCB;
 
 #if ( portCRITICAL_NESTING_IN_TCB == 1 )
 
-	kKERNEL_SECTION_ITCM void vTaskEnterCritical( void )
+	DefKERNEL_SECTION_ITCM void vTaskEnterCritical( void )
 	{
 		portDISABLE_INTERRUPTS();
 
@@ -4161,7 +4161,7 @@ TCB_t *pxTCB;
 
 #if ( portCRITICAL_NESTING_IN_TCB == 1 )
 
-	kKERNEL_SECTION_ITCM void vTaskExitCritical( void )
+	DefKERNEL_SECTION_ITCM void vTaskExitCritical( void )
 	{
 		if( xSchedulerRunning != pdFALSE )
 		{
@@ -4194,7 +4194,7 @@ TCB_t *pxTCB;
 
 #if ( ( configUSE_TRACE_FACILITY == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS > 0 ) )
 
-	kKERNEL_SECTION_ITCM static char *prvWriteNameToBuffer( char *pcBuffer, const char *pcTaskName )
+	DefKERNEL_SECTION_ITCM static char *prvWriteNameToBuffer( char *pcBuffer, const char *pcTaskName )
 	{
 	size_t x;
 
@@ -4220,7 +4220,7 @@ TCB_t *pxTCB;
 
 #if ( ( configUSE_TRACE_FACILITY == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS > 0 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
 
-	kKERNEL_SECTION_ITCM void vTaskList( char * pcWriteBuffer )
+	DefKERNEL_SECTION_ITCM void vTaskList( char * pcWriteBuffer )
 	{
 	TaskStatus_t *pxTaskStatusArray;
 	UBaseType_t uxArraySize, x;
@@ -4319,7 +4319,7 @@ TCB_t *pxTCB;
 
 #if ( ( configGENERATE_RUN_TIME_STATS == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS > 0 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
 
-	kKERNEL_SECTION_ITCM void vTaskGetRunTimeStats( char *pcWriteBuffer )
+	DefKERNEL_SECTION_ITCM void vTaskGetRunTimeStats( char *pcWriteBuffer )
 	{
 	TaskStatus_t *pxTaskStatusArray;
 	UBaseType_t uxArraySize, x;
@@ -4444,7 +4444,7 @@ TCB_t *pxTCB;
 #endif /* ( ( configGENERATE_RUN_TIME_STATS == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS > 0 ) && ( configSUPPORT_STATIC_ALLOCATION == 1 ) ) */
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM TickType_t uxTaskResetEventItemValue( void )
+DefKERNEL_SECTION_ITCM TickType_t uxTaskResetEventItemValue( void )
 {
 TickType_t uxReturn;
 
@@ -4460,7 +4460,7 @@ TickType_t uxReturn;
 
 #if ( configUSE_MUTEXES == 1 )
 
-	kKERNEL_SECTION_ITCM TaskHandle_t pvTaskIncrementMutexHeldCount( void )
+	DefKERNEL_SECTION_ITCM TaskHandle_t pvTaskIncrementMutexHeldCount( void )
 	{
 		/* If xSemaphoreCreateMutex() is called before any tasks have been created
 		then pxCurrentTCB will be NULL. */
@@ -4477,7 +4477,7 @@ TickType_t uxReturn;
 
 #if( configUSE_TASK_NOTIFICATIONS == 1 )
 
-	kKERNEL_SECTION_ITCM uint32_t ulTaskNotifyTake( BaseType_t xClearCountOnExit, TickType_t xTicksToWait )
+	DefKERNEL_SECTION_ITCM uint32_t ulTaskNotifyTake( BaseType_t xClearCountOnExit, TickType_t xTicksToWait )
 	{
 	uint32_t ulReturn;
 
@@ -4545,7 +4545,7 @@ TickType_t uxReturn;
 
 #if( configUSE_TASK_NOTIFICATIONS == 1 )
 
-	kKERNEL_SECTION_ITCM BaseType_t xTaskNotifyWait( uint32_t ulBitsToClearOnEntry, uint32_t ulBitsToClearOnExit, uint32_t *pulNotificationValue, TickType_t xTicksToWait )
+	DefKERNEL_SECTION_ITCM BaseType_t xTaskNotifyWait( uint32_t ulBitsToClearOnEntry, uint32_t ulBitsToClearOnExit, uint32_t *pulNotificationValue, TickType_t xTicksToWait )
 	{
 	BaseType_t xReturn;
 
@@ -4625,7 +4625,7 @@ TickType_t uxReturn;
 
 #if( configUSE_TASK_NOTIFICATIONS == 1 )
 
-	kKERNEL_SECTION_ITCM BaseType_t xTaskGenericNotify( TaskHandle_t xTaskToNotify, uint32_t ulValue, eNotifyAction eAction, uint32_t *pulPreviousNotificationValue )
+	DefKERNEL_SECTION_ITCM BaseType_t xTaskGenericNotify( TaskHandle_t xTaskToNotify, uint32_t ulValue, eNotifyAction eAction, uint32_t *pulPreviousNotificationValue )
 	{
 	TCB_t * pxTCB;
 	BaseType_t xReturn = pdPASS;
@@ -4739,7 +4739,7 @@ TickType_t uxReturn;
 
 #if( configUSE_TASK_NOTIFICATIONS == 1 )
 
-	kKERNEL_SECTION_ITCM BaseType_t xTaskGenericNotifyFromISR( TaskHandle_t xTaskToNotify, uint32_t ulValue, eNotifyAction eAction, uint32_t *pulPreviousNotificationValue, BaseType_t *pxHigherPriorityTaskWoken )
+	DefKERNEL_SECTION_ITCM BaseType_t xTaskGenericNotifyFromISR( TaskHandle_t xTaskToNotify, uint32_t ulValue, eNotifyAction eAction, uint32_t *pulPreviousNotificationValue, BaseType_t *pxHigherPriorityTaskWoken )
 	{
 	TCB_t * pxTCB;
 	uint8_t ucOriginalNotifyState;
@@ -4868,7 +4868,7 @@ TickType_t uxReturn;
 
 #if( configUSE_TASK_NOTIFICATIONS == 1 )
 
-	kKERNEL_SECTION_ITCM void vTaskNotifyGiveFromISR( TaskHandle_t xTaskToNotify, BaseType_t *pxHigherPriorityTaskWoken )
+	DefKERNEL_SECTION_ITCM void vTaskNotifyGiveFromISR( TaskHandle_t xTaskToNotify, BaseType_t *pxHigherPriorityTaskWoken )
 	{
 	TCB_t * pxTCB;
 	uint8_t ucOriginalNotifyState;
@@ -4955,7 +4955,7 @@ TickType_t uxReturn;
 
 #if( configUSE_TASK_NOTIFICATIONS == 1 )
 
-	kKERNEL_SECTION_ITCM BaseType_t xTaskNotifyStateClear( TaskHandle_t xTask )
+	DefKERNEL_SECTION_ITCM BaseType_t xTaskNotifyStateClear( TaskHandle_t xTask )
 	{
 	TCB_t *pxTCB;
 	BaseType_t xReturn;
@@ -4985,7 +4985,7 @@ TickType_t uxReturn;
 /*-----------------------------------------------------------*/
 
 
-kKERNEL_SECTION_ITCM static void prvAddCurrentTaskToDelayedList( TickType_t xTicksToWait, const BaseType_t xCanBlockIndefinitely )
+DefKERNEL_SECTION_ITCM static void prvAddCurrentTaskToDelayedList( TickType_t xTicksToWait, const BaseType_t xCanBlockIndefinitely )
 {
 TickType_t xTimeToWake;
 const TickType_t xConstTickCount = xTickCount;
@@ -5110,7 +5110,7 @@ when performing module tests). */
 	#include "freertos_tasks_c_additions.h"
 
 	#ifdef FREERTOS_TASKS_C_ADDITIONS_INIT
-		kKERNEL_SECTION_ITCM static void freertos_tasks_c_additions_init( void )
+		DefKERNEL_SECTION_ITCM static void freertos_tasks_c_additions_init( void )
 		{
 			FREERTOS_TASKS_C_ADDITIONS_INIT();
 		}

@@ -84,10 +84,19 @@
 #define configUSE_CO_ROUTINES                    0
 #define configMAX_CO_ROUTINE_PRIORITIES          ( 2 )
 
-#define configALLOCATE_KERNEL_IN_ITCM			(1)		/** ITCMに配置したい */
-#define kKERNEL_SECTION_ITCM __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define kKERNEL_SECTION_DTCM __attribute__((section(".data.$SRAM_DTC")))
+#define configALLOCATE_KERNEL_IN_TCM			(1)		/** ITCMに配置したい */
 
+#ifndef configALLOCATE_KERNEL_IN_TCM
+#define configALLOCATE_KERNEL_IN_TCM (0)
+#endif
+
+#if (configALLOCATE_KERNEL_IN_TCM == 1)
+#define DefKERNEL_SECTION_ITCM __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define DefKERNEL_SECTION_DTCM __attribute__((section(".data.$SRAM_DTC")))
+#else
+#define DefKERNEL_SECTION_ITCM
+#define DefKERNEL_SECTION_DTCM
+#endif
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */

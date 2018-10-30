@@ -171,32 +171,32 @@ typedef xQUEUE Queue_t;
  * to indicate that a task may require unblocking.  When the queue in unlocked
  * these lock counts are inspected, and the appropriate action taken.
  */
-kKERNEL_SECTION_ITCM static void prvUnlockQueue( Queue_t * const pxQueue ) PRIVILEGED_FUNCTION;
+DefKERNEL_SECTION_ITCM static void prvUnlockQueue( Queue_t * const pxQueue ) PRIVILEGED_FUNCTION;
 
 /*
  * Uses a critical section to determine if there is any data in a queue.
  *
  * @return pdTRUE if the queue contains no items, otherwise pdFALSE.
  */
-kKERNEL_SECTION_ITCM static BaseType_t prvIsQueueEmpty( const Queue_t *pxQueue ) PRIVILEGED_FUNCTION;
+DefKERNEL_SECTION_ITCM static BaseType_t prvIsQueueEmpty( const Queue_t *pxQueue ) PRIVILEGED_FUNCTION;
 
 /*
  * Uses a critical section to determine if there is any space in a queue.
  *
  * @return pdTRUE if there is no space, otherwise pdFALSE;
  */
-kKERNEL_SECTION_ITCM static BaseType_t prvIsQueueFull( const Queue_t *pxQueue ) PRIVILEGED_FUNCTION;
+DefKERNEL_SECTION_ITCM static BaseType_t prvIsQueueFull( const Queue_t *pxQueue ) PRIVILEGED_FUNCTION;
 
 /*
  * Copies an item into the queue, either at the front of the queue or the
  * back of the queue.
  */
-kKERNEL_SECTION_ITCM static BaseType_t prvCopyDataToQueue( Queue_t * const pxQueue, const void *pvItemToQueue, const BaseType_t xPosition ) PRIVILEGED_FUNCTION;
+DefKERNEL_SECTION_ITCM static BaseType_t prvCopyDataToQueue( Queue_t * const pxQueue, const void *pvItemToQueue, const BaseType_t xPosition ) PRIVILEGED_FUNCTION;
 
 /*
  * Copies an item out of a queue.
  */
-kKERNEL_SECTION_ITCM static void prvCopyDataFromQueue( Queue_t * const pxQueue, void * const pvBuffer ) PRIVILEGED_FUNCTION;
+DefKERNEL_SECTION_ITCM static void prvCopyDataFromQueue( Queue_t * const pxQueue, void * const pvBuffer ) PRIVILEGED_FUNCTION;
 
 #if ( configUSE_QUEUE_SETS == 1 )
 	/*
@@ -210,7 +210,7 @@ kKERNEL_SECTION_ITCM static void prvCopyDataFromQueue( Queue_t * const pxQueue, 
  * Called after a Queue_t structure has been allocated either statically or
  * dynamically to fill in the structure's members.
  */
-kKERNEL_SECTION_ITCM static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength, const UBaseType_t uxItemSize, uint8_t *pucQueueStorage, const uint8_t ucQueueType, Queue_t *pxNewQueue ) PRIVILEGED_FUNCTION;
+DefKERNEL_SECTION_ITCM static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength, const UBaseType_t uxItemSize, uint8_t *pucQueueStorage, const uint8_t ucQueueType, Queue_t *pxNewQueue ) PRIVILEGED_FUNCTION;
 
 /*
  * Mutexes are a special type of queue.  When a mutex is created, first the
@@ -218,7 +218,7 @@ kKERNEL_SECTION_ITCM static void prvInitialiseNewQueue( const UBaseType_t uxQueu
  * as a mutex.
  */
 #if( configUSE_MUTEXES == 1 )
-	kKERNEL_SECTION_ITCM static void prvInitialiseMutex( Queue_t *pxNewQueue ) PRIVILEGED_FUNCTION;
+	DefKERNEL_SECTION_ITCM static void prvInitialiseMutex( Queue_t *pxNewQueue ) PRIVILEGED_FUNCTION;
 #endif
 
 #if( configUSE_MUTEXES == 1 )
@@ -229,7 +229,7 @@ kKERNEL_SECTION_ITCM static void prvInitialiseNewQueue( const UBaseType_t uxQueu
 	 * other tasks that are waiting for the same mutex.  This function returns
 	 * that priority.
 	 */
-	kKERNEL_SECTION_ITCM static UBaseType_t prvGetDisinheritPriorityAfterTimeout( const Queue_t * const pxQueue ) PRIVILEGED_FUNCTION;
+	DefKERNEL_SECTION_ITCM static UBaseType_t prvGetDisinheritPriorityAfterTimeout( const Queue_t * const pxQueue ) PRIVILEGED_FUNCTION;
 #endif
 /*-----------------------------------------------------------*/
 
@@ -252,7 +252,7 @@ kKERNEL_SECTION_ITCM static void prvInitialiseNewQueue( const UBaseType_t uxQueu
 	taskEXIT_CRITICAL()
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM BaseType_t xQueueGenericReset( QueueHandle_t xQueue, BaseType_t xNewQueue )
+DefKERNEL_SECTION_ITCM BaseType_t xQueueGenericReset( QueueHandle_t xQueue, BaseType_t xNewQueue )
 {
 Queue_t * const pxQueue = xQueue;
 
@@ -307,7 +307,7 @@ Queue_t * const pxQueue = xQueue;
 
 #if( configSUPPORT_STATIC_ALLOCATION == 1 )
 
-	kKERNEL_SECTION_ITCM QueueHandle_t xQueueGenericCreateStatic( const UBaseType_t uxQueueLength, const UBaseType_t uxItemSize, uint8_t *pucQueueStorage, StaticQueue_t *pxStaticQueue, const uint8_t ucQueueType )
+	DefKERNEL_SECTION_ITCM QueueHandle_t xQueueGenericCreateStatic( const UBaseType_t uxQueueLength, const UBaseType_t uxItemSize, uint8_t *pucQueueStorage, StaticQueue_t *pxStaticQueue, const uint8_t ucQueueType )
 	{
 	Queue_t *pxNewQueue;
 
@@ -365,7 +365,7 @@ Queue_t * const pxQueue = xQueue;
 
 #if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
 
-	kKERNEL_SECTION_ITCM QueueHandle_t xQueueGenericCreate( const UBaseType_t uxQueueLength, const UBaseType_t uxItemSize, const uint8_t ucQueueType )
+	DefKERNEL_SECTION_ITCM QueueHandle_t xQueueGenericCreate( const UBaseType_t uxQueueLength, const UBaseType_t uxItemSize, const uint8_t ucQueueType )
 	{
 	Queue_t *pxNewQueue;
 	size_t xQueueSizeInBytes;
@@ -426,7 +426,7 @@ Queue_t * const pxQueue = xQueue;
 #endif /* configSUPPORT_STATIC_ALLOCATION */
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength, const UBaseType_t uxItemSize, uint8_t *pucQueueStorage, const uint8_t ucQueueType, Queue_t *pxNewQueue )
+DefKERNEL_SECTION_ITCM static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength, const UBaseType_t uxItemSize, uint8_t *pucQueueStorage, const uint8_t ucQueueType, Queue_t *pxNewQueue )
 {
 	/* Remove compiler warnings about unused parameters should
 	configUSE_TRACE_FACILITY not be set to 1. */
@@ -470,7 +470,7 @@ kKERNEL_SECTION_ITCM static void prvInitialiseNewQueue( const UBaseType_t uxQueu
 
 #if( configUSE_MUTEXES == 1 )
 
-	kKERNEL_SECTION_ITCM static void prvInitialiseMutex( Queue_t *pxNewQueue )
+	DefKERNEL_SECTION_ITCM static void prvInitialiseMutex( Queue_t *pxNewQueue )
 	{
 		if( pxNewQueue != NULL )
 		{
@@ -500,7 +500,7 @@ kKERNEL_SECTION_ITCM static void prvInitialiseNewQueue( const UBaseType_t uxQueu
 
 #if( ( configUSE_MUTEXES == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
 
-	kKERNEL_SECTION_ITCM QueueHandle_t xQueueCreateMutex( const uint8_t ucQueueType )
+	DefKERNEL_SECTION_ITCM QueueHandle_t xQueueCreateMutex( const uint8_t ucQueueType )
 	{
 	QueueHandle_t xNewQueue;
 	const UBaseType_t uxMutexLength = ( UBaseType_t ) 1, uxMutexSize = ( UBaseType_t ) 0;
@@ -516,7 +516,7 @@ kKERNEL_SECTION_ITCM static void prvInitialiseNewQueue( const UBaseType_t uxQueu
 
 #if( ( configUSE_MUTEXES == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 1 ) )
 
-	kKERNEL_SECTION_ITCM QueueHandle_t xQueueCreateMutexStatic( const uint8_t ucQueueType, StaticQueue_t *pxStaticQueue )
+	DefKERNEL_SECTION_ITCM QueueHandle_t xQueueCreateMutexStatic( const uint8_t ucQueueType, StaticQueue_t *pxStaticQueue )
 	{
 	QueueHandle_t xNewQueue;
 	const UBaseType_t uxMutexLength = ( UBaseType_t ) 1, uxMutexSize = ( UBaseType_t ) 0;
@@ -536,7 +536,7 @@ kKERNEL_SECTION_ITCM static void prvInitialiseNewQueue( const UBaseType_t uxQueu
 
 #if ( ( configUSE_MUTEXES == 1 ) && ( INCLUDE_xSemaphoreGetMutexHolder == 1 ) )
 
-	kKERNEL_SECTION_ITCM TaskHandle_t xQueueGetMutexHolder( QueueHandle_t xSemaphore )
+	DefKERNEL_SECTION_ITCM TaskHandle_t xQueueGetMutexHolder( QueueHandle_t xSemaphore )
 	{
 	TaskHandle_t pxReturn;
 	Queue_t * const pxSemaphore = ( Queue_t * ) xSemaphore;
@@ -567,7 +567,7 @@ kKERNEL_SECTION_ITCM static void prvInitialiseNewQueue( const UBaseType_t uxQueu
 
 #if ( ( configUSE_MUTEXES == 1 ) && ( INCLUDE_xSemaphoreGetMutexHolder == 1 ) )
 
-	kKERNEL_SECTION_ITCM TaskHandle_t xQueueGetMutexHolderFromISR( QueueHandle_t xSemaphore )
+	DefKERNEL_SECTION_ITCM TaskHandle_t xQueueGetMutexHolderFromISR( QueueHandle_t xSemaphore )
 	{
 	TaskHandle_t pxReturn;
 
@@ -593,7 +593,7 @@ kKERNEL_SECTION_ITCM static void prvInitialiseNewQueue( const UBaseType_t uxQueu
 
 #if ( configUSE_RECURSIVE_MUTEXES == 1 )
 
-	kKERNEL_SECTION_ITCM BaseType_t xQueueGiveMutexRecursive( QueueHandle_t xMutex )
+	DefKERNEL_SECTION_ITCM BaseType_t xQueueGiveMutexRecursive( QueueHandle_t xMutex )
 	{
 	BaseType_t xReturn;
 	Queue_t * const pxMutex = ( Queue_t * ) xMutex;
@@ -648,7 +648,7 @@ kKERNEL_SECTION_ITCM static void prvInitialiseNewQueue( const UBaseType_t uxQueu
 
 #if ( configUSE_RECURSIVE_MUTEXES == 1 )
 
-	kKERNEL_SECTION_ITCM BaseType_t xQueueTakeMutexRecursive( QueueHandle_t xMutex, TickType_t xTicksToWait )
+	DefKERNEL_SECTION_ITCM BaseType_t xQueueTakeMutexRecursive( QueueHandle_t xMutex, TickType_t xTicksToWait )
 	{
 	BaseType_t xReturn;
 	Queue_t * const pxMutex = ( Queue_t * ) xMutex;
@@ -690,7 +690,7 @@ kKERNEL_SECTION_ITCM static void prvInitialiseNewQueue( const UBaseType_t uxQueu
 
 #if( ( configUSE_COUNTING_SEMAPHORES == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 1 ) )
 
-	kKERNEL_SECTION_ITCM QueueHandle_t xQueueCreateCountingSemaphoreStatic( const UBaseType_t uxMaxCount, const UBaseType_t uxInitialCount, StaticQueue_t *pxStaticQueue )
+	DefKERNEL_SECTION_ITCM QueueHandle_t xQueueCreateCountingSemaphoreStatic( const UBaseType_t uxMaxCount, const UBaseType_t uxInitialCount, StaticQueue_t *pxStaticQueue )
 	{
 	QueueHandle_t xHandle;
 
@@ -718,7 +718,7 @@ kKERNEL_SECTION_ITCM static void prvInitialiseNewQueue( const UBaseType_t uxQueu
 
 #if( ( configUSE_COUNTING_SEMAPHORES == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
 
-	kKERNEL_SECTION_ITCM QueueHandle_t xQueueCreateCountingSemaphore( const UBaseType_t uxMaxCount, const UBaseType_t uxInitialCount )
+	DefKERNEL_SECTION_ITCM QueueHandle_t xQueueCreateCountingSemaphore( const UBaseType_t uxMaxCount, const UBaseType_t uxInitialCount )
 	{
 	QueueHandle_t xHandle;
 
@@ -744,7 +744,7 @@ kKERNEL_SECTION_ITCM static void prvInitialiseNewQueue( const UBaseType_t uxQueu
 #endif /* ( ( configUSE_COUNTING_SEMAPHORES == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) ) */
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM BaseType_t xQueueGenericSend( QueueHandle_t xQueue, const void * const pvItemToQueue, TickType_t xTicksToWait, const BaseType_t xCopyPosition )
+DefKERNEL_SECTION_ITCM BaseType_t xQueueGenericSend( QueueHandle_t xQueue, const void * const pvItemToQueue, TickType_t xTicksToWait, const BaseType_t xCopyPosition )
 {
 BaseType_t xEntryTimeSet = pdFALSE, xYieldRequired;
 TimeOut_t xTimeOut;
@@ -954,7 +954,7 @@ Queue_t * const pxQueue = xQueue;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM BaseType_t xQueueGenericSendFromISR( QueueHandle_t xQueue, const void * const pvItemToQueue, BaseType_t * const pxHigherPriorityTaskWoken, const BaseType_t xCopyPosition )
+DefKERNEL_SECTION_ITCM BaseType_t xQueueGenericSendFromISR( QueueHandle_t xQueue, const void * const pvItemToQueue, BaseType_t * const pxHigherPriorityTaskWoken, const BaseType_t xCopyPosition )
 {
 BaseType_t xReturn;
 UBaseType_t uxSavedInterruptStatus;
@@ -1105,7 +1105,7 @@ Queue_t * const pxQueue = xQueue;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM BaseType_t xQueueGiveFromISR( QueueHandle_t xQueue, BaseType_t * const pxHigherPriorityTaskWoken )
+DefKERNEL_SECTION_ITCM BaseType_t xQueueGiveFromISR( QueueHandle_t xQueue, BaseType_t * const pxHigherPriorityTaskWoken )
 {
 BaseType_t xReturn;
 UBaseType_t uxSavedInterruptStatus;
@@ -1270,7 +1270,7 @@ Queue_t * const pxQueue = xQueue;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM BaseType_t xQueueReceive( QueueHandle_t xQueue, void * const pvBuffer, TickType_t xTicksToWait )
+DefKERNEL_SECTION_ITCM BaseType_t xQueueReceive( QueueHandle_t xQueue, void * const pvBuffer, TickType_t xTicksToWait )
 {
 BaseType_t xEntryTimeSet = pdFALSE;
 TimeOut_t xTimeOut;
@@ -1411,7 +1411,7 @@ Queue_t * const pxQueue = xQueue;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM BaseType_t xQueueSemaphoreTake( QueueHandle_t xQueue, TickType_t xTicksToWait )
+DefKERNEL_SECTION_ITCM BaseType_t xQueueSemaphoreTake( QueueHandle_t xQueue, TickType_t xTicksToWait )
 {
 BaseType_t xEntryTimeSet = pdFALSE;
 TimeOut_t xTimeOut;
@@ -1629,7 +1629,7 @@ Queue_t * const pxQueue = xQueue;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM BaseType_t xQueuePeek( QueueHandle_t xQueue, void * const pvBuffer, TickType_t xTicksToWait )
+DefKERNEL_SECTION_ITCM BaseType_t xQueuePeek( QueueHandle_t xQueue, void * const pvBuffer, TickType_t xTicksToWait )
 {
 BaseType_t xEntryTimeSet = pdFALSE;
 TimeOut_t xTimeOut;
@@ -1778,7 +1778,7 @@ Queue_t * const pxQueue = xQueue;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM BaseType_t xQueueReceiveFromISR( QueueHandle_t xQueue, void * const pvBuffer, BaseType_t * const pxHigherPriorityTaskWoken )
+DefKERNEL_SECTION_ITCM BaseType_t xQueueReceiveFromISR( QueueHandle_t xQueue, void * const pvBuffer, BaseType_t * const pxHigherPriorityTaskWoken )
 {
 BaseType_t xReturn;
 UBaseType_t uxSavedInterruptStatus;
@@ -1869,7 +1869,7 @@ Queue_t * const pxQueue = xQueue;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM BaseType_t xQueuePeekFromISR( QueueHandle_t xQueue,  void * const pvBuffer )
+DefKERNEL_SECTION_ITCM BaseType_t xQueuePeekFromISR( QueueHandle_t xQueue,  void * const pvBuffer )
 {
 BaseType_t xReturn;
 UBaseType_t uxSavedInterruptStatus;
@@ -1923,7 +1923,7 @@ Queue_t * const pxQueue = xQueue;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM UBaseType_t uxQueueMessagesWaiting( const QueueHandle_t xQueue )
+DefKERNEL_SECTION_ITCM UBaseType_t uxQueueMessagesWaiting( const QueueHandle_t xQueue )
 {
 UBaseType_t uxReturn;
 
@@ -1939,7 +1939,7 @@ UBaseType_t uxReturn;
 } /*lint !e818 Pointer cannot be declared const as xQueue is a typedef not pointer. */
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM UBaseType_t uxQueueSpacesAvailable( const QueueHandle_t xQueue )
+DefKERNEL_SECTION_ITCM UBaseType_t uxQueueSpacesAvailable( const QueueHandle_t xQueue )
 {
 UBaseType_t uxReturn;
 Queue_t * const pxQueue = xQueue;
@@ -1956,7 +1956,7 @@ Queue_t * const pxQueue = xQueue;
 } /*lint !e818 Pointer cannot be declared const as xQueue is a typedef not pointer. */
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM UBaseType_t uxQueueMessagesWaitingFromISR( const QueueHandle_t xQueue )
+DefKERNEL_SECTION_ITCM UBaseType_t uxQueueMessagesWaitingFromISR( const QueueHandle_t xQueue )
 {
 UBaseType_t uxReturn;
 Queue_t * const pxQueue = xQueue;
@@ -1968,7 +1968,7 @@ Queue_t * const pxQueue = xQueue;
 } /*lint !e818 Pointer cannot be declared const as xQueue is a typedef not pointer. */
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM void vQueueDelete( QueueHandle_t xQueue )
+DefKERNEL_SECTION_ITCM void vQueueDelete( QueueHandle_t xQueue )
 {
 Queue_t * const pxQueue = xQueue;
 
@@ -2012,7 +2012,7 @@ Queue_t * const pxQueue = xQueue;
 
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	kKERNEL_SECTION_ITCM UBaseType_t uxQueueGetQueueNumber( QueueHandle_t xQueue )
+	DefKERNEL_SECTION_ITCM UBaseType_t uxQueueGetQueueNumber( QueueHandle_t xQueue )
 	{
 		return ( ( Queue_t * ) xQueue )->uxQueueNumber;
 	}
@@ -2022,7 +2022,7 @@ Queue_t * const pxQueue = xQueue;
 
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	kKERNEL_SECTION_ITCM void vQueueSetQueueNumber( QueueHandle_t xQueue, UBaseType_t uxQueueNumber )
+	DefKERNEL_SECTION_ITCM void vQueueSetQueueNumber( QueueHandle_t xQueue, UBaseType_t uxQueueNumber )
 	{
 		( ( Queue_t * ) xQueue )->uxQueueNumber = uxQueueNumber;
 	}
@@ -2032,7 +2032,7 @@ Queue_t * const pxQueue = xQueue;
 
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	kKERNEL_SECTION_ITCM uint8_t ucQueueGetQueueType( QueueHandle_t xQueue )
+	DefKERNEL_SECTION_ITCM uint8_t ucQueueGetQueueType( QueueHandle_t xQueue )
 	{
 		return ( ( Queue_t * ) xQueue )->ucQueueType;
 	}
@@ -2042,7 +2042,7 @@ Queue_t * const pxQueue = xQueue;
 
 #if( configUSE_MUTEXES == 1 )
 
-	kKERNEL_SECTION_ITCM static UBaseType_t prvGetDisinheritPriorityAfterTimeout( const Queue_t * const pxQueue )
+	DefKERNEL_SECTION_ITCM static UBaseType_t prvGetDisinheritPriorityAfterTimeout( const Queue_t * const pxQueue )
 	{
 	UBaseType_t uxHighestPriorityOfWaitingTasks;
 
@@ -2067,7 +2067,7 @@ Queue_t * const pxQueue = xQueue;
 #endif /* configUSE_MUTEXES */
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static BaseType_t prvCopyDataToQueue( Queue_t * const pxQueue, const void *pvItemToQueue, const BaseType_t xPosition )
+DefKERNEL_SECTION_ITCM static BaseType_t prvCopyDataToQueue( Queue_t * const pxQueue, const void *pvItemToQueue, const BaseType_t xPosition )
 {
 BaseType_t xReturn = pdFALSE;
 UBaseType_t uxMessagesWaiting;
@@ -2146,7 +2146,7 @@ UBaseType_t uxMessagesWaiting;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static void prvCopyDataFromQueue( Queue_t * const pxQueue, void * const pvBuffer )
+DefKERNEL_SECTION_ITCM static void prvCopyDataFromQueue( Queue_t * const pxQueue, void * const pvBuffer )
 {
 	if( pxQueue->uxItemSize != ( UBaseType_t ) 0 )
 	{
@@ -2164,7 +2164,7 @@ kKERNEL_SECTION_ITCM static void prvCopyDataFromQueue( Queue_t * const pxQueue, 
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static void prvUnlockQueue( Queue_t * const pxQueue )
+DefKERNEL_SECTION_ITCM static void prvUnlockQueue( Queue_t * const pxQueue )
 {
 	/* THIS FUNCTION MUST BE CALLED WITH THE SCHEDULER SUSPENDED. */
 
@@ -2284,7 +2284,7 @@ kKERNEL_SECTION_ITCM static void prvUnlockQueue( Queue_t * const pxQueue )
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static BaseType_t prvIsQueueEmpty( const Queue_t *pxQueue )
+DefKERNEL_SECTION_ITCM static BaseType_t prvIsQueueEmpty( const Queue_t *pxQueue )
 {
 BaseType_t xReturn;
 
@@ -2305,7 +2305,7 @@ BaseType_t xReturn;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM BaseType_t xQueueIsQueueEmptyFromISR( const QueueHandle_t xQueue )
+DefKERNEL_SECTION_ITCM BaseType_t xQueueIsQueueEmptyFromISR( const QueueHandle_t xQueue )
 {
 BaseType_t xReturn;
 Queue_t * const pxQueue = xQueue;
@@ -2324,7 +2324,7 @@ Queue_t * const pxQueue = xQueue;
 } /*lint !e818 xQueue could not be pointer to const because it is a typedef. */
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static BaseType_t prvIsQueueFull( const Queue_t *pxQueue )
+DefKERNEL_SECTION_ITCM static BaseType_t prvIsQueueFull( const Queue_t *pxQueue )
 {
 BaseType_t xReturn;
 
@@ -2345,7 +2345,7 @@ BaseType_t xReturn;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM BaseType_t xQueueIsQueueFullFromISR( const QueueHandle_t xQueue )
+DefKERNEL_SECTION_ITCM BaseType_t xQueueIsQueueFullFromISR( const QueueHandle_t xQueue )
 {
 BaseType_t xReturn;
 Queue_t * const pxQueue = xQueue;
@@ -2366,7 +2366,7 @@ Queue_t * const pxQueue = xQueue;
 
 #if ( configUSE_CO_ROUTINES == 1 )
 
-	kKERNEL_SECTION_ITCM BaseType_t xQueueCRSend( QueueHandle_t xQueue, const void *pvItemToQueue, TickType_t xTicksToWait )
+	DefKERNEL_SECTION_ITCM BaseType_t xQueueCRSend( QueueHandle_t xQueue, const void *pvItemToQueue, TickType_t xTicksToWait )
 	{
 	BaseType_t xReturn;
 	Queue_t * const pxQueue = xQueue;
@@ -2443,7 +2443,7 @@ Queue_t * const pxQueue = xQueue;
 
 #if ( configUSE_CO_ROUTINES == 1 )
 
-	kKERNEL_SECTION_ITCM BaseType_t xQueueCRReceive( QueueHandle_t xQueue, void *pvBuffer, TickType_t xTicksToWait )
+	DefKERNEL_SECTION_ITCM BaseType_t xQueueCRReceive( QueueHandle_t xQueue, void *pvBuffer, TickType_t xTicksToWait )
 	{
 	BaseType_t xReturn;
 	Queue_t * const pxQueue = xQueue;
@@ -2533,7 +2533,7 @@ Queue_t * const pxQueue = xQueue;
 
 #if ( configUSE_CO_ROUTINES == 1 )
 
-	kKERNEL_SECTION_ITCM BaseType_t xQueueCRSendFromISR( QueueHandle_t xQueue, const void *pvItemToQueue, BaseType_t xCoRoutinePreviouslyWoken )
+	DefKERNEL_SECTION_ITCM BaseType_t xQueueCRSendFromISR( QueueHandle_t xQueue, const void *pvItemToQueue, BaseType_t xCoRoutinePreviouslyWoken )
 	{
 	Queue_t * const pxQueue = xQueue;
 
@@ -2581,7 +2581,7 @@ Queue_t * const pxQueue = xQueue;
 
 #if ( configUSE_CO_ROUTINES == 1 )
 
-	kKERNEL_SECTION_ITCM BaseType_t xQueueCRReceiveFromISR( QueueHandle_t xQueue, void *pvBuffer, BaseType_t *pxCoRoutineWoken )
+	DefKERNEL_SECTION_ITCM BaseType_t xQueueCRReceiveFromISR( QueueHandle_t xQueue, void *pvBuffer, BaseType_t *pxCoRoutineWoken )
 	{
 	BaseType_t xReturn;
 	Queue_t * const pxQueue = xQueue;
@@ -2641,7 +2641,7 @@ Queue_t * const pxQueue = xQueue;
 
 #if ( configQUEUE_REGISTRY_SIZE > 0 )
 
-	kKERNEL_SECTION_ITCM void vQueueAddToRegistry( QueueHandle_t xQueue, const char *pcQueueName ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+	DefKERNEL_SECTION_ITCM void vQueueAddToRegistry( QueueHandle_t xQueue, const char *pcQueueName ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 	{
 	UBaseType_t ux;
 
@@ -2670,7 +2670,7 @@ Queue_t * const pxQueue = xQueue;
 
 #if ( configQUEUE_REGISTRY_SIZE > 0 )
 
-	kKERNEL_SECTION_ITCM const char *pcQueueGetName( QueueHandle_t xQueue ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+	DefKERNEL_SECTION_ITCM const char *pcQueueGetName( QueueHandle_t xQueue ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 	{
 	UBaseType_t ux;
 	const char *pcReturn = NULL; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
@@ -2698,7 +2698,7 @@ Queue_t * const pxQueue = xQueue;
 
 #if ( configQUEUE_REGISTRY_SIZE > 0 )
 
-	kKERNEL_SECTION_ITCM void vQueueUnregisterQueue( QueueHandle_t xQueue )
+	DefKERNEL_SECTION_ITCM void vQueueUnregisterQueue( QueueHandle_t xQueue )
 	{
 	UBaseType_t ux;
 
@@ -2730,7 +2730,7 @@ Queue_t * const pxQueue = xQueue;
 
 #if ( configUSE_TIMERS == 1 )
 
-	kKERNEL_SECTION_ITCM void vQueueWaitForMessageRestricted( QueueHandle_t xQueue, TickType_t xTicksToWait, const BaseType_t xWaitIndefinitely )
+	DefKERNEL_SECTION_ITCM void vQueueWaitForMessageRestricted( QueueHandle_t xQueue, TickType_t xTicksToWait, const BaseType_t xWaitIndefinitely )
 	{
 	Queue_t * const pxQueue = xQueue;
 
@@ -2766,7 +2766,7 @@ Queue_t * const pxQueue = xQueue;
 
 #if( ( configUSE_QUEUE_SETS == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
 
-	kKERNEL_SECTION_ITCM QueueSetHandle_t xQueueCreateSet( const UBaseType_t uxEventQueueLength )
+	DefKERNEL_SECTION_ITCM QueueSetHandle_t xQueueCreateSet( const UBaseType_t uxEventQueueLength )
 	{
 	QueueSetHandle_t pxQueue;
 
@@ -2780,7 +2780,7 @@ Queue_t * const pxQueue = xQueue;
 
 #if ( configUSE_QUEUE_SETS == 1 )
 
-	kKERNEL_SECTION_ITCM BaseType_t xQueueAddToSet( QueueSetMemberHandle_t xQueueOrSemaphore, QueueSetHandle_t xQueueSet )
+	DefKERNEL_SECTION_ITCM BaseType_t xQueueAddToSet( QueueSetMemberHandle_t xQueueOrSemaphore, QueueSetHandle_t xQueueSet )
 	{
 	BaseType_t xReturn;
 
@@ -2813,7 +2813,7 @@ Queue_t * const pxQueue = xQueue;
 
 #if ( configUSE_QUEUE_SETS == 1 )
 
-	kKERNEL_SECTION_ITCM BaseType_t xQueueRemoveFromSet( QueueSetMemberHandle_t xQueueOrSemaphore, QueueSetHandle_t xQueueSet )
+	DefKERNEL_SECTION_ITCM BaseType_t xQueueRemoveFromSet( QueueSetMemberHandle_t xQueueOrSemaphore, QueueSetHandle_t xQueueSet )
 	{
 	BaseType_t xReturn;
 	Queue_t * const pxQueueOrSemaphore = ( Queue_t * ) xQueueOrSemaphore;
@@ -2849,7 +2849,7 @@ Queue_t * const pxQueue = xQueue;
 
 #if ( configUSE_QUEUE_SETS == 1 )
 
-	kKERNEL_SECTION_ITCM QueueSetMemberHandle_t xQueueSelectFromSet( QueueSetHandle_t xQueueSet, TickType_t const xTicksToWait )
+	DefKERNEL_SECTION_ITCM QueueSetMemberHandle_t xQueueSelectFromSet( QueueSetHandle_t xQueueSet, TickType_t const xTicksToWait )
 	{
 	QueueSetMemberHandle_t xReturn = NULL;
 
@@ -2862,7 +2862,7 @@ Queue_t * const pxQueue = xQueue;
 
 #if ( configUSE_QUEUE_SETS == 1 )
 
-	kKERNEL_SECTION_ITCM QueueSetMemberHandle_t xQueueSelectFromSetFromISR( QueueSetHandle_t xQueueSet )
+	DefKERNEL_SECTION_ITCM QueueSetMemberHandle_t xQueueSelectFromSetFromISR( QueueSetHandle_t xQueueSet )
 	{
 	QueueSetMemberHandle_t xReturn = NULL;
 
@@ -2875,7 +2875,7 @@ Queue_t * const pxQueue = xQueue;
 
 #if ( configUSE_QUEUE_SETS == 1 )
 
-	kKERNEL_SECTION_ITCM static BaseType_t prvNotifyQueueSetContainer( const Queue_t * const pxQueue, const BaseType_t xCopyPosition )
+	DefKERNEL_SECTION_ITCM static BaseType_t prvNotifyQueueSetContainer( const Queue_t * const pxQueue, const BaseType_t xCopyPosition )
 	{
 	Queue_t *pxQueueSetContainer = pxQueue->pxQueueSetContainer;
 	BaseType_t xReturn = pdFALSE;

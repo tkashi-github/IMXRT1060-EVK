@@ -110,29 +110,29 @@ debugger. */
  * file is weak to allow application writers to change the timer used to
  * generate the tick interrupt.
  */
-kKERNEL_SECTION_ITCM void vPortSetupTimerInterrupt( void );
+DefKERNEL_SECTION_ITCM void vPortSetupTimerInterrupt( void );
 
 /*
  * Exception handlers.
  */
-kKERNEL_SECTION_ITCM void xPortPendSVHandler( void ) __attribute__ (( naked ));
-kKERNEL_SECTION_ITCM void xPortSysTickHandler( void );
-kKERNEL_SECTION_ITCM void vPortSVCHandler( void ) __attribute__ (( naked ));
+DefKERNEL_SECTION_ITCM void xPortPendSVHandler( void ) __attribute__ (( naked ));
+DefKERNEL_SECTION_ITCM void xPortSysTickHandler( void );
+DefKERNEL_SECTION_ITCM void vPortSVCHandler( void ) __attribute__ (( naked ));
 
 /*
  * Start first task is a separate function so it can be tested in isolation.
  */
-kKERNEL_SECTION_ITCM static void prvPortStartFirstTask( void ) __attribute__ (( naked ));
+DefKERNEL_SECTION_ITCM static void prvPortStartFirstTask( void ) __attribute__ (( naked ));
 
 /*
  * Function to enable the VFP.
  */
-kKERNEL_SECTION_ITCM static void vPortEnableVFP( void ) __attribute__ (( naked ));
+DefKERNEL_SECTION_ITCM static void vPortEnableVFP( void ) __attribute__ (( naked ));
 
 /*
  * Used to catch tasks that attempt to return from their implementing function.
  */
-kKERNEL_SECTION_ITCM static void prvTaskExitError( void );
+DefKERNEL_SECTION_ITCM static void prvTaskExitError( void );
 
 /*-----------------------------------------------------------*/
 
@@ -179,7 +179,7 @@ static UBaseType_t uxCriticalNesting = 0xaaaaaaaa;
 /*
  * See header file for description.
  */
-kKERNEL_SECTION_ITCM StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters )
+DefKERNEL_SECTION_ITCM StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters )
 {
 	/* Simulate the stack frame as it would be created by a context switch
 	interrupt. */
@@ -209,7 +209,7 @@ kKERNEL_SECTION_ITCM StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfSta
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static void prvTaskExitError( void )
+DefKERNEL_SECTION_ITCM static void prvTaskExitError( void )
 {
 volatile uint32_t ulDummy = 0;
 
@@ -234,7 +234,7 @@ volatile uint32_t ulDummy = 0;
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM void vPortSVCHandler( void )
+DefKERNEL_SECTION_ITCM void vPortSVCHandler( void )
 {
 	__asm volatile (
 					"	ldr	r3, pxCurrentTCBConst2		\n" /* Restore the context. */
@@ -253,7 +253,7 @@ kKERNEL_SECTION_ITCM void vPortSVCHandler( void )
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM static void prvPortStartFirstTask( void )
+DefKERNEL_SECTION_ITCM static void prvPortStartFirstTask( void )
 {
 	/* Start the first task.  This also clears the bit that indicates the FPU is
 	in use in case the FPU was used before the scheduler was started - which
@@ -279,7 +279,7 @@ kKERNEL_SECTION_ITCM static void prvPortStartFirstTask( void )
 /*
  * See header file for description.
  */
-kKERNEL_SECTION_ITCM BaseType_t xPortStartScheduler( void )
+DefKERNEL_SECTION_ITCM BaseType_t xPortStartScheduler( void )
 {
 	/* configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to 0.
 	See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html */
@@ -381,7 +381,7 @@ kKERNEL_SECTION_ITCM BaseType_t xPortStartScheduler( void )
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM void vPortEndScheduler( void )
+DefKERNEL_SECTION_ITCM void vPortEndScheduler( void )
 {
 	/* Not implemented in ports where there is nothing to return to.
 	Artificially force an assert. */
@@ -389,7 +389,7 @@ kKERNEL_SECTION_ITCM void vPortEndScheduler( void )
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM void vPortEnterCritical( void )
+DefKERNEL_SECTION_ITCM void vPortEnterCritical( void )
 {
 	portDISABLE_INTERRUPTS();
 	uxCriticalNesting++;
@@ -406,7 +406,7 @@ kKERNEL_SECTION_ITCM void vPortEnterCritical( void )
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM void vPortExitCritical( void )
+DefKERNEL_SECTION_ITCM void vPortExitCritical( void )
 {
 	configASSERT( uxCriticalNesting );
 	uxCriticalNesting--;
@@ -417,7 +417,7 @@ kKERNEL_SECTION_ITCM void vPortExitCritical( void )
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM void xPortPendSVHandler( void )
+DefKERNEL_SECTION_ITCM void xPortPendSVHandler( void )
 {
 	/* This is a naked function. */
 
@@ -476,7 +476,7 @@ kKERNEL_SECTION_ITCM void xPortPendSVHandler( void )
 }
 /*-----------------------------------------------------------*/
 
-kKERNEL_SECTION_ITCM void xPortSysTickHandler( void )
+DefKERNEL_SECTION_ITCM void xPortSysTickHandler( void )
 {
 	/* The SysTick runs at the lowest interrupt priority, so when this interrupt
 	executes all interrupts must be unmasked.  There is therefore no need to
@@ -498,7 +498,7 @@ kKERNEL_SECTION_ITCM void xPortSysTickHandler( void )
 
 #if( configUSE_TICKLESS_IDLE == 1 )
 
-	kKERNEL_SECTION_ITCM __attribute__((weak)) void vPortSuppressTicksAndSleep( TickType_t xExpectedIdleTime )
+	DefKERNEL_SECTION_ITCM __attribute__((weak)) void vPortSuppressTicksAndSleep( TickType_t xExpectedIdleTime )
 	{
 	uint32_t ulReloadValue, ulCompleteTickPeriods, ulCompletedSysTickDecrements;
 	TickType_t xModifiableIdleTime;
@@ -667,7 +667,7 @@ kKERNEL_SECTION_ITCM void xPortSysTickHandler( void )
  * Setup the systick timer to generate the tick interrupts at the required
  * frequency.
  */
-kKERNEL_SECTION_ITCM __attribute__(( weak )) void vPortSetupTimerInterrupt( void )
+DefKERNEL_SECTION_ITCM __attribute__(( weak )) void vPortSetupTimerInterrupt( void )
 {
 	/* Calculate the constants required to configure the tick interrupt. */
 	#if( configUSE_TICKLESS_IDLE == 1 )
@@ -689,7 +689,7 @@ kKERNEL_SECTION_ITCM __attribute__(( weak )) void vPortSetupTimerInterrupt( void
 /*-----------------------------------------------------------*/
 
 /* This is a naked function. */
-kKERNEL_SECTION_ITCM static void vPortEnableVFP( void )
+DefKERNEL_SECTION_ITCM static void vPortEnableVFP( void )
 {
 	__asm volatile
 	(
@@ -705,7 +705,7 @@ kKERNEL_SECTION_ITCM static void vPortEnableVFP( void )
 
 #if( configASSERT_DEFINED == 1 )
 
-	kKERNEL_SECTION_ITCM void vPortValidateInterruptPriority( void )
+	DefKERNEL_SECTION_ITCM void vPortValidateInterruptPriority( void )
 	{
 	uint32_t ulCurrentInterrupt;
 	uint8_t ucCurrentPriority;

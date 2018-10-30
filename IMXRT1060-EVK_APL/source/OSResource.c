@@ -50,29 +50,24 @@ typedef struct{
 	osThreadAttr_t Attr;
 }stOSdefTable_t;
 
-#if (defined(__GNUC__)) && (defined(__ARM_ARCH_7M__))
-#define ALLOCATE_IN_DTCM __attribute__((section(".bss.$SRAM_DTC*"))) 
-#else
-#define ALLOCATE_IN_DTCM
-#endif
 
 /** Task Handle */
-ALLOCATE_IN_DTCM alignas(32) osThreadId_t g_InitialTaskHandle;
-ALLOCATE_IN_DTCM alignas(32) osThreadId_t g_ConsoleTaskHandle;
-ALLOCATE_IN_DTCM alignas(32) osThreadId_t g_StorageTaskHandle;
-ALLOCATE_IN_DTCM alignas(32) osThreadId_t g_LanTaskHandle;
+DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_InitialTaskHandle;
+DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_ConsoleTaskHandle;
+DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_StorageTaskHandle;
+DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_LanTaskHandle;
 
 /** Task Control Block (STATIC ALLOCATION)*/
-ALLOCATE_IN_DTCM alignas(32) static StaticTask_t s_InitialTaskTCB;
-ALLOCATE_IN_DTCM alignas(32) static StaticTask_t s_ConsoleTaskTCB;
-ALLOCATE_IN_DTCM alignas(32) static StaticTask_t s_StorageTaskTCB;
-ALLOCATE_IN_DTCM alignas(32) static StaticTask_t s_LanTaskTCB;
+DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_InitialTaskTCB;
+DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_ConsoleTaskTCB;
+DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_StorageTaskTCB;
+DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_LanTaskTCB;
 
 /** Task Stack (STATIC ALLOCATION)*/
-ALLOCATE_IN_DTCM alignas(32) static uint32_t s_InitialTaskStack[8192/sizeof(uint32_t)];
-ALLOCATE_IN_DTCM alignas(32) static uint32_t s_ConsoleTaskStack[8192/sizeof(uint32_t)];
-ALLOCATE_IN_DTCM alignas(32) static uint32_t s_StorageTaskStack[8192/sizeof(uint32_t)];
-ALLOCATE_IN_DTCM alignas(32) static uint32_t s_LanTaskStack[8192/sizeof(uint32_t)];
+DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_InitialTaskStack[8192/sizeof(uint32_t)];
+DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_ConsoleTaskStack[8192/sizeof(uint32_t)];
+DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_StorageTaskStack[8192/sizeof(uint32_t)];
+DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_LanTaskStack[8192/sizeof(uint32_t)];
 
 /** Task Table */
 static const stOSdefTable_t s_stTaskTable[] = {
@@ -125,11 +120,11 @@ typedef struct{
 }stEventGroupTable_t;
 
 /** Event Group Handle */
-ALLOCATE_IN_DTCM alignas(32) EventGroupHandle_t g_xLPUARTEventGroup[1+enLPUART_MAX];
-ALLOCATE_IN_DTCM alignas(32) EventGroupHandle_t g_xFSReadyEventGroup;
+DefALLOCATE_BSS_DTCM alignas(32) EventGroupHandle_t g_xLPUARTEventGroup[1+enLPUART_MAX];
+DefALLOCATE_BSS_DTCM alignas(32) EventGroupHandle_t g_xFSReadyEventGroup;
 /** Event Group Buffer */
-ALLOCATE_IN_DTCM alignas(32) static StaticEventGroup_t s_xLPUARTEventGroupBuffer[1+enLPUART_MAX];
-ALLOCATE_IN_DTCM alignas(32) static StaticEventGroup_t s_xFSReadyEventGroupBuffer;
+DefALLOCATE_BSS_DTCM alignas(32) static StaticEventGroup_t s_xLPUARTEventGroupBuffer[1+enLPUART_MAX];
+DefALLOCATE_BSS_DTCM alignas(32) static StaticEventGroup_t s_xFSReadyEventGroupBuffer;
 static stEventGroupTable_t s_stEventGroupTable[] = {
 	{&g_xLPUARTEventGroup[enLPUART1], &s_xLPUARTEventGroupBuffer[enLPUART1]},
 	{&g_xLPUARTEventGroup[enLPUART2], &s_xLPUARTEventGroupBuffer[enLPUART2]},
@@ -159,10 +154,10 @@ typedef struct{
 	StaticSemaphore_t *pSMBuffer;
 }stBinarySemaphoreTable_t;
 
-ALLOCATE_IN_DTCM alignas(32) SemaphoreHandle_t g_xLPUARTRxSemaphore[1+enLPUART_MAX] = {NULL};
-ALLOCATE_IN_DTCM alignas(32) SemaphoreHandle_t g_xLPUARTTxSemaphore[1+enLPUART_MAX] = {NULL};
-ALLOCATE_IN_DTCM alignas(32) static StaticSemaphore_t s_xLPUARTRxSemaphoreBuffer[1+enLPUART_MAX];
-ALLOCATE_IN_DTCM alignas(32) static StaticSemaphore_t s_xLPUARTTxSemaphoreBuffer[1+enLPUART_MAX];
+DefALLOCATE_BSS_DTCM alignas(32) SemaphoreHandle_t g_xLPUARTRxSemaphore[1+enLPUART_MAX] = {NULL};
+DefALLOCATE_BSS_DTCM alignas(32) SemaphoreHandle_t g_xLPUARTTxSemaphore[1+enLPUART_MAX] = {NULL};
+DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xLPUARTRxSemaphoreBuffer[1+enLPUART_MAX];
+DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xLPUARTTxSemaphoreBuffer[1+enLPUART_MAX];
 
 static stBinarySemaphoreTable_t s_stBinarySemaphoreTable[] = {
 	{&g_xLPUARTRxSemaphore[enLPUART1], &s_xLPUARTRxSemaphoreBuffer[enLPUART1]},
@@ -203,7 +198,7 @@ typedef struct{
 	osMessageQueueAttr_t stAttr;	/** 今のところ使い道がない */
 }stQueueTable_t;
 
-ALLOCATE_IN_DTCM alignas(32) osMessageQueueId_t g_StorageTaskQueueId = NULL;
+DefALLOCATE_BSS_DTCM alignas(32) osMessageQueueId_t g_StorageTaskQueueId = NULL;
 
 static stQueueTable_t s_stQueueTable[] = {
 	{&g_StorageTaskQueueId, 32, sizeof(stTaskMsgBlock_t), {0}},
@@ -227,20 +222,20 @@ typedef struct{
 	StaticStreamBuffer_t *pxStreamBufferStruct;
 }stStreamBuffer_t;
 
-ALLOCATE_IN_DTCM alignas(32) StreamBufferHandle_t g_sbhLPUARTTx[1+enLPUART_MAX] = {NULL};
-ALLOCATE_IN_DTCM alignas(32) static uint8_t s_u8StorageLPUARTTx[1+enLPUART_MAX][1024+1];	/** +1 はマニュアルの指示 */
-ALLOCATE_IN_DTCM alignas(32) static StaticStreamBuffer_t s_ssbLPUARTTx[1+enLPUART_MAX];
-ALLOCATE_IN_DTCM alignas(32) StreamBufferHandle_t g_sbhLPUARTRx[1+enLPUART_MAX] = {NULL};
-ALLOCATE_IN_DTCM alignas(32) static uint8_t s_u8StorageLPUARTRx[1+enLPUART_MAX][1024+1];	/** +1 はマニュアルの指示 */
-ALLOCATE_IN_DTCM alignas(32) static StaticStreamBuffer_t s_ssbLPUARTRx[1+enLPUART_MAX];
+DefALLOCATE_BSS_DTCM alignas(32) StreamBufferHandle_t g_sbhLPUARTTx[1+enLPUART_MAX] = {NULL};
+DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_u8StorageLPUARTTx[1+enLPUART_MAX][1024+1];	/** +1 はマニュアルの指示 */
+DefALLOCATE_BSS_DTCM alignas(32) static StaticStreamBuffer_t s_ssbLPUARTTx[1+enLPUART_MAX];
+DefALLOCATE_BSS_DTCM alignas(32) StreamBufferHandle_t g_sbhLPUARTRx[1+enLPUART_MAX] = {NULL};
+DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_u8StorageLPUARTRx[1+enLPUART_MAX][1024+1];	/** +1 はマニュアルの指示 */
+DefALLOCATE_BSS_DTCM alignas(32) static StaticStreamBuffer_t s_ssbLPUARTRx[1+enLPUART_MAX];
 
-ALLOCATE_IN_DTCM alignas(32) StreamBufferHandle_t g_sbhStorageTask[enNumOfSD] = {NULL, NULL};
-ALLOCATE_IN_DTCM alignas(32) static uint8_t s_StorageTaskStorage[enNumOfSD][sizeof(stTaskMsgBlock_t) * 32 + 1];	/** +1 はマニュアルの指示 */
-ALLOCATE_IN_DTCM alignas(32) static StaticStreamBuffer_t s_ssbStorageTaskStreamBuffer[enNumOfSD];
+DefALLOCATE_BSS_DTCM alignas(32) StreamBufferHandle_t g_sbhStorageTask[enNumOfSD] = {NULL, NULL};
+DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_StorageTaskStorage[enNumOfSD][sizeof(stTaskMsgBlock_t) * 32 + 1];	/** +1 はマニュアルの指示 */
+DefALLOCATE_BSS_DTCM alignas(32) static StaticStreamBuffer_t s_ssbStorageTaskStreamBuffer[enNumOfSD];
 
-ALLOCATE_IN_DTCM alignas(32) StreamBufferHandle_t g_sbhLanTask = NULL;
-ALLOCATE_IN_DTCM alignas(32) static uint8_t s_LanTaskStorage[sizeof(stTaskMsgBlock_t) * 32 + 1];	/** +1 はマニュアルの指示 */
-ALLOCATE_IN_DTCM alignas(32) static StaticStreamBuffer_t s_ssbSLanTaskStreamBuffer;
+DefALLOCATE_BSS_DTCM alignas(32) StreamBufferHandle_t g_sbhLanTask = NULL;
+DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_LanTaskStorage[sizeof(stTaskMsgBlock_t) * 32 + 1];	/** +1 はマニュアルの指示 */
+DefALLOCATE_BSS_DTCM alignas(32) static StaticStreamBuffer_t s_ssbSLanTaskStreamBuffer;
 
 static stStreamBuffer_t s_stStreamBufferTable[] = {
 	{
