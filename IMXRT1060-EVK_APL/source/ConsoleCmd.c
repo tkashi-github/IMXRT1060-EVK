@@ -45,6 +45,12 @@
 
 #include "task.h"
 
+#include "lwip/timeouts.h"
+#include "lwip/sockets.h"
+#include "lwip/inet.h"
+#include "ip.h"
+#include "ping/ping.h"
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -62,7 +68,7 @@ static void CmdClock(uint32_t argc, const char *argv[]);
 static void CmdTask(uint32_t argc, const char *argv[]);
 
 static void CmdNvic(uint32_t argc, const char *argv[]);
-
+static void CmdPing(uint32_t argc, const char *argv[]);
 
 stCmdTable_t g_stCmdTable[] = {
 	{"HELP", CmdHelp, "Help"},			/* Help Command*/
@@ -79,6 +85,7 @@ stCmdTable_t g_stCmdTable[] = {
 
 	{"CLK", CmdClock, "Show Clock"},
 	{"TASK", CmdTask, "vTaskList"},
+	{"PING", CmdPing, "PING"},
 	{NULL, NULL, NULL}, /* Terminator */
 };
 
@@ -227,3 +234,56 @@ static void CmdNvic(uint32_t argc, const char *argv[]){
 	}
 }
 
+
+static void CmdPing(uint32_t argc, const char *argv[])
+{
+	int s;
+	int ret;
+	ip_addr_t ping_addr;
+
+	if(argc != 2){
+		bsp_printf("ping <ip>\r\n");
+	}
+	ip4addr_aton(argv[1], &ping_addr);
+
+#if LWIP_SO_SNDRCVTIMEO_NONSTANDARD
+	int timeout = PING_RCV_TIMEO;
+#else
+	struct timeval timeout;
+	timeout.tv_sec = 1;
+	timeout.tv_usec = 0;
+#endif
+	
+#if LWIP_IPV6
+	if (IP_IS_V4(ping_target) || ip6_addr_isipv6mappedipv4(ip_2_ip6(ping_target)))
+	{
+		s = lwip_socket(AF_INET6, SOCK_RAW, IP_PROTO_ICMP);
+	}
+	else
+	{
+		s = lwip_socket(AF_INET6, SOCK_RAW, IP6_NEXTH_ICMP6);
+	}
+#else
+	s = lwip_socket(AF_INET, SOCK_RAW, IP_PROTO_ICMP);
+#endif
+	if (s < 0)
+	{
+		return;
+	}
+
+	ret = lwip_setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+
+	for(uint32_t i=0;i<4;i++)
+	{
+		if (ping_send(s, &ping_addr) == ERR_OK)
+		{
+			mimic_printf("ping: send %s OK\r\n", argv[1]);
+			ping_recv(s, sys_now());
+		}
+		else
+		{
+			mimic_printf("ping: send %s NG\r\n", argv[1]);
+		}
+		sys_msleep(1000);
+	}
+}
