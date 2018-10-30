@@ -242,7 +242,7 @@ static void CmdPing(uint32_t argc, const char *argv[])
 	ip_addr_t ping_addr;
 
 	if(argc != 2){
-		bsp_printf("ping <ip>\r\n");
+		mimic_printf("ping <ip>\r\n");
 	}
 	ip4addr_aton(argv[1], &ping_addr);
 

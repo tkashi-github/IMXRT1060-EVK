@@ -73,6 +73,7 @@
 #define configINITIAL_TICK_COUNT                 0
 #define configCHECK_FOR_STACK_OVERFLOW           1
 #define configFRTOS_MEMORY_SCHEME     			4
+#define configUSE_COUNTING_SEMAPHORES			1
 /* Software timer definitions. */
 #define configUSE_TIMERS             1
 #define configTIMER_TASK_PRIORITY    (2)
