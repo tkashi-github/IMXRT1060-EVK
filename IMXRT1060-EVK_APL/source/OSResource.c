@@ -114,36 +114,39 @@ void CreateTask(void){
 	}
 }
 
+/** CMSIS RTOS2 Event Flag Table */
 typedef struct{
-	EventGroupHandle_t *pEGHandle;
-	StaticEventGroup_t *pEGBuffer;
-}stEventGroupTable_t;
+	osEventFlagsId_t *pefID;
+	osEventFlagsAttr_t efAttr;
+}stEventFlagTable_t;
 
-/** Event Group Handle */
-DefALLOCATE_BSS_DTCM alignas(32) EventGroupHandle_t g_xLPUARTEventGroup[1+enLPUART_MAX];
-DefALLOCATE_BSS_DTCM alignas(32) EventGroupHandle_t g_xFSReadyEventGroup;
-/** Event Group Buffer */
+/** osEventFlagsId_t */
+DefALLOCATE_BSS_DTCM alignas(32) osEventFlagsId_t g_efLPUART[1+enLPUART_MAX];
+DefALLOCATE_BSS_DTCM alignas(32) osEventFlagsId_t g_efFSReady;
+
+/** StaticEventGroup_t */
 DefALLOCATE_BSS_DTCM alignas(32) static StaticEventGroup_t s_xLPUARTEventGroupBuffer[1+enLPUART_MAX];
 DefALLOCATE_BSS_DTCM alignas(32) static StaticEventGroup_t s_xFSReadyEventGroupBuffer;
-static stEventGroupTable_t s_stEventGroupTable[] = {
-	{&g_xLPUARTEventGroup[enLPUART1], &s_xLPUARTEventGroupBuffer[enLPUART1]},
-	{&g_xLPUARTEventGroup[enLPUART2], &s_xLPUARTEventGroupBuffer[enLPUART2]},
-	{&g_xLPUARTEventGroup[enLPUART3], &s_xLPUARTEventGroupBuffer[enLPUART3]},
-	{&g_xLPUARTEventGroup[enLPUART4], &s_xLPUARTEventGroupBuffer[enLPUART4]},
-	{&g_xLPUARTEventGroup[enLPUART5], &s_xLPUARTEventGroupBuffer[enLPUART5]},
-	{&g_xLPUARTEventGroup[enLPUART6], &s_xLPUARTEventGroupBuffer[enLPUART6]},
-	{&g_xLPUARTEventGroup[enLPUART7], &s_xLPUARTEventGroupBuffer[enLPUART7]},
-	{&g_xLPUARTEventGroup[enLPUART8], &s_xLPUARTEventGroupBuffer[enLPUART8]},
 
-	{&g_xFSReadyEventGroup, &s_xFSReadyEventGroupBuffer},
+static stEventFlagTable_t s_stEventFlagTable[] = {
+	{&g_efLPUART[enLPUART1], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART1], sizeof(StaticEventGroup_t)}},
+	{&g_efLPUART[enLPUART2], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART2], sizeof(StaticEventGroup_t)}},
+	{&g_efLPUART[enLPUART3], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART3], sizeof(StaticEventGroup_t)}},
+	{&g_efLPUART[enLPUART4], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART4], sizeof(StaticEventGroup_t)}},
+	{&g_efLPUART[enLPUART5], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART5], sizeof(StaticEventGroup_t)}},
+	{&g_efLPUART[enLPUART6], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART6], sizeof(StaticEventGroup_t)}},
+	{&g_efLPUART[enLPUART7], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART7], sizeof(StaticEventGroup_t)}},
+	{&g_efLPUART[enLPUART8], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART8], sizeof(StaticEventGroup_t)}},
+
+	{&g_efFSReady, {"EF_LPUART", 0, &s_xFSReadyEventGroupBuffer, sizeof(StaticEventGroup_t)}},
 	{NULL, NULL},
 };
 
-void CreateEventGroup(void){	/** CMSIS RTOS2にすること */
+void CreateEventGroup(void){	
 	uint32_t i=0;
 
-	while(s_stEventGroupTable[i].pEGHandle != NULL){
-		*s_stEventGroupTable[i].pEGHandle = xEventGroupCreateStatic(s_stEventGroupTable[i].pEGBuffer);
+	while(s_stEventFlagTable[i].pefID != NULL){
+		*s_stEventFlagTable[i].pefID = osEventFlagsNew(&s_stEventFlagTable[i].efAttr);
 		i++;
 	}
 }

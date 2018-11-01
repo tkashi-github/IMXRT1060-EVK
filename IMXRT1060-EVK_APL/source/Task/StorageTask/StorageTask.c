@@ -132,6 +132,7 @@ DefALLOCATE_ITCM static _Bool StorageInit(enSD_t enSlotNo, sd_card_t *card)
 		mimic_printf("card->blockSize        = %lu\r\n", card->blockSize);
 		mimic_printf("<Initial Time = %lu msec>\r\n", xTaskGetTickCount() - StartTick);
 		bret = true;
+		
 	}
 	else
 	{
@@ -173,6 +174,7 @@ DefALLOCATE_ITCM static void StorageMount(enSD_t enSlotNo)
 	if (sts == FR_OK)
 	{
 		mimic_printf("f_mount OK (Slot = %d)\r\n", enSlotNo + 1);
+		osEventFlagsSet(g_efFSReady, 1);
 	}
 	else
 	{

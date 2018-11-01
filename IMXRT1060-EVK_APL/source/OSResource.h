@@ -69,8 +69,9 @@ extern osThreadId_t g_LEDTaskHandle;
 extern osThreadId_t g_LanTaskHandle;
 
 /** Event Group */
-extern EventGroupHandle_t g_xLPUARTEventGroup[];
-extern EventGroupHandle_t g_xFSReadyEventGroup;
+extern osEventFlagsId_t g_efLPUART[];
+extern osEventFlagsId_t g_efFSReady;
+
 extern SemaphoreHandle_t g_xLPUARTRxSemaphore[];
 extern SemaphoreHandle_t g_xLPUARTTxSemaphore[];
 

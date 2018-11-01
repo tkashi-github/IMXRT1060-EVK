@@ -190,7 +190,6 @@ static void LPUARTXHandleIRQ(enLPUART_t enLPUARTNo)
 
         /* Disable interrupt.*/
 		//LPUART_DisableInterrupts(base, kLPUART_IdleLineInterruptEnable);
-		osEventFlagsSet(g_xLPUARTEventGroup[enLPUARTNo], 1);
     }
     /* Receive data register full */
     if ((LPUART_STAT_RDRF_MASK & base->STAT) && (LPUART_CTRL_RIE_MASK & base->CTRL))
@@ -205,8 +204,6 @@ static void LPUARTXHandleIRQ(enLPUART_t enLPUARTNo)
 		}
 
 		//LPUART_DisableInterrupts(base, kLPUART_IdleLineInterruptEnable);
-
-		osEventFlagsSet(g_xLPUARTEventGroup[enLPUARTNo], 1);
     }
 
     /* Send data register empty and the interrupt is enabled. */

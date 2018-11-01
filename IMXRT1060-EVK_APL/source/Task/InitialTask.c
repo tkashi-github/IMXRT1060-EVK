@@ -57,12 +57,7 @@ void InitialTask(void const *argument)
 		g_bInitEnd = true;
 		PostMsgLanTaskRestart();
 		mimic_printf("[%s (%d)] All Task Started! (%lu msec)\r\n", __FUNCTION__, __LINE__, xTaskGetTickCount());
-		xEventGroupWaitBits(
-					g_xFSReadyEventGroup, // The event group being tested.
-					0x00000001u,	  // The bits within the event group to wait for.
-					pdTRUE,			  // BIT_0  should be cleared before returning.
-					pdFALSE,		  // Don't wait for both bits, either bit will do.
-					portMAX_DELAY);   // Wait a maximum 
+		osEventFlagsWait(g_efFSReady, 1, osFlagsWaitAny, portMAX_DELAY);   // Wait a maximum 
 
 		mimic_printf("[%s (%d)] Storage Init Complete (%lu msec)\r\n", __FUNCTION__, __LINE__, xTaskGetTickCount());
 		osThreadSuspend(osThreadGetId());
