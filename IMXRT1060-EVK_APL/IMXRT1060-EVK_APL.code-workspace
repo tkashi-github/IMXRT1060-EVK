@@ -41,7 +41,8 @@
 			"storagetask.h": "c",
 			"usertypedef.h": "c",
 			"filecmd.h": "c",
-			"freertos.h": "c"
+			"freertos.h": "c",
+			"storagebenchmark.h": "c"
 		},
 		"C_Cpp.default.defines": [
 			"__GNUC__",

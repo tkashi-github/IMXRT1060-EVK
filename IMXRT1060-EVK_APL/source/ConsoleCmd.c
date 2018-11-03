@@ -50,7 +50,7 @@
 #include "lwip/inet.h"
 #include "ip.h"
 #include "ping/ping.h"
-
+#include "common/storageBenchMark.h"
 #ifdef __cplusplus
 extern "C"
 {
@@ -86,6 +86,7 @@ stCmdTable_t g_stCmdTable[] = {
 	{"CLK", CmdClock, "Show Clock"},
 	{"TASK", CmdTask, "vTaskList"},
 	{"PING", CmdPing, "PING"},
+	{"SB", CmdStorageBenchMark, "StorageBenchMark"},
 	{NULL, NULL, NULL}, /* Terminator */
 };
 
