@@ -111,7 +111,7 @@ DefALLOCATE_ITCM static _Bool StorageInit(enSD_t enSlotNo, sd_card_t *card)
 	/** var */
 	status_t sts;
 	_Bool bret = false;
-	TickType_t StartTick = xTaskGetTickCount();
+	uint32_t StartTick = osKernelGetTickCount();
 
 	/** begin */
 	SD_HostInit(card);
@@ -123,6 +123,7 @@ DefALLOCATE_ITCM static _Bool StorageInit(enSD_t enSlotNo, sd_card_t *card)
 
 	if (sts == kStatus_Success)
 	{
+		mimic_printf("\r\nStorage Info [%lu msec]\r\n", StartTick);
 		mimic_printf("SD_HOST_CLK_FREQ       = %lu\r\n", BOARD_SD_HOST_CLK_FREQ);
 		mimic_printf("card->busClock_Hz      = %lu\r\n", card->busClock_Hz);
 		mimic_printf("card->version          = %lu\r\n", card->version);
@@ -130,7 +131,7 @@ DefALLOCATE_ITCM static _Bool StorageInit(enSD_t enSlotNo, sd_card_t *card)
 		mimic_printf("card->operationVoltage = %lu\r\n", card->operationVoltage);
 		mimic_printf("card->blockCount       = %lu\r\n", card->blockCount);
 		mimic_printf("card->blockSize        = %lu\r\n", card->blockSize);
-		mimic_printf("<Initial Time = %lu msec>\r\n", xTaskGetTickCount() - StartTick);
+		mimic_printf("<Initial Time = %lu msec>\r\n", osKernelGetTickCount() - StartTick);
 		bret = true;
 		
 	}

@@ -145,7 +145,7 @@
 */
 #define BOARD_MMC_SUPPORT_8BIT_BUS (1U)
 
-#define BOARD_SD_HOST_SUPPORT_SDR104_FREQ (200000000U)
+#define BOARD_SD_HOST_SUPPORT_SDR104_FREQ (198000000U)
 #define BOARD_SD_HOST_SUPPORT_HS200_FREQ (180000000U)
 /* define for SD/MMC config IO driver strength dynamic */
 #define BOARD_SD_PIN_CONFIG(speed, strength)                                                      \
