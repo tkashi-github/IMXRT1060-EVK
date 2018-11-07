@@ -38,7 +38,6 @@ extern clock_ip_name_t s_enetClock[FSL_FEATURE_SOC_ENET_COUNT];
 /*******************************************************************************
  * Code
  ******************************************************************************/
-#define FSL_FEATURE_PHYKSZ8081_USE_RMII50M_MODE
 
 status_t PHY_Init(ENET_Type *base, uint32_t phyAddr, uint32_t srcClock_Hz)
 {

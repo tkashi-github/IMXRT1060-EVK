@@ -49,9 +49,32 @@ uint32_t BOARD_DebugConsoleSrcFreq(void)
 }
 
 #if defined(SDK_I2C_BASED_COMPONENT_USED) && SDK_I2C_BASED_COMPONENT_USED
+#include "freertos/fsl_lpi2c_freertos.h"
+#include "OSresource.h"
+static const lpi2c_rtos_handle_t s_hndI2C[5];
+static const uint32_t s_u32I2CIRQn[5] = LPI2C_IRQS;
+	
 void BOARD_LPI2C_Init(LPI2C_Type *base, uint32_t clkSrc_Hz)
 {
     lpi2c_master_config_t lpi2cConfig = {0};
+	uint32_t u32DeviceNo = 0;
+
+	switch((uintptr_t)base){
+	case (uintptr_t)LPI2C1:
+		u32DeviceNo = 1;
+		break;
+	case (uintptr_t)LPI2C2:
+		u32DeviceNo = 2;
+		break;
+	case (uintptr_t)LPI2C3:
+		u32DeviceNo = 3;
+		break;
+	case (uintptr_t)LPI2C4:
+		u32DeviceNo = 4;
+		break;
+	default:
+		return;
+	}
 
     /*
      * lpi2cConfig.debugEnable = false;
@@ -64,14 +87,17 @@ void BOARD_LPI2C_Init(LPI2C_Type *base, uint32_t clkSrc_Hz)
      * lpi2cConfig.sclGlitchFilterWidth_ns = 0;
      */
     LPI2C_MasterGetDefaultConfig(&lpi2cConfig);
-    LPI2C_MasterInit(base, &lpi2cConfig, clkSrc_Hz);
+    //LPI2C_MasterInit(base, &lpi2cConfig, clkSrc_Hz);
+	EnableIRQ(s_u32I2CIRQn[u32DeviceNo]);
+	NVIC_SetPriority(s_u32I2CIRQn[u32DeviceNo], kIRQ_PRIORITY_LPI2C);
+	LPI2C_RTOS_Init(&s_hndI2C[u32DeviceNo], base, &lpi2cConfig, clkSrc_Hz);
 }
 
 status_t BOARD_LPI2C_Send(LPI2C_Type *base, uint8_t deviceAddress, uint32_t subAddress,
                 uint8_t subAddressSize, uint8_t *txBuff, uint8_t txBuffSize)
 {
     status_t reVal;
-
+#if 0
     /* Send master blocking data to slave */
     reVal = LPI2C_MasterStart(base, deviceAddress, kLPI2C_Write);
     if (kStatus_Success == reVal)
@@ -98,7 +124,38 @@ status_t BOARD_LPI2C_Send(LPI2C_Type *base, uint8_t deviceAddress, uint32_t subA
             return reVal;
         }
     }
+#else
+	uint32_t u32DeviceNo = 0;
+	lpi2c_master_transfer_t stTransfer;
 
+	switch((uintptr_t)base){
+	case (uintptr_t)LPI2C1:
+		u32DeviceNo = 1;
+		break;
+	case (uintptr_t)LPI2C2:
+		u32DeviceNo = 2;
+		break;
+	case (uintptr_t)LPI2C3:
+		u32DeviceNo = 3;
+		break;
+	case (uintptr_t)LPI2C4:
+		u32DeviceNo = 4;
+		break;
+	default:
+		return kStatus_InvalidArgument;
+	}
+
+	memset(&stTransfer, 0, sizeof(stTransfer));
+    stTransfer.slaveAddress = deviceAddress;
+    stTransfer.direction = kLPI2C_Write;
+    stTransfer.subaddress = subAddress;
+    stTransfer.subaddressSize = subAddressSize;
+    stTransfer.data = txBuff;
+    stTransfer.dataSize = txBuffSize;
+    stTransfer.flags = kLPI2C_TransferDefaultFlag;
+
+	reVal = LPI2C_RTOS_Transfer(&s_hndI2C[u32DeviceNo], &stTransfer);
+#endif
     return reVal;
 }
 
@@ -106,7 +163,7 @@ status_t BOARD_LPI2C_Receive(LPI2C_Type *base, uint8_t deviceAddress, uint32_t s
                 uint8_t subAddressSize, uint8_t *rxBuff, uint8_t rxBuffSize)
 {
     status_t reVal;
-
+#if 0
     reVal = LPI2C_MasterStart(base, deviceAddress, kLPI2C_Write);
     if (kStatus_Success == reVal)
     {
@@ -139,7 +196,40 @@ status_t BOARD_LPI2C_Receive(LPI2C_Type *base, uint8_t deviceAddress, uint32_t s
             return reVal;
         }
     }
-    return reVal;
+  
+#else
+	uint32_t u32DeviceNo = 0;
+	lpi2c_master_transfer_t stTransfer;
+
+	switch((uintptr_t)base){
+	case (uintptr_t)LPI2C1:
+		u32DeviceNo = 1;
+		break;
+	case (uintptr_t)LPI2C2:
+		u32DeviceNo = 2;
+		break;
+	case (uintptr_t)LPI2C3:
+		u32DeviceNo = 3;
+		break;
+	case (uintptr_t)LPI2C4:
+		u32DeviceNo = 4;
+		break;
+	default:
+		return kStatus_InvalidArgument;
+	}
+
+	memset(&stTransfer, 0, sizeof(stTransfer));
+    stTransfer.slaveAddress = deviceAddress;
+    stTransfer.direction = kLPI2C_Read;
+    stTransfer.subaddress = subAddress;
+    stTransfer.subaddressSize = subAddressSize;
+    stTransfer.data = rxBuff;
+    stTransfer.dataSize = rxBuffSize;
+    stTransfer.flags = kLPI2C_TransferDefaultFlag;
+
+	reVal = LPI2C_RTOS_Transfer(&s_hndI2C[u32DeviceNo], &stTransfer);
+#endif
+	return reVal;
 }
 
 status_t BOARD_LPI2C_SendSCCB(LPI2C_Type *base,
