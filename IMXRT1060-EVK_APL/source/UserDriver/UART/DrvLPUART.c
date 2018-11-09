@@ -257,10 +257,6 @@ _Bool DrvLPUARTInit(enLPUART_t enLPUARTNo, const lpuart_config_t *config)
 			IRQn_Type enIRQn= LPUART1_IRQn;
 			enIRQn += (IRQn_Type)(enLPUARTNo - enLPUART_MIN);
 
-			/* Initialize OS resource */
-			xSemaphoreGive(g_xLPUARTTxSemaphore[enLPUARTNo]);
-			xSemaphoreGive(g_xLPUARTRxSemaphore[enLPUARTNo]);
-
 			LPUART_EnableTx(base, true);
 			LPUART_EnableRx(base, true);
 			/* Enable Interrupts (LPUART) */

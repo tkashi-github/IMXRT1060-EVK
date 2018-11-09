@@ -156,18 +156,21 @@ static inline void RTOS_GetChar(TCHAR *ch)
  */
 static inline void RTOS_PutChar(TCHAR ch)
 {
+	if (osSemaphoreAcquire(g_bsIdLPUARTTxSemaphore[kStdioPort], portMAX_DELAY) == osOK)
+	{
+		if(pdFALSE != xPortIsInsideInterrupt()){
+			BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-	if(pdFALSE != xPortIsInsideInterrupt()){
-		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-
-		if(xStreamBufferSendFromISR(g_sbhLPUARTTx[kStdioPort], &ch, sizeof(TCHAR), &xHigherPriorityTaskWoken) >= 1){
-			LPUART1->CTRL |=LPUART_CTRL_TIE_MASK;
+			if(xStreamBufferSendFromISR(g_sbhLPUARTTx[kStdioPort], &ch, sizeof(TCHAR), &xHigherPriorityTaskWoken) >= 1){
+				LPUART1->CTRL |=LPUART_CTRL_TIE_MASK;
+			}
+			portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+		}else{
+			if(xStreamBufferSend(g_sbhLPUARTTx[kStdioPort], &ch, sizeof(TCHAR), 10) >= 1){
+				LPUART1->CTRL |=LPUART_CTRL_TIE_MASK;
+			}
 		}
-		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-	}else{
-		if(xStreamBufferSend(g_sbhLPUARTTx[kStdioPort], &ch, sizeof(TCHAR), 10) >= 1){
-			LPUART1->CTRL |=LPUART_CTRL_TIE_MASK;
-		}
+		osSemaphoreRelease(g_bsIdLPUARTTxSemaphore[kStdioPort]);
 	}
 }
 /**
@@ -177,9 +180,13 @@ static inline void RTOS_PutChar(TCHAR ch)
  */
 static inline void RTOS_PutString(const TCHAR pszStr[])
 {
-	if (xSemaphoreTake(g_xLPUARTTxSemaphore[kStdioPort], portMAX_DELAY) == pdTRUE)
+	TickType_t tTimeout = portMAX_DELAY;
+	if(pdFALSE != xPortIsInsideInterrupt()){
+		tTimeout = 0;
+	}
+	if (pszStr != NULL)
 	{
-		if (pszStr != NULL)
+		if (osSemaphoreAcquire(g_bsIdLPUARTTxSemaphore[kStdioPort], tTimeout) == osOK)
 		{
 			uint32_t ByteCnt = mimic_tcslen(pszStr)*sizeof(TCHAR);
 
@@ -200,8 +207,8 @@ static inline void RTOS_PutString(const TCHAR pszStr[])
 			{
 				LPUART1->CTRL |= LPUART_CTRL_TIE_MASK;
 			}
+			osSemaphoreRelease(g_bsIdLPUARTTxSemaphore[kStdioPort]);
 		}
-		xSemaphoreGive(g_xLPUARTTxSemaphore[kStdioPort]);
 	}
 }
 

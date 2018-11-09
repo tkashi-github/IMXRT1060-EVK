@@ -72,8 +72,9 @@ extern osThreadId_t g_LanTaskHandle;
 extern osEventFlagsId_t g_efLPUART[];
 extern osEventFlagsId_t g_efFSReady;
 
-extern SemaphoreHandle_t g_xLPUARTRxSemaphore[];
-extern SemaphoreHandle_t g_xLPUARTTxSemaphore[];
+extern osSemaphoreId_t g_bsIdLPUARTRxSemaphore[];
+extern osSemaphoreId_t g_bsIdLPUARTTxSemaphore[];
+extern osSemaphoreId_t g_bsIdStorageTaskMsg;
 
 /** Queue */
 extern osMessageQueueId_t g_StorageTaskQueueId;
