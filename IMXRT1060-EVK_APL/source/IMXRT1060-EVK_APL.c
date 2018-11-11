@@ -102,6 +102,9 @@ int main(void) {
 		lpuart_config.baudRate_Bps = 115200;
 		DrvLPUARTInit(enLPUART1, &lpuart_config);
 	}
+	{
+		BOARD_LPI2C_Init(LPI2C, BOARD_CODEC_I2C_CLOCK_FREQ);
+	}
 	osKernelStart();
 
 	for(;;);

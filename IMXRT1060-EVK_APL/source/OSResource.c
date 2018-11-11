@@ -41,6 +41,7 @@
 #include "Task/ConsoleTask/ConsoleTask.h"
 #include "Task/StorageTask/StorageTask.h"
 #include "Task/LanTask/LanTask.h"
+#include "SensorTask/SensorTask.h"
 
 /** typedef Task Table */
 typedef struct{
@@ -56,18 +57,21 @@ DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_InitialTaskHandle;
 DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_ConsoleTaskHandle;
 DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_StorageTaskHandle;
 DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_LanTaskHandle;
+DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_SensorTaskHandle;
 
 /** Task Control Block (STATIC ALLOCATION)*/
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_InitialTaskTCB;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_ConsoleTaskTCB;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_StorageTaskTCB;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_LanTaskTCB;
+DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_SensorTaskTCB;
 
 /** Task Stack (STATIC ALLOCATION)*/
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_InitialTaskStack[8192/sizeof(uint32_t)];
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_ConsoleTaskStack[8192/sizeof(uint32_t)];
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_StorageTaskStack[8192/sizeof(uint32_t)];
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_LanTaskStack[8192/sizeof(uint32_t)];
+DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_SensorTaskStack[8192/sizeof(uint32_t)];
 
 /** Task Table */
 static const stOSdefTable_t s_stTaskTable[] = {
@@ -90,10 +94,16 @@ static const stOSdefTable_t s_stTaskTable[] = {
 		{"StorageTask1", osThreadDetached, &s_StorageTaskTCB, sizeof(s_StorageTaskTCB), s_StorageTaskStack, sizeof(s_StorageTaskStack), osPriorityNormal, 0, 0},
 	},
 	{	/** LanTask */
-		&g_StorageTaskHandle,
+		&g_LanTaskHandle,
 		(osThreadFunc_t)LanTask,
 		NULL,
 		{"LanTask", osThreadDetached, &s_LanTaskTCB, sizeof(s_LanTaskTCB), s_LanTaskStack, sizeof(s_LanTaskStack), osPriorityBelowNormal, 0, 0},
+	},
+	{	/** SensorTask */
+		&g_SensorTaskHandle,
+		(osThreadFunc_t)SensorTask,
+		NULL,
+		{"SensorTask", osThreadDetached, &s_SensorTaskTCB, sizeof(s_SensorTaskTCB), s_SensorTaskStack, sizeof(s_SensorTaskStack), osPriorityBelowNormal, 0, 0},
 	},
 	// Terminate
 	{	
@@ -162,9 +172,11 @@ typedef struct{
 DefALLOCATE_BSS_DTCM alignas(4) osSemaphoreId_t g_bsIdLPUARTRxSemaphore[1+enLPUART_MAX] = {NULL};
 DefALLOCATE_BSS_DTCM alignas(4) osSemaphoreId_t g_bsIdLPUARTTxSemaphore[1+enLPUART_MAX] = {NULL};
 DefALLOCATE_BSS_DTCM alignas(4) osSemaphoreId_t g_bsIdStorageTaskMsg;
+DefALLOCATE_BSS_DTCM alignas(4) osSemaphoreId_t g_bsIdComboSensor;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xLPUARTRxSemaphoreBuffer[1+enLPUART_MAX];
 DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xLPUARTTxSemaphoreBuffer[1+enLPUART_MAX];
 DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xStorageTaskMsgBuffer;
+DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xComboSensor;
 
 static stBinarySemaphoreTable_t s_stBinarySemaphoreTable[] = {
 	{&g_bsIdLPUARTRxSemaphore[enLPUART1], {"BS_LPUART1RX", 0, &s_xLPUARTRxSemaphoreBuffer[enLPUART1], sizeof(StaticSemaphore_t)}, 1, 1},
@@ -186,6 +198,7 @@ static stBinarySemaphoreTable_t s_stBinarySemaphoreTable[] = {
 	{&g_bsIdLPUARTTxSemaphore[enLPUART8], {"BS_LPUART8TX", 0, &s_xLPUARTTxSemaphoreBuffer[enLPUART8], sizeof(StaticSemaphore_t)}, 1, 1},
 
 	{&g_bsIdStorageTaskMsg, {"BS_STORAGETASKMSG", 0, &s_xStorageTaskMsgBuffer, sizeof(StaticSemaphore_t)}, 1, 1},
+	{&g_bsIdComboSensor, {"BS_COMBOSENSOR", 0, &s_xComboSensor, sizeof(StaticSemaphore_t)}, 1, 1},
 
 	{NULL, NULL},
 };

@@ -75,6 +75,7 @@ extern osEventFlagsId_t g_efFSReady;
 extern osSemaphoreId_t g_bsIdLPUARTRxSemaphore[];
 extern osSemaphoreId_t g_bsIdLPUARTTxSemaphore[];
 extern osSemaphoreId_t g_bsIdStorageTaskMsg;
+extern osSemaphoreId_t g_bsIdComboSensor;
 
 /** Queue */
 extern osMessageQueueId_t g_StorageTaskQueueId;

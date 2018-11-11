@@ -1,8 +1,8 @@
 /**
- * @file DrvFSOS8700.c
+ * @file DrvFXOS8700.h
  * @brief TODO
  * @author Takashi Kashiwagi
- * @date 2018/11/07
+ * @date 2018/10/28
  * @version     0.1
  * @details 
  * --
@@ -28,32 +28,28 @@
  * DEALINGS IN THE SOFTWARE.
  *
  * @par Update:
- * - 2018/11/07: Takashi Kashiwagi: v0.1 for IMXRT1060-EVK
+ * - 2018/10/28: Takashi Kashiwagi: v0.1 for IMXRT1060-EVK
  */
-#include "FSOS8700/DrvFSOS8700.h"
+#ifndef __cplusplus
+#if __STDC_VERSION__ < 201112L
+#error /** Only C11 */
+#endif
+#endif
+#pragma once
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+/** User Typedefine */
+#include "UserTypedef.h"
 #include "board.h"
+#include "fxos8700.h"
 
+extern status_t FXOS8700Init(void);
+extern status_t FXOS8700ReadStatus(uint8_t *pu8sts);
+extern status_t FXOS8700ReadData(uint16_t pu16Accel[], uint16_t pu16Mag[]);
 
-/** TODO */
-status_t FXOS8700Init(void)
-{
-	status_t sts = kStatus_Success;
-
-	return sts;
+#ifdef __cplusplus
 }
-
-/** TODO */
-status_t FXOS8700ReadStatus(void)
-{
-	status_t sts = kStatus_Success;
-
-	return sts;
-}
-/** TODO */
-status_t FXOS8700ReadData(void)
-{
-	status_t sts = kStatus_Success;
-
-	return sts;
-}
-
+#endif

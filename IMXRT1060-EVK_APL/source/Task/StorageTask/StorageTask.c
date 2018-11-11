@@ -420,37 +420,44 @@ DefALLOCATE_ITCM DRESULT StorageIoctl(uint8_t physicalDrive, uint8_t command, vo
 DefALLOCATE_ITCM _Bool PostMsgStorageTaskInsertFromISR(_Bool bInsert)
 {
 	/** var */
+	_Bool bret = true;
+	TickType_t tTimeout = portMAX_DELAY;
 	alignas(8) stTaskMsgBlock_t stTaskMsg = {0};
 
 	/** begin */
 	memset(&stTaskMsg, 0, sizeof(stTaskMsg));
 
-	if (bInsert != false)
-	{
-		stTaskMsg.enMsgId = enSDInsterted;
+	
+	if(pdFALSE != xPortIsInsideInterrupt()){
+		tTimeout = 0;
 	}
-	else
-	{
-		stTaskMsg.enMsgId = enSDRemoved;
-	}
-#if 0
-	if(pdFALSE == xPortIsInsideInterrupt()){
-		if(sizeof(stTaskMsg) != xStreamBufferSend(g_sbhStorageTask[enUSDHC1], &stTaskMsg, sizeof(stTaskMsg), 50)){
-			mimic_printf("[%s (%d)] xStreamBufferSend NG\r\n", __FUNCTION__, __LINE__);
-			return false;
-		}
-	}else{
-		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-		
-		xStreamBufferSendFromISR(g_sbhStorageTask[enUSDHC1], &stTaskMsg, sizeof(stTaskMsg), &xHigherPriorityTaskWoken);
-		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-	}
-#else
-	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-	xStreamBufferSendFromISR(g_sbhStorageTask[enUSDHC1], &stTaskMsg, sizeof(stTaskMsg), &xHigherPriorityTaskWoken);
-	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-#endif
+	if (osSemaphoreAcquire(g_bsIdStorageTaskMsg, tTimeout) == osOK)
+	{
+		stTaskMsgBlock_t stTaskMsg;
+		memset(&stTaskMsg, 0, sizeof(stTaskMsgBlock_t));
+		if (bInsert != false)
+		{
+			stTaskMsg.enMsgId = enSDInsterted;
+		}
+		else
+		{
+			stTaskMsg.enMsgId = enSDRemoved;
+		}
+
+		if(pdFALSE != xPortIsInsideInterrupt()){
+			BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+			if(sizeof(stTaskMsg) != xStreamBufferSendFromISR(g_sbhStorageTask[enUSDHC1], &stTaskMsg, sizeof(stTaskMsg), &xHigherPriorityTaskWoken)){
+				bret = false;
+			}
+			portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+		}else{
+			if(sizeof(stTaskMsg) != xStreamBufferSend(g_sbhStorageTask[enUSDHC1], &stTaskMsg, sizeof(stTaskMsg), 10)){
+				bret = false;
+			}
+		}
+		osSemaphoreRelease(g_bsIdStorageTaskMsg);
+	}
 
 	return true;
 }

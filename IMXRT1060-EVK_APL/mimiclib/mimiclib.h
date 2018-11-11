@@ -246,15 +246,15 @@ static inline _Bool mimic_memcmp(uintptr_t p1, uintptr_t p2, uint32_t u32ByteCnt
 	}
 	return bret;
 }
-static inline _Bool mimic_memcpy(uintptr_t p1, uintptr_t p2, uint32_t u32ByteCnt){
+static inline _Bool mimic_memcpy(uintptr_t pDst, uintptr_t pSrc, uint32_t u32ByteCnt){
 	/*-- var --*/
-	uint8_t *pu81 = (uint8_t*)p1;
-	uint8_t *pu82 = (uint8_t*)p2;
+	uint8_t *pu8Dst = (uint8_t*)pDst;
+	uint8_t *pu8Src = (uint8_t*)pSrc;
 	_Bool bret = true;
 
 	/*-- begin --*/
 	for(uint32_t i=0u;i<u32ByteCnt;i++){
-		pu81[i] = pu82[i];
+		pu8Dst[i] = pu8Src[i];
 	}
 #ifdef DefBSP_IMXRT1060_EVK
 	__DMB();

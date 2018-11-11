@@ -1,8 +1,8 @@
 /**
- * @file DrvFSOS8700.h
+ * @file SensorTask.h
  * @brief TODO
  * @author Takashi Kashiwagi
- * @date 2018/10/28
+ * @date 2018/11/11
  * @version     0.1
  * @details 
  * --
@@ -28,7 +28,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  * @par Update:
- * - 2018/10/28: Takashi Kashiwagi: v0.1 for IMXRT1060-EVK
+ * - 2018/11/11: Takashi Kashiwagi: v0.1 for IMXRT1060-EVK
  */
 #ifndef __cplusplus
 #if __STDC_VERSION__ < 201112L
@@ -43,13 +43,12 @@ extern "C"
 
 /** User Typedefine */
 #include "UserTypedef.h"
-#include "board.h"
-#include "fxos8700.h"
 
-extern status_t FXOS8700Init(void);
-extern status_t FXOS8700ReadStatus(void);
-extern status_t FXOS8700ReadData(void);
+extern void SensorTask(void const *argument);
+extern _Bool SensorTaskReadData(uint16_t pu16Accel[], uint16_t pu16Mag[]);
 
 #ifdef __cplusplus
 }
 #endif
+
+
