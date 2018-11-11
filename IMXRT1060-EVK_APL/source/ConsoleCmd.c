@@ -51,6 +51,9 @@
 #include "ip.h"
 #include "ping/ping.h"
 #include "common/storageBenchMark.h"
+
+#include "SensorTask/SensorTask.h"
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -73,9 +76,9 @@ static void CmdPing(uint32_t argc, const char *argv[]);
 stCmdTable_t g_stCmdTable[] = {
 	{"HELP", CmdHelp, "Help"},			/* Help Command*/
 	{"VERSION", CmdVersion, "Version"}, /* Version Command*/
-	{"ARG", CmdArg, "Argment Test"},	/* Version Command*/
-	{"TICK", CmdTick, "Tick Test"},		/* Version Command*/
-	{"LOAD", CmdLoad, "CPU Load"},		/* Version Command*/
+	{"ARG", CmdArg, "Argment Test"},	/* Argment Command*/
+	{"TICK", CmdTick, "Tick Test"},		/* Tick Command*/
+	{"LOAD", CmdLoad, "CPU Load"},		/* LOAD Command*/
 	{"NVIC", CmdNvic, "NVIC"},
 	{"LS", FileCmd_ls, "LS"},			/** */
 	{"MKDIR", FileCmd_mkdir, "mkdir"},  /** */
@@ -87,6 +90,7 @@ stCmdTable_t g_stCmdTable[] = {
 	{"TASK", CmdTask, "vTaskList"},
 	{"PING", CmdPing, "PING"},
 	{"SB", CmdStorageBenchMark, "StorageBenchMark"},
+	{"SENSOR", CmdSensor, "Combo Sensor"},
 	{NULL, NULL, NULL}, /* Terminator */
 };
 
@@ -108,7 +112,6 @@ static void CmdHelp(uint32_t argc, const char *argv[])
 	{
 		mimic_printf("%03lu : %-20s %-20s\r\n", u32, g_stCmdTable[u32].m_pszCmd, g_stCmdTable[u32].m_pszComments);
 		u32++;
-		vTaskDelay(20);
 	}
 	mimic_printf("[%s (%d)] ----\r\n", __FUNCTION__, __LINE__);
 	return;

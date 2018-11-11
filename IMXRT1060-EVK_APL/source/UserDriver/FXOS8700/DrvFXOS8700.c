@@ -33,7 +33,7 @@
 #include "FXOS8700/DrvFXOS8700.h"
 #include "board.h"
 
-#define DEF_COMBO_SENSOR_DEVICE_ADDR	(0x3Fu)
+#define DEF_COMBO_SENSOR_DEVICE_ADDR	(0x1Fu)
 
 typedef struct{
 	uint8_t u8Register;
@@ -61,14 +61,21 @@ static const stFXOSInitRegisterTable_t s_stInitTable[]={
 status_t FXOS8700Init(void)
 {
 	status_t sts = kStatus_Success;	
+	uint8_t u8ReadBuffer[8];
+	sts = BOARD_LPI2C_Receive(LPI2C1, DEF_COMBO_SENSOR_DEVICE_ADDR, FXOS8700_WHO_AM_I, 1, u8ReadBuffer, 1);
+	if (kStatus_Success != sts)
+	{
+		return kStatus_Fail;
+	}
+
 	
     /* Put the device into standby mode so that configuration can be applied.*/
-	for(uin32_t i=0;i<(sizeof(s_stInitTable)/sizeof(s_stInitTable[0]));i++){
+	for(uint32_t i=0;i<(sizeof(s_stInitTable)/sizeof(s_stInitTable[0]));i++){
 		uint8_t u8TxTmp[8];
 		u8TxTmp[0] = s_stInitTable[i].u8Value;
 		u8TxTmp[0] &= s_stInitTable[i].u8Mask;
 
-		sts = BOARD_LPI2C_Send(LPI2C1, DEF_COMBO_SENSOR_DEVICE_ADDR, stInitTable[i].u8Register, 1, u8TxTmp, 1);
+		sts = BOARD_LPI2C_Send(LPI2C1, DEF_COMBO_SENSOR_DEVICE_ADDR, s_stInitTable[i].u8Register, 1, u8TxTmp, 1);
 		if (kStatus_Success != sts)
 		{
 			return kStatus_Fail;
@@ -114,28 +121,28 @@ status_t FXOS8700ReadData(uint16_t pu16Accel[], uint16_t pu16Mag[])
 		return kStatus_Fail;
 	}
 	
-	pu16Accel[0] = (uint16_t)data[0];
+	pu16Accel[0] = (uint16_t)u8ReadBuffer[0];
 	pu16Accel[0] <<= 8;
-	pu16Accel[0] |= (uint16_t)data[1];
+	pu16Accel[0] |= (uint16_t)u8ReadBuffer[1];
 	pu16Accel[0] /= 4;
-	pu16Accel[1] = (uint16_t)data[2];
+	pu16Accel[1] = (uint16_t)u8ReadBuffer[2];
 	pu16Accel[1] <<= 8;
-	pu16Accel[1] |= (uint16_t)data[3];
+	pu16Accel[1] |= (uint16_t)u8ReadBuffer[3];
 	pu16Accel[1] /= 4;
-	pu16Accel[2] = (uint16_t)data[4];
+	pu16Accel[2] = (uint16_t)u8ReadBuffer[4];
 	pu16Accel[2] <<= 8;
-	pu16Accel[2] |= (uint16_t)data[5];
+	pu16Accel[2] |= (uint16_t)u8ReadBuffer[5];
 	pu16Accel[2] /= 4;
 
-	pu16Mag[0] = (uint16_t)data[6];
+	pu16Mag[0] = (uint16_t)u8ReadBuffer[6];
 	pu16Mag[0] <<= 8;
-	pu16Mag[0] |= (uint16_t)data[7];
-	pu16Mag[1] = (uint16_t)data[8];
+	pu16Mag[0] |= (uint16_t)u8ReadBuffer[7];
+	pu16Mag[1] = (uint16_t)u8ReadBuffer[8];
 	pu16Mag[1] <<= 8;
-	pu16Mag[1] |= (uint16_t)data[9];
-	pu16Mag[2] = (uint16_t)data[10];
+	pu16Mag[1] |= (uint16_t)u8ReadBuffer[9];
+	pu16Mag[2] = (uint16_t)u8ReadBuffer[10];
 	pu16Mag[2] <<= 8;
-	pu16Mag[2] |= (uint16_t)data[11];
+	pu16Mag[2] |= (uint16_t)u8ReadBuffer[11];
 
 	return sts;
 }

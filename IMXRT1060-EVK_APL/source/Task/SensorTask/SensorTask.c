@@ -32,23 +32,27 @@
  */
 
 #include "SensorTask/SensorTask.h"
-#include "DrvFXOS8700/DrvFXOS8700.h"
+#include "OSResource.h"
+#include "FXOS8700/DrvFXOS8700.h"
+#include "mimiclib/mimiclib.h"
 
-
-static uint16_t s_au16Accel[6];
-static uint16_t s_au16Mag[6];
+static uint16_t s_au16Accel[3];
+static uint16_t s_au16Mag[3];
 
 static void SensorTaskReadDataFromDevice(uint16_t pu16Accel[], uint16_t pu16Mag[]){
-	uint16_t au16Accel[6];
-	uint16_t au16Mag[6];
+	uint16_t au16Accel[3];
+	uint16_t au16Mag[3];
 	
 	if(FXOS8700ReadData(au16Accel, au16Mag) == kStatus_Success){
 		if (osSemaphoreAcquire(g_bsIdComboSensor, 5) == osOK)
 		{
+			
 			mimic_memcpy(pu16Accel, au16Accel, sizeof(au16Accel));
 			mimic_memcpy(pu16Mag, au16Mag, sizeof(au16Mag));
 			osSemaphoreRelease(g_bsIdComboSensor);
 		}
+	}else{
+		mimic_printf("[%s (%d)] FXOS8700ReadData NG\r\n", __FUNCTION__, __LINE__);
 	}
 }
 /**
@@ -60,14 +64,18 @@ DefALLOCATE_ITCM void SensorTask(void const *argument)
 {
 	TickType_t tick;
 	uint8_t u8sts;
-	FXOS8700Init();
+	if(kStatus_Success != FXOS8700Init()){
+		mimic_printf("[%s (%d)] FXOS8700Init NG\r\n", __FUNCTION__, __LINE__);
+	}
 	tick = xTaskGetTickCount();
 	for (;;)
 	{
-		if(FXOS8700ReadStatus(u8sts) == kStatus_Success){
+		if(FXOS8700ReadStatus(&u8sts) == kStatus_Success){
 			if(u8sts != 0u){
 				SensorTaskReadDataFromDevice(s_au16Accel, s_au16Mag);
 			}
+		}else{
+			mimic_printf("[%s (%d)] FXOS8700ReadStatus NG\r\n", __FUNCTION__, __LINE__);
 		}
 		vTaskDelayUntil((TickType_t *const) & tick, 100);
 	}
@@ -88,4 +96,20 @@ _Bool SensorTaskReadData(uint16_t pu16Accel[], uint16_t pu16Mag[]){
 	return bret;
 }
 
+void CmdSensor(uint32_t argc, const char *argv[])
+{
+	TickType_t tick;
+	mimic_printf("\r\nCOMBO SENSOR\r\n");
 
+	tick = xTaskGetTickCount();
+	while (mimic_kbhit() == false)
+	{
+		uint16_t au16Accel[3];
+		uint16_t au16Mag[3];
+
+		SensorTaskReadData(au16Accel, au16Mag);
+		mimic_printf("\rAccel = %5d,%5d,%5d, Mag = %5d,%5d,%5d", au16Accel[0], au16Accel[1], au16Accel[2], au16Mag[0], au16Mag[1], au16Mag[2]);
+		vTaskDelayUntil((TickType_t *const) & tick, 100);
+	}
+	mimic_printf("\r\n");
+}

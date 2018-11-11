@@ -46,6 +46,7 @@ extern "C"
 
 extern void SensorTask(void const *argument);
 extern _Bool SensorTaskReadData(uint16_t pu16Accel[], uint16_t pu16Mag[]);
+extern void CmdSensor(uint32_t argc, const char *argv[]);
 
 #ifdef __cplusplus
 }
