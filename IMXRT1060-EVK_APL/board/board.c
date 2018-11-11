@@ -217,15 +217,28 @@ status_t BOARD_LPI2C_Receive(LPI2C_Type *base, uint8_t deviceAddress, uint32_t s
 	default:
 		return kStatus_InvalidArgument;
 	}
+	
+	memset(&stTransfer, 0, sizeof(stTransfer));
+    stTransfer.slaveAddress = deviceAddress;
+    stTransfer.direction = kLPI2C_Write;
+    stTransfer.subaddress = subAddress;
+    stTransfer.subaddressSize = subAddressSize;
+    stTransfer.data = NULL;
+    stTransfer.dataSize = 0;
+    stTransfer.flags = kLPI2C_TransferNoStopFlag;
 
+	reVal = LPI2C_RTOS_Transfer(&s_hndI2C[u32DeviceNo], &stTransfer);
+	if(reVal != kStatus_Success){
+		return reVal;
+	}
 	memset(&stTransfer, 0, sizeof(stTransfer));
     stTransfer.slaveAddress = deviceAddress;
     stTransfer.direction = kLPI2C_Read;
     stTransfer.subaddress = subAddress;
-    stTransfer.subaddressSize = subAddressSize;
+    stTransfer.subaddressSize = 0;
     stTransfer.data = rxBuff;
     stTransfer.dataSize = rxBuffSize;
-    stTransfer.flags = kLPI2C_TransferDefaultFlag;
+    stTransfer.flags = (kLPI2C_TransferRepeatedStartFlag | kLPI2C_TransferNoStartFlag);
 
 	reVal = LPI2C_RTOS_Transfer(&s_hndI2C[u32DeviceNo], &stTransfer);
 #endif

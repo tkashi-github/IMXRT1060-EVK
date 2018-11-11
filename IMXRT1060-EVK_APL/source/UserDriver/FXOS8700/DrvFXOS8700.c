@@ -32,6 +32,7 @@
  */
 #include "FXOS8700/DrvFXOS8700.h"
 #include "board.h"
+#include "mimiclib/mimiclib.h"
 
 #define DEF_COMBO_SENSOR_DEVICE_ADDR	(0x1Fu)
 
@@ -50,7 +51,7 @@ static const stFXOSInitRegisterTable_t s_stInitTable[]={
     {FXOS8700_M_CTRL_REG1, FXOS8700_M_CTRL_REG1_M_ACAL_EN | FXOS8700_M_CTRL_REG1_M_HMS_HYBRID_MODE,
                            FXOS8700_M_CTRL_REG1_M_ACAL_MASK | FXOS8700_M_CTRL_REG1_M_HMS_MASK},
  	/**  M_CTRL_REG2 (0x5C) register : hyb_autoinc_mode is Enabled. Auto-calibration feature is enabled.  Automatic magnetic reset is disabled. */
-   {FXOS8700_M_CTRL_REG2, FXOS8700_M_CTRL_REG2_M_AUTOINC_HYBRID_MODE | FXOS8700_M_CTRL_REG2_M_RST_CNT_DISABLE,
+    {FXOS8700_M_CTRL_REG2, FXOS8700_M_CTRL_REG2_M_AUTOINC_HYBRID_MODE | FXOS8700_M_CTRL_REG2_M_RST_CNT_DISABLE,
                            FXOS8700_M_CTRL_REG2_M_AUTOINC_MASK | FXOS8700_M_CTRL_REG2_M_RST_CNT_MASK},
 	/** Enter ACTIVE Mode */
 	{FXOS8700_CTRL_REG1, FXOS8700_CTRL_REG1_ACTIVE_ACTIVE_MODE, FXOS8700_CTRL_REG1_ACTIVE_MASK},
@@ -71,15 +72,31 @@ status_t FXOS8700Init(void)
 	
     /* Put the device into standby mode so that configuration can be applied.*/
 	for(uint32_t i=0;i<(sizeof(s_stInitTable)/sizeof(s_stInitTable[0]));i++){
+		uint8_t u8ReadBuffer[8];
 		uint8_t u8TxTmp[8];
-		u8TxTmp[0] = s_stInitTable[i].u8Value;
-		u8TxTmp[0] &= s_stInitTable[i].u8Mask;
 
+		sts = BOARD_LPI2C_Receive(LPI2C1, DEF_COMBO_SENSOR_DEVICE_ADDR, s_stInitTable[i].u8Register, 1, u8ReadBuffer, 1);
+		if (kStatus_Success != sts)
+		{
+			return kStatus_Fail;
+		}
+		u8ReadBuffer[0] &= ~s_stInitTable[i].u8Mask;
+		u8TxTmp[0] = s_stInitTable[i].u8Value;
+		u8TxTmp[0] |= u8ReadBuffer[0];
 		sts = BOARD_LPI2C_Send(LPI2C1, DEF_COMBO_SENSOR_DEVICE_ADDR, s_stInitTable[i].u8Register, 1, u8TxTmp, 1);
 		if (kStatus_Success != sts)
 		{
 			return kStatus_Fail;
 		}
+		mimic_printf("[%s (%d)] s_stInitTable[%d].u8Register = 0x%02X : 0x%02X\r\n", __FUNCTION__, __LINE__, i, s_stInitTable[i].u8Register, u8TxTmp[0]);
+		
+		sts = BOARD_LPI2C_Receive(LPI2C1, DEF_COMBO_SENSOR_DEVICE_ADDR, s_stInitTable[i].u8Register, 1, u8ReadBuffer, 1);
+		if (kStatus_Success != sts)
+		{
+			return kStatus_Fail;
+		}
+		mimic_printf("[%s (%d)] s_stInitTable[%d].u8Register = 0x%02X : 0x%02X\r\n", __FUNCTION__, __LINE__, i, s_stInitTable[i].u8Register, u8ReadBuffer[0]);
+		
 	}
 
 	return sts;
@@ -101,6 +118,7 @@ status_t FXOS8700ReadStatus(uint8_t *pu8sts)
 		return kStatus_Fail;
 	}
 	*pu8sts = u8ReadBuffer[0];
+	//mimic_printf("[%s (%d)] *pu8sts = 0x%02X\r\n", __FUNCTION__, __LINE__, *pu8sts);
 	*pu8sts &= FXOS8700_DR_STATUS_ZYXDR_MASK;
 
 	return sts;
