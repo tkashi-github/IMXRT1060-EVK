@@ -103,6 +103,7 @@ int main(void) {
 		DrvLPUARTInit(enLPUART1, &lpuart_config);
 	}
 	{
+		/*Clock setting for LPI2C*/
 		BOARD_LPI2C_Init(LPI2C1, BOARD_CODEC_I2C_CLOCK_FREQ);
 	}
 	osKernelStart();

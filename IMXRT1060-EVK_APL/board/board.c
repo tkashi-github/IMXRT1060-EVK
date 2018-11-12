@@ -86,12 +86,15 @@ void BOARD_LPI2C_Init(LPI2C_Type *base, uint32_t clkSrc_Hz)
      * lpi2cConfig.sdaGlitchFilterWidth_ns = 0;
      * lpi2cConfig.sclGlitchFilterWidth_ns = 0;
      */
+	lpi2cConfig.busIdleTimeout_ns = 10000;
     LPI2C_MasterGetDefaultConfig(&lpi2cConfig);
     //LPI2C_MasterInit(base, &lpi2cConfig, clkSrc_Hz);
-	EnableIRQ(s_u32I2CIRQn[u32DeviceNo]);
+	//EnableIRQ(s_u32I2CIRQn[u32DeviceNo]);
 	NVIC_SetPriority(s_u32I2CIRQn[u32DeviceNo], kIRQ_PRIORITY_LPI2C);
 	LPI2C_RTOS_Init(&s_hndI2C[u32DeviceNo], base, &lpi2cConfig, clkSrc_Hz);
 }
+
+#include "mimiclib/mimiclib.h"
 
 status_t BOARD_LPI2C_Send(LPI2C_Type *base, uint8_t deviceAddress, uint32_t subAddress,
                 uint8_t subAddressSize, uint8_t *txBuff, uint8_t txBuffSize)
@@ -155,6 +158,9 @@ status_t BOARD_LPI2C_Send(LPI2C_Type *base, uint8_t deviceAddress, uint32_t subA
     stTransfer.flags = kLPI2C_TransferDefaultFlag;
 
 	reVal = LPI2C_RTOS_Transfer(&s_hndI2C[u32DeviceNo], &stTransfer);
+	if(reVal != kStatus_Success){
+		mimic_printf("[%s (%d)] LPI2C_RTOS_Transfer NG\r\n", __FUNCTION__, __LINE__);
+	}
 #endif
     return reVal;
 }
@@ -220,27 +226,17 @@ status_t BOARD_LPI2C_Receive(LPI2C_Type *base, uint8_t deviceAddress, uint32_t s
 	
 	memset(&stTransfer, 0, sizeof(stTransfer));
     stTransfer.slaveAddress = deviceAddress;
-    stTransfer.direction = kLPI2C_Write;
+    stTransfer.direction = kLPI2C_Read;
     stTransfer.subaddress = subAddress;
-    stTransfer.subaddressSize = subAddressSize;
-    stTransfer.data = NULL;
-    stTransfer.dataSize = 0;
-    stTransfer.flags = kLPI2C_TransferNoStopFlag;
+    stTransfer.subaddressSize = 1;
+    stTransfer.data = rxBuff;
+    stTransfer.dataSize = rxBuffSize;
+    stTransfer.flags = kLPI2C_TransferDefaultFlag;
 
 	reVal = LPI2C_RTOS_Transfer(&s_hndI2C[u32DeviceNo], &stTransfer);
 	if(reVal != kStatus_Success){
-		return reVal;
+		mimic_printf("[%s (%d)] LPI2C_RTOS_Transfer NG\r\n", __FUNCTION__, __LINE__);
 	}
-	memset(&stTransfer, 0, sizeof(stTransfer));
-    stTransfer.slaveAddress = deviceAddress;
-    stTransfer.direction = kLPI2C_Read;
-    stTransfer.subaddress = subAddress;
-    stTransfer.subaddressSize = 0;
-    stTransfer.data = rxBuff;
-    stTransfer.dataSize = rxBuffSize;
-    stTransfer.flags = (kLPI2C_TransferRepeatedStartFlag | kLPI2C_TransferNoStartFlag);
-
-	reVal = LPI2C_RTOS_Transfer(&s_hndI2C[u32DeviceNo], &stTransfer);
 #endif
 	return reVal;
 }

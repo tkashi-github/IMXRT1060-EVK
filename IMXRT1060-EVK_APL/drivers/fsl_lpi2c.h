@@ -239,7 +239,7 @@ struct _lpi2c_master_handle
     uint8_t state;                                       /*!< Transfer state machine current state. */
     uint16_t remainingBytes;                             /*!< Remaining byte count in current state. */
     uint8_t *buf;                                        /*!< Buffer pointer for current state. */
-    uint16_t commandBuffer[7];                           /*!< LPI2C command sequence. */
+    uint16_t commandBuffer[16];                           /*!< LPI2C command sequence. */
     lpi2c_master_transfer_t transfer;                    /*!< Copy of the current transfer info. */
     lpi2c_master_transfer_callback_t completionCallback; /*!< Callback function pointer. */
     void *userData;                                      /*!< Application data passed to callback. */

@@ -196,29 +196,31 @@ static void CmdLoad(uint32_t argc, const char *argv[])
 
 static void CmdClock(uint32_t argc, const char *argv[])
 {
-	mimic_printf("kCLOCK_CpuClk         = %12lu\r\n", CLOCK_GetFreq(kCLOCK_CpuClk));
-	mimic_printf("kCLOCK_AhbClk         = %12lu\r\n", CLOCK_GetFreq(kCLOCK_AhbClk));
-	mimic_printf("kCLOCK_SemcClk        = %12lu\r\n", CLOCK_GetFreq(kCLOCK_SemcClk));
-	mimic_printf("kCLOCK_IpgClk         = %12lu\r\n", CLOCK_GetFreq(kCLOCK_IpgClk));
-	mimic_printf("kCLOCK_OscClk         = %12lu\r\n", CLOCK_GetFreq(kCLOCK_OscClk));
-	mimic_printf("kCLOCK_RtcClk         = %12lu\r\n", CLOCK_GetFreq(kCLOCK_RtcClk));
-	mimic_printf("kCLOCK_ArmPllClk      = %12lu\r\n", CLOCK_GetFreq(kCLOCK_ArmPllClk));
-	mimic_printf("kCLOCK_Usb1PllClk     = %12lu\r\n", CLOCK_GetFreq(kCLOCK_Usb1PllClk));
-	mimic_printf("kCLOCK_Usb1PllPfd0Clk = %12lu\r\n", CLOCK_GetFreq(kCLOCK_Usb1PllPfd0Clk));
-	mimic_printf("kCLOCK_Usb1PllPfd1Clk = %12lu\r\n", CLOCK_GetFreq(kCLOCK_Usb1PllPfd1Clk));
-	mimic_printf("kCLOCK_Usb1PllPfd2Clk = %12lu\r\n", CLOCK_GetFreq(kCLOCK_Usb1PllPfd2Clk));
-	mimic_printf("kCLOCK_Usb1PllPfd3Clk = %12lu\r\n", CLOCK_GetFreq(kCLOCK_Usb1PllPfd3Clk));
-	mimic_printf("kCLOCK_Usb2PllClk     = %12lu\r\n", CLOCK_GetFreq(kCLOCK_Usb2PllClk));
-	mimic_printf("kCLOCK_SysPllClk      = %12lu\r\n", CLOCK_GetFreq(kCLOCK_SysPllClk));
-	mimic_printf("kCLOCK_SysPllPfd0Clk  = %12lu\r\n", CLOCK_GetFreq(kCLOCK_SysPllPfd0Clk));
-	mimic_printf("kCLOCK_SysPllPfd1Clk  = %12lu\r\n", CLOCK_GetFreq(kCLOCK_SysPllPfd1Clk));
-	mimic_printf("kCLOCK_SysPllPfd2Clk  = %12lu\r\n", CLOCK_GetFreq(kCLOCK_SysPllPfd2Clk));
-	mimic_printf("kCLOCK_SysPllPfd3Clk  = %12lu\r\n", CLOCK_GetFreq(kCLOCK_SysPllPfd3Clk));
-	mimic_printf("kCLOCK_EnetPll0Clk    = %12lu\r\n", CLOCK_GetFreq(kCLOCK_EnetPll0Clk));
-	mimic_printf("kCLOCK_EnetPll1Clk    = %12lu\r\n", CLOCK_GetFreq(kCLOCK_EnetPll1Clk));
-	mimic_printf("kCLOCK_AudioPllClk    = %12lu\r\n", CLOCK_GetFreq(kCLOCK_AudioPllClk));
-	mimic_printf("kCLOCK_VideoPllClk    = %12lu\r\n", CLOCK_GetFreq(kCLOCK_VideoPllClk));
-	mimic_printf("SD_HOST_CLK_FREQ      = %12lu\r\n", BOARD_SD_HOST_CLK_FREQ);
+	mimic_printf("kCLOCK_CpuClk                 = %12lu\r\n", CLOCK_GetFreq(kCLOCK_CpuClk));
+	mimic_printf("kCLOCK_AhbClk                 = %12lu\r\n", CLOCK_GetFreq(kCLOCK_AhbClk));
+	mimic_printf("kCLOCK_SemcClk                = %12lu\r\n", CLOCK_GetFreq(kCLOCK_SemcClk));
+	mimic_printf("kCLOCK_IpgClk                 = %12lu\r\n", CLOCK_GetFreq(kCLOCK_IpgClk));
+	mimic_printf("kCLOCK_OscClk                 = %12lu\r\n", CLOCK_GetFreq(kCLOCK_OscClk));
+	mimic_printf("kCLOCK_RtcClk                 = %12lu\r\n", CLOCK_GetFreq(kCLOCK_RtcClk));
+	mimic_printf("kCLOCK_ArmPllClk              = %12lu\r\n", CLOCK_GetFreq(kCLOCK_ArmPllClk));
+	mimic_printf("kCLOCK_Usb1PllClk             = %12lu\r\n", CLOCK_GetFreq(kCLOCK_Usb1PllClk));
+	mimic_printf("kCLOCK_Usb1PllPfd0Clk         = %12lu\r\n", CLOCK_GetFreq(kCLOCK_Usb1PllPfd0Clk));
+	mimic_printf("kCLOCK_Usb1PllPfd1Clk         = %12lu\r\n", CLOCK_GetFreq(kCLOCK_Usb1PllPfd1Clk));
+	mimic_printf("kCLOCK_Usb1PllPfd2Clk         = %12lu\r\n", CLOCK_GetFreq(kCLOCK_Usb1PllPfd2Clk));
+	mimic_printf("kCLOCK_Usb1PllPfd3Clk         = %12lu\r\n", CLOCK_GetFreq(kCLOCK_Usb1PllPfd3Clk));
+	mimic_printf("kCLOCK_Usb2PllClk             = %12lu\r\n", CLOCK_GetFreq(kCLOCK_Usb2PllClk));
+	mimic_printf("kCLOCK_SysPllClk              = %12lu\r\n", CLOCK_GetFreq(kCLOCK_SysPllClk));
+	mimic_printf("kCLOCK_SysPllPfd0Clk          = %12lu\r\n", CLOCK_GetFreq(kCLOCK_SysPllPfd0Clk));
+	mimic_printf("kCLOCK_SysPllPfd1Clk          = %12lu\r\n", CLOCK_GetFreq(kCLOCK_SysPllPfd1Clk));
+	mimic_printf("kCLOCK_SysPllPfd2Clk          = %12lu\r\n", CLOCK_GetFreq(kCLOCK_SysPllPfd2Clk));
+	mimic_printf("kCLOCK_SysPllPfd3Clk          = %12lu\r\n", CLOCK_GetFreq(kCLOCK_SysPllPfd3Clk));
+	mimic_printf("kCLOCK_EnetPll0Clk            = %12lu\r\n", CLOCK_GetFreq(kCLOCK_EnetPll0Clk));
+	mimic_printf("kCLOCK_EnetPll1Clk            = %12lu\r\n", CLOCK_GetFreq(kCLOCK_EnetPll1Clk));
+	mimic_printf("kCLOCK_AudioPllClk            = %12lu\r\n", CLOCK_GetFreq(kCLOCK_AudioPllClk));
+	mimic_printf("kCLOCK_VideoPllClk            = %12lu\r\n", CLOCK_GetFreq(kCLOCK_VideoPllClk));
+	mimic_printf("SD_HOST_CLK_FREQ              = %12lu\r\n", BOARD_SD_HOST_CLK_FREQ);
+	mimic_printf("BOARD_CODEC_I2C_CLOCK_FREQ    = %12lu\r\n", BOARD_CODEC_I2C_CLOCK_FREQ);
+	
 }
 
 static void CmdTask(uint32_t argc, const char *argv[])

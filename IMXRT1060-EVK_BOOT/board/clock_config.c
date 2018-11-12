@@ -281,13 +281,13 @@ void BOARD_BootClockRUN(void)
     /* Disable USDHC1 clock gate. */
     CLOCK_DisableClock(kCLOCK_Usdhc1);
     /* Set USDHC1_PODF. */
-    CLOCK_SetDiv(kCLOCK_Usdhc1Div, 0);
+    CLOCK_SetDiv(kCLOCK_Usdhc1Div, 2);
     /* Set Usdhc1 clock source. */
     CLOCK_SetMux(kCLOCK_Usdhc1Mux, 1);
     /* Disable USDHC2 clock gate. */
     CLOCK_DisableClock(kCLOCK_Usdhc2);
     /* Set USDHC2_PODF. */
-    CLOCK_SetDiv(kCLOCK_Usdhc2Div, 0);
+    CLOCK_SetDiv(kCLOCK_Usdhc2Div, 2);
     /* Set Usdhc2 clock source. */
     CLOCK_SetMux(kCLOCK_Usdhc2Mux, 1);
 
@@ -374,11 +374,11 @@ void BOARD_BootClockRUN(void)
     /* Set Sai3 clock source. */
     CLOCK_SetMux(kCLOCK_Sai3Mux, 0);
     /* Disable Lpi2c clock gate. */
-    CLOCK_DisableClock(kCLOCK_Lpi2c1);
-    CLOCK_DisableClock(kCLOCK_Lpi2c2);
-    CLOCK_DisableClock(kCLOCK_Lpi2c3);
+    CLOCK_EnableClock(kCLOCK_Lpi2c1);
+    CLOCK_EnableClock(kCLOCK_Lpi2c2);
+    CLOCK_EnableClock(kCLOCK_Lpi2c3);
     /* Set LPI2C_CLK_PODF. */
-    CLOCK_SetDiv(kCLOCK_Lpi2cDiv, 0);
+    CLOCK_SetDiv(kCLOCK_Lpi2cDiv, 5);
     /* Set Lpi2c clock source. */
     CLOCK_SetMux(kCLOCK_Lpi2cMux, 0);
     /* Disable CAN clock gate. */
