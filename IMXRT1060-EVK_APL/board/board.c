@@ -51,8 +51,8 @@ uint32_t BOARD_DebugConsoleSrcFreq(void)
 #if defined(SDK_I2C_BASED_COMPONENT_USED) && SDK_I2C_BASED_COMPONENT_USED
 #include "freertos/fsl_lpi2c_freertos.h"
 #include "OSresource.h"
-static const lpi2c_rtos_handle_t s_hndI2C[5];
-static const uint32_t s_u32I2CIRQn[5] = LPI2C_IRQS;
+static lpi2c_rtos_handle_t s_hndI2C[5];
+static uint32_t s_u32I2CIRQn[5] = LPI2C_IRQS;
 	
 void BOARD_LPI2C_Init(LPI2C_Type *base, uint32_t clkSrc_Hz)
 {
@@ -86,7 +86,7 @@ void BOARD_LPI2C_Init(LPI2C_Type *base, uint32_t clkSrc_Hz)
      * lpi2cConfig.sdaGlitchFilterWidth_ns = 0;
      * lpi2cConfig.sclGlitchFilterWidth_ns = 0;
      */
-	lpi2cConfig.busIdleTimeout_ns = 10000;
+	//lpi2cConfig.busIdleTimeout_ns = 10000;
     LPI2C_MasterGetDefaultConfig(&lpi2cConfig);
     //LPI2C_MasterInit(base, &lpi2cConfig, clkSrc_Hz);
 	//EnableIRQ(s_u32I2CIRQn[u32DeviceNo]);
@@ -159,7 +159,7 @@ status_t BOARD_LPI2C_Send(LPI2C_Type *base, uint8_t deviceAddress, uint32_t subA
 
 	reVal = LPI2C_RTOS_Transfer(&s_hndI2C[u32DeviceNo], &stTransfer);
 	if(reVal != kStatus_Success){
-		mimic_printf("[%s (%d)] LPI2C_RTOS_Transfer NG\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] LPI2C_RTOS_Transfer NG (reVal = %d)\r\n", __FUNCTION__, __LINE__, reVal);
 	}
 #endif
     return reVal;
@@ -228,14 +228,14 @@ status_t BOARD_LPI2C_Receive(LPI2C_Type *base, uint8_t deviceAddress, uint32_t s
     stTransfer.slaveAddress = deviceAddress;
     stTransfer.direction = kLPI2C_Read;
     stTransfer.subaddress = subAddress;
-    stTransfer.subaddressSize = 1;
+    stTransfer.subaddressSize = subAddressSize;
     stTransfer.data = rxBuff;
     stTransfer.dataSize = rxBuffSize;
     stTransfer.flags = kLPI2C_TransferDefaultFlag;
 
 	reVal = LPI2C_RTOS_Transfer(&s_hndI2C[u32DeviceNo], &stTransfer);
 	if(reVal != kStatus_Success){
-		mimic_printf("[%s (%d)] LPI2C_RTOS_Transfer NG\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] LPI2C_RTOS_Transfer NG (reVal = %d)\r\n", __FUNCTION__, __LINE__, reVal);
 	}
 #endif
 	return reVal;

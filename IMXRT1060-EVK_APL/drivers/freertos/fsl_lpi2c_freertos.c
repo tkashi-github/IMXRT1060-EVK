@@ -40,25 +40,34 @@ status_t LPI2C_RTOS_Init(lpi2c_rtos_handle_t *handle,
     }
 
     memset(handle, 0, sizeof(lpi2c_rtos_handle_t));
-
+#if (configSUPPORT_STATIC_ALLOCATION != 0)
+    handle->mutex = xSemaphoreCreateMutexStatic(&handle->resMutex);
+#else
     handle->mutex = xSemaphoreCreateMutex();
+#endif
     if (handle->mutex == NULL)
     {
         return kStatus_Fail;
     }
-
+#if (configSUPPORT_STATIC_ALLOCATION != 0)
+    handle->semaphore = xSemaphoreCreateBinaryStatic(&handle->resSemaphore);
+#else
     handle->semaphore = xSemaphoreCreateBinary();
+#endif
     if (handle->semaphore == NULL)
     {
         vSemaphoreDelete(handle->mutex);
         return kStatus_Fail;
     }
-
+#if (configSUPPORT_STATIC_ALLOCATION != 0)
+	xSemaphoreGive(handle->mutex);
+	xSemaphoreGive(handle->semaphore);
+#endif
     handle->base = base;
 
     LPI2C_MasterInit(handle->base, masterConfig, srcClock_Hz);
     LPI2C_MasterTransferCreateHandle(base, &handle->drv_handle, LPI2C_RTOS_Callback, (void *)handle);
-
+	mimic_printf("[%s (%d)] TP\r\n", __FUNCTION__, __LINE__);
     return kStatus_Success;
 }
 
@@ -77,7 +86,7 @@ status_t LPI2C_RTOS_Transfer(lpi2c_rtos_handle_t *handle, lpi2c_master_transfer_
     status_t status;
 
     /* Lock resource mutex */
-    if (xSemaphoreTake(handle->mutex, portMAX_DELAY) != pdTRUE)
+    if (xSemaphoreTake(handle->mutex, 20) != pdTRUE)
     {
         return kStatus_LPI2C_Busy;
     }
@@ -90,7 +99,7 @@ status_t LPI2C_RTOS_Transfer(lpi2c_rtos_handle_t *handle, lpi2c_master_transfer_
     }
 
     /* Wait for transfer to finish */
-    xSemaphoreTake(handle->semaphore, portMAX_DELAY);
+    xSemaphoreTake(handle->semaphore, 20);
 
     /* Unlock resource mutex */
     xSemaphoreGive(handle->mutex);

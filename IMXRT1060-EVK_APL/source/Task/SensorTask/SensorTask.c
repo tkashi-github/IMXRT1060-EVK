@@ -36,10 +36,10 @@
 #include "FXOS8700/DrvFXOS8700.h"
 #include "mimiclib/mimiclib.h"
 
-static uint16_t s_au16Accel[3];
-static uint16_t s_au16Mag[3];
+static int16_t s_ai16Accel[3];
+static int16_t s_ai16Mag[3];
 
-static void SensorTaskReadDataFromDevice(uint16_t pu16Accel[], uint16_t pu16Mag[]){
+static void SensorTaskReadDataFromDevice(int16_t pi16Accel[], int16_t pi16Mag[]){
 	uint16_t au16Accel[3];
 	uint16_t au16Mag[3];
 	
@@ -47,8 +47,11 @@ static void SensorTaskReadDataFromDevice(uint16_t pu16Accel[], uint16_t pu16Mag[
 		if (osSemaphoreAcquire(g_bsIdComboSensor, 5) == osOK)
 		{
 			
-			mimic_memcpy(pu16Accel, au16Accel, sizeof(au16Accel));
-			mimic_memcpy(pu16Mag, au16Mag, sizeof(au16Mag));
+			mimic_memcpy(pi16Accel, au16Accel, sizeof(au16Accel));
+			mimic_memcpy(pi16Mag, au16Mag, sizeof(au16Mag));
+			pi16Accel[0] /= 4;
+			pi16Accel[1] /= 4;
+			pi16Accel[2] /= 4;
 			osSemaphoreRelease(g_bsIdComboSensor);
 		}
 	}else{
@@ -72,7 +75,7 @@ DefALLOCATE_ITCM void SensorTask(void const *argument)
 	{
 		if(FXOS8700ReadStatus(&u8sts) == kStatus_Success){
 			if(u8sts != 0u){
-				SensorTaskReadDataFromDevice(s_au16Accel, s_au16Mag);
+				SensorTaskReadDataFromDevice(s_ai16Accel, s_ai16Mag);
 			}
 		}else{
 			mimic_printf("[%s (%d)] FXOS8700ReadStatus NG\r\n", __FUNCTION__, __LINE__);
@@ -83,13 +86,13 @@ DefALLOCATE_ITCM void SensorTask(void const *argument)
 	vTaskSuspend(NULL);
 }
 
-_Bool SensorTaskReadData(uint16_t pu16Accel[], uint16_t pu16Mag[]){
+_Bool SensorTaskReadData(int16_t pi16Accel[], int16_t pi16Mag[]){
 	_Bool bret = false;
 	if (osSemaphoreAcquire(g_bsIdComboSensor, 5) == osOK)
 	{
 		bret = true;
-		mimic_memcpy(pu16Accel, s_au16Accel, sizeof(s_au16Accel));
-		mimic_memcpy(pu16Mag, s_au16Mag, sizeof(s_au16Mag));
+		mimic_memcpy(pi16Accel, s_ai16Accel, sizeof(s_ai16Accel));
+		mimic_memcpy(pi16Mag, s_ai16Mag, sizeof(s_ai16Mag));
 		osSemaphoreRelease(g_bsIdComboSensor);
 	}
 
@@ -104,11 +107,11 @@ void CmdSensor(uint32_t argc, const char *argv[])
 	tick = xTaskGetTickCount();
 	while (mimic_kbhit() == false)
 	{
-		uint16_t au16Accel[3];
-		uint16_t au16Mag[3];
+		int16_t ai16Accel[3];
+		int16_t ai16Mag[3];
 
-		SensorTaskReadData(au16Accel, au16Mag);
-		mimic_printf("\rAccel = %5d,%5d,%5d, Mag = %5d,%5d,%5d", au16Accel[0], au16Accel[1], au16Accel[2], au16Mag[0], au16Mag[1], au16Mag[2]);
+		SensorTaskReadData(ai16Accel, ai16Mag);
+		mimic_printf("\rAccel = %5d,%5d,%5d, Mag = %5d,%5d,%5d", ai16Accel[0], ai16Accel[1], ai16Accel[2], ai16Mag[0], ai16Mag[1], ai16Mag[2]);
 		vTaskDelayUntil((TickType_t *const) & tick, 100);
 	}
 	mimic_printf("\r\n");

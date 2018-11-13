@@ -34,7 +34,7 @@
 #include "board.h"
 #include "mimiclib/mimiclib.h"
 
-#define DEF_COMBO_SENSOR_DEVICE_ADDR	(0x3Eu)
+#define DEF_COMBO_SENSOR_DEVICE_ADDR	(0x1Fu)
 
 typedef struct{
 	uint8_t u8Register;
@@ -65,12 +65,19 @@ status_t FXOS8700Init(void)
 	uint8_t u8ReadBuffer[8] = {0};
 	uint8_t u8TxTmp[8];
 
-	sts = BOARD_LPI2C_Receive(LPI2C1, DEF_COMBO_SENSOR_DEVICE_ADDR, FXOS8700_WHO_AM_I, 1, u8ReadBuffer, 1);
-	if (kStatus_Success != sts)
-	{
-		return kStatus_Fail;
+	for(uint8_t i=1;i<0xFE;i++){
+		sts = BOARD_LPI2C_Receive(LPI2C1, DEF_COMBO_SENSOR_DEVICE_ADDR, FXOS8700_WHO_AM_I, 1, u8ReadBuffer, 1);
+#if 1
+		if (kStatus_Success != sts)
+		{
+			//mimic_printf("[%s (%d)] BOARD_LPI2C_Receive NG (sts=%d)\r\n", __FUNCTION__, __LINE__, sts);
+			//return kStatus_Fail;
+		}else{
+			mimic_printf("[%s (%d)] %d FXOS8700_WHO_AM_I : 0x%02X\r\n", __FUNCTION__, __LINE__, i, u8ReadBuffer[0]);
+		}
+#endif
+		
 	}
-	mimic_printf("[%s (%d)] FXOS8700_WHO_AM_I : 0x%02X\r\n", __FUNCTION__, __LINE__, u8ReadBuffer[0]);
 
 	
     /* Put the device into standby mode so that configuration can be applied.*/
@@ -79,26 +86,20 @@ status_t FXOS8700Init(void)
 		sts = BOARD_LPI2C_Receive(LPI2C1, DEF_COMBO_SENSOR_DEVICE_ADDR, s_stInitTable[i].u8Register, 1, u8ReadBuffer, 1);
 		if (kStatus_Success != sts)
 		{
+			mimic_printf("[%s (%d)] BOARD_LPI2C_Receive NG (sts=%d)\r\n", __FUNCTION__, __LINE__, sts);
 			return kStatus_Fail;
 		}
+		mimic_printf("[%s (%d)] s_stInitTable[%d].u8Register = 0x%02X : 0x%02X\r\n", __FUNCTION__, __LINE__, i, s_stInitTable[i].u8Register, u8ReadBuffer[0]);
 		u8ReadBuffer[0] &= ~s_stInitTable[i].u8Mask;
 		u8TxTmp[0] = s_stInitTable[i].u8Value;
 		u8TxTmp[0] |= u8ReadBuffer[0];
 		sts = BOARD_LPI2C_Send(LPI2C1, DEF_COMBO_SENSOR_DEVICE_ADDR, s_stInitTable[i].u8Register, 1, u8TxTmp, 1);
 		if (kStatus_Success != sts)
 		{
+			mimic_printf("[%s (%d)] BOARD_LPI2C_Receive NG (sts=%d)\r\n", __FUNCTION__, __LINE__, sts);
 			return kStatus_Fail;
 		}
-		mimic_printf("[%s (%d)] s_stInitTable[%d].u8Register = 0x%02X : 0x%02X\r\n", __FUNCTION__, __LINE__, i, s_stInitTable[i].u8Register, u8TxTmp[0]);
-
-		sts = BOARD_LPI2C_Receive(LPI2C1, DEF_COMBO_SENSOR_DEVICE_ADDR, s_stInitTable[i].u8Register, 1, u8ReadBuffer, 2);
-		if (kStatus_Success != sts)
-		{
-			return kStatus_Fail;
-		}
-		mimic_printf("[%s (%d)] s_stInitTable[%d].u8Register = 0x%02X : 0x%02X 0x%02X\r\n", __FUNCTION__, __LINE__, i, s_stInitTable[i].u8Register, u8ReadBuffer[0], u8ReadBuffer[1]);
-		
-	}
+ 	}
 
 	return sts;
 }
@@ -143,15 +144,12 @@ status_t FXOS8700ReadData(uint16_t pu16Accel[], uint16_t pu16Mag[])
 	pu16Accel[0] = (uint16_t)u8ReadBuffer[0];
 	pu16Accel[0] <<= 8;
 	pu16Accel[0] |= (uint16_t)u8ReadBuffer[1];
-	pu16Accel[0] /= 4;
 	pu16Accel[1] = (uint16_t)u8ReadBuffer[2];
 	pu16Accel[1] <<= 8;
 	pu16Accel[1] |= (uint16_t)u8ReadBuffer[3];
-	pu16Accel[1] /= 4;
 	pu16Accel[2] = (uint16_t)u8ReadBuffer[4];
 	pu16Accel[2] <<= 8;
 	pu16Accel[2] |= (uint16_t)u8ReadBuffer[5];
-	pu16Accel[2] /= 4;
 
 	pu16Mag[0] = (uint16_t)u8ReadBuffer[6];
 	pu16Mag[0] <<= 8;

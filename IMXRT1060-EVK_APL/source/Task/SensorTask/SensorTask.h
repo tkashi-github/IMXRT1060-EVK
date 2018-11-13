@@ -45,7 +45,7 @@ extern "C"
 #include "UserTypedef.h"
 
 extern void SensorTask(void const *argument);
-extern _Bool SensorTaskReadData(uint16_t pu16Accel[], uint16_t pu16Mag[]);
+extern _Bool SensorTaskReadData(int16_t pi16Accel[], int16_t pi16Mag[]);
 extern void CmdSensor(uint32_t argc, const char *argv[]);
 
 #ifdef __cplusplus
