@@ -34,7 +34,7 @@
 #include "board.h"
 #include "mimiclib/mimiclib.h"
 
-#define DEF_COMBO_SENSOR_DEVICE_ADDR	(0x1Fu)
+#define DEF_COMBO_SENSOR_DEVICE_ADDR	FXOS8700_DEVICE_ADDR_SA_11
 
 typedef struct{
 	uint8_t u8Register;
@@ -63,21 +63,16 @@ status_t FXOS8700Init(void)
 {
 	status_t sts = kStatus_Success;	
 	uint8_t u8ReadBuffer[8] = {0};
-	uint8_t u8TxTmp[8];
+	uint8_t u8TxTmp[8] = {0};
 
-	for(uint8_t i=1;i<0xFE;i++){
-		sts = BOARD_LPI2C_Receive(LPI2C1, DEF_COMBO_SENSOR_DEVICE_ADDR, FXOS8700_WHO_AM_I, 1, u8ReadBuffer, 1);
-#if 1
-		if (kStatus_Success != sts)
-		{
-			//mimic_printf("[%s (%d)] BOARD_LPI2C_Receive NG (sts=%d)\r\n", __FUNCTION__, __LINE__, sts);
-			//return kStatus_Fail;
-		}else{
-			mimic_printf("[%s (%d)] %d FXOS8700_WHO_AM_I : 0x%02X\r\n", __FUNCTION__, __LINE__, i, u8ReadBuffer[0]);
-		}
-#endif
-		
+	sts = BOARD_LPI2C_Receive(LPI2C1, DEF_COMBO_SENSOR_DEVICE_ADDR, FXOS8700_WHO_AM_I, 1, u8ReadBuffer, 1);
+	if (kStatus_Success != sts)
+	{
+		mimic_printf("[%s (%d)] BOARD_LPI2C_Receive NG (sts=%d)\r\n", __FUNCTION__, __LINE__, sts);
+		return kStatus_Fail;
 	}
+	
+	mimic_printf("[%s (%d)] FXOS8700_WHO_AM_I : 0x%02X\r\n", __FUNCTION__, __LINE__, u8ReadBuffer[0]);
 
 	
     /* Put the device into standby mode so that configuration can be applied.*/

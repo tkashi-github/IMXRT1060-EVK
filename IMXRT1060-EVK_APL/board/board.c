@@ -73,6 +73,7 @@ void BOARD_LPI2C_Init(LPI2C_Type *base, uint32_t clkSrc_Hz)
 		u32DeviceNo = 4;
 		break;
 	default:
+		mimic_printf("[%s (%d)] TP\r\n", __FUNCTION__, __LINE__);
 		return;
 	}
 
@@ -87,11 +88,15 @@ void BOARD_LPI2C_Init(LPI2C_Type *base, uint32_t clkSrc_Hz)
      * lpi2cConfig.sclGlitchFilterWidth_ns = 0;
      */
 	//lpi2cConfig.busIdleTimeout_ns = 10000;
+#if 0
     LPI2C_MasterGetDefaultConfig(&lpi2cConfig);
-    //LPI2C_MasterInit(base, &lpi2cConfig, clkSrc_Hz);
+    LPI2C_MasterInit(base, &lpi2cConfig, clkSrc_Hz);
+#else
 	//EnableIRQ(s_u32I2CIRQn[u32DeviceNo]);
-	NVIC_SetPriority(s_u32I2CIRQn[u32DeviceNo], kIRQ_PRIORITY_LPI2C);
+	LPI2C_MasterGetDefaultConfig(&lpi2cConfig);
+    NVIC_SetPriority(s_u32I2CIRQn[u32DeviceNo], kIRQ_PRIORITY_LPI2C);
 	LPI2C_RTOS_Init(&s_hndI2C[u32DeviceNo], base, &lpi2cConfig, clkSrc_Hz);
+#endif
 }
 
 #include "mimiclib/mimiclib.h"
@@ -145,6 +150,7 @@ status_t BOARD_LPI2C_Send(LPI2C_Type *base, uint8_t deviceAddress, uint32_t subA
 		u32DeviceNo = 4;
 		break;
 	default:
+		mimic_printf("[%s (%d)] TP\r\n", __FUNCTION__, __LINE__);
 		return kStatus_InvalidArgument;
 	}
 
@@ -221,6 +227,7 @@ status_t BOARD_LPI2C_Receive(LPI2C_Type *base, uint8_t deviceAddress, uint32_t s
 		u32DeviceNo = 4;
 		break;
 	default:
+		mimic_printf("[%s (%d)] TP\r\n", __FUNCTION__, __LINE__);
 		return kStatus_InvalidArgument;
 	}
 	
@@ -463,14 +470,14 @@ void BOARD_ConfigMPU(void)
 
     /* Enable I cache and D cache */
 #if defined(__ICACHE_PRESENT) && __ICACHE_PRESENT
-    if (SCB_CCR_IC_Msk != (SCB_CCR_IC_Msk & SCB->CCR)) {
+    //if (SCB_CCR_IC_Msk != (SCB_CCR_IC_Msk & SCB->CCR)) {
         SCB_EnableICache();
-    }
+    //}
 #endif
 #if defined(__DCACHE_PRESENT) && __DCACHE_PRESENT
-    if (SCB_CCR_DC_Msk != (SCB_CCR_DC_Msk & SCB->CCR)) {
+    //if (SCB_CCR_DC_Msk != (SCB_CCR_DC_Msk & SCB->CCR)) {
 		SCB_EnableDCache();
-    }
+    //}
 #endif
 
 	return;

@@ -86,8 +86,9 @@ status_t LPI2C_RTOS_Transfer(lpi2c_rtos_handle_t *handle, lpi2c_master_transfer_
     status_t status;
 
     /* Lock resource mutex */
-    if (xSemaphoreTake(handle->mutex, 20) != pdTRUE)
+    if (xSemaphoreTake(handle->mutex, 50) != pdTRUE)
     {
+		mimic_printf("[%s (%d)] TP\r\n", __FUNCTION__, __LINE__);
         return kStatus_LPI2C_Busy;
     }
 
@@ -99,7 +100,11 @@ status_t LPI2C_RTOS_Transfer(lpi2c_rtos_handle_t *handle, lpi2c_master_transfer_
     }
 
     /* Wait for transfer to finish */
-    xSemaphoreTake(handle->semaphore, 20);
+    if(xSemaphoreTake(handle->semaphore, 50) != pdTRUE ){
+		mimic_printf("[%s (%d)] TP\r\n", __FUNCTION__, __LINE__);
+		xSemaphoreGive(handle->mutex);
+		return kStatus_LPI2C_Timeout;
+	}
 
     /* Unlock resource mutex */
     xSemaphoreGive(handle->mutex);
