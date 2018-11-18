@@ -62,8 +62,12 @@
 #define APP_CAMERA_CONTROL_FLAGS (kCAMERA_HrefActiveHigh | kCAMERA_DataLatchOnRisingEdge)
 #define APP_CAMERA_OV7725 0
 #define APP_CAMERA_MT9M114 1
-#define APP_CAMERA_TYPE APP_CAMERA_MT9M114
-
+#define APP_CAMERA_TYPE APP_CAMERA_OV7725
+static void BOARD_PullCameraResetPin(bool pullUp)
+{
+    /* Reset pin is connected to DCDC_3V3. */
+    return;
+}
 static csi_resource_t csiResource = {
     .csiBase = CSI,
 };
@@ -74,11 +78,31 @@ camera_receiver_handle_t cameraReceiver = {
     .resource = &csiResource, .ops = &csi_ops, .privateData = &csiPrivateData,
 };
 
-static void BOARD_PullCameraResetPin(bool pullUp)
+#if (APP_CAMERA_TYPE == APP_CAMERA_OV7725)
+static void BOARD_PullCameraPowerDownPin(bool pullUp)
 {
-    /* Reset pin is connected to DCDC_3V3. */
-    return;
+    if (pullUp)
+    {
+        GPIO_PinWrite(GPIO1, 4, 1);
+    }
+    else
+    {
+        GPIO_PinWrite(GPIO1, 4, 0);
+    }
 }
+
+static ov7725_resource_t ov7725Resource = {
+    .i2cSendFunc = BOARD_Camera_I2C_SendSCCB,
+    .i2cReceiveFunc = BOARD_Camera_I2C_ReceiveSCCB,
+    .pullResetPin = BOARD_PullCameraResetPin,
+    .pullPowerDownPin = BOARD_PullCameraPowerDownPin,
+    .inputClockFreq_Hz = 24000000,
+};
+
+camera_device_handle_t cameraDevice = {
+    .resource = &ov7725Resource, .ops = &ov7725_ops,
+};
+#else
 /*
  * MT9M114 camera module has PWDN pin, but the pin is not
  * connected internally, MT9M114 does not have power down pin.
@@ -155,6 +179,8 @@ static mt9m114_resource_t mt9m114Resource = {
 camera_device_handle_t cameraDevice = {
     .resource = &mt9m114Resource, .ops = &mt9m114_ops,
 };
+#endif
+
 
 extern void CSI_DriverIRQHandler(void);
 
@@ -211,7 +237,6 @@ static void CameraTaskActual(void){
 	uint32_t activeFrameAddr;
     uint32_t inactiveFrameAddr;
 
-	CAMERA_RECEIVER_Start(&cameraReceiver);
 
 	stTaskMsgBlock_t stTaskMsg = {0};
 	if (sizeof(stTaskMsg) == xStreamBufferReceive(g_sbhCameraTask, &stTaskMsg, sizeof(stTaskMsg), portMAX_DELAY))
@@ -272,6 +297,15 @@ void CameraTask(void const *argument){
     };
 
     memset(s_frameBuffer, 0, sizeof(s_frameBuffer));
+
+	for(uint32_t i=0;i<0x7F;i++){
+		uint8_t u8ReadBuffer[8] = {0};
+		status_t sts = BOARD_LPI2C_Receive(LPI2C1, i, OV7725_PID_REG, 1, u8ReadBuffer, 2);
+		if (kStatus_Success == sts)
+		{
+			mimic_printf("[%s (%d)] BOARD_LPI2C_Receive OK (i=%lu, 0x%02X%02X)\r\n", __FUNCTION__, __LINE__, i, u8ReadBuffer[0], u8ReadBuffer[1]);
+		}
+	}
 
 	sts = CAMERA_RECEIVER_Init(&cameraReceiver, &cameraConfig, CallBackCameraDriverReceived, NULL);
     if(kStatus_Success != sts){

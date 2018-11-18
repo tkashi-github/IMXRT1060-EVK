@@ -506,58 +506,54 @@ void BOARD_InitCSI(void)
 {
 	CLOCK_EnableClock(kCLOCK_Iomuxc); /* iomuxc clock (iomuxc_clk_enable): 0x03u */
 
-	IOMUXC_SetPinMux(
-		IOMUXC_GPIO_AD_B0_04_GPIO1_IO04, /* GPIO_AD_B0_04 is configured as GPIO1_IO04 */
-		0U);							 /* Software Input On Field: Input Path is determined by functionality */
-	IOMUXC_SetPinMux(
-		IOMUXC_GPIO_AD_B1_00_LPI2C1_SCL, /* GPIO_AD_B1_00 is configured as LPI2C1_SCL */
-		0U);							 /* Software Input On Field: Input Path is determined by functionality */
-	IOMUXC_SetPinMux(
-		IOMUXC_GPIO_AD_B1_01_LPI2C1_SDA, /* GPIO_AD_B1_01 is configured as LPI2C1_SDA */
-		0U);							 /* Software Input On Field: Input Path is determined by functionality */
-	IOMUXC_SetPinMux(
-		IOMUXC_GPIO_AD_B1_04_CSI_PIXCLK, /* GPIO_AD_B1_04 is configured as CSI_PIXCLK */
-		0U);							 /* Software Input On Field: Input Path is determined by functionality */
-	IOMUXC_SetPinMux(
-		IOMUXC_GPIO_AD_B1_05_CSI_MCLK, /* GPIO_AD_B1_05 is configured as CSI_MCLK */
-		0U);						   /* Software Input On Field: Input Path is determined by functionality */
-	IOMUXC_SetPinMux(
-		IOMUXC_GPIO_AD_B1_06_CSI_VSYNC, /* GPIO_AD_B1_06 is configured as CSI_VSYNC */
-		0U);							/* Software Input On Field: Input Path is determined by functionality */
-	IOMUXC_SetPinMux(
-		IOMUXC_GPIO_AD_B1_07_CSI_HSYNC, /* GPIO_AD_B1_07 is configured as CSI_HSYNC */
-		0U);							/* Software Input On Field: Input Path is determined by functionality */
-	IOMUXC_SetPinMux(
-		IOMUXC_GPIO_AD_B1_08_CSI_DATA09, /* GPIO_AD_B1_08 is configured as CSI_DATA09 */
-		0U);							 /* Software Input On Field: Input Path is determined by functionality */
-	IOMUXC_SetPinMux(
-		IOMUXC_GPIO_AD_B1_09_CSI_DATA08, /* GPIO_AD_B1_09 is configured as CSI_DATA08 */
-		0U);							 /* Software Input On Field: Input Path is determined by functionality */
-	IOMUXC_SetPinMux(
-		IOMUXC_GPIO_AD_B1_10_CSI_DATA07, /* GPIO_AD_B1_10 is configured as CSI_DATA07 */
-		0U);							 /* Software Input On Field: Input Path is determined by functionality */
-	IOMUXC_SetPinMux(
-		IOMUXC_GPIO_AD_B1_11_CSI_DATA06, /* GPIO_AD_B1_11 is configured as CSI_DATA06 */
-		0U);							 /* Software Input On Field: Input Path is determined by functionality */
-	IOMUXC_SetPinMux(
-		IOMUXC_GPIO_AD_B1_12_CSI_DATA05, /* GPIO_AD_B1_12 is configured as CSI_DATA05 */
-		0U);							 /* Software Input On Field: Input Path is determined by functionality */
-	IOMUXC_SetPinMux(
-		IOMUXC_GPIO_AD_B1_13_CSI_DATA04, /* GPIO_AD_B1_13 is configured as CSI_DATA04 */
-		0U);							 /* Software Input On Field: Input Path is determined by functionality */
-	IOMUXC_SetPinMux(
-		IOMUXC_GPIO_AD_B1_14_CSI_DATA03, /* GPIO_AD_B1_14 is configured as CSI_DATA03 */
-		0U);							 /* Software Input On Field: Input Path is determined by functionality */
-	IOMUXC_SetPinMux(
-		IOMUXC_GPIO_AD_B1_15_CSI_DATA02, /* GPIO_AD_B1_15 is configured as CSI_DATA02 */
-		0U);							 /* Software Input On Field: Input Path is determined by functionality */
-	IOMUXC_GPR->GPR26 = ((IOMUXC_GPR->GPR26 &
-						  (~(IOMUXC_GPR_GPR26_GPIO_MUX1_GPIO_SEL_MASK))) /* Mask bits to zero which are setting */
-						 | IOMUXC_GPR_GPR26_GPIO_MUX1_GPIO_SEL(0x00u)	/* GPIO1 and GPIO6 share same IO MUX function, GPIO_MUX1 selects one GPIO function.: 0x00u */
-	);
-	IOMUXC_SetPinConfig(
-		IOMUXC_GPIO_AD_B1_00_LPI2C1_SCL, /* GPIO_AD_B1_00 PAD functional properties : */
-		0xD8B0u);						 /* Slew Rate Field: Slow Slew Rate
+  IOMUXC_SetPinMux(
+      IOMUXC_GPIO_AD_B0_04_GPIO1_IO04,        /* GPIO_AD_B0_04 is configured as GPIO1_IO04 */
+      0U);                                    /* Software Input On Field: Input Path is determined by functionality */
+  IOMUXC_SetPinMux(
+      IOMUXC_GPIO_AD_B1_00_LPI2C1_SCL,        /* GPIO_AD_B1_00 is configured as LPI2C1_SCL */
+      1U);                                    /* Software Input On Field: Force input path of pad GPIO_AD_B1_00 */
+  IOMUXC_SetPinMux(
+      IOMUXC_GPIO_AD_B1_01_LPI2C1_SDA,        /* GPIO_AD_B1_01 is configured as LPI2C1_SDA */
+      1U);                                    /* Software Input On Field: Force input path of pad GPIO_AD_B1_01 */
+  IOMUXC_SetPinMux(
+      IOMUXC_GPIO_AD_B1_04_CSI_PIXCLK,        /* GPIO_AD_B1_04 is configured as CSI_PIXCLK */
+      0U);                                    /* Software Input On Field: Input Path is determined by functionality */
+  IOMUXC_SetPinMux(
+      IOMUXC_GPIO_AD_B1_05_CSI_MCLK,          /* GPIO_AD_B1_05 is configured as CSI_MCLK */
+      0U);                                    /* Software Input On Field: Input Path is determined by functionality */
+  IOMUXC_SetPinMux(
+      IOMUXC_GPIO_AD_B1_06_CSI_VSYNC,         /* GPIO_AD_B1_06 is configured as CSI_VSYNC */
+      0U);                                    /* Software Input On Field: Input Path is determined by functionality */
+  IOMUXC_SetPinMux(
+      IOMUXC_GPIO_AD_B1_07_CSI_HSYNC,         /* GPIO_AD_B1_07 is configured as CSI_HSYNC */
+      0U);                                    /* Software Input On Field: Input Path is determined by functionality */
+  IOMUXC_SetPinMux(
+      IOMUXC_GPIO_AD_B1_08_CSI_DATA09,        /* GPIO_AD_B1_08 is configured as CSI_DATA09 */
+      0U);                                    /* Software Input On Field: Input Path is determined by functionality */
+  IOMUXC_SetPinMux(
+      IOMUXC_GPIO_AD_B1_09_CSI_DATA08,        /* GPIO_AD_B1_09 is configured as CSI_DATA08 */
+      0U);                                    /* Software Input On Field: Input Path is determined by functionality */
+  IOMUXC_SetPinMux(
+      IOMUXC_GPIO_AD_B1_10_CSI_DATA07,        /* GPIO_AD_B1_10 is configured as CSI_DATA07 */
+      0U);                                    /* Software Input On Field: Input Path is determined by functionality */
+  IOMUXC_SetPinMux(
+      IOMUXC_GPIO_AD_B1_11_CSI_DATA06,        /* GPIO_AD_B1_11 is configured as CSI_DATA06 */
+      0U);                                    /* Software Input On Field: Input Path is determined by functionality */
+  IOMUXC_SetPinMux(
+      IOMUXC_GPIO_AD_B1_12_CSI_DATA05,        /* GPIO_AD_B1_12 is configured as CSI_DATA05 */
+      0U);                                    /* Software Input On Field: Input Path is determined by functionality */
+  IOMUXC_SetPinMux(
+      IOMUXC_GPIO_AD_B1_13_CSI_DATA04,        /* GPIO_AD_B1_13 is configured as CSI_DATA04 */
+      0U);                                    /* Software Input On Field: Input Path is determined by functionality */
+  IOMUXC_SetPinMux(
+      IOMUXC_GPIO_AD_B1_14_CSI_DATA03,        /* GPIO_AD_B1_14 is configured as CSI_DATA03 */
+      0U);                                    /* Software Input On Field: Input Path is determined by functionality */
+  IOMUXC_SetPinMux(
+      IOMUXC_GPIO_AD_B1_15_CSI_DATA02,        /* GPIO_AD_B1_15 is configured as CSI_DATA02 */
+      0U);                                    /* Software Input On Field: Input Path is determined by functionality */
+  IOMUXC_SetPinConfig(
+      IOMUXC_GPIO_AD_B1_00_LPI2C1_SCL,        /* GPIO_AD_B1_00 PAD functional properties : */
+      0xD8B0u);                               /* Slew Rate Field: Slow Slew Rate
                                                  Drive Strength Field: R0/6
                                                  Speed Field: medium(100MHz)
                                                  Open Drain Enable Field: Open Drain Enabled
@@ -565,9 +561,9 @@ void BOARD_InitCSI(void)
                                                  Pull / Keep Select Field: Keeper
                                                  Pull Up / Down Config. Field: 22K Ohm Pull Up
                                                  Hyst. Enable Field: Hysteresis Disabled */
-	IOMUXC_SetPinConfig(
-		IOMUXC_GPIO_AD_B1_01_LPI2C1_SDA, /* GPIO_AD_B1_01 PAD functional properties : */
-		0xD8B0u);						 /* Slew Rate Field: Slow Slew Rate
+  IOMUXC_SetPinConfig(
+      IOMUXC_GPIO_AD_B1_01_LPI2C1_SDA,        /* GPIO_AD_B1_01 PAD functional properties : */
+      0xD8B0u);                               /* Slew Rate Field: Slow Slew Rate
                                                  Drive Strength Field: R0/6
                                                  Speed Field: medium(100MHz)
                                                  Open Drain Enable Field: Open Drain Enabled

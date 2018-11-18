@@ -75,7 +75,7 @@ int main(void) {
   
   	/* Init board hardware. */
     BOARD_InitBootClocks();
-	BOARD_I2C_ReleaseBus();
+//	BOARD_I2C_ReleaseBus();
     BOARD_InitBootPins();
 
 	InitGpio();

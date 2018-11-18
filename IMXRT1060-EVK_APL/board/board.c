@@ -242,7 +242,7 @@ status_t BOARD_LPI2C_Receive(LPI2C_Type *base, uint8_t deviceAddress, uint32_t s
 
 	reVal = LPI2C_RTOS_Transfer(&s_hndI2C[u32DeviceNo], &stTransfer);
 	if(reVal != kStatus_Success){
-		mimic_printf("[%s (%d)] LPI2C_RTOS_Transfer NG (reVal = %d)\r\n", __FUNCTION__, __LINE__, reVal);
+		//mimic_printf("[%s (%d)] LPI2C_RTOS_Transfer NG (reVal = %d)\r\n", __FUNCTION__, __LINE__, reVal);
 	}
 #endif
 	return reVal;
@@ -265,49 +265,7 @@ status_t BOARD_LPI2C_ReceiveSCCB(LPI2C_Type *base,
                                  uint8_t *rxBuff,
                                  uint8_t rxBuffSize)
 {
-    status_t reVal;
-
-    reVal = LPI2C_MasterStart(base, deviceAddress, kLPI2C_Write);
-    if (kStatus_Success == reVal)
-    {
-        while (LPI2C_MasterGetStatusFlags(base) & kLPI2C_MasterNackDetectFlag)
-        {
-        }
-
-        reVal = LPI2C_MasterSend(base, &subAddress, subAddressSize);
-        if (reVal != kStatus_Success)
-        {
-            return reVal;
-        }
-
-        /* SCCB does not support LPI2C repeat start, must stop then start. */
-        reVal = LPI2C_MasterStop(base);
-
-        if (reVal != kStatus_Success)
-        {
-            return reVal;
-        }
-
-        reVal = LPI2C_MasterStart(base, deviceAddress, kLPI2C_Read);
-
-        if (reVal != kStatus_Success)
-        {
-            return reVal;
-        }
-
-        reVal = LPI2C_MasterReceive(base, rxBuff, rxBuffSize);
-        if (reVal != kStatus_Success)
-        {
-            return reVal;
-        }
-
-        reVal = LPI2C_MasterStop(base);
-        if (reVal != kStatus_Success)
-        {
-            return reVal;
-        }
-    }
-    return reVal;
+    return BOARD_LPI2C_Receive(base, deviceAddress, subAddress, subAddressSize,  rxBuff, rxBuffSize);
 }
 
 void BOARD_Accel_I2C_Init(void)
