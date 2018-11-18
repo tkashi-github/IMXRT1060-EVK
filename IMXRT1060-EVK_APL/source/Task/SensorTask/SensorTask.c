@@ -47,8 +47,8 @@ static void SensorTaskReadDataFromDevice(int16_t pi16Accel[], int16_t pi16Mag[])
 		if (osSemaphoreAcquire(g_bsIdComboSensor, 5) == osOK)
 		{
 			
-			mimic_memcpy(pi16Accel, au16Accel, sizeof(au16Accel));
-			mimic_memcpy(pi16Mag, au16Mag, sizeof(au16Mag));
+			mimic_memcpy((uintptr_t)pi16Accel, (uintptr_t)au16Accel, sizeof(au16Accel));
+			mimic_memcpy((uintptr_t)pi16Mag, (uintptr_t)au16Mag, sizeof(au16Mag));
 			pi16Accel[0] /= 4;
 			pi16Accel[1] /= 4;
 			pi16Accel[2] /= 4;
@@ -91,8 +91,8 @@ _Bool SensorTaskReadData(int16_t pi16Accel[], int16_t pi16Mag[]){
 	if (osSemaphoreAcquire(g_bsIdComboSensor, 5) == osOK)
 	{
 		bret = true;
-		mimic_memcpy(pi16Accel, s_ai16Accel, sizeof(s_ai16Accel));
-		mimic_memcpy(pi16Mag, s_ai16Mag, sizeof(s_ai16Mag));
+		mimic_memcpy((uintptr_t)pi16Accel, (uintptr_t)s_ai16Accel, sizeof(s_ai16Accel));
+		mimic_memcpy((uintptr_t)pi16Mag, (uintptr_t)s_ai16Mag, sizeof(s_ai16Mag));
 		osSemaphoreRelease(g_bsIdComboSensor);
 	}
 

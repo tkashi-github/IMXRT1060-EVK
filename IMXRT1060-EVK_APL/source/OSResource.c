@@ -42,6 +42,7 @@
 #include "Task/StorageTask/StorageTask.h"
 #include "Task/LanTask/LanTask.h"
 #include "SensorTask/SensorTask.h"
+#include "CameraTask/CameraTask.h"
 
 /** typedef Task Table */
 typedef struct{
@@ -58,6 +59,7 @@ DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_ConsoleTaskHandle;
 DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_StorageTaskHandle;
 DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_LanTaskHandle;
 DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_SensorTaskHandle;
+DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_CameraTaskHandle;
 
 /** Task Control Block (STATIC ALLOCATION)*/
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_InitialTaskTCB;
@@ -65,6 +67,7 @@ DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_ConsoleTaskTCB;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_StorageTaskTCB;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_LanTaskTCB;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_SensorTaskTCB;
+DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_CameraTaskTCB;
 
 /** Task Stack (STATIC ALLOCATION)*/
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_InitialTaskStack[8192/sizeof(uint32_t)];
@@ -72,6 +75,7 @@ DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_ConsoleTaskStack[8192/sizeof(
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_StorageTaskStack[8192/sizeof(uint32_t)];
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_LanTaskStack[8192/sizeof(uint32_t)];
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_SensorTaskStack[8192/sizeof(uint32_t)];
+DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_CameraTaskStack[8192/sizeof(uint32_t)];
 
 /** Task Table */
 static const stOSdefTable_t s_stTaskTable[] = {
@@ -99,11 +103,19 @@ static const stOSdefTable_t s_stTaskTable[] = {
 		NULL,
 		{"LanTask", osThreadDetached, &s_LanTaskTCB, sizeof(s_LanTaskTCB), s_LanTaskStack, sizeof(s_LanTaskStack), osPriorityBelowNormal, 0, 0},
 	},
+#if 0	/** IMXRT1060-EVK doesn't have FXOS8700 */
 	{	/** SensorTask */
 		&g_SensorTaskHandle,
 		(osThreadFunc_t)SensorTask,
 		NULL,
 		{"SensorTask", osThreadDetached, &s_SensorTaskTCB, sizeof(s_SensorTaskTCB), s_SensorTaskStack, sizeof(s_SensorTaskStack), osPriorityBelowNormal, 0, 0},
+	},
+#endif
+	{	/** CameraTask */
+		&g_CameraTaskHandle,
+		(osThreadFunc_t)CameraTask,
+		NULL,
+		{"CameraTask", osThreadDetached, &s_CameraTaskTCB, sizeof(s_CameraTaskTCB), s_CameraTaskStack, sizeof(s_CameraTaskStack), osPriorityBelowNormal, 0, 0},
 	},
 	// Terminate
 	{	
@@ -133,10 +145,12 @@ typedef struct{
 /** osEventFlagsId_t */
 DefALLOCATE_BSS_DTCM alignas(4) osEventFlagsId_t g_efLPUART[1+enLPUART_MAX];
 DefALLOCATE_BSS_DTCM alignas(4) osEventFlagsId_t g_efFSReady;
+DefALLOCATE_BSS_DTCM alignas(4) osEventFlagsId_t g_efCameraSensor;
 
 /** StaticEventGroup_t */
 DefALLOCATE_BSS_DTCM alignas(4) static StaticEventGroup_t s_xLPUARTEventGroupBuffer[1+enLPUART_MAX];
 DefALLOCATE_BSS_DTCM alignas(4) static StaticEventGroup_t s_xFSReadyEventGroupBuffer;
+DefALLOCATE_BSS_DTCM alignas(4) static StaticEventGroup_t s_xCameraSensorEventGroupBuffer;
 
 static stEventFlagTable_t s_stEventFlagTable[] = {
 	{&g_efLPUART[enLPUART1], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART1], sizeof(StaticEventGroup_t)}},
@@ -148,7 +162,8 @@ static stEventFlagTable_t s_stEventFlagTable[] = {
 	{&g_efLPUART[enLPUART7], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART7], sizeof(StaticEventGroup_t)}},
 	{&g_efLPUART[enLPUART8], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART8], sizeof(StaticEventGroup_t)}},
 
-	{&g_efFSReady, {"EF_LPUART", 0, &s_xFSReadyEventGroupBuffer, sizeof(StaticEventGroup_t)}},
+	{&g_efFSReady, {"EF_FSREADY", 0, &s_xFSReadyEventGroupBuffer, sizeof(StaticEventGroup_t)}},
+	{&g_efCameraSensor, {"EF_CAMERA_SENSOR", 0, &s_xCameraSensorEventGroupBuffer, sizeof(StaticEventGroup_t)}},
 	{NULL, NULL},
 };
 
@@ -173,10 +188,13 @@ DefALLOCATE_BSS_DTCM alignas(4) osSemaphoreId_t g_bsIdLPUARTRxSemaphore[1+enLPUA
 DefALLOCATE_BSS_DTCM alignas(4) osSemaphoreId_t g_bsIdLPUARTTxSemaphore[1+enLPUART_MAX] = {NULL};
 DefALLOCATE_BSS_DTCM alignas(4) osSemaphoreId_t g_bsIdStorageTaskMsg;
 DefALLOCATE_BSS_DTCM alignas(4) osSemaphoreId_t g_bsIdComboSensor;
+DefALLOCATE_BSS_DTCM alignas(4) osSemaphoreId_t g_bsIdCameraTask;
+
 DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xLPUARTRxSemaphoreBuffer[1+enLPUART_MAX];
 DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xLPUARTTxSemaphoreBuffer[1+enLPUART_MAX];
 DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xStorageTaskMsgBuffer;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xComboSensor;
+DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xCameraTask;
 
 static stBinarySemaphoreTable_t s_stBinarySemaphoreTable[] = {
 	{&g_bsIdLPUARTRxSemaphore[enLPUART1], {"BS_LPUART1RX", 0, &s_xLPUARTRxSemaphoreBuffer[enLPUART1], sizeof(StaticSemaphore_t)}, 1, 1},
@@ -199,6 +217,7 @@ static stBinarySemaphoreTable_t s_stBinarySemaphoreTable[] = {
 
 	{&g_bsIdStorageTaskMsg, {"BS_STORAGETASKMSG", 0, &s_xStorageTaskMsgBuffer, sizeof(StaticSemaphore_t)}, 1, 1},
 	{&g_bsIdComboSensor, {"BS_COMBOSENSOR", 0, &s_xComboSensor, sizeof(StaticSemaphore_t)}, 1, 1},
+	{&g_bsIdCameraTask, {"BS_CAMERATASKMSG", 0, &s_xCameraTask, sizeof(StaticSemaphore_t)}, 1, 1},
 
 	{NULL, NULL},
 };
@@ -262,6 +281,10 @@ DefALLOCATE_BSS_DTCM alignas(32) StreamBufferHandle_t g_sbhLanTask = NULL;
 DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_LanTaskStorage[sizeof(stTaskMsgBlock_t) * 32 + 1];	/** +1 はマニュアルの指示 */
 DefALLOCATE_BSS_DTCM alignas(32) static StaticStreamBuffer_t s_ssbSLanTaskStreamBuffer;
 
+DefALLOCATE_BSS_DTCM alignas(32) StreamBufferHandle_t g_sbhCameraTask;
+DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_CameraTaskStorage[sizeof(stTaskMsgBlock_t) * 32 + 1];	/** +1 はマニュアルの指示 */
+DefALLOCATE_BSS_DTCM alignas(32) static StaticStreamBuffer_t s_ssbSCameraTaskStreamBuffer;
+
 static stStreamBuffer_t s_stStreamBufferTable[] = {
 	{
 		&g_sbhStorageTask[enUSDHC1], 
@@ -293,6 +316,7 @@ static stStreamBuffer_t s_stStreamBufferTable[] = {
 	{&g_sbhLPUARTRx[enLPUART8], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTRx[enLPUART8], &s_ssbLPUARTRx[enLPUART8]},
 
 	{&g_sbhLanTask, sizeof(s_LanTaskStorage), sizeof(stTaskMsgBlock_t), s_LanTaskStorage, &s_ssbSLanTaskStreamBuffer},
+	{&g_sbhCameraTask, sizeof(s_CameraTaskStorage), sizeof(stTaskMsgBlock_t), s_CameraTaskStorage, &s_ssbSCameraTaskStreamBuffer},
 
 	{NULL, 0, 0, NULL, NULL},
 };

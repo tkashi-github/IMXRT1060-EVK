@@ -44,7 +44,9 @@
 			"freertos.h": "c",
 			"storagebenchmark.h": "c",
 			"xutility": "c",
-			"board.h": "c"
+			"board.h": "c",
+			"cameratask.h": "c",
+			"fsl_camera_device.h": "c"
 		},
 		"C_Cpp.default.defines": [
 			"__GNUC__",

@@ -91,6 +91,7 @@ typedef enum{
 	enStorageIsReady,
 	enLanLinkChange,
 	enLanRestart,
+	enCameraBtn,
 	enMsgID_MAX,
 }enMsgID_t;
 

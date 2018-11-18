@@ -459,7 +459,7 @@ DefALLOCATE_ITCM _Bool PostMsgStorageTaskInsertFromISR(_Bool bInsert)
 		osSemaphoreRelease(g_bsIdStorageTaskMsg);
 	}
 
-	return true;
+	return bret;
 }
 
 static void StorageDumpActual(enSD_t enSlotNo, uint32_t SectorNo)

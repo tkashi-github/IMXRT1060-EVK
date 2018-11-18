@@ -67,15 +67,19 @@ extern osThreadId_t g_InitialTaskHandle;
 extern osThreadId_t g_ConsoleTaskHandle;
 extern osThreadId_t g_LEDTaskHandle;
 extern osThreadId_t g_LanTaskHandle;
+extern osThreadId_t g_CameraTaskHandle;
 
 /** Event Group */
 extern osEventFlagsId_t g_efLPUART[];
 extern osEventFlagsId_t g_efFSReady;
+extern osEventFlagsId_t g_efCameraSensor;
 
+/** Binary Semaphore */
 extern osSemaphoreId_t g_bsIdLPUARTRxSemaphore[];
 extern osSemaphoreId_t g_bsIdLPUARTTxSemaphore[];
 extern osSemaphoreId_t g_bsIdStorageTaskMsg;
 extern osSemaphoreId_t g_bsIdComboSensor;
+extern osSemaphoreId_t g_bsIdCameraTask;
 
 /** Queue */
 extern osMessageQueueId_t g_StorageTaskQueueId;
@@ -87,6 +91,7 @@ extern StreamBufferHandle_t g_sbhLPUARTRx[1+enLPUART_MAX];
 extern StreamBufferHandle_t g_sbhStorageTask[enNumOfSD];
 extern StreamBufferHandle_t g_sbhUpdateTask;
 extern StreamBufferHandle_t g_sbhLanTask;
+extern StreamBufferHandle_t g_sbhCameraTask;
 
 extern void CreateTask(void);
 extern void CreateQueue(void);

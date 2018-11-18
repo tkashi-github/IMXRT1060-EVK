@@ -42,6 +42,7 @@
 #include "OSResource.h"
 #include "CPUFunc.h"
 #include "UART/DrvLPUART.h"
+#include "CameraTask/CameraTask.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -72,6 +73,7 @@ int main(void) {
   
   	/* Init board hardware. */
     BOARD_InitBootClocks();
+	BOARD_I2C_ReleaseBus();
     BOARD_InitBootPins();
 
 	InitGpio();

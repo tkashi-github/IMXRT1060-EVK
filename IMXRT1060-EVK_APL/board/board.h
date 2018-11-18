@@ -18,7 +18,6 @@
  ******************************************************************************/
 /*! @brief The board name */
 #define BOARD_NAME "MIMXRT1060-EVK"
-#define BOARD_USE_CODEC
 
 /* The UART to use for debug messages. */
 #define BOARD_DEBUG_UART_TYPE DEBUG_CONSOLE_DEVICE_TYPE_LPUART
