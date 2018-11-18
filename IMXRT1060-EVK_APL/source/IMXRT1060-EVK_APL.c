@@ -64,6 +64,8 @@ static void InitGpio(void){
 	userCaedDetect.interruptMode = kGPIO_NoIntmode;
 
 	GPIO_PinInit(BOARD_USDHC_CD_GPIO_BASE, BOARD_USDHC_CD_GPIO_PIN, &userCaedDetect);
+	GPIO_PinInit(BOARD_USER_BUTTON_GPIO, BOARD_USER_BUTTON_GPIO_PIN, &userCaedDetect);
+
 }
 /*
  * @brief   Application entry point.

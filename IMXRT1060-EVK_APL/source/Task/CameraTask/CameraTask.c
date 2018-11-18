@@ -233,7 +233,7 @@ static void CameraTaskActual(void){
 			if(u32Bits == 1){
 				mimic_printf("[%s (%d)] osEventFlagsWait OK\r\n", __FUNCTION__, __LINE__);
 			}else{
-				mimic_printf("[%s (%d)] osEventFlagsWait OK\r\n", __FUNCTION__, __LINE__);
+				mimic_printf("[%s (%d)] osEventFlagsWait NG\r\n", __FUNCTION__, __LINE__);
 			}
 			CAMERA_RECEIVER_Stop(&cameraReceiver);
 			CAMERA_DEVICE_Stop(&cameraDevice);
@@ -257,8 +257,9 @@ static void CallBackCameraDriverReceived(camera_receiver_handle_t *handle, statu
 
 void CameraTask(void const *argument){
 
-	mimic_printf("[%s (%d)] Start", __FUNCTION__, __LINE__);
+	mimic_printf("\r\n[%s (%d)] Start\r\n", __FUNCTION__, __LINE__);
     BOARD_InitCameraResource();
+	status_t sts;
 
     const camera_config_t cameraConfig = {
         .pixelFormat = kVIDEO_PixelFormatRGB565,
@@ -272,11 +273,15 @@ void CameraTask(void const *argument){
 
     memset(s_frameBuffer, 0, sizeof(s_frameBuffer));
 
-    CAMERA_RECEIVER_Init(&cameraReceiver, &cameraConfig, CallBackCameraDriverReceived, NULL);
+	sts = CAMERA_RECEIVER_Init(&cameraReceiver, &cameraConfig, CallBackCameraDriverReceived, NULL);
+    if(kStatus_Success != sts){
+		mimic_printf("\r\n[%s (%d)] CAMERA_RECEIVER_Init NG (%d)\r\n", __FUNCTION__, __LINE__, sts);
+	}
 
-    CAMERA_DEVICE_Init(&cameraDevice, &cameraConfig);
-
-    
+	sts = CAMERA_DEVICE_Init(&cameraDevice, &cameraConfig);
+    if(kStatus_Success != sts){
+		mimic_printf("\r\n[%s (%d)] CAMERA_DEVICE_Init NG (%d)\r\n", __FUNCTION__, __LINE__, sts);
+	}
 
 	for (;;)
 	{

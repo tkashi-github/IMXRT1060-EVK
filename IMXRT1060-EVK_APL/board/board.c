@@ -312,7 +312,7 @@ status_t BOARD_LPI2C_ReceiveSCCB(LPI2C_Type *base,
 
 void BOARD_Accel_I2C_Init(void)
 {    
-    BOARD_LPI2C_Init(BOARD_ACCEL_I2C_BASEADDR, BOARD_ACCEL_I2C_CLOCK_FREQ);
+    //BOARD_LPI2C_Init(BOARD_ACCEL_I2C_BASEADDR, BOARD_ACCEL_I2C_CLOCK_FREQ);
 }
 
 status_t BOARD_Accel_I2C_Send(uint8_t deviceAddress, uint32_t subAddress, uint8_t subaddressSize, uint32_t txBuff)
@@ -332,7 +332,7 @@ status_t BOARD_Accel_I2C_Receive(uint8_t deviceAddress, uint32_t subAddress, uin
 
 void BOARD_Codec_I2C_Init(void)
 {
-    BOARD_LPI2C_Init(BOARD_CODEC_I2C_BASEADDR, BOARD_CODEC_I2C_CLOCK_FREQ);
+    //BOARD_LPI2C_Init(BOARD_CODEC_I2C_BASEADDR, BOARD_CODEC_I2C_CLOCK_FREQ);
 }
 
 status_t BOARD_Codec_I2C_Send(
@@ -354,7 +354,7 @@ void BOARD_Camera_I2C_Init(void)
 {
     CLOCK_SetMux(kCLOCK_Lpi2cMux, BOARD_CAMERA_I2C_CLOCK_SOURCE_SELECT);
     CLOCK_SetDiv(kCLOCK_Lpi2cDiv, BOARD_CAMERA_I2C_CLOCK_SOURCE_DIVIDER);
-    BOARD_LPI2C_Init(BOARD_CAMERA_I2C_BASEADDR, BOARD_CAMERA_I2C_CLOCK_FREQ);
+    //BOARD_LPI2C_Init(BOARD_CAMERA_I2C_BASEADDR, BOARD_CAMERA_I2C_CLOCK_FREQ);
 }
 
 status_t BOARD_Camera_I2C_Send(

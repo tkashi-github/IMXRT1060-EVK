@@ -67,7 +67,7 @@ status_t LPI2C_RTOS_Init(lpi2c_rtos_handle_t *handle,
 
     LPI2C_MasterInit(handle->base, masterConfig, srcClock_Hz);
     LPI2C_MasterTransferCreateHandle(base, &handle->drv_handle, LPI2C_RTOS_Callback, (void *)handle);
-	mimic_printf("[%s (%d)] TP\r\n", __FUNCTION__, __LINE__);
+	//mimic_printf("[%s (%d)] TP\r\n", __FUNCTION__, __LINE__);
     return kStatus_Success;
 }
 
