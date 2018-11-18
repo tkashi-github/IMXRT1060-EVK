@@ -119,34 +119,60 @@ int main(void) {
 /** GPIOのチャタリング対策 */
 DefALLOCATE_ITCM static void GPIOMonitor(void){
 	/** SD1 */
-	static uint32_t u32LastCDPin = 0;
-	static uint32_t u32CDPinCnt = 0;
-	uint32_t u32NowCDPin = GPIO_PinRead(BOARD_USDHC_CD_GPIO_BASE, BOARD_USDHC_CD_GPIO_PIN);
+	{
+		static uint32_t u32LastCDPin = 0;
+		static uint32_t u32CDPinCnt = 0;
+		uint32_t u32NowCDPin = GPIO_PinRead(BOARD_USDHC_CD_GPIO_BASE, BOARD_USDHC_CD_GPIO_PIN);
 
-	if(u32NowCDPin != u32LastCDPin){
-		u32CDPinCnt = 0;
-	}else{
-		if(u32CDPinCnt < DefSDCardDetectTime){
-			u32CDPinCnt++;
-		}else if(u32CDPinCnt == DefSDCardDetectTime){
-			stTaskMsgBlock_t stTaskMsg;
-			BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-			memset(&stTaskMsg, 0, sizeof(stTaskMsg));
-
-			if(u32LastCDPin == 0){
-				stTaskMsg.enMsgId = enSDInsterted;
-			}else{
-				stTaskMsg.enMsgId = enSDRemoved;
-			}
-
-			xStreamBufferSendFromISR(g_sbhStorageTask[enUSDHC1], &stTaskMsg, sizeof(stTaskMsg), &xHigherPriorityTaskWoken);
-			portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-			u32CDPinCnt++;
+		if(u32NowCDPin != u32LastCDPin){
+			u32CDPinCnt = 0;
 		}else{
-			/* nop */
+			if(u32CDPinCnt < DefSDCardDetectTime){
+				u32CDPinCnt++;
+			}else if(u32CDPinCnt == DefSDCardDetectTime){
+				stTaskMsgBlock_t stTaskMsg;
+				BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+				memset(&stTaskMsg, 0, sizeof(stTaskMsg));
+
+				if(u32LastCDPin == 0){
+					stTaskMsg.enMsgId = enSDInsterted;
+				}else{
+					stTaskMsg.enMsgId = enSDRemoved;
+				}
+
+				xStreamBufferSendFromISR(g_sbhStorageTask[enUSDHC1], &stTaskMsg, sizeof(stTaskMsg), &xHigherPriorityTaskWoken);
+				portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+				u32CDPinCnt++;
+			}else{
+				/* nop */
+			}
 		}
+		u32LastCDPin = u32NowCDPin;
 	}
-	u32LastCDPin = u32NowCDPin;
+
+	/** User SW */
+	{
+		static uint32_t u32LastSWPin = 0;
+		static uint32_t u32SWPinCnt = 0;
+		uint32_t u32NowSWPin = GPIO_PinRead(BOARD_USER_BUTTON_GPIO, BOARD_USER_BUTTON_GPIO_PIN);
+
+		if(u32NowSWPin != u32LastSWPin){
+			u32SWPinCnt = 0;
+		}else{
+			if(u32SWPinCnt < 100){
+				u32SWPinCnt++;
+			}else if(u32SWPinCnt == 100){
+				if(u32LastSWPin == 0){
+					PostMsgCameraTaskBtnPushed();
+				}
+				u32SWPinCnt++;
+			}else{
+				/* nop */
+			}
+		}
+		u32LastSWPin = u32NowSWPin;
+	}
+	
 }
 
 

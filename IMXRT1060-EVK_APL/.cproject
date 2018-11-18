@@ -765,7 +765,7 @@
 &lt;vendor&gt;NXP&lt;/vendor&gt;&#13;
 &lt;memory can_program="true" id="Flash" is_ro="true" size="0" type="Flash"/&gt;&#13;
 &lt;memory id="RAM" size="1024" type="RAM"/&gt;&#13;
-&lt;memoryInstance derived_from="RAM" edited="true" id="Program" location="0x80000000" size="0x400000"/&gt;&#13;
+&lt;memoryInstance derived_from="RAM" edited="true" id="Prgram" location="0x80000000" size="0x400000"/&gt;&#13;
 &lt;memoryInstance derived_from="RAM" edited="true" id="NonCache" location="0x80400000" size="0x800000"/&gt;&#13;
 &lt;memoryInstance derived_from="RAM" edited="true" id="HEAP" location="0x80c00000" size="0x1400000"/&gt;&#13;
 &lt;memoryInstance derived_from="RAM" edited="true" id="SRAM_ITC" location="0x0" size="0x40000"/&gt;&#13;

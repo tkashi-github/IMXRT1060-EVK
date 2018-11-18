@@ -205,7 +205,7 @@ void BOARD_InitCameraResource(void)
 }
 /*--*/
 
-__attribute__((section("NonCache"))) alignas(64) static uint16_t s_frameBuffer[APP_CAMERA_HEIGHT][APP_CAMERA_WIDTH];
+__attribute__((section(".NonCacheable"))) alignas(64) static uint16_t s_frameBuffer[APP_CAMERA_HEIGHT][APP_CAMERA_WIDTH];
 
 static void CameraTaskActual(void){
 	uint32_t activeFrameAddr;
@@ -257,7 +257,7 @@ static void CallBackCameraDriverReceived(camera_receiver_handle_t *handle, statu
 
 void CameraTask(void const *argument){
 
-
+	mimic_printf("[%s (%d)] Start", __FUNCTION__, __LINE__);
     BOARD_InitCameraResource();
 
     const camera_config_t cameraConfig = {
