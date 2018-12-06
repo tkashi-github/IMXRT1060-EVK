@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include "SPIFlash.h"
+#include "SPIFlash/SPIFlash.h"
 
 #include "board.h"
 #include "mimiclib/mimiclib.h"
@@ -49,9 +49,6 @@
 /*******************************************************************************
  * Variables
  ******************************************************************************/
-
-extern flexspi_device_config_t deviceconfig;
-extern const uint32_t customLUT[CUSTOM_LUT_LENGTH];
 static uint8_t s_nor_program_buffer[256];
 static uint8_t s_nor_read_buffer[256];
 
@@ -342,11 +339,6 @@ status_t SPIFlashInit(void)
     status_t status;
     uint8_t vendorID = 0;
 
-    BOARD_ConfigMPU();
-    BOARD_InitPins();
-    BOARD_BootClockRUN();
-    BOARD_InitDebugConsole();
-
     const clock_usb_pll_config_t g_ccmConfigUsbPll = {.loopDivider = 0U};
 
     CLOCK_InitUsb1Pll(&g_ccmConfigUsbPll);
@@ -384,7 +376,7 @@ status_t SPIFlashInit(void)
 }
 
 #if 0
-#endif
+
 
 _Bool SPIFlashWriteData(uint32_t u32StartSectorNo, const uint8_t[], uint32_t u32ByteCnt)
 {
@@ -451,3 +443,4 @@ _Bool SPIFlashWriteData(uint32_t u32StartSectorNo, const uint8_t[], uint32_t u32
         mimic_printf("Program data - successfully. \r\n");
     }
 }
+#endif

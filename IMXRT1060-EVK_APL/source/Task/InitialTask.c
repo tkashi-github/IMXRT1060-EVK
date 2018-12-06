@@ -44,6 +44,8 @@
 #include "mimiclib/mimiclib.h"
 #include "Task/LanTask/LanTask.h"
 
+#include "SPIFlash/SPIFlash.h"
+
 /**  */
 extern _Bool g_bInitEnd;
 
@@ -55,6 +57,7 @@ extern _Bool g_bInitEnd;
 void InitialTask(void const *argument)
 {
 		g_bInitEnd = true;
+		SPIFlashInit();
 		PostMsgLanTaskRestart();
 		mimic_printf("[%s (%d)] All Task Started! (%lu msec)\r\n", __FUNCTION__, __LINE__, xTaskGetTickCount());
 		osEventFlagsWait(g_efFSReady, 1, osFlagsWaitAny, portMAX_DELAY);   // Wait a maximum 

@@ -235,7 +235,6 @@ static void CmdNvic(uint32_t argc, const char *argv[]){
 	for(uint32_t i=0;i<NUMBER_OF_INT_VECTORS;i++){
 		mimic_printf("IRQ%03d = %lu:%lu, pend = %lu, pri = %lu\r\n", i, 
 			NVIC_GetActive((IRQn_Type)i), NVIC_GetEnableIRQ((IRQn_Type)i), NVIC_GetPendingIRQ((IRQn_Type)i), NVIC_GetPriority((IRQn_Type)i));
-		vTaskDelay(10);
 	}
 }
 
