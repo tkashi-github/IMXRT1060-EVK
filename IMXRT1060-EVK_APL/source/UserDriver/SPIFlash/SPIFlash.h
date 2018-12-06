@@ -1,8 +1,8 @@
 /**
- * @file InitialTask.c
+ * @file SPIFlash.h
  * @brief TODO
  * @author Takashi Kashiwagi
- * @date 2018/10/28
+ * @date 2018/11/29
  * @version     0.1
  * @details 
  * --
@@ -30,32 +30,23 @@
  * @par Update:
  * - 2018/10/28: Takashi Kashiwagi: v0.1 for IMXRT1060-EVK
  */
-#include "Task/InitialTask.h"
-
-/** Standard Header */
-#include <stdint.h>
-#include <stdbool.h>
+#ifndef __cplusplus
+#if __STDC_VERSION__ < 201112L
+#error /** Only C11 */
+#endif
+#endif
+#pragma once
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 /** User Typedefine */
 #include "UserTypedef.h"
+#include "fsl_flexspi.h"
 
-#include "OSResource.h"
-#include "common/update.h"
+extern status_t flexspi_nor_get_vendor_id(FLEXSPI_Type *base, uint8_t *vendorId);
 
-/**  */
-extern _Bool g_bInitEnd;
-
-/**
- * @brief Starts Other Tasks
- * @param [in]  argument nouse
- * @return void
- */
-void InitialTask(void const *argument)
-{
-		g_bInitEnd = true;
-		CheckROM();
-		//CheckBinFile("IMXRT1050-EVKB_APL_crc16.bin");
-		osThreadSuspend(osThreadGetId());
+#ifdef __cplusplus
 }
-
-
+#endif

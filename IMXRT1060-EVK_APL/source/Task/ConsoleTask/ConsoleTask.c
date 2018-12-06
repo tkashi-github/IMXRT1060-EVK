@@ -30,9 +30,7 @@
  * @par Update:
  * - 2018/10/28: Takashi Kashiwagi: v0.1 for IMXRT1060-EVK
  */
-#include <stdarg.h>
-#include <stdlib.h>
-#include <string.h>
+
 #include <stdbool.h>
 #include "Task/ConsoleTask/ConsoleTask.h"
 #include "version.h"
@@ -40,6 +38,7 @@
 
 #include "mimiclib/mimiclib.h"
 #include "UART/DrvLPUART.h"
+#include <string.h>
 
 #define DEF_PROMPT "IMXRT1060-EVK APL > "
 
@@ -90,7 +89,7 @@ void ConsoleTask(void const *argument){
 		u32 = 0u;
 		while(g_stCmdTable[u32].m_pszCmd != NULL){
 			mimic_strupper(argv[0]);
-			if(strncmp(g_stCmdTable[u32].m_pszCmd, argv[0], 32) == 0){
+			if(mimic_tcsncmp(g_stCmdTable[u32].m_pszCmd, argv[0], 32) == 0){
 				g_stCmdTable[u32].m_pfnc(argc, (const char **)argv);
 				break;
 			}

@@ -33,10 +33,11 @@ extern osThreadId_t g_ConsoleTaskHandle;
 extern osThreadId_t g_LEDTaskHandle;
 
 /** Event Group */
-extern EventGroupHandle_t g_xLPUARTEventGroup[];
-extern EventGroupHandle_t g_xFSReadyEventGroup;
-extern SemaphoreHandle_t g_xLPUARTRxSemaphore[];
-extern SemaphoreHandle_t g_xLPUARTTxSemaphore[];
+extern osEventFlagsId_t g_efLPUART[];
+extern osEventFlagsId_t g_efFSReady;
+
+extern osSemaphoreId_t g_bsIdLPUARTRxSemaphore[];
+extern osSemaphoreId_t g_bsIdLPUARTTxSemaphore[];
 
 /** Queue */
 extern osMessageQueueId_t g_StorageTaskQueueId;

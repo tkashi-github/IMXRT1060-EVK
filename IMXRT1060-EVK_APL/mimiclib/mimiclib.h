@@ -41,6 +41,9 @@
 extern "C"
 {
 #endif
+#include <stdint.h>
+#include <stdbool.h>
+#include <stdarg.h>
 
 #ifndef WIN_TEST
 #define DefBSP_IMXRT1060_EVK
@@ -62,16 +65,17 @@ extern "C"
 #endif
 
 #ifndef NULL
-#define NULL (void*)NULL
+#define NULL (void*)0
 #endif
 
+#ifndef TCHAR_TYPE
+typedef char TCHAR;
+#endif
 
-
-
-uint32_t mimic_gets(TCHAR pszStr[], uint32_t u32Size);
-void mimic_printf(const TCHAR *format, ...);
-_Bool mimic_kbhit(void);
-
+extern uint32_t mimic_gets(TCHAR pszStr[], uint32_t u32Size);
+extern void mimic_printf(const char* fmt, ...);
+extern _Bool mimic_kbhit(void);
+extern void mimic_tcsvprintf(TCHAR szDst[], uint32_t u32MaxElementOfszDst, const TCHAR szFormat[], va_list arg);
 
 /**
  * @brief toupper
@@ -156,21 +160,18 @@ static inline void RTOS_GetChar(TCHAR *ch)
  */
 static inline void RTOS_PutChar(TCHAR ch)
 {
-	if (osSemaphoreAcquire(g_bsIdLPUARTTxSemaphore[kStdioPort], portMAX_DELAY) == osOK)
-	{
-		if(pdFALSE != xPortIsInsideInterrupt()){
-			BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-			if(xStreamBufferSendFromISR(g_sbhLPUARTTx[kStdioPort], &ch, sizeof(TCHAR), &xHigherPriorityTaskWoken) >= 1){
-				LPUART1->CTRL |=LPUART_CTRL_TIE_MASK;
-			}
-			portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-		}else{
-			if(xStreamBufferSend(g_sbhLPUARTTx[kStdioPort], &ch, sizeof(TCHAR), 10) >= 1){
-				LPUART1->CTRL |=LPUART_CTRL_TIE_MASK;
-			}
+	if(pdFALSE != xPortIsInsideInterrupt()){
+		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+		if(xStreamBufferSendFromISR(g_sbhLPUARTTx[kStdioPort], &ch, sizeof(TCHAR), &xHigherPriorityTaskWoken) >= 1){
+			LPUART1->CTRL |=LPUART_CTRL_TIE_MASK;
 		}
-		osSemaphoreRelease(g_bsIdLPUARTTxSemaphore[kStdioPort]);
+		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+	}else{
+		if(xStreamBufferSend(g_sbhLPUARTTx[kStdioPort], &ch, sizeof(TCHAR), 10) >= 1){
+			LPUART1->CTRL |=LPUART_CTRL_TIE_MASK;
+		}
 	}
 }
 /**
@@ -180,13 +181,9 @@ static inline void RTOS_PutChar(TCHAR ch)
  */
 static inline void RTOS_PutString(const TCHAR pszStr[])
 {
-	TickType_t tTimeout = portMAX_DELAY;
-	if(pdFALSE != xPortIsInsideInterrupt()){
-		tTimeout = 0;
-	}
-	if (pszStr != NULL)
+	if (xSemaphoreTake(g_bsIdLPUARTTxSemaphore[kStdioPort], portMAX_DELAY) == pdTRUE)
 	{
-		if (osSemaphoreAcquire(g_bsIdLPUARTTxSemaphore[kStdioPort], tTimeout) == osOK)
+		if (pszStr != NULL)
 		{
 			uint32_t ByteCnt = mimic_tcslen(pszStr)*sizeof(TCHAR);
 
@@ -207,8 +204,8 @@ static inline void RTOS_PutString(const TCHAR pszStr[])
 			{
 				LPUART1->CTRL |= LPUART_CTRL_TIE_MASK;
 			}
-			osSemaphoreRelease(g_bsIdLPUARTTxSemaphore[kStdioPort]);
 		}
+		xSemaphoreGive(g_bsIdLPUARTTxSemaphore[kStdioPort]);
 	}
 }
 
@@ -246,15 +243,15 @@ static inline _Bool mimic_memcmp(uintptr_t p1, uintptr_t p2, uint32_t u32ByteCnt
 	}
 	return bret;
 }
-static inline _Bool mimic_memcpy(uintptr_t pDst, uintptr_t pSrc, uint32_t u32ByteCnt){
+static inline _Bool mimic_memcpy(uintptr_t p1, uintptr_t p2, uint32_t u32ByteCnt){
 	/*-- var --*/
-	uint8_t *pu8Dst = (uint8_t*)pDst;
-	uint8_t *pu8Src = (uint8_t*)pSrc;
+	uint8_t *pu81 = (uint8_t*)p1;
+	uint8_t *pu82 = (uint8_t*)p2;
 	_Bool bret = true;
 
 	/*-- begin --*/
 	for(uint32_t i=0u;i<u32ByteCnt;i++){
-		pu8Dst[i] = pu8Src[i];
+		pu81[i] = pu82[i];
 	}
 #ifdef DefBSP_IMXRT1060_EVK
 	__DMB();
@@ -352,8 +349,8 @@ static inline _Bool mimic_isprint(char c){
 }
 
 
-static inline TCHAR * mimic_tcscpy(TCHAR szDst[], const TCHAR pszSrc[], size_t DstSize){
-	size_t i = 0u;
+static inline TCHAR * mimic_tcscpy(TCHAR szDst[], const TCHAR pszSrc[], uint32_t DstSize){
+	uint32_t i = 0u;
 
 	for(i=0;i<DstSize;i++){
 		szDst[i] = (TCHAR)'\0';
@@ -397,26 +394,292 @@ static inline char *mimic_strcpy(char szDst[], const char szSrc[], uint32_t u32D
 * @return true str1 == str2
 * @return false str1 != str2
 */
-static inline _Bool mimic_strcmp(const char szStr1[], const char szStr2[]){
+static inline int32_t mimic_strcmp(const char szStr1[], const char szStr2[]){
 	/*-- var --*/
 	uint32_t u32Cnt = 0u;
-	_Bool bret = true;
 
 	/*-- begin --*/
 	if((szStr1 != (const char*)NULL) && (szStr2 != (const char*)NULL)){
 		for(;;){
-			if(szStr1[u32Cnt] != szStr2[u32Cnt]){
-				bret = false;
-				break;
+			if(szStr1[u32Cnt] < szStr2[u32Cnt]){
+				return -1;
 			}
-			if(szStr1[u32Cnt] == '\0'){
-				break;
+			if(szStr1[u32Cnt] > szStr2[u32Cnt]){
+				return 1;
+			}
+			if((szStr1[u32Cnt] == '\0') && (szStr2[u32Cnt] == '\0')){
+				return 0;
 			}
 			u32Cnt++;
 		}
 	}
 
-	return bret;
+	return 0;
+}
+static inline int32_t mimic_tcsncmp(const TCHAR szStr1[], const TCHAR szStr2[], uint32_t u32NumberOfElements)
+{
+	if((szStr1 != (const TCHAR*)NULL) && (szStr2 != (const TCHAR*)NULL))
+	{
+		uint32_t u32Cnt = 0u;
+		for(;;){
+			if(szStr1[u32Cnt] < szStr2[u32Cnt]){
+				return -1;
+			}
+			if(szStr1[u32Cnt] > szStr2[u32Cnt]){
+				return 1;
+			}
+			if((szStr1[u32Cnt] == '\0') && (szStr2[u32Cnt] == '\0')){
+				return 0;
+			}
+			u32Cnt++;
+			if(u32Cnt >= u32NumberOfElements){
+				return -1;
+			}
+		}
+	}
+
+	return -1;
+}
+
+
+static inline TCHAR *mimic_ltoa(const int32_t i32Val, TCHAR szDst[], uint32_t u32MaxElementOfszDst){
+	uint32_t u32Index = 0;
+	int32_t i32Sign;
+	uint32_t u32Val;
+
+	if((szDst == NULL) || (u32MaxElementOfszDst == 0)){
+		return NULL;
+	}
+	i32Sign = i32Val;
+	if(i32Sign < 0){
+		u32Val = (uint32_t)-i32Val;
+	}else{
+		u32Val = (uint32_t)i32Val;
+	}
+	mimic_memset((uintptr_t)szDst, 0, sizeof(TCHAR)*u32MaxElementOfszDst);
+
+	while(u32Index < (u32MaxElementOfszDst - 1)){
+		uint32_t u32 = (u32Val % 10);
+		u32Val /= 10;
+		szDst[u32Index] = (TCHAR)u32 + (TCHAR)'0'; 
+		u32Index++;
+		if(u32Val == 0){
+			break;
+		}
+	}
+
+	/** Add sign */
+	if(i32Sign < 0){
+		szDst[u32Index] = (TCHAR)'-';
+		u32Index++;
+	}
+
+	/** Reverse*/
+	for(uint32_t j=0;j<(u32Index/2);j++)
+	{
+		TCHAR tcTemp = szDst[j];
+		szDst[j] = szDst[u32Index - 1 - j];
+		szDst[u32Index - 1 - j] = tcTemp;
+	}
+	return szDst;
+}
+
+static inline TCHAR *mimic_ultoa(const uint32_t u32Val, TCHAR szDst[], uint32_t u32MaxElementOfszDst, uint32_t u32Radix){
+	uint32_t u32Index = 0;
+	uint32_t u32Temp = u32Val;
+
+	if((szDst == NULL) || (u32MaxElementOfszDst == 0)){
+		return NULL;
+	}
+
+	mimic_memset((uintptr_t)szDst, 0, sizeof(TCHAR)*u32MaxElementOfszDst);
+
+	while(u32Index < (u32MaxElementOfszDst - 1)){
+		uint32_t u32 = (u32Temp % u32Radix);
+		u32Temp /= u32Radix;
+		if(u32 <= 9){
+			szDst[u32Index] = (TCHAR)u32 + (TCHAR)'0';
+		}else{
+			szDst[u32Index] = (TCHAR)(u32 - 10) + (TCHAR)'A';
+		}
+		u32Index++;
+		if(u32Temp == 0){
+			break;
+		}
+	}
+
+	/** Reverse*/
+	for(uint32_t j=0;j<(u32Index/2);j++)
+	{
+		TCHAR tcTemp = szDst[j];
+		szDst[j] = szDst[u32Index - 1 - j];
+		szDst[u32Index - 1 - j] = tcTemp;
+	}
+	return szDst;
+}
+
+static inline TCHAR *mimic_lltoa(const int64_t i64Val, TCHAR szDst[], uint32_t u32MaxElementOfszDst){
+	uint32_t u32Index = 0;
+	int64_t i64Sign;
+	uint64_t u64Val;
+
+	if((szDst == NULL) || (u32MaxElementOfszDst == 0)){
+		return NULL;
+	}
+	i64Sign = i64Val;
+	if(i64Sign < 0){
+		u64Val = (uint64_t)-i64Val;
+	}else{
+		u64Val = (uint64_t)i64Val;
+	}
+	mimic_memset((uintptr_t)szDst, 0, sizeof(TCHAR)*u32MaxElementOfszDst);
+
+	while(u32Index < (u32MaxElementOfszDst - 1)){
+		uint32_t u32 = (uint32_t)(u64Val % 10ull);
+		u64Val /= 10ull;
+		szDst[u32Index] = (TCHAR)u32 + (TCHAR)'0'; 
+		u32Index++;
+		if(u64Val == 0){
+			break;
+		}
+	}
+
+	/** Add sign */
+	if(i64Sign < 0){
+		szDst[u32Index] = (TCHAR)'-';
+		u32Index++;
+	}
+
+	/** Reverse*/
+	for(uint32_t j=0;j<(u32Index/2);j++)
+	{
+		TCHAR tcTemp = szDst[j];
+		szDst[j] = szDst[u32Index - 1 - j];
+		szDst[u32Index - 1 - j] = tcTemp;
+	}
+	return szDst;
+}
+
+
+static inline TCHAR *mimic_ulltoa(const uint64_t u64Val, TCHAR szDst[], uint32_t u32MaxElementOfszDst, uint32_t u32Radix){
+	uint32_t u32Index = 0;
+	uint64_t u64Temp = u64Val;
+
+	if((szDst == NULL) || (u32MaxElementOfszDst == 0)){
+		return NULL;
+	}
+
+	mimic_memset((uintptr_t)szDst, 0, sizeof(TCHAR)*u32MaxElementOfszDst);
+
+	while(u32Index < (u32MaxElementOfszDst - 1)){
+		uint32_t u32 = (uint32_t)(u64Temp % u32Radix);
+		u64Temp /= u32Radix;
+		if(u32 <= 9){
+			szDst[u32Index] = (TCHAR)u32 + (TCHAR)'0';
+		}else{
+			szDst[u32Index] = (TCHAR)(u32 - 10u) + (TCHAR)'A';
+		}
+		u32Index++;
+		if(u64Temp == 0){
+			break;
+		}
+	}
+
+	/** Reverse*/
+	for(uint32_t j=0;j<(u32Index/2);j++)
+	{
+		TCHAR tcTemp = szDst[j];
+		szDst[j] = szDst[u32Index - 1 - j];
+		szDst[u32Index - 1 - j] = tcTemp;
+	}
+	return szDst;
+}
+
+
+static inline TCHAR *mimic_tcscat(TCHAR pszStr1[], uint32_t u32MaxElementOfszStr1, const TCHAR pszStr2[]){
+	uint32_t u32Pos = 0;
+	uint32_t u32Index = 0;
+
+	while(pszStr1[u32Pos] != (TCHAR)'\0')
+	{
+		u32Pos++;
+		if(u32Pos >= (u32MaxElementOfszStr1 -1))
+		{
+			return pszStr1;
+		}
+	}
+
+	while(pszStr2[u32Index] != (TCHAR)'\0')
+	{
+		pszStr1[u32Pos] = pszStr2[u32Index];
+		u32Pos++;
+		u32Index++;
+		if(u32Pos >= (u32MaxElementOfszStr1 -1))
+		{
+			return pszStr1;
+		}
+	}
+
+	return pszStr1;
+}
+
+/** TODO : これは良くない実装 */
+static inline TCHAR *mimic_ftoa(const double dfpVal, TCHAR szDst[], uint32_t u32MaxElementOfszDst, uint32_t precision_width)
+{
+	double dfpTemp = dfpVal;
+	uint64_t u64Z;
+	uint32_t u32Pos = 0;
+	uint32_t u32PrecCnt = 0;
+
+	mimic_memset((uintptr_t)szDst, 0, sizeof(TCHAR)*u32MaxElementOfszDst);
+	if(dfpVal < 0.0){
+		dfpTemp = -dfpVal;
+	}
+
+	u64Z = dfpTemp;
+	dfpTemp -= (double)u64Z;
+
+	if(u64Z != 0){
+		if(dfpVal < 0.0){
+			szDst[0] = (TCHAR)'-';
+			mimic_ulltoa(u64Z, &szDst[1], u32MaxElementOfszDst-1, 10);
+		}else{
+			mimic_ulltoa(u64Z, szDst, u32MaxElementOfszDst, 10);
+		}
+		
+		u32Pos = mimic_tcslen(szDst);
+	}else{
+		if(dfpVal < 0.0){
+			szDst[u32Pos] = (TCHAR)'-';
+			u32Pos++;
+		}
+		szDst[u32Pos] = (TCHAR)'0';
+		u32Pos++;
+	}
+	szDst[u32Pos] = (TCHAR)'.';
+	u32Pos++;
+	u32PrecCnt = 0;
+
+	for(;;)
+	{
+		dfpTemp *= 10.0;
+		if(u32PrecCnt >= (precision_width - 1)){
+			dfpTemp += 0.5;
+		}
+		uint32_t u32Z = (uint32_t)dfpTemp;
+		dfpTemp -= (double)u32Z;
+		
+		szDst[u32Pos] = (TCHAR)u32Z + (TCHAR)'0';
+		u32Pos++;
+		u32PrecCnt++;
+		if((dfpTemp == 0.0) || (u32PrecCnt >= precision_width))
+		{
+			break;
+		}
+
+	}
+
+	return szDst;
 }
 
 #ifdef __cplusplus

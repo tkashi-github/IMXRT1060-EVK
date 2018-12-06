@@ -90,77 +90,94 @@ void CreateTask(void){
 	}
 }
 
+/** CMSIS RTOS2 Event Flag Table */
 typedef struct{
-	EventGroupHandle_t *pEGHandle;
-	StaticEventGroup_t *pEGBuffer;
-}stEventGroupTable_t;
+	osEventFlagsId_t *pefID;
+	osEventFlagsAttr_t efAttr;
+}stEventFlagTable_t;
 
-/** Event Group Handle */
-ALLOCATE_IN_DTCM alignas(32) EventGroupHandle_t g_xLPUARTEventGroup[1+enLPUART_MAX];
-ALLOCATE_IN_DTCM alignas(32) EventGroupHandle_t g_xFSReadyEventGroup;
-/** Event Group Buffer */
-ALLOCATE_IN_DTCM alignas(32) static StaticEventGroup_t s_xLPUARTEventGroupBuffer[1+enLPUART_MAX];
-ALLOCATE_IN_DTCM alignas(32) static StaticEventGroup_t s_xFSReadyEventGroupBuffer;
-static stEventGroupTable_t s_stEventGroupTable[] = {
-	{&g_xLPUARTEventGroup[enLPUART1], &s_xLPUARTEventGroupBuffer[enLPUART1]},
-	{&g_xLPUARTEventGroup[enLPUART2], &s_xLPUARTEventGroupBuffer[enLPUART2]},
-	{&g_xLPUARTEventGroup[enLPUART3], &s_xLPUARTEventGroupBuffer[enLPUART3]},
-	{&g_xLPUARTEventGroup[enLPUART4], &s_xLPUARTEventGroupBuffer[enLPUART4]},
-	{&g_xLPUARTEventGroup[enLPUART5], &s_xLPUARTEventGroupBuffer[enLPUART5]},
-	{&g_xLPUARTEventGroup[enLPUART6], &s_xLPUARTEventGroupBuffer[enLPUART6]},
-	{&g_xLPUARTEventGroup[enLPUART7], &s_xLPUARTEventGroupBuffer[enLPUART7]},
-	{&g_xLPUARTEventGroup[enLPUART8], &s_xLPUARTEventGroupBuffer[enLPUART8]},
+/** osEventFlagsId_t */
+DefALLOCATE_BSS_DTCM alignas(4) osEventFlagsId_t g_efLPUART[1+enLPUART_MAX];
+DefALLOCATE_BSS_DTCM alignas(4) osEventFlagsId_t g_efFSReady;
 
-	{&g_xFSReadyEventGroup, &s_xFSReadyEventGroupBuffer},
+
+/** StaticEventGroup_t */
+DefALLOCATE_BSS_DTCM alignas(4) static StaticEventGroup_t s_xLPUARTEventGroupBuffer[1+enLPUART_MAX];
+DefALLOCATE_BSS_DTCM alignas(4) static StaticEventGroup_t s_xFSReadyEventGroupBuffer;
+
+
+static stEventFlagTable_t s_stEventFlagTable[] = {
+	{&g_efLPUART[enLPUART1], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART1], sizeof(StaticEventGroup_t)}},
+	{&g_efLPUART[enLPUART2], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART2], sizeof(StaticEventGroup_t)}},
+	{&g_efLPUART[enLPUART3], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART3], sizeof(StaticEventGroup_t)}},
+	{&g_efLPUART[enLPUART4], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART4], sizeof(StaticEventGroup_t)}},
+	{&g_efLPUART[enLPUART5], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART5], sizeof(StaticEventGroup_t)}},
+	{&g_efLPUART[enLPUART6], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART6], sizeof(StaticEventGroup_t)}},
+	{&g_efLPUART[enLPUART7], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART7], sizeof(StaticEventGroup_t)}},
+	{&g_efLPUART[enLPUART8], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART8], sizeof(StaticEventGroup_t)}},
+
+	{&g_efFSReady, {"EF_FSREADY", 0, &s_xFSReadyEventGroupBuffer, sizeof(StaticEventGroup_t)}},
 	{NULL, NULL},
 };
 
-void CreateEventGroup(void){	/** CMSIS RTOS2にすること */
+void CreateEventGroup(void){	
 	uint32_t i=0;
 
-	while(s_stEventGroupTable[i].pEGHandle != NULL){
-		*s_stEventGroupTable[i].pEGHandle = xEventGroupCreateStatic(s_stEventGroupTable[i].pEGBuffer);
+	while(s_stEventFlagTable[i].pefID != NULL){
+		*s_stEventFlagTable[i].pefID = osEventFlagsNew(&s_stEventFlagTable[i].efAttr);
 		i++;
 	}
 }
 
 
 typedef struct{
-	SemaphoreHandle_t *pSMHandle;
-	StaticSemaphore_t *pSMBuffer;
+	osSemaphoreId_t *pbsId;
+	osSemaphoreAttr_t bsAttr;
+	uint32_t u32MaxCount;
+	uint32_t u32InitCount;
 }stBinarySemaphoreTable_t;
 
-ALLOCATE_IN_DTCM alignas(32) SemaphoreHandle_t g_xLPUARTRxSemaphore[1+enLPUART_MAX] = {NULL};
-ALLOCATE_IN_DTCM alignas(32) SemaphoreHandle_t g_xLPUARTTxSemaphore[1+enLPUART_MAX] = {NULL};
-ALLOCATE_IN_DTCM alignas(32) static StaticSemaphore_t s_xLPUARTRxSemaphoreBuffer[1+enLPUART_MAX];
-ALLOCATE_IN_DTCM alignas(32) static StaticSemaphore_t s_xLPUARTTxSemaphoreBuffer[1+enLPUART_MAX];
+DefALLOCATE_BSS_DTCM alignas(4) osSemaphoreId_t g_bsIdLPUARTRxSemaphore[1+enLPUART_MAX] = {NULL};
+DefALLOCATE_BSS_DTCM alignas(4) osSemaphoreId_t g_bsIdLPUARTTxSemaphore[1+enLPUART_MAX] = {NULL};
+DefALLOCATE_BSS_DTCM alignas(4) osSemaphoreId_t g_bsIdStorageTaskMsg;
+
+
+DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xLPUARTRxSemaphoreBuffer[1+enLPUART_MAX];
+DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xLPUARTTxSemaphoreBuffer[1+enLPUART_MAX];
+DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xStorageTaskMsgBuffer;
+
 
 static stBinarySemaphoreTable_t s_stBinarySemaphoreTable[] = {
-	{&g_xLPUARTRxSemaphore[enLPUART1], &s_xLPUARTRxSemaphoreBuffer[enLPUART1]},
-	{&g_xLPUARTRxSemaphore[enLPUART2], &s_xLPUARTRxSemaphoreBuffer[enLPUART2]},
-	{&g_xLPUARTRxSemaphore[enLPUART3], &s_xLPUARTRxSemaphoreBuffer[enLPUART3]},
-	{&g_xLPUARTRxSemaphore[enLPUART4], &s_xLPUARTRxSemaphoreBuffer[enLPUART4]},
-	{&g_xLPUARTRxSemaphore[enLPUART5], &s_xLPUARTRxSemaphoreBuffer[enLPUART5]},
-	{&g_xLPUARTRxSemaphore[enLPUART6], &s_xLPUARTRxSemaphoreBuffer[enLPUART6]},
-	{&g_xLPUARTRxSemaphore[enLPUART7], &s_xLPUARTRxSemaphoreBuffer[enLPUART7]},
-	{&g_xLPUARTRxSemaphore[enLPUART8], &s_xLPUARTRxSemaphoreBuffer[enLPUART8]},
+	{&g_bsIdLPUARTRxSemaphore[enLPUART1], {"BS_LPUART1RX", 0, &s_xLPUARTRxSemaphoreBuffer[enLPUART1], sizeof(StaticSemaphore_t)}, 1, 1},
+	{&g_bsIdLPUARTRxSemaphore[enLPUART2], {"BS_LPUART2RX", 0, &s_xLPUARTRxSemaphoreBuffer[enLPUART2], sizeof(StaticSemaphore_t)}, 1, 1},
+	{&g_bsIdLPUARTRxSemaphore[enLPUART3], {"BS_LPUART3RX", 0, &s_xLPUARTRxSemaphoreBuffer[enLPUART3], sizeof(StaticSemaphore_t)}, 1, 1},
+	{&g_bsIdLPUARTRxSemaphore[enLPUART4], {"BS_LPUART4RX", 0, &s_xLPUARTRxSemaphoreBuffer[enLPUART4], sizeof(StaticSemaphore_t)}, 1, 1},
+	{&g_bsIdLPUARTRxSemaphore[enLPUART5], {"BS_LPUART5RX", 0, &s_xLPUARTRxSemaphoreBuffer[enLPUART5], sizeof(StaticSemaphore_t)}, 1, 1},
+	{&g_bsIdLPUARTRxSemaphore[enLPUART6], {"BS_LPUART6RX", 0, &s_xLPUARTRxSemaphoreBuffer[enLPUART6], sizeof(StaticSemaphore_t)}, 1, 1},
+	{&g_bsIdLPUARTRxSemaphore[enLPUART7], {"BS_LPUART7RX", 0, &s_xLPUARTRxSemaphoreBuffer[enLPUART7], sizeof(StaticSemaphore_t)}, 1, 1},
+	{&g_bsIdLPUARTRxSemaphore[enLPUART8], {"BS_LPUART8RX", 0, &s_xLPUARTRxSemaphoreBuffer[enLPUART8], sizeof(StaticSemaphore_t)}, 1, 1},
 
-	{&g_xLPUARTTxSemaphore[enLPUART1], &s_xLPUARTTxSemaphoreBuffer[enLPUART1]},
-	{&g_xLPUARTTxSemaphore[enLPUART2], &s_xLPUARTTxSemaphoreBuffer[enLPUART2]},
-	{&g_xLPUARTTxSemaphore[enLPUART3], &s_xLPUARTTxSemaphoreBuffer[enLPUART3]},
-	{&g_xLPUARTTxSemaphore[enLPUART4], &s_xLPUARTTxSemaphoreBuffer[enLPUART4]},
-	{&g_xLPUARTTxSemaphore[enLPUART5], &s_xLPUARTTxSemaphoreBuffer[enLPUART5]},
-	{&g_xLPUARTTxSemaphore[enLPUART6], &s_xLPUARTTxSemaphoreBuffer[enLPUART6]},
-	{&g_xLPUARTTxSemaphore[enLPUART7], &s_xLPUARTTxSemaphoreBuffer[enLPUART7]},
-	{&g_xLPUARTTxSemaphore[enLPUART8], &s_xLPUARTTxSemaphoreBuffer[enLPUART8]},
+	{&g_bsIdLPUARTTxSemaphore[enLPUART1], {"BS_LPUART1TX", 0, &s_xLPUARTTxSemaphoreBuffer[enLPUART1], sizeof(StaticSemaphore_t)}, 1, 1},
+	{&g_bsIdLPUARTTxSemaphore[enLPUART2], {"BS_LPUART2TX", 0, &s_xLPUARTTxSemaphoreBuffer[enLPUART2], sizeof(StaticSemaphore_t)}, 1, 1},
+	{&g_bsIdLPUARTTxSemaphore[enLPUART3], {"BS_LPUART3TX", 0, &s_xLPUARTTxSemaphoreBuffer[enLPUART3], sizeof(StaticSemaphore_t)}, 1, 1},
+	{&g_bsIdLPUARTTxSemaphore[enLPUART4], {"BS_LPUART4TX", 0, &s_xLPUARTTxSemaphoreBuffer[enLPUART4], sizeof(StaticSemaphore_t)}, 1, 1},
+	{&g_bsIdLPUARTTxSemaphore[enLPUART5], {"BS_LPUART5TX", 0, &s_xLPUARTTxSemaphoreBuffer[enLPUART5], sizeof(StaticSemaphore_t)}, 1, 1},
+	{&g_bsIdLPUARTTxSemaphore[enLPUART6], {"BS_LPUART6TX", 0, &s_xLPUARTTxSemaphoreBuffer[enLPUART6], sizeof(StaticSemaphore_t)}, 1, 1},
+	{&g_bsIdLPUARTTxSemaphore[enLPUART7], {"BS_LPUART7TX", 0, &s_xLPUARTTxSemaphoreBuffer[enLPUART7], sizeof(StaticSemaphore_t)}, 1, 1},
+	{&g_bsIdLPUARTTxSemaphore[enLPUART8], {"BS_LPUART8TX", 0, &s_xLPUARTTxSemaphoreBuffer[enLPUART8], sizeof(StaticSemaphore_t)}, 1, 1},
+
+	{&g_bsIdStorageTaskMsg, {"BS_STORAGETASKMSG", 0, &s_xStorageTaskMsgBuffer, sizeof(StaticSemaphore_t)}, 1, 1},
+
 	{NULL, NULL},
 };
 
 void CreateBinarySemaphore(void){	/** CMSIS RTOS2にすること */
 	uint32_t i=0;
 
-	while(s_stBinarySemaphoreTable[i].pSMHandle != NULL){
-		*s_stBinarySemaphoreTable[i].pSMHandle = xSemaphoreCreateBinaryStatic(s_stBinarySemaphoreTable[i].pSMBuffer);
+	while(s_stBinarySemaphoreTable[i].pbsId != NULL){
+		*s_stBinarySemaphoreTable[i].pbsId = osSemaphoreNew(s_stBinarySemaphoreTable[i].u32MaxCount, 
+															s_stBinarySemaphoreTable[i].u32InitCount, 
+															&s_stBinarySemaphoreTable[i].bsAttr);
 		
 		i++;
 	}

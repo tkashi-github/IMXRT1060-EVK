@@ -34,7 +34,6 @@
 #include "board.h"
 
 #include <stdlib.h>
-#include <string.h>
 #include "version.h"
 #include "FreeRTOS.h"
 #include "task.h"

@@ -30,6 +30,13 @@
  * @par Update:
  * - 2018/10/28: Takashi Kashiwagi: v0.1 for IMXRT1060-EVK
  */
+/*
+ * Copyright (c) 2015-2016, Freescale Semiconductor, Inc.
+ * Copyright 2016-2017 NXP
+ * All rights reserved.
+ * 
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
 #include "UART/DrvLPUART.h"
 #include "board.h"
 
@@ -190,7 +197,6 @@ static void LPUARTXHandleIRQ(enLPUART_t enLPUARTNo)
 
         /* Disable interrupt.*/
 		//LPUART_DisableInterrupts(base, kLPUART_IdleLineInterruptEnable);
-		osEventFlagsSet(g_xLPUARTEventGroup[enLPUARTNo], 1);
     }
     /* Receive data register full */
     if ((LPUART_STAT_RDRF_MASK & base->STAT) && (LPUART_CTRL_RIE_MASK & base->CTRL))
@@ -205,8 +211,6 @@ static void LPUARTXHandleIRQ(enLPUART_t enLPUARTNo)
 		}
 
 		//LPUART_DisableInterrupts(base, kLPUART_IdleLineInterruptEnable);
-
-		osEventFlagsSet(g_xLPUARTEventGroup[enLPUARTNo], 1);
     }
 
     /* Send data register empty and the interrupt is enabled. */
@@ -259,10 +263,6 @@ _Bool DrvLPUARTInit(enLPUART_t enLPUARTNo, const lpuart_config_t *config)
 		if (LPUART_Init(base, config, uartClkSrcFreq) == kStatus_Success){
 			IRQn_Type enIRQn= LPUART1_IRQn;
 			enIRQn += (IRQn_Type)(enLPUARTNo - enLPUART_MIN);
-
-			/* Initialize OS resource */
-			xSemaphoreGive(g_xLPUARTTxSemaphore[enLPUARTNo]);
-			xSemaphoreGive(g_xLPUARTRxSemaphore[enLPUARTNo]);
 
 			LPUART_EnableTx(base, true);
 			LPUART_EnableRx(base, true);

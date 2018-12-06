@@ -31,7 +31,7 @@
  * - 2018/07/05: Takashi Kashiwagi: v0.1
  * - 2018/10/28: Takashi Kashiwagi: v0.2 for IMXRT1060-EVK
  */
-#include "mimiclib/mimiclib.h"
+#include "mimiclib.h"
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,30 +39,35 @@
 #ifndef WIN_TEST
 #define DefBSP_IMXRT1060_EVK
 #else
-
 #include <string.h>
-void mimic_printf(const char* fmt, ...){
-	va_list arg;
-	char szBuffer[1024];
 
-	va_start(arg, fmt);
-	vsnprintf(szBuffer, sizeof(szBuffer), fmt, arg);
-	va_end(arg);
-
-	puts(szBuffer);
-}
 uint32_t mimic_gets(char pszStr[], uint32_t u32Size){
 	uint32_t ret = 0;
-	if (fgets(a, 20, stdin) != NULL) {
+	if (fgets(pszStr, u32Size, stdin) != NULL) {
 		ret = strlen(pszStr);
 	}
 	return ret;
 }
 _Bool mimic_kbhit(void){
-	return kbhit();
+	return true; //kbhit();
 }
 #endif
 
+
+void mimic_printf(const char* fmt, ...){
+	va_list arg;
+	char szBuffer[1024];
+
+	va_start(arg, fmt);
+	mimic_tcsvprintf(szBuffer, sizeof(szBuffer), fmt, arg);
+	va_end(arg);
+
+#ifdef DefBSP_IMXRT1060_EVK
+	RTOS_PutString(szBuffer);
+#else
+	fputs(szBuffer, stdin);
+#endif
+}
 
 #ifdef DefBSP_IMXRT1060_EVK
 /**
@@ -118,21 +123,6 @@ uint32_t mimic_gets(char pszStr[], uint32_t u32Size){
 	return u32Cnt;
 }
 
-/**
- * @brief printf
- * @param [in]  format
- * @return void
- */
-void mimic_printf(const char *format, ...){
-	va_list arg;
-	char szStr[512];
-
-    va_start(arg, format);
-    vsnprintf(szStr, sizeof(szStr), format, arg);
-    va_end(arg);
-
-	RTOS_PutString(szStr);
-}
 
 /**
  * @brief printf
@@ -144,25 +134,267 @@ _Bool mimic_kbhit(void){
 }
 #endif
 
-/**
- * Retargeting printf/scanf(https://community.nxp.com/thread/389140)
- */
-#ifdef __NEW_LIB__
-/** 
- * @breif To retarget printf(), you will need to provide your own implementation of the Newlib system function _write():
- * @return Function returns number of unwritten bytes if error, otherwise 0 for success
- */
-int _write(int iFileHandle, char *pcBuffer, int iLength){
-	RTOS_PutString(pcBuffer);
-	return 0;
-}
-/** 
- * @breif To retarget scanf, you will need to provide your own implementation of the Newlib system function _read():
- * @return Function returns number of characters read, stored in pcBuffer
- */
-int _read(int iFileHandle, char *pcBuffer, int iLength){
-	return mimic_gets(pcBuffer, iLength);
-}
+typedef enum
+{
+    enPrintfFlagsMinus = 0x01U,
+    enPrintfFlagsPlus = 0x02U,
+    enPrintfFlagsSpace = 0x04U,
+    enPrintfFlagsZero = 0x08U,
+    enPrintfFlagsPound = 0x10U,
+    enPrintfFlagsLengthChar = 0x20U,
+    enPrintfFlagsLengthShortInt = 0x40U,
+    enPrintfFlagsLengthLongInt = 0x80U,
+    enPrintfFlagsLengthLongLongInt = 0x100U,
+}enPrintfFlags_t;
 
-#endif
+
+void mimic_tcsvprintf(
+    TCHAR szDst[],
+    uint32_t u32MaxElementOfszDst,
+    const TCHAR szFormat[],
+    va_list arg
+)
+{
+    TCHAR *pszStr = NULL;
+    uint32_t u32Cnt = 0;
+    uint32_t u32FlagsUsed;
+    uint32_t u32FlagsWidth;
+    _Bool bValidFlagsWidth;
+	uint32_t u32PrecisionWidth;
+    _Bool bValidPrecisionWidth;
+    TCHAR vstr[33];
+    int32_t vlen = 0;
+	/** -- */
+
+	/** begin */
+	if((szDst == NULL) ||
+	(szFormat == NULL)){
+		return;
+	}
+	memset(szDst, 0, sizeof(TCHAR)*u32MaxElementOfszDst);
+
+	pszStr = (TCHAR *)szFormat;
+	while(*pszStr != (TCHAR)'\0')
+    {
+		TCHAR ch = *pszStr;
+
+        if (ch != (TCHAR)'%')
+        {
+			szDst[u32Cnt] = *pszStr;
+			u32Cnt++;
+			pszStr++;
+        }else{
+			for(;;){
+				pszStr++;
+				if(*pszStr == '-'){
+					u32FlagsUsed |= enPrintfFlagsMinus;
+				}else if(*pszStr == (TCHAR)'+'){
+					u32FlagsUsed |= enPrintfFlagsPlus;
+				}else if(*pszStr == (TCHAR)'0'){
+					u32FlagsUsed |= enPrintfFlagsZero;
+				}else{
+					--pszStr;
+					break;
+				}
+			}
+			u32FlagsWidth = 0;
+			bValidFlagsWidth = false;
+			for(;;){
+				pszStr++;
+				TCHAR ch = *pszStr;
+				if ((ch >= (TCHAR)'0') && (ch <= (TCHAR)'9')){
+					bValidFlagsWidth = true;
+					u32FlagsWidth = (u32FlagsWidth * 10) + (ch - (TCHAR)'0');
+				}else if (ch == (TCHAR)'*'){
+					bValidFlagsWidth = true;
+					u32FlagsWidth = (uint32_t)va_arg(arg, uint32_t);
+				}else{
+					--pszStr;
+					break;
+				}
+			}
+			
+			u32PrecisionWidth = 6;
+			bValidPrecisionWidth = false;
+			pszStr++;
+			if (*pszStr == (TCHAR)'.'){
+				u32PrecisionWidth = 0;
+				for(;;)
+				{
+					pszStr++;
+					TCHAR ch = *pszStr;
+					if ((ch >= (TCHAR)'0') && (ch <= (TCHAR)'9')){
+						u32PrecisionWidth = (u32PrecisionWidth * 10) + (ch - (TCHAR)'0');
+						bValidPrecisionWidth = true;
+					}else if (ch == (TCHAR)'*'){
+						u32PrecisionWidth = (uint32_t)va_arg(arg, uint32_t);
+						bValidPrecisionWidth = true;
+					}else{
+						--pszStr;
+						break;
+					}
+				}
+			}else{
+				--pszStr;
+			}
+
+			pszStr++;
+			u32FlagsUsed = 0;
+			switch (*pszStr){
+			case (TCHAR)'l':
+				pszStr++;
+				if (*pszStr != (TCHAR)'l'){
+					u32FlagsUsed |= enPrintfFlagsLengthLongInt;
+					--pszStr;
+				}else{
+					u32FlagsUsed |= enPrintfFlagsLengthLongLongInt;
+				}
+				break;
+			default:
+				--pszStr;
+				break;
+			}
+
+			pszStr++;
+			ch = *pszStr;
+			{
+				if ((ch == (TCHAR)'d') || 
+				(ch == (TCHAR)'i') || 
+				(ch == (TCHAR)'f') || 
+				(ch == (TCHAR)'F') || 
+				(ch == (TCHAR)'x') || 
+				(ch == (TCHAR)'X') || 
+				(ch == (TCHAR)'u') || 
+				(ch == (TCHAR)'U'))
+				{
+					if ((ch == (TCHAR)'d') || (ch == (TCHAR)'i')){
+						if (u32FlagsUsed & enPrintfFlagsLengthLongLongInt){
+							mimic_lltoa((int64_t)va_arg(arg, int64_t), vstr, sizeof(vstr));
+						}else{
+							mimic_ltoa((int32_t)va_arg(arg, int32_t), vstr, sizeof(vstr));
+						}
+						vlen = mimic_tcslen(vstr);
+					}else if ((ch == (TCHAR)'f') || (ch == (TCHAR)'F')){
+						if(bValidPrecisionWidth == false){
+							mimic_ftoa((double)va_arg(arg, double), vstr, sizeof(vstr), 6);
+						}else{
+							mimic_ftoa((double)va_arg(arg, double), vstr, sizeof(vstr), u32PrecisionWidth);
+						}
+						vlen = mimic_tcslen(vstr);
+					}else if ((ch == (TCHAR)'X') || (ch == (TCHAR)'x')){
+						if (u32FlagsUsed & enPrintfFlagsLengthLongLongInt){
+							mimic_ulltoa((uint64_t)va_arg(arg, uint64_t), vstr, sizeof(vstr), 16);							
+						}else{
+							mimic_ultoa((uint32_t)va_arg(arg, uint32_t), vstr, sizeof(vstr), 16);
+						}
+						vlen = mimic_tcslen(vstr);
+					}else if ((ch == (TCHAR)'U') || (ch == (TCHAR)'u')){
+						if (u32FlagsUsed & enPrintfFlagsLengthLongLongInt){
+							mimic_ulltoa((uint64_t)va_arg(arg, uint64_t), vstr, sizeof(vstr), 10);							
+						}else{
+							mimic_ultoa((uint32_t)va_arg(arg, uint32_t), vstr, sizeof(vstr), 10);
+						}
+						vlen = mimic_tcslen(vstr);
+					}else{
+						/* NOP */
+						vlen = 0;
+					}
+
+
+					if(u32FlagsWidth > 0){
+						if(vlen > u32FlagsWidth){
+							for(uint32_t i=0;i<u32FlagsWidth;i++){
+								vstr[i] = vstr[i + (vlen - u32FlagsWidth)]; 
+							}
+							vlen = u32FlagsWidth;
+							vstr[vlen] = (TCHAR)'\0';
+						}else{
+							uint32_t u32 = u32FlagsWidth - vlen;
+							if((u32FlagsUsed & enPrintfFlagsZero) == enPrintfFlagsZero){
+								/** zero */
+								for(uint32_t i=0;i<u32FlagsWidth;i++){
+									vstr[i + u32] = vstr[i]; 
+								}
+								for(uint32_t i=0;i<u32;i++){
+									vstr[i] = '0'; 
+								}
+							}else{
+								/** space */
+								for(uint32_t i=0;i<u32FlagsWidth;i++){
+									vstr[i + u32] = vstr[i]; 
+								}
+								for(uint32_t i=0;i<u32;i++){
+									vstr[i] = '0'; 
+								}
+							}
+							vlen = u32FlagsWidth;
+							vstr[vlen] = (TCHAR)'\0';
+						}
+					}
+
+					mimic_tcscat(&szDst[u32Cnt], u32MaxElementOfszDst - u32Cnt, vstr);
+					u32Cnt += vlen;
+					pszStr++;
+
+				}
+				else if (ch == (TCHAR)'c')
+				{
+					szDst[u32Cnt] = (TCHAR)va_arg(arg, uint32_t);
+					u32Cnt++;
+					pszStr++;
+				}
+				else if (ch == (TCHAR)'s')
+				{
+					TCHAR *psz = (TCHAR *)va_arg(arg, TCHAR *);
+					if (psz != NULL)
+					{
+						if(bValidFlagsWidth == false){
+							mimic_tcscat(&szDst[u32Cnt], u32MaxElementOfszDst - u32Cnt, psz);
+							u32Cnt += mimic_tcslen(psz);
+						}else{
+							vlen = mimic_tcslen(psz);
+							if(vlen > u32FlagsWidth){
+								for(uint32_t i=0;i<u32FlagsWidth;i++){
+									szDst[u32Cnt] =  psz[i];
+									u32Cnt++;
+								}
+							}else{
+								uint32_t u32 = u32FlagsWidth - vlen;
+								if((u32FlagsUsed & enPrintfFlagsMinus) == enPrintfFlagsMinus){
+									/** zero */
+									for(uint32_t i=0;i<vlen;i++){
+										szDst[u32Cnt] = psz[i];
+										u32Cnt++; 
+									}
+									for(uint32_t i=0;i<u32;i++){
+										szDst[u32Cnt] = (TCHAR)' ';
+										u32Cnt++; 
+									}
+								}else{
+									for(uint32_t i=0;i<u32;i++){
+										szDst[u32Cnt] = (TCHAR)' ';
+										u32Cnt++; 
+									}
+									for(uint32_t i=0;i<vlen;i++){
+										szDst[u32Cnt] = psz[i];
+										u32Cnt++; 
+									}
+								}
+							}
+							szDst[u32Cnt] = (TCHAR)'\0';
+						}
+					}
+					pszStr++;
+				}
+				else
+				{
+					szDst[u32Cnt] =  *pszStr;
+					u32Cnt++;
+					pszStr++;
+				}
+			}
+		}
+	}
+	return;
+}
 

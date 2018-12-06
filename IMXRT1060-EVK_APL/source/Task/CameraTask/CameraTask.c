@@ -234,8 +234,6 @@ void BOARD_InitCameraResource(void)
 __attribute__((section(".NonCacheable"))) alignas(64) static uint16_t s_frameBuffer[APP_CAMERA_HEIGHT][APP_CAMERA_WIDTH];
 
 static void CameraTaskActual(void){
-	uint32_t activeFrameAddr;
-    uint32_t inactiveFrameAddr;
 
 
 	stTaskMsgBlock_t stTaskMsg = {0};
