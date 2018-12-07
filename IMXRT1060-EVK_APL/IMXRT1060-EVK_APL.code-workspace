@@ -46,7 +46,8 @@
 			"xutility": "c",
 			"board.h": "c",
 			"cameratask.h": "c",
-			"fsl_camera_device.h": "c"
+			"fsl_camera_device.h": "c",
+			"spiflash.h": "c"
 		},
 		"C_Cpp.default.defines": [
 			"__GNUC__",

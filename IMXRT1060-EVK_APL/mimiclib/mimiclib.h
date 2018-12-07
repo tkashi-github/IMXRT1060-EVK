@@ -574,7 +574,7 @@ static inline TCHAR *mimic_ulltoa(const uint64_t u64Val, TCHAR szDst[], uint32_t
 	while(u32Index < (u32MaxElementOfszDst - 1)){
 		uint32_t u32 = (uint32_t)(u64Temp % u32Radix);
 		u64Temp /= u32Radix;
-		if(u32 <= 9){
+		if(u32 < 10){
 			szDst[u32Index] = (TCHAR)u32 + (TCHAR)'0';
 		}else{
 			szDst[u32Index] = (TCHAR)(u32 - 10u) + (TCHAR)'A';

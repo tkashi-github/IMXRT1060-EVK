@@ -15,14 +15,16 @@
 #include "board.h"
 #include "clock_config.h"
 #include "fsl_common.h"
+#include "common.h"
+
 /*******************************************************************************
 * Definitions
 ******************************************************************************/
 #define FLASH_SIZE 0x2000 /* 64Mb/KByte */
 #define FLASH_PAGE_SIZE 256
-#define EXAMPLE_SECTOR 4
 #define SECTOR_SIZE 0x1000 /* 4K */
 #define FLEXSPI_CLOCK kCLOCK_FlexSpi
+#define DEF_TOP_SECTOR	(0x600)
 
 #define NOR_CMD_LUT_SEQ_IDX_READ_NORMAL 0
 #define NOR_CMD_LUT_SEQ_IDX_READ_FAST 1
@@ -49,8 +51,8 @@
 /*******************************************************************************
  * Variables
  ******************************************************************************/
-static uint8_t s_nor_program_buffer[256];
-static uint8_t s_nor_read_buffer[256];
+static uint8_t s_nor_program_buffer[FLASH_PAGE_SIZE];
+static uint8_t s_nor_read_buffer[FLASH_PAGE_SIZE];
 
 /*******************************************************************************
  * Code
@@ -375,15 +377,13 @@ status_t SPIFlashInit(void)
     return status;
 }
 
-#if 0
-
-
-_Bool SPIFlashWriteData(uint32_t u32StartSectorNo, const uint8_t[], uint32_t u32ByteCnt)
+_Bool SPIFlashWriteData(uint32_t u32StartSectorNo, const uint8_t pu8[], uint32_t u32ByteCnt)
 {
-
-    /* Erase sectors. */
+	status_t status;
+    
+	/* Erase sectors. */
     mimic_printf("Erasing Serial NOR over FlexSPI...\r\n");
-	u32Loop = u32ByteCnt / SECTOR_SIZE;
+	uint32_t u32Loop = u32ByteCnt / SECTOR_SIZE;
 	if((u32ByteCnt % SECTOR_SIZE) != 0)
 	{
 		u32Loop++;
@@ -391,56 +391,69 @@ _Bool SPIFlashWriteData(uint32_t u32StartSectorNo, const uint8_t[], uint32_t u32
 
 	for(uint32_t i=0;i<u32Loop;i++)
 	{
-		mimic_printf("Erase Area = 0x%08lX\r\n", (i + u32StartSectorNo) * SECTOR_SIZE, (i + u32StartSectorNo + 1) * SECTOR_SIZE- 1 );
+		mimic_printf("Erase Area = 0x%08lX - 0x%08lX\r\n", FlexSPI_AMBA_BASE + (i + u32StartSectorNo) * SECTOR_SIZE, FlexSPI_AMBA_BASE + (i + u32StartSectorNo + 1) * SECTOR_SIZE- 1 );
 		status = flexspi_nor_flash_erase_sector(FLEXSPI, (i + u32StartSectorNo) * SECTOR_SIZE);
 		if (status != kStatus_Success)
 		{
 			mimic_printf("Erase sector failure !\r\n");
 			return false;
 		}
+
+		memset(s_nor_program_buffer, 0xFFU, sizeof(s_nor_program_buffer));
+		memcpy(s_nor_read_buffer, (void *)(FlexSPI_AMBA_BASE + u32StartSectorNo * SECTOR_SIZE),
+			sizeof(s_nor_read_buffer));
+
+		if (memcmp(s_nor_program_buffer, s_nor_read_buffer, sizeof(s_nor_program_buffer)))
+		{
+			mimic_printf("Erase data -  read out data value incorrect !\r\n ");
+			return false;
+		}
+		else
+		{
+			mimic_printf("Erase data - successfully. \r\n");
+		}
+
+		for (uint32_t j = 0; j < FLASH_PAGE_SIZE; j++)
+		{
+			s_nor_program_buffer[j] = j;
+		}
+
+		for (uint32_t j = 0; j < (SECTOR_SIZE / FLASH_PAGE_SIZE); j++)
+		{
+			status = flexspi_nor_flash_page_program(FLEXSPI, (i+u32StartSectorNo) * SECTOR_SIZE + j*FLASH_PAGE_SIZE, (void *)s_nor_program_buffer);
+			if (status != kStatus_Success)
+			{
+				mimic_printf("Page program failure !\r\n");
+				return false;
+			}
+		}
+
+		/* Do software reset to reset AHB buffer. */
+		FLEXSPI_SoftwareReset(FLEXSPI);
+
+		for (uint32_t j = 0; j < (SECTOR_SIZE / FLASH_PAGE_SIZE); j++)
+		{
+			memcpy(s_nor_read_buffer, (void *)(FlexSPI_AMBA_BASE + (i+u32StartSectorNo) * SECTOR_SIZE + j*FLASH_PAGE_SIZE),
+				sizeof(s_nor_read_buffer));
+
+			if (memcmp(s_nor_read_buffer, s_nor_program_buffer, sizeof(s_nor_program_buffer)) != 0)
+			{
+				mimic_printf("Program data -  read out data value incorrect !\r\n ");
+				MemDump(s_nor_read_buffer, sizeof(s_nor_read_buffer));
+				return false;
+			}
+			else
+			{
+				mimic_printf("Program data - successfully. \r\n");
+				MemDump(s_nor_read_buffer, sizeof(s_nor_read_buffer));
+			}
+		}
 	}
-
-    memset(s_nor_program_buffer, 0xFFU, sizeof(s_nor_program_buffer));
-    memcpy(s_nor_read_buffer, (void *)(FlexSPI_AMBA_BASE + EXAMPLE_SECTOR * SECTOR_SIZE),
-           sizeof(s_nor_read_buffer));
-
-    if (memcmp(s_nor_program_buffer, s_nor_read_buffer, sizeof(s_nor_program_buffer)))
-    {
-        mimic_printf("Erase data -  read out data value incorrect !\r\n ");
-        return -1;
-    }
-    else
-    {
-        mimic_printf("Erase data - successfully. \r\n");
-    }
-
-    for (i = 0; i < 0xFFU; i++)
-    {
-        s_nor_program_buffer[i] = i;
-    }
-
-    status =
-        flexspi_nor_flash_page_program(FLEXSPI, EXAMPLE_SECTOR * SECTOR_SIZE, (void *)s_nor_program_buffer);
-    if (status != kStatus_Success)
-    {
-        mimic_printf("Page program failure !\r\n");
-        return -1;
-    }
-
-    /* Do software reset to reset AHB buffer. */
-    FLEXSPI_SoftwareReset(FLEXSPI);
-
-    memcpy(s_nor_read_buffer, (void *)(FlexSPI_AMBA_BASE + EXAMPLE_SECTOR * SECTOR_SIZE),
-           sizeof(s_nor_read_buffer));
-
-    if (memcmp(s_nor_read_buffer, s_nor_program_buffer, sizeof(s_nor_program_buffer)) != 0)
-    {
-        mimic_printf("Program data -  read out data value incorrect !\r\n ");
-        return -1;
-    }
-    else
-    {
-        mimic_printf("Program data - successfully. \r\n");
-    }
 }
-#endif
+
+
+static uint8_t s_u8[0x1000] = {0};
+void CmdSFROM(uint32_t argc, const char *argv[])
+{
+	SPIFlashWriteData(DEF_TOP_SECTOR, s_u8, sizeof(s_u8));
+}

@@ -47,6 +47,7 @@ extern "C"
 
 extern status_t flexspi_nor_get_vendor_id(FLEXSPI_Type *base, uint8_t *vendorId);
 extern status_t SPIFlashInit(void);
+extern void CmdSFROM(uint32_t argc, const char *argv[]);
 
 #ifdef __cplusplus
 }

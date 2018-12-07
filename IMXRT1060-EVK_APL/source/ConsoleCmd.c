@@ -52,6 +52,7 @@
 #include "common/storageBenchMark.h"
 
 #include "SensorTask/SensorTask.h"
+#include "SPIFlash/SPIFlash.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -90,6 +91,7 @@ stCmdTable_t g_stCmdTable[] = {
 	{"PING", CmdPing, "PING"},
 	{"SB", CmdStorageBenchMark, "StorageBenchMark"},
 	{"SENSOR", CmdSensor, "Combo Sensor"},
+	{"SFROM", CmdSFROM, "SerialFlashTest"},
 	{NULL, NULL, NULL}, /* Terminator */
 };
 

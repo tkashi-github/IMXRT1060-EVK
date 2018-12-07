@@ -33,12 +33,13 @@
  */
 #include "mimiclib.h"
 #include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
+
 
 #ifndef WIN_TEST
 #define DefBSP_IMXRT1060_EVK
 #else
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 uint32_t mimic_gets(char pszStr[], uint32_t u32Size){
@@ -65,7 +66,7 @@ void mimic_printf(const char* fmt, ...){
 #ifdef DefBSP_IMXRT1060_EVK
 	RTOS_PutString(szBuffer);
 #else
-	fputs(szBuffer, stdin);
+	fputs(szBuffer, stdout);
 #endif
 }
 
@@ -157,12 +158,12 @@ void mimic_tcsvprintf(
 {
     TCHAR *pszStr = NULL;
     uint32_t u32Cnt = 0;
-    uint32_t u32FlagsUsed;
-    uint32_t u32FlagsWidth;
-    _Bool bValidFlagsWidth;
-	uint32_t u32PrecisionWidth;
-    _Bool bValidPrecisionWidth;
-    TCHAR vstr[33];
+    uint32_t u32FlagsUsed = 0;
+    uint32_t u32FlagsWidth = 0;
+    _Bool bValidFlagsWidth = false;
+	uint32_t u32PrecisionWidth = 0;
+    _Bool bValidPrecisionWidth= false;
+    TCHAR vstr[33] = {0};
     int32_t vlen = 0;
 	/** -- */
 
@@ -239,7 +240,6 @@ void mimic_tcsvprintf(
 			}
 
 			pszStr++;
-			u32FlagsUsed = 0;
 			switch (*pszStr){
 			case (TCHAR)'l':
 				pszStr++;
@@ -258,13 +258,13 @@ void mimic_tcsvprintf(
 			pszStr++;
 			ch = *pszStr;
 			{
-				if ((ch == (TCHAR)'d') || 
-				(ch == (TCHAR)'i') || 
-				(ch == (TCHAR)'f') || 
-				(ch == (TCHAR)'F') || 
-				(ch == (TCHAR)'x') || 
-				(ch == (TCHAR)'X') || 
-				(ch == (TCHAR)'u') || 
+				if ((ch == (TCHAR)'d') ||
+				(ch == (TCHAR)'i') ||
+				(ch == (TCHAR)'f') ||
+				(ch == (TCHAR)'F') ||
+				(ch == (TCHAR)'x') ||
+				(ch == (TCHAR)'X') ||
+				(ch == (TCHAR)'u') ||
 				(ch == (TCHAR)'U'))
 				{
 					if ((ch == (TCHAR)'d') || (ch == (TCHAR)'i')){
@@ -283,14 +283,14 @@ void mimic_tcsvprintf(
 						vlen = mimic_tcslen(vstr);
 					}else if ((ch == (TCHAR)'X') || (ch == (TCHAR)'x')){
 						if (u32FlagsUsed & enPrintfFlagsLengthLongLongInt){
-							mimic_ulltoa((uint64_t)va_arg(arg, uint64_t), vstr, sizeof(vstr), 16);							
+							mimic_ulltoa((uint64_t)va_arg(arg, uint64_t), vstr, sizeof(vstr), 16);
 						}else{
 							mimic_ultoa((uint32_t)va_arg(arg, uint32_t), vstr, sizeof(vstr), 16);
 						}
 						vlen = mimic_tcslen(vstr);
 					}else if ((ch == (TCHAR)'U') || (ch == (TCHAR)'u')){
 						if (u32FlagsUsed & enPrintfFlagsLengthLongLongInt){
-							mimic_ulltoa((uint64_t)va_arg(arg, uint64_t), vstr, sizeof(vstr), 10);							
+							mimic_ulltoa((uint64_t)va_arg(arg, uint64_t), vstr, sizeof(vstr), 10);
 						}else{
 							mimic_ultoa((uint32_t)va_arg(arg, uint32_t), vstr, sizeof(vstr), 10);
 						}
@@ -302,31 +302,29 @@ void mimic_tcsvprintf(
 
 
 					if(u32FlagsWidth > 0){
-						if(vlen > u32FlagsWidth){
+						if(vlen >= u32FlagsWidth){
 							for(uint32_t i=0;i<u32FlagsWidth;i++){
-								vstr[i] = vstr[i + (vlen - u32FlagsWidth)]; 
+								vstr[i] = vstr[i + (vlen - u32FlagsWidth)];
 							}
 							vlen = u32FlagsWidth;
 							vstr[vlen] = (TCHAR)'\0';
 						}else{
 							uint32_t u32 = u32FlagsWidth - vlen;
+							TCHAR szTemp[64];
+							
+							TCHAR tcTemp = (TCHAR)' ';
 							if((u32FlagsUsed & enPrintfFlagsZero) == enPrintfFlagsZero){
-								/** zero */
-								for(uint32_t i=0;i<u32FlagsWidth;i++){
-									vstr[i + u32] = vstr[i]; 
-								}
-								for(uint32_t i=0;i<u32;i++){
-									vstr[i] = '0'; 
-								}
-							}else{
-								/** space */
-								for(uint32_t i=0;i<u32FlagsWidth;i++){
-									vstr[i + u32] = vstr[i]; 
-								}
-								for(uint32_t i=0;i<u32;i++){
-									vstr[i] = '0'; 
-								}
+								tcTemp = (TCHAR)'0';
 							}
+							mimic_tcscpy(szTemp, vstr, sizeof(szTemp));
+
+							uint32_t i;
+							for(i=0;i<u32;i++){
+								vstr[i] = tcTemp;
+							}
+							vstr[i] = (TCHAR)'\0';
+
+							mimic_tcscat(vstr, sizeof(vstr), szTemp);
 							vlen = u32FlagsWidth;
 							vstr[vlen] = (TCHAR)'\0';
 						}
@@ -360,24 +358,24 @@ void mimic_tcsvprintf(
 								}
 							}else{
 								uint32_t u32 = u32FlagsWidth - vlen;
-								if((u32FlagsUsed & enPrintfFlagsMinus) == enPrintfFlagsMinus){
+								if((u32FlagsUsed & enPrintfFlagsMinus) != enPrintfFlagsMinus){
 									/** zero */
 									for(uint32_t i=0;i<vlen;i++){
 										szDst[u32Cnt] = psz[i];
-										u32Cnt++; 
+										u32Cnt++;
 									}
 									for(uint32_t i=0;i<u32;i++){
 										szDst[u32Cnt] = (TCHAR)' ';
-										u32Cnt++; 
+										u32Cnt++;
 									}
 								}else{
 									for(uint32_t i=0;i<u32;i++){
 										szDst[u32Cnt] = (TCHAR)' ';
-										u32Cnt++; 
+										u32Cnt++;
 									}
 									for(uint32_t i=0;i<vlen;i++){
 										szDst[u32Cnt] = psz[i];
-										u32Cnt++; 
+										u32Cnt++;
 									}
 								}
 							}
