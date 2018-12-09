@@ -35,6 +35,7 @@
 #include "mimiclib/mimiclib.h"
 #include "ff.h"
 #include "CPUFunc.h"
+#include "SPIFlash/SPIFlash.h"
 
 #define kROM_BIN_TOP	(0x60400000)
 #define kBinBufferSize (4 * 1024 * 1024)
@@ -117,6 +118,82 @@ _Bool CheckROM(void)
 			JumpApplication(*(uint32_t*)0x80000000, *(uint32_t*)0x80000004);
 		}
 	}
+
+	return bret;
+}
+
+_Bool CheckBinFile(const TCHAR szBinFile[])
+{
+	/** var */
+	_Bool bret = false;
+	uint32_t u32BinSize;
+	FIL fBinFile;
+	uint8_t *pu8;
+
+	/** begin */
+	if(FR_OK != f_open(&fBinFile, szBinFile, FA_READ)){
+		return false;
+	}
+	u32BinSize = f_size(&fBinFile);
+	mimic_printf("u32BinSize = %lu\r\n", u32BinSize);
+
+	if((u32BinSize > kBinBufferSize) || (u32BinSize == 0))
+	{
+		mimic_printf("u32BinSize NG\r\n");
+		f_close(&fBinFile);
+		return false;
+	}
+	pu8 = pvPortMalloc(u32BinSize);
+	if(pu8 == NULL){
+		f_close(&fBinFile);
+		return false;
+	}
+	{
+		UINT br;
+		if(FR_OK != f_read(&fBinFile, pu8, u32BinSize, &br)){
+			f_close(&fBinFile);
+			vPortFree(pu8);
+			return false;
+		}
+
+		if(u32BinSize != br){
+			f_close(&fBinFile);
+			vPortFree(pu8);
+			return false;
+		}
+	}
+	{
+		/** !!!!(先頭4byteを含める) */
+		uint16_t CalcCRC16 = SlowCrc16(0xFFFF, pu8, u32BinSize-2);
+		uint16_t RomCRC16;
+
+		memcpy(&RomCRC16, &pu8[u32BinSize - 2], 2);
+
+
+		mimic_printf("RomCRC16  = 0x%04X\r\n", RomCRC16);
+		mimic_printf("CalcCRC16 = 0x%04X\r\n", CalcCRC16);
+
+		if (RomCRC16 != CalcCRC16)
+		{
+			mimic_printf("CRC NG\r\n");
+		}else{
+			mimic_printf("CRC OK\r\n");
+
+			SPIFlashWriteData(DEF_APL_TOP_SECTOR, pu8, u32BinSize);
+			bret = true;
+			for(uint32_t i=0;i<u32BinSize;i++){
+
+				if(pu8[i] != *(uint8_t*)(kROM_BIN_TOP + i)){
+					mimic_printf("VerifyNG (i=%lu)\r\n", i);
+					bret = false;
+					break;
+				}
+			}
+		}
+	}
+
+	f_close(&fBinFile);
+	vPortFree(pu8);
 
 	return bret;
 }

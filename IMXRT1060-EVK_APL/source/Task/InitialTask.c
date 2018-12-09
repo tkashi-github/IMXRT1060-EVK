@@ -61,7 +61,12 @@ void InitialTask(void const *argument)
 		PostMsgLanTaskRestart();
 		mimic_printf("[%s (%d)] All Task Started! (%lu msec)\r\n", __FUNCTION__, __LINE__, xTaskGetTickCount());
 		osEventFlagsWait(g_efFSReady, 1, osFlagsWaitAny, portMAX_DELAY);   // Wait a maximum 
-
+		if(CheckBinFile("IMXRT1060-EVK_APL_crc16.bin") != false){
+			f_rename("IMXRT1060-EVK_APL_crc16.bin", "IMXRT1060-EVK_APL_crc16_end.bin");
+			mimic_printf("Call SYSTEM RESET\r\n");
+			vTaskDelay(100);
+			NVIC_SystemReset();
+		}
 		mimic_printf("[%s (%d)] Storage Init Complete (%lu msec)\r\n", __FUNCTION__, __LINE__, xTaskGetTickCount());
 		osThreadSuspend(osThreadGetId());
 }

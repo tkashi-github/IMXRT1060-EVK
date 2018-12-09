@@ -45,6 +45,9 @@ extern "C"
 #include "UserTypedef.h"
 #include "fsl_flexspi.h"
 
+#define DEF_APL_TOP_SECTOR	(0x400)
+extern _Bool SPIFlashWriteData(uint32_t u32StartSectorNo, const uint8_t pu8[], uint32_t u32ByteCnt);
+
 extern status_t flexspi_nor_get_vendor_id(FLEXSPI_Type *base, uint8_t *vendorId);
 extern status_t SPIFlashInit(void);
 extern void CmdSFROM(uint32_t argc, const char *argv[]);

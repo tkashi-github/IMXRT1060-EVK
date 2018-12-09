@@ -24,7 +24,7 @@
 #define FLASH_PAGE_SIZE 256
 #define SECTOR_SIZE 0x1000 /* 4K */
 #define FLEXSPI_CLOCK kCLOCK_FlexSpi
-#define DEF_TOP_SECTOR	(0x600)
+#define DEF_DUMMY_SECTOR	(0x600)
 
 #define NOR_CMD_LUT_SEQ_IDX_READ_NORMAL 0
 #define NOR_CMD_LUT_SEQ_IDX_READ_FAST 1
@@ -387,7 +387,9 @@ status_t SPIFlashInit(void)
 _Bool SPIFlashWriteData(uint32_t u32StartSectorNo, const uint8_t pu8[], uint32_t u32ByteCnt)
 {
 	status_t status;
-    
+    _Bool bret = true;
+
+	SCB_DisableDCache();
 	/* Erase sectors. */
     mimic_printf("Erasing Serial NOR over FlexSPI...\r\n");
 	uint32_t u32Loop = u32ByteCnt / SECTOR_SIZE;
@@ -403,7 +405,8 @@ _Bool SPIFlashWriteData(uint32_t u32StartSectorNo, const uint8_t pu8[], uint32_t
 		if (status != kStatus_Success)
 		{
 			mimic_printf("NG\r\n");
-			return false;
+			bret = false;
+			goto _END;
 		}
 
 		for(uint32_t j=0;j<SECTOR_SIZE;j++){
@@ -412,28 +415,31 @@ _Bool SPIFlashWriteData(uint32_t u32StartSectorNo, const uint8_t pu8[], uint32_t
 			if(pu8[j] != 0xFF){
 				MemDump(s_nor_read_buffer, sizeof(s_nor_read_buffer));
 				mimic_printf("NG\r\n ");
-				return false;
+				bret = false;
+				goto _END;
 			}
 		}
 
 		mimic_printf("OK\r\n");
 
 
-		for (uint32_t j = 0; j < FLASH_PAGE_SIZE; j++)
-		{
-			s_nor_program_buffer[j] = j;
-		}
-		__DMB();
+		
 		
 		mimic_printf("Program Area = 0x%08lX - 0x%08lX\r\n", FlexSPI_AMBA_BASE + (i + u32StartSectorNo) * SECTOR_SIZE, FlexSPI_AMBA_BASE + (i + u32StartSectorNo + 1) * SECTOR_SIZE- 1 );
 		for (uint32_t j = 0; j < (SECTOR_SIZE / FLASH_PAGE_SIZE); j++)
 		{
+			for (uint32_t k = 0; k < FLASH_PAGE_SIZE; k++)
+			{
+				s_nor_program_buffer[k] = pu8[k + j * FLASH_PAGE_SIZE + i * SECTOR_SIZE];
+			}
+			__DMB();
 			status = flexspi_nor_flash_page_program(FLEXSPI, (i+u32StartSectorNo) * SECTOR_SIZE + j*FLASH_PAGE_SIZE, (void *)s_nor_program_buffer);
 			if (status != kStatus_Success)
 			{
 				mimic_printf("Page program failure !\r\n");
 				FLEXSPI_SoftwareReset(FLEXSPI);
-				return false;
+				bret = false;
+				goto _END;
 			}
 		}
 
@@ -443,6 +449,11 @@ _Bool SPIFlashWriteData(uint32_t u32StartSectorNo, const uint8_t pu8[], uint32_t
 
 		for (uint32_t j = 0; j < (SECTOR_SIZE / FLASH_PAGE_SIZE); j++)
 		{
+			for (uint32_t k = 0; k < FLASH_PAGE_SIZE; k++)
+			{
+				s_nor_program_buffer[k] = pu8[k + j * FLASH_PAGE_SIZE + i * SECTOR_SIZE];
+			}
+			
 			memcpy(s_nor_read_buffer, (void *)(FlexSPI_AMBA_BASE + (i+u32StartSectorNo) * SECTOR_SIZE + j*FLASH_PAGE_SIZE),
 				sizeof(s_nor_read_buffer));
 			__DMB();
@@ -450,23 +461,25 @@ _Bool SPIFlashWriteData(uint32_t u32StartSectorNo, const uint8_t pu8[], uint32_t
 			{
 				mimic_printf("Program data -  read out data value incorrect !\r\n");
 				MemDump(s_nor_read_buffer, sizeof(s_nor_read_buffer));
-				return false;
+				bret = false;
+				goto _END;
 			}
 		}
 	}
 
-	return true;
+	mimic_printf("Prpgram Update OK\r\n\r\n");
+_END:
+	SCB_EnableDCache();
+	return bret;
 }
 
 
 static uint8_t s_u8[SECTOR_SIZE] = {0};
 void CmdSFROM(uint32_t argc, const char *argv[])
 {
-	 SCB_DisableDCache();
 	for(uint32_t i=0;i<((BOARD_FLASH_SIZE / SECTOR_SIZE) / 4);i++){
-		if(SPIFlashWriteData(DEF_TOP_SECTOR + i, s_u8, sizeof(s_u8)) == false){
+		if(SPIFlashWriteData(DEF_DUMMY_SECTOR + i, s_u8, sizeof(s_u8)) == false){
 			break;
 		}
-	}
-	SCB_EnableDCache();
+	}	
 }
