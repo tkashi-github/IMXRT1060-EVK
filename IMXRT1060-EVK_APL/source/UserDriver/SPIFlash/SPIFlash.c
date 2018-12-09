@@ -347,7 +347,7 @@ status_t SPIFlashInit(void)
     CLOCK_InitUsb1Pfd(kCLOCK_Pfd0, 24);   /* Set PLL3 PFD0 clock 360MHZ. */
     CLOCK_SetMux(kCLOCK_FlexspiMux, 0x3); /* Choose PLL3 PFD0 clock as flexspi source clock. */
     CLOCK_SetDiv(kCLOCK_FlexspiDiv, 2);   /* flexspi clock 120M. */
-    SCB_DisableDCache();
+   
 
     /*Get FLEXSPI default settings and configure the flexspi. */
     FLEXSPI_GetDefaultConfig(&config);
@@ -363,10 +363,17 @@ status_t SPIFlashInit(void)
     /* Update LUT table. */
     FLEXSPI_UpdateLUT(FLEXSPI, 0, customLUT, CUSTOM_LUT_LENGTH);
 
+	status = flexspi_nor_wait_bus_busy(FLEXSPI);
+	if (status != kStatus_Success)
+    {
+		mimic_printf("flexspi_nor_wait_bus_busy NG\r\n");
+        return status;
+    }
     /* Get vendor ID. */
     status = flexspi_nor_get_vendor_id(FLEXSPI, &vendorID);
     if (status != kStatus_Success)
     {
+		mimic_printf("flexspi_nor_get_vendor_id NG\r\n");
         return status;
     }
     mimic_printf("Vendor ID: 0x%x\r\n", vendorID);
@@ -391,69 +398,75 @@ _Bool SPIFlashWriteData(uint32_t u32StartSectorNo, const uint8_t pu8[], uint32_t
 
 	for(uint32_t i=0;i<u32Loop;i++)
 	{
-		mimic_printf("Erase Area = 0x%08lX - 0x%08lX\r\n", FlexSPI_AMBA_BASE + (i + u32StartSectorNo) * SECTOR_SIZE, FlexSPI_AMBA_BASE + (i + u32StartSectorNo + 1) * SECTOR_SIZE- 1 );
+		mimic_printf("Erase Area = 0x%08lX - 0x%08lX ", FlexSPI_AMBA_BASE + (i + u32StartSectorNo) * SECTOR_SIZE, FlexSPI_AMBA_BASE + (i + u32StartSectorNo + 1) * SECTOR_SIZE- 1 );
 		status = flexspi_nor_flash_erase_sector(FLEXSPI, (i + u32StartSectorNo) * SECTOR_SIZE);
 		if (status != kStatus_Success)
 		{
-			mimic_printf("Erase sector failure !\r\n");
+			mimic_printf("NG\r\n");
 			return false;
 		}
 
-		memset(s_nor_program_buffer, 0xFFU, sizeof(s_nor_program_buffer));
-		memcpy(s_nor_read_buffer, (void *)(FlexSPI_AMBA_BASE + u32StartSectorNo * SECTOR_SIZE),
-			sizeof(s_nor_read_buffer));
+		for(uint32_t j=0;j<SECTOR_SIZE;j++){
+			uint8_t *pu8 = (uint8_t *)(FlexSPI_AMBA_BASE + (i + u32StartSectorNo) * SECTOR_SIZE);
 
-		if (memcmp(s_nor_program_buffer, s_nor_read_buffer, sizeof(s_nor_program_buffer)))
-		{
-			mimic_printf("Erase data -  read out data value incorrect !\r\n ");
-			return false;
+			if(pu8[j] != 0xFF){
+				MemDump(s_nor_read_buffer, sizeof(s_nor_read_buffer));
+				mimic_printf("NG\r\n ");
+				return false;
+			}
 		}
-		else
-		{
-			mimic_printf("Erase data - successfully. \r\n");
-		}
+
+		mimic_printf("OK\r\n");
+
 
 		for (uint32_t j = 0; j < FLASH_PAGE_SIZE; j++)
 		{
 			s_nor_program_buffer[j] = j;
 		}
-
+		__DMB();
+		
+		mimic_printf("Program Area = 0x%08lX - 0x%08lX\r\n", FlexSPI_AMBA_BASE + (i + u32StartSectorNo) * SECTOR_SIZE, FlexSPI_AMBA_BASE + (i + u32StartSectorNo + 1) * SECTOR_SIZE- 1 );
 		for (uint32_t j = 0; j < (SECTOR_SIZE / FLASH_PAGE_SIZE); j++)
 		{
 			status = flexspi_nor_flash_page_program(FLEXSPI, (i+u32StartSectorNo) * SECTOR_SIZE + j*FLASH_PAGE_SIZE, (void *)s_nor_program_buffer);
 			if (status != kStatus_Success)
 			{
 				mimic_printf("Page program failure !\r\n");
+				FLEXSPI_SoftwareReset(FLEXSPI);
 				return false;
 			}
 		}
 
 		/* Do software reset to reset AHB buffer. */
 		FLEXSPI_SoftwareReset(FLEXSPI);
+			__DMB();
 
 		for (uint32_t j = 0; j < (SECTOR_SIZE / FLASH_PAGE_SIZE); j++)
 		{
 			memcpy(s_nor_read_buffer, (void *)(FlexSPI_AMBA_BASE + (i+u32StartSectorNo) * SECTOR_SIZE + j*FLASH_PAGE_SIZE),
 				sizeof(s_nor_read_buffer));
-
+			__DMB();
 			if (memcmp(s_nor_read_buffer, s_nor_program_buffer, sizeof(s_nor_program_buffer)) != 0)
 			{
-				mimic_printf("Program data -  read out data value incorrect !\r\n ");
+				mimic_printf("Program data -  read out data value incorrect !\r\n");
 				MemDump(s_nor_read_buffer, sizeof(s_nor_read_buffer));
 				return false;
 			}
-			else
-			{
-				mimic_printf("Program data - successfully. \r\n");
-				MemDump(s_nor_read_buffer, sizeof(s_nor_read_buffer));
-			}
 		}
 	}
+
+	return true;
 }
 
 
-static uint8_t s_u8[0x1000] = {0};
+static uint8_t s_u8[SECTOR_SIZE] = {0};
 void CmdSFROM(uint32_t argc, const char *argv[])
 {
-	SPIFlashWriteData(DEF_TOP_SECTOR, s_u8, sizeof(s_u8));
+	 SCB_DisableDCache();
+	for(uint32_t i=0;i<((BOARD_FLASH_SIZE / SECTOR_SIZE) / 4);i++){
+		if(SPIFlashWriteData(DEF_TOP_SECTOR + i, s_u8, sizeof(s_u8)) == false){
+			break;
+		}
+	}
+	SCB_EnableDCache();
 }
