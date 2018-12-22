@@ -110,13 +110,14 @@ static const stOSdefTable_t s_stTaskTable[] = {
 		NULL,
 		{"SensorTask", osThreadDetached, &s_SensorTaskTCB, sizeof(s_SensorTaskTCB), s_SensorTaskStack, sizeof(s_SensorTaskStack), osPriorityBelowNormal, 0, 0},
 	},
-#endif
+
 	{	/** CameraTask */
 		&g_CameraTaskHandle,
 		(osThreadFunc_t)CameraTask,
 		NULL,
 		{"CameraTask", osThreadDetached, &s_CameraTaskTCB, sizeof(s_CameraTaskTCB), s_CameraTaskStack, sizeof(s_CameraTaskStack), osPriorityBelowNormal, 0, 0},
 	},
+#endif
 	// Terminate
 	{	
 		NULL,

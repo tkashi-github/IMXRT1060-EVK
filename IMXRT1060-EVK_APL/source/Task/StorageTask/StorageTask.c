@@ -226,20 +226,28 @@ DefALLOCATE_ITCM static void StorageUnmount(enSD_t enSlotNo)
  */
 DefALLOCATE_ITCM static void StorageTaskActual(enSD_t enSlotNo)
 {
+	_Bool bSDIn = false;
 	stTaskMsgBlock_t stTaskMsg = {0};
 	if (sizeof(stTaskMsg) == xStreamBufferReceive(g_sbhStorageTask[enSlotNo], &stTaskMsg, sizeof(stTaskMsg), portMAX_DELAY))
 	{
 		switch (stTaskMsg.enMsgId)
 		{
 		case enSDInsterted:
-			if (StorageInit(enSlotNo, &s_stSD[enSlotNo]) != false)
-			{
-				StorageMount(enSlotNo);
+			if(bSDIn== false)
+			{ 
+				if (StorageInit(enSlotNo, &s_stSD[enSlotNo]) != false)
+				{
+					StorageMount(enSlotNo);
+				}
+				bSDIn = true;
 			}
 			break;
 		case enSDRemoved:
-			StorageDeinit(enSlotNo, &s_stSD[enSlotNo]);
-			StorageUnmount(enSlotNo);
+			if(bSDIn != false){
+				StorageDeinit(enSlotNo, &s_stSD[enSlotNo]);
+				StorageUnmount(enSlotNo);
+				bSDIn = false;
+			}
 			break;
 		default:
 			mimic_printf("[%s (%d)] Unkown Msg (Slot = %d)!\r\n", __FUNCTION__, __LINE__, enSlotNo + 1);
