@@ -39,7 +39,7 @@ status_t SDMMC_SelectCard(SDMMCHOST_TYPE *base,
 
     content.command = &command;
     content.data = NULL;
-    if ((kStatus_Success != transfer(base, &content)) || (command.response[0U] & kSDMMC_R1ErrorAllFlag))
+    if ((kStatus_Success != transfer(base, &content)) || (command.response[0U] & SDMMC_R1_ALL_ERROR_FLAG))
     {
         return kStatus_SDMMC_TransferFailed;
     }
@@ -63,12 +63,12 @@ status_t SDMMC_SendApplicationCommand(SDMMCHOST_TYPE *base,
 
     content.command = &command;
     content.data = 0U;
-    if ((kStatus_Success != transfer(base, &content)) || (command.response[0U] & kSDMMC_R1ErrorAllFlag))
+    if ((kStatus_Success != transfer(base, &content)) || (command.response[0U] & SDMMC_R1_ALL_ERROR_FLAG))
     {
         return kStatus_SDMMC_TransferFailed;
     }
 
-    if (!(command.response[0U] & kSDMMC_R1ApplicationCommandFlag))
+    if (!(command.response[0U] & SDMMC_MASK(kSDMMC_R1ApplicationCommandFlag)))
     {
         return kStatus_SDMMC_CardNotSupport;
     }
@@ -89,7 +89,7 @@ status_t SDMMC_SetBlockCount(SDMMCHOST_TYPE *base, SDMMCHOST_TRANSFER_FUNCTION t
 
     content.command = &command;
     content.data = 0U;
-    if ((kStatus_Success != transfer(base, &content)) || (command.response[0U] & kSDMMC_R1ErrorAllFlag))
+    if ((kStatus_Success != transfer(base, &content)) || (command.response[0U] & SDMMC_R1_ALL_ERROR_FLAG))
     {
         return kStatus_SDMMC_TransferFailed;
     }
@@ -129,7 +129,7 @@ status_t SDMMC_SetBlockSize(SDMMCHOST_TYPE *base, SDMMCHOST_TRANSFER_FUNCTION tr
 
     content.command = &command;
     content.data = 0U;
-    if ((kStatus_Success != transfer(base, &content)) || (command.response[0U] & kSDMMC_R1ErrorAllFlag))
+    if ((kStatus_Success != transfer(base, &content)) || (command.response[0U] & SDMMC_R1_ALL_ERROR_FLAG))
     {
         return kStatus_SDMMC_TransferFailed;
     }
@@ -164,6 +164,7 @@ status_t SDMMC_SwitchVoltage(SDMMCHOST_TYPE *base, SDMMCHOST_TRANSFER_FUNCTION t
 
     SDMMCHOST_TRANSFER content = {0};
     SDMMCHOST_COMMAND command = {0};
+    status_t error = kStatus_Success;
 
     command.index = kSD_VoltageSwitch;
     command.argument = 0U;
@@ -203,10 +204,28 @@ status_t SDMMC_SwitchVoltage(SDMMCHOST_TYPE *base, SDMMCHOST_TRANSFER_FUNCTION t
     if ((GET_SDMMCHOST_STATUS(base) &
          (CARD_DATA1_STATUS_MASK | CARD_DATA2_STATUS_MASK | CARD_DATA3_STATUS_MASK | CARD_DATA0_NOT_BUSY)) == 0U)
     {
-        return kStatus_SDMMC_SwitchVoltageFail;
+        error = kStatus_SDMMC_SwitchVoltageFail;
+        /* power reset the card */
+        SDMMCHOST_ENABLE_SD_POWER(false);
+        SDMMCHOST_Delay(10U);
+        SDMMCHOST_ENABLE_SD_POWER(true);
+        SDMMCHOST_Delay(10U);
+        /* re-check the data line status */
+        if ((GET_SDMMCHOST_STATUS(base) &
+             (CARD_DATA1_STATUS_MASK | CARD_DATA2_STATUS_MASK | CARD_DATA3_STATUS_MASK | CARD_DATA0_NOT_BUSY)))
+        {
+            error = kStatus_SDMMC_SwitchVoltage18VFail33VSuccess;
+            SDMMC_LOG("\r\nNote: Current card support 1.8V, but board don't support, so sdmmc switch back to 3.3V.");
+        }
+        else
+        {
+            SDMMC_LOG(
+                "\r\nError: Current card support 1.8V, but board don't support, sdmmc tried to switch back\
+                    to 3.3V, but failed, please check board setting.");
+        }
     }
 
-    return kStatus_Success;
+    return error;
 }
 
 status_t SDMMC_ExecuteTuning(SDMMCHOST_TYPE *base,
@@ -265,16 +284,15 @@ status_t SDMMC_ExecuteTuning(SDMMCHOST_TYPE *base,
         }
     }
 
-    /* delay to wait the host controller stable */
-    SDMMCHOST_Delay(100U);
-
     /* check tuning result*/
     if (SDMMCHOST_EXECUTE_STANDARD_TUNING_RESULT(base) == 0U)
     {
         return kStatus_SDMMC_TuningFail;
     }
 
-    SDMMCHOST_AUTO_STANDARD_RETUNING_TIMER(base);
+#if !SDMMC_ENABLE_SOFTWARE_TUNING
+    SDMMCHOST_AUTO_TUNING_ENABLE(base, true);
+#endif
 
     return kStatus_Success;
 }

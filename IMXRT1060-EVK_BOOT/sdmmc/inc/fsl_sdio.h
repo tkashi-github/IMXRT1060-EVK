@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-
 #ifndef _FSL_SDIO_H_
 #define _FSL_SDIO_H_
 
@@ -19,6 +18,9 @@
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
+/*! @brief Middleware version. */
+#define FSL_SDIO_DRIVER_VERSION (MAKE_VERSION(2U, 2U, 6U)) /*2.2.6*/
+
 /*! @brief card user parameter, user can define the parameter according the board, card capability */
 typedef struct _sdiocard_usr_param
 {
@@ -354,6 +356,35 @@ status_t SDIO_WaitCardDetectStatus(SDMMCHOST_TYPE *hostBase, const sdmmchost_det
  * @param card card descriptor.
  */
 bool SDIO_IsCardPresent(sdio_card_t *card);
+
+/*!
+ * @brief sdio card io transfer function.
+ * This function can be used for trnansfer direct/extend command.
+ * Please pay attention to the non-align data buffer address transfer,
+ * if data buffer address can not meet host controller internal DMA requirement, sdio driver will try to use internal
+ align buffer if data size is not bigger than internal buffer size,
+ * Align address transfer always can get a better performance, so if application want sdio driver make sure buffer
+ address align,
+ * please redefine the SDMMC_GLOBAL_BUFFER_SIZE macro to a value which is big enough for your application.
+ *
+ * @param card card descriptor.
+ * @param cmd command to transfer
+ * @param argument argument to transfer
+ * @param blockSize used for block mode.
+ * @param txData tx buffer pointer or NULL
+ * @param rxData rx buffer pointer or NULL
+ * @param dataSize transfer data size
+ * @param response reponse pointer, if application want read response back, please set it to a NON-NULL pointer.
+
+ */
+status_t SDIO_IO_Transfer(sdio_card_t *card,
+                          sdio_command_t cmd,
+                          uint32_t argument,
+                          uint32_t blockSize,
+                          uint8_t *txData,
+                          uint8_t *rxData,
+                          uint16_t dataSize,
+                          uint32_t *response);
 
 /* @} */
 
