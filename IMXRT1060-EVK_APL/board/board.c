@@ -13,19 +13,18 @@
 #if defined BOARD_USE_CODEC
 #include "fsl_wm8960.h"
 #endif
+#include "fsl_iomuxc.h"
 #include "mimiclib/mimiclib.h"
 
 /*******************************************************************************
  * Variables
  ******************************************************************************/
 #if defined BOARD_USE_CODEC
-codec_config_t boardCodecConfig = {
-    .I2C_SendFunc = BOARD_Codec_I2C_Send,
-    .I2C_ReceiveFunc = BOARD_Codec_I2C_Receive,
-    .op.Init = WM8960_Init,
-    .op.Deinit = WM8960_Deinit,
-    .op.SetFormat = WM8960_ConfigDataFormat
-};
+codec_config_t boardCodecConfig = {.I2C_SendFunc = BOARD_Codec_I2C_Send,
+                                   .I2C_ReceiveFunc = BOARD_Codec_I2C_Receive,
+                                   .op.Init = WM8960_Init,
+                                   .op.Deinit = WM8960_Deinit,
+                                   .op.SetFormat = WM8960_ConfigDataFormat};
 #endif
 /*******************************************************************************
  * Code
@@ -51,7 +50,7 @@ uint32_t BOARD_DebugConsoleSrcFreq(void)
 }
 
 #if defined(SDK_I2C_BASED_COMPONENT_USED) && SDK_I2C_BASED_COMPONENT_USED
-#include "freertos/fsl_lpi2c_freertos.h"
+#include "fsl_lpi2c_freertos.h"
 #include "OSresource.h"
 static lpi2c_rtos_handle_t s_hndI2C[5];
 static uint32_t s_u32I2CIRQn[5] = LPI2C_IRQS;
@@ -101,10 +100,12 @@ void BOARD_LPI2C_Init(LPI2C_Type *base, uint32_t clkSrc_Hz)
 #endif
 }
 
-#include "mimiclib/mimiclib.h"
-
-status_t BOARD_LPI2C_Send(LPI2C_Type *base, uint8_t deviceAddress, uint32_t subAddress,
-                uint8_t subAddressSize, uint8_t *txBuff, uint8_t txBuffSize)
+status_t BOARD_LPI2C_Send(LPI2C_Type *base,
+                          uint8_t deviceAddress,
+                          uint32_t subAddress,
+                          uint8_t subAddressSize,
+                          uint8_t *txBuff,
+                          uint8_t txBuffSize)
 {
     status_t reVal;
 #if 0
@@ -114,7 +115,7 @@ status_t BOARD_LPI2C_Send(LPI2C_Type *base, uint8_t deviceAddress, uint32_t subA
     {
         while (LPI2C_MasterGetStatusFlags(base) & kLPI2C_MasterNackDetectFlag)
         {
-        } 
+        }
 
         reVal = LPI2C_MasterSend(base, &subAddress, subAddressSize);
         if (reVal != kStatus_Success)
@@ -173,8 +174,12 @@ status_t BOARD_LPI2C_Send(LPI2C_Type *base, uint8_t deviceAddress, uint32_t subA
     return reVal;
 }
 
-status_t BOARD_LPI2C_Receive(LPI2C_Type *base, uint8_t deviceAddress, uint32_t subAddress,
-                uint8_t subAddressSize, uint8_t *rxBuff, uint8_t rxBuffSize)
+status_t BOARD_LPI2C_Receive(LPI2C_Type *base,
+                             uint8_t deviceAddress,
+                             uint32_t subAddress,
+                             uint8_t subAddressSize,
+                             uint8_t *rxBuff,
+                             uint8_t rxBuffSize)
 {
     status_t reVal;
 #if 0
@@ -279,15 +284,13 @@ status_t BOARD_Accel_I2C_Send(uint8_t deviceAddress, uint32_t subAddress, uint8_
 {
     uint8_t data = (uint8_t)txBuff;
 
-    return BOARD_LPI2C_Send(BOARD_ACCEL_I2C_BASEADDR, deviceAddress, subAddress,
-                subaddressSize, &data, 1);
+    return BOARD_LPI2C_Send(BOARD_ACCEL_I2C_BASEADDR, deviceAddress, subAddress, subaddressSize, &data, 1);
 }
 
-status_t BOARD_Accel_I2C_Receive(uint8_t deviceAddress, uint32_t subAddress, uint8_t subaddressSize,
-                uint8_t *rxBuff, uint8_t rxBuffSize)
+status_t BOARD_Accel_I2C_Receive(
+    uint8_t deviceAddress, uint32_t subAddress, uint8_t subaddressSize, uint8_t *rxBuff, uint8_t rxBuffSize)
 {
-    return BOARD_LPI2C_Receive(BOARD_ACCEL_I2C_BASEADDR, deviceAddress, subAddress,
-            subaddressSize,  rxBuff, rxBuffSize);
+    return BOARD_LPI2C_Receive(BOARD_ACCEL_I2C_BASEADDR, deviceAddress, subAddress, subaddressSize, rxBuff, rxBuffSize);
 }
 
 void BOARD_Codec_I2C_Init(void)
@@ -305,10 +308,8 @@ status_t BOARD_Codec_I2C_Send(
 status_t BOARD_Codec_I2C_Receive(
     uint8_t deviceAddress, uint32_t subAddress, uint8_t subAddressSize, uint8_t *rxBuff, uint8_t rxBuffSize)
 {
-    return BOARD_LPI2C_Receive(BOARD_CODEC_I2C_BASEADDR, deviceAddress, subAddress, subAddressSize, rxBuff,
-                               rxBuffSize);
+    return BOARD_LPI2C_Receive(BOARD_CODEC_I2C_BASEADDR, deviceAddress, subAddress, subAddressSize, rxBuff, rxBuffSize);
 }
-
 
 void BOARD_Camera_I2C_Init(void)
 {
@@ -352,10 +353,12 @@ status_t BOARD_Camera_I2C_ReceiveSCCB(
 void BOARD_ConfigMPU(void)
 {
     /* Disable I cache and D cache */
-    if (SCB_CCR_IC_Msk == (SCB_CCR_IC_Msk & SCB->CCR)) {
+    if (SCB_CCR_IC_Msk == (SCB_CCR_IC_Msk & SCB->CCR))
+    {
         SCB_DisableICache();
     }
-    if (SCB_CCR_DC_Msk == (SCB_CCR_DC_Msk & SCB->CCR)) {
+    if (SCB_CCR_DC_Msk == (SCB_CCR_DC_Msk & SCB->CCR))
+    {
         SCB_DisableDCache();
     }
 
@@ -429,16 +432,44 @@ void BOARD_ConfigMPU(void)
     ARM_MPU_Enable(MPU_CTRL_PRIVDEFENA_Msk);
 
     /* Enable I cache and D cache */
-#if defined(__ICACHE_PRESENT) && __ICACHE_PRESENT
-    //if (SCB_CCR_IC_Msk != (SCB_CCR_IC_Msk & SCB->CCR)) {
-        SCB_EnableICache();
-    //}
-#endif
-#if defined(__DCACHE_PRESENT) && __DCACHE_PRESENT
-    //if (SCB_CCR_DC_Msk != (SCB_CCR_DC_Msk & SCB->CCR)) {
-		SCB_EnableDCache();
-    //}
-#endif
+    SCB_EnableDCache();
+    SCB_EnableICache();
 
 	return;
+}
+void BOARD_SD_Pin_Config(uint32_t speed, uint32_t strength)
+{
+    IOMUXC_SetPinConfig(IOMUXC_GPIO_SD_B0_00_USDHC1_CMD,
+                        IOMUXC_SW_PAD_CTL_PAD_SPEED(speed) | IOMUXC_SW_PAD_CTL_PAD_SRE_MASK |
+                            IOMUXC_SW_PAD_CTL_PAD_PKE_MASK | IOMUXC_SW_PAD_CTL_PAD_PUE_MASK |
+                            IOMUXC_SW_PAD_CTL_PAD_HYS_MASK | IOMUXC_SW_PAD_CTL_PAD_PUS(1) |
+                            IOMUXC_SW_PAD_CTL_PAD_DSE(strength));
+    IOMUXC_SetPinConfig(IOMUXC_GPIO_SD_B0_01_USDHC1_CLK,
+                        IOMUXC_SW_PAD_CTL_PAD_SPEED(speed) | IOMUXC_SW_PAD_CTL_PAD_SRE_MASK |
+                            IOMUXC_SW_PAD_CTL_PAD_HYS_MASK | IOMUXC_SW_PAD_CTL_PAD_PUS(0) |
+                            IOMUXC_SW_PAD_CTL_PAD_DSE(strength));
+    IOMUXC_SetPinConfig(IOMUXC_GPIO_SD_B0_02_USDHC1_DATA0,
+                        IOMUXC_SW_PAD_CTL_PAD_SPEED(speed) | IOMUXC_SW_PAD_CTL_PAD_SRE_MASK |
+                            IOMUXC_SW_PAD_CTL_PAD_PKE_MASK | IOMUXC_SW_PAD_CTL_PAD_PUE_MASK |
+                            IOMUXC_SW_PAD_CTL_PAD_HYS_MASK | IOMUXC_SW_PAD_CTL_PAD_PUS(1) |
+                            IOMUXC_SW_PAD_CTL_PAD_DSE(strength));
+    IOMUXC_SetPinConfig(IOMUXC_GPIO_SD_B0_03_USDHC1_DATA1,
+                        IOMUXC_SW_PAD_CTL_PAD_SPEED(speed) | IOMUXC_SW_PAD_CTL_PAD_SRE_MASK |
+                            IOMUXC_SW_PAD_CTL_PAD_PKE_MASK | IOMUXC_SW_PAD_CTL_PAD_PUE_MASK |
+                            IOMUXC_SW_PAD_CTL_PAD_HYS_MASK | IOMUXC_SW_PAD_CTL_PAD_PUS(1) |
+                            IOMUXC_SW_PAD_CTL_PAD_DSE(strength));
+    IOMUXC_SetPinConfig(IOMUXC_GPIO_SD_B0_04_USDHC1_DATA2,
+                        IOMUXC_SW_PAD_CTL_PAD_SPEED(speed) | IOMUXC_SW_PAD_CTL_PAD_SRE_MASK |
+                            IOMUXC_SW_PAD_CTL_PAD_PKE_MASK | IOMUXC_SW_PAD_CTL_PAD_PUE_MASK |
+                            IOMUXC_SW_PAD_CTL_PAD_HYS_MASK | IOMUXC_SW_PAD_CTL_PAD_PUS(1) |
+                            IOMUXC_SW_PAD_CTL_PAD_DSE(strength));
+    IOMUXC_SetPinConfig(IOMUXC_GPIO_SD_B0_05_USDHC1_DATA3,
+                        IOMUXC_SW_PAD_CTL_PAD_SPEED(speed) | IOMUXC_SW_PAD_CTL_PAD_SRE_MASK |
+                            IOMUXC_SW_PAD_CTL_PAD_PKE_MASK | IOMUXC_SW_PAD_CTL_PAD_PUE_MASK |
+                            IOMUXC_SW_PAD_CTL_PAD_HYS_MASK | IOMUXC_SW_PAD_CTL_PAD_PUS(1) |
+                            IOMUXC_SW_PAD_CTL_PAD_DSE(strength));
+}
+
+void BOARD_MMC_Pin_Config(uint32_t speed, uint32_t strength)
+{
 }

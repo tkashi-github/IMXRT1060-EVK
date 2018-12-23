@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Freescale Semiconductor, Inc.
+ * Copyright (c) 2015, Freescale Semiconductor, Inc.
  * Copyright 2016-2018 NXP
  * All rights reserved.
  *
@@ -57,7 +57,6 @@ static status_t inline SDIO_GoIdle(sdio_card_t *card);
  */
 static status_t SDIO_DecodeCIS(
     sdio_card_t *card, sdio_func_num_t func, uint8_t *dataBuffer, uint32_t tplCode, uint32_t tplLink);
-
 /*******************************************************************************
  * Variables
  ******************************************************************************/
@@ -66,6 +65,8 @@ static const uint32_t g_tupleList[SDIO_COMMON_CIS_TUPLE_NUM] = {
     SDIO_TPL_CODE_MANIFID, SDIO_TPL_CODE_FUNCID, SDIO_TPL_CODE_FUNCE,
 };
 
+/* g_sdmmc statement */
+extern uint32_t g_sdmmc[SDK_SIZEALIGN(SDMMC_GLOBAL_BUFFER_SIZE, SDMMC_DATA_BUFFER_ALIGN_CACHE)];
 /*******************************************************************************
  * Code
  ******************************************************************************/
@@ -152,19 +153,19 @@ static status_t SDIO_SendOperationCondition(sdio_card_t *card, uint32_t argument
         if (argument == 0U)
         {
             /* check if memory present */
-            if ((command.response[0U] & kSDIO_OcrMemPresent) == kSDIO_OcrMemPresent)
+            if ((command.response[0U] & SDMMC_MASK(kSDIO_OcrMemPresent)) == SDMMC_MASK(kSDIO_OcrMemPresent))
             {
                 card->memPresentFlag = true;
             }
             /* save the io number */
-            card->ioTotalNumber = (command.response[0U] & kSDIO_OcrIONumber) >> 28U;
+            card->ioTotalNumber = (command.response[0U] & SDMMC_MASK(kSDIO_OcrIONumber)) >> 28U;
             /* save the operation condition */
             card->ocr = command.response[0U] & 0xFFFFFFU;
 
             break;
         }
         /* wait the card is ready for after initialization */
-        else if (command.response[0U] & kSDIO_OcrPowerUpBusyFlag)
+        else if (command.response[0U] & SDMMC_MASK(kSDIO_OcrPowerUpBusyFlag))
         {
             break;
         }
@@ -396,6 +397,104 @@ status_t SDIO_IO_Read_Extended(
     }
 
     return kStatus_Success;
+}
+
+status_t SDIO_IO_Transfer(sdio_card_t *card,
+                          sdio_command_t cmd,
+                          uint32_t argument,
+                          uint32_t blockSize,
+                          uint8_t *txData,
+                          uint8_t *rxData,
+                          uint16_t dataSize,
+                          uint32_t *response)
+{
+    assert(card != NULL);
+    assert((dataSize != 0U) && ((txData != NULL) || (rxData != NULL)));
+
+    uint32_t actualSize = dataSize;
+    SDMMCHOST_TRANSFER content = {0U};
+    SDMMCHOST_COMMAND command = {0U};
+    SDMMCHOST_DATA data = {0U};
+    uint32_t i = SDIO_RETRY_TIMES;
+    bool internalAlign = false;
+    uint32_t *dataAddr = (uint32_t *)(txData == NULL ? rxData : txData);
+
+    command.index = cmd;
+    command.argument = argument;
+    command.responseType = kCARD_ResponseTypeR5;
+    command.responseErrorFlags = (kSDIO_StatusCmdCRCError | kSDIO_StatusIllegalCmd | kSDIO_StatusError |
+                                  kSDIO_StatusFunctionNumError | kSDIO_StatusOutofRange);
+    content.command = &command;
+    content.data = NULL;
+
+    if (dataSize)
+    {
+        /* if block size bigger than 1, then use block mode */
+        if (argument & SDIO_EXTEND_CMD_BLOCK_MODE_MASK)
+        {
+            if (dataSize % blockSize != 0)
+            {
+                actualSize = ((dataSize / blockSize) + 1) * blockSize;
+            }
+
+            data.blockCount = actualSize / blockSize;
+            data.blockSize = blockSize;
+        }
+        else
+        {
+            data.blockCount = 1;
+            data.blockSize = dataSize;
+        }
+        /* if data buffer address can not meet host controller internal DMA requirement, sdio driver will try to use
+        * internal align buffer if data size is not bigger than internal buffer size,
+        * Align address transfer always can get a better performance, so if you want sdio driver make buffer address
+        * align, you should
+        * redefine the SDMMC_GLOBAL_BUFFER_SIZE macro to a value which is big enough for your application.
+        */
+        if (((uint32_t)dataAddr & (SDMMCHOST_DMA_BUFFER_ADDR_ALIGN - 1U)) &&
+            (actualSize <= (SDMMC_GLOBAL_BUFFER_SIZE * sizeof(uint32_t))))
+        {
+            internalAlign = true;
+            dataAddr = (uint32_t *)g_sdmmc;
+            memset(g_sdmmc, 0U, actualSize);
+            if (txData)
+            {
+                memcpy(g_sdmmc, txData, dataSize);
+            }
+        }
+
+        if (rxData)
+        {
+            data.rxData = dataAddr;
+        }
+        else
+        {
+            data.txData = dataAddr;
+        }
+
+        content.data = &data;
+    }
+
+    do
+    {
+        if (kStatus_Success == card->host.transfer(card->host.base, &content))
+        {
+            if (internalAlign && rxData)
+            {
+                memcpy(rxData, g_sdmmc, dataSize);
+            }
+
+            if (response != NULL)
+            {
+                *response = command.response[0];
+            }
+
+            return kStatus_Success;
+        }
+
+    } while (i--);
+
+    return kStatus_Fail;
 }
 
 status_t SDIO_GetCardCapability(sdio_card_t *card, sdio_func_num_t func)
@@ -835,7 +934,8 @@ status_t SDIO_CardInit(sdio_card_t *card)
     /* verify the voltage and set the new voltage */
     if (card->host.capability.flags & kSDMMCHOST_SupportV330)
     {
-        if (kStatus_Success != SDIO_SendOperationCondition(card, kSDIO_OcrVdd32_33Flag | kSDIO_OcrVdd33_34Flag))
+        if (kStatus_Success !=
+            SDIO_SendOperationCondition(card, SDMMC_MASK(kSDIO_OcrVdd32_33Flag) | SDMMC_MASK(kSDIO_OcrVdd33_34Flag)))
         {
             return kStatus_SDMMC_InvalidVoltage;
         }
@@ -898,7 +998,7 @@ status_t SDIO_HostInit(sdio_card_t *card)
 {
     assert(card);
 
-    if ((!card->isHostReady) && SDMMCHOST_Init(&(card->host), (void *)(&(card->usrParam.cd))) != kStatus_Success)
+    if ((!card->isHostReady) && SDMMCHOST_Init(&(card->host), (void *)(card->usrParam.cd)) != kStatus_Success)
     {
         return kStatus_Fail;
     }

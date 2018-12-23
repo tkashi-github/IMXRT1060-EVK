@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Freescale Semiconductor, Inc.
+ * Copyright (c) 2015, Freescale Semiconductor, Inc.
  * Copyright 2016-2018 NXP
  * All rights reserved.
  *
@@ -7,12 +7,7 @@
  */
 
 #include "fsl_sdmmc_host.h"
-#include "board.h"
 #include "fsl_sdmmc_event.h"
-#include "fsl_gpio.h"
-#ifdef BOARD_USDHC_CD_PORT_BASE
-#include "fsl_port.h"
-#endif
 
 /*******************************************************************************
 * Definitions
@@ -84,7 +79,7 @@ static status_t SDMMCHOST_CardDetectInit(SDMMCHOST_TYPE *base, const sdmmchost_d
 AT_NONCACHEABLE_SECTION_ALIGN(uint32_t g_usdhcAdma2Table[USDHC_ADMA_TABLE_WORDS], USDHC_ADMA2_ADDR_ALIGN);
 
 static usdhc_handle_t s_usdhcHandle;
-static volatile bool s_usdhcTransferSuccessFlag = true;
+static volatile status_t s_usdhcTransferStatus = kStatus_Success;
 static volatile bool s_sdInsertedFlag = false;
 static volatile status_t s_reTuningFlag = false;
 /*******************************************************************************
@@ -137,16 +132,12 @@ static void SDMMCHOST_TransferCompleteCallback(SDMMCHOST_TYPE *base,
                                                void *userData)
 {
     /* wait the target status and then notify the transfer complete */
-    if (status == kStatus_Success)
-    {
-        s_usdhcTransferSuccessFlag = true;
-    }
-    else
-    {
-        s_usdhcTransferSuccessFlag = false;
-    }
+    s_usdhcTransferStatus = status;
 
-    SDMMCEVENT_Notify(kSDMMCEVENT_TransferComplete);
+    if (!((handle->data->rxData) && (status == kStatus_USDHC_SendCommandFailed)))
+    {
+        SDMMCEVENT_Notify(kSDMMCEVENT_TransferComplete);
+    }
 }
 
 static void SDMMCHOST_ReTuningCallback(SDMMCHOST_TYPE *base, void *userData)
@@ -178,7 +169,7 @@ static status_t SDMMCHOST_TransferFunction(SDMMCHOST_TYPE *base, SDMMCHOST_TRANS
 
     if ((error != kStatus_Success) ||
         (false == SDMMCEVENT_Wait(kSDMMCEVENT_TransferComplete, SDMMCHOST_TRANSFER_COMPLETE_TIMEOUT)) ||
-        (s_reTuningFlag) || (!s_usdhcTransferSuccessFlag))
+        (s_reTuningFlag) || (s_usdhcTransferStatus != kStatus_Success))
     {
         if (s_reTuningFlag || (error == kStatus_USDHC_ReTuningRequest))
         {
@@ -190,7 +181,7 @@ static status_t SDMMCHOST_TransferFunction(SDMMCHOST_TYPE *base, SDMMCHOST_TRANS
         }
         else
         {
-            error = kStatus_Fail;
+            error = s_usdhcTransferStatus;
             /* host error recovery */
             SDMMCHOST_ErrorRecovery(base);
         }
@@ -234,7 +225,6 @@ static status_t SDMMCHOST_CardDetectInit(SDMMCHOST_TYPE *base, const sdmmchost_d
 
     if (cdType == kSDMMCHOST_DetectCardByGpioCD)
     {
-#if 0	/** Disable GPIO Interrupt */
         SDMMCHOST_CARD_DETECT_GPIO_INIT();
 
 /* set IRQ priority */
@@ -247,7 +237,6 @@ static status_t SDMMCHOST_CardDetectInit(SDMMCHOST_TYPE *base, const sdmmchost_d
         SDMMCHOST_ENABLE_IRQ(SDMMCHOST_CARD_DETECT_GPIO_IRQ);
         /* detect card status */
         SDMMCHOST_DetectCardByGpio(cd);
-#endif
     }
     else
     {
@@ -393,7 +382,7 @@ status_t SDMMCHOST_Init(SDMMCHOST_CONFIG *host, void *userData)
     /* Define transfer function. */
     usdhcHost->transfer = SDMMCHOST_TransferFunction;
     /* card detect init */
-    SDMMCHOST_CardDetectInit(usdhcHost->base, (sdmmchost_detect_card_t *)userData);
+    //SDMMCHOST_CardDetectInit(usdhcHost->base, (sdmmchost_detect_card_t *)userData);
 
     return kStatus_Success;
 }

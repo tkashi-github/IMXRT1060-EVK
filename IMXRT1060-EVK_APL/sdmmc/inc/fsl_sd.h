@@ -61,6 +61,7 @@ typedef struct _sd_card
     sd_cid_t cid;                   /*!< CID */
     sd_csd_t csd;                   /*!< CSD */
     sd_scr_t scr;                   /*!< SCR */
+    sd_status_t stat;               /*!< sd 512 bit status */
     uint32_t blockCount;            /*!< Card total block number */
     uint32_t blockSize;             /*!< Card block size */
     sd_timing_mode_t currentTiming; /*!< current timing mode */
@@ -184,7 +185,7 @@ void SD_HostReset(SDMMCHOST_CONFIG *host);
 void SD_PowerOnCard(SDMMCHOST_TYPE *base, const sdmmchost_pwr_card_t *pwr);
 
 /*!
- * @brief power on card.
+ * @brief power off card.
  *
  * The power off operation depend on host or the user define power on function.
  * @param base host base address.
@@ -220,6 +221,26 @@ bool SD_IsCardPresent(sd_card_t *card);
  * @retval false Card isn't read only.
  */
 bool SD_CheckReadOnly(sd_card_t *card);
+
+/*!
+ * @brief Send SELECT_CARD command to set the card to be transfer state or not.
+ *
+ * @param card Card descriptor.
+ * @param isSelected True to set the card into transfer state, false to disselect.
+ * @retval kStatus_SDMMC_TransferFailed Transfer failed.
+ * @retval kStatus_Success Operate successfully.
+ */
+status_t SD_SelectCard(sd_card_t *card, bool isSelected);
+
+/*!
+ * @brief Send ACMD13 to get the card current status.
+ *
+ * @param card Card descriptor.
+ * @retval kStatus_SDMMC_TransferFailed Transfer failed.
+ * @retval kStatus_SDMMC_SendApplicationCommandFailed send application command failed.
+ * @retval kStatus_Success Operate successfully.
+ */
+status_t SD_ReadStatus(sd_card_t *card);
 
 /*!
  * @brief Reads blocks from the specific card.
@@ -275,6 +296,22 @@ status_t SD_WriteBlocks(sd_card_t *card, const uint8_t *buffer, uint32_t startBl
  * @retval kStatus_Success Operate successfully.
  */
 status_t SD_EraseBlocks(sd_card_t *card, uint32_t startBlock, uint32_t blockCount);
+
+/*!
+ * @brief select card driver strength
+ * select card driver strength
+ * @param card Card descriptor.
+ * @param driverStrength Driver strength
+ */
+status_t SD_SetDriverStrength(sd_card_t *card, sd_driver_strength_t driverStrength);
+
+/*!
+ * @brief select max current
+ * select max operation current
+ * @param card Card descriptor.
+ * @param maxCurrent Max current
+ */
+status_t SD_SetMaxCurrent(sd_card_t *card, sd_max_current_t maxCurrent);
 
 /* @} */
 

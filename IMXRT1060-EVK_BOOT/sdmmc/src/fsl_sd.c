@@ -1808,6 +1808,7 @@ status_t SD_CardInit(sd_card_t *card)
 
     /* reset variables */
     card->flags = 0U;
+	card->currentTiming = kSD_TimingSDR12DefaultMode;
     /* set DATA bus width */
     SDMMCHOST_SET_CARD_BUS_WIDTH(card->host.base, kSDMMCHOST_DATABUSWIDTH1BIT);
     /*set card freq to 400KHZ*/

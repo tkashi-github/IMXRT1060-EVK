@@ -14,11 +14,16 @@
 #include "fsl_sdmmc_spec.h"
 #include "stdlib.h"
 
+/*!
+ * @addtogroup CARD
+ * @{
+ */
+
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
 /*! @brief Middleware version. */
-#define FSL_SDMMC_DRIVER_VERSION (MAKE_VERSION(2U, 2U, 5U)) /*2.2.5*/
+#define FSL_SDMMC_DRIVER_VERSION (MAKE_VERSION(2U, 2U, 6U)) /*2.2.6*/
 
 /*! @brief Reverse byte sequence in uint32_t */
 #define SWAP_WORD_BYTE_SEQUENCE(x) (__REV(x))
@@ -30,9 +35,12 @@
 #define FSL_SDMMC_MAX_CMD_RETRIES (10U)
 /*! @brief Default block size */
 #define FSL_SDMMC_DEFAULT_BLOCK_SIZE (512U)
+#ifndef SDMMC_GLOBAL_BUFFER_SIZE
 /*! @brief SDMMC global data buffer size, word unit*/
 #define SDMMC_GLOBAL_BUFFER_SIZE (128U)
-
+#endif
+/*! @brief SDMMC enable software tuning */
+#define SDMMC_ENABLE_SOFTWARE_TUNING (0U)
 /* Common definition for cache line size align */
 #if defined(FSL_SDK_ENABLE_DRIVER_CACHE_CONTROL) && FSL_SDK_ENABLE_DRIVER_CACHE_CONTROL
 #if defined(FSL_FEATURE_L1DCACHE_LINESIZE_BYTE)
@@ -46,6 +54,14 @@
 #endif
 #else
 #define SDMMC_DATA_BUFFER_ALIGN_CACHE 1
+#endif
+
+/*! @brief SD/MMC error log. */
+#if defined SDMMC_ENABLE_LOG_PRINT
+#include "fsl_debug_console.h"
+#define SDMMC_LOG(...) PRINTF(__VA_ARGS__)
+#else
+#define SDMMC_LOG(format, ...)
 #endif
 
 /*! @brief SD/MMC card API's running status. */
@@ -90,12 +106,17 @@ enum _sdmmc_status
     kStatus_SDMMC_SDIO_ReadCISFail = MAKE_STATUS(kStatusGroup_SDMMC, 31U),         /*!<  read CIS fail */
     kStatus_SDMMC_SDIO_InvalidCard = MAKE_STATUS(kStatusGroup_SDMMC, 32U),         /*!<  invaild SDIO card */
     kStatus_SDMMC_TuningFail = MAKE_STATUS(kStatusGroup_SDMMC, 33U),               /*!<  tuning fail */
-    kStatus_SDMMC_SwitchVoltageFail = MAKE_STATUS(kStatusGroup_SDMMC, 34U),        /*!< switch voltage fail*/
-    kStatus_SDMMC_ReTuningRequest = MAKE_STATUS(kStatusGroup_SDMMC, 35U),          /*!<  retuning request */
-    kStatus_SDMMC_SetDriverStrengthFail = MAKE_STATUS(kStatusGroup_SDMMC, 36U),    /*!<  set driver strength fail */
-    kStatus_SDMMC_SetPowerClassFail = MAKE_STATUS(kStatusGroup_SDMMC, 37U),        /*!<  set power class fail */
-    kStatus_SDMMC_HostNotReady = MAKE_STATUS(kStatusGroup_SDMMC, 38U),             /*!<  host controller not ready */
-    kStatus_SDMMC_CardDetectFailed = MAKE_STATUS(kStatusGroup_SDMMC, 39U),         /*!<  card detect failed */
+
+    kStatus_SDMMC_SwitchVoltageFail = MAKE_STATUS(kStatusGroup_SDMMC, 34U),              /*!< switch voltage fail*/
+    kStatus_SDMMC_SwitchVoltage18VFail33VSuccess = MAKE_STATUS(kStatusGroup_SDMMC, 35U), /*!< switch voltage fail*/
+
+    kStatus_SDMMC_ReTuningRequest = MAKE_STATUS(kStatusGroup_SDMMC, 36U),       /*!<  retuning request */
+    kStatus_SDMMC_SetDriverStrengthFail = MAKE_STATUS(kStatusGroup_SDMMC, 37U), /*!<  set driver strength fail */
+    kStatus_SDMMC_SetPowerClassFail = MAKE_STATUS(kStatusGroup_SDMMC, 38U),     /*!<  set power class fail */
+    kStatus_SDMMC_HostNotReady = MAKE_STATUS(kStatusGroup_SDMMC, 39U),          /*!<  host controller not ready */
+    kStatus_SDMMC_CardDetectFailed = MAKE_STATUS(kStatusGroup_SDMMC, 40U),      /*!<  card detect failed */
+    kStatus_SDMMC_AuSizeNotSetProperly = MAKE_STATUS(kStatusGroup_SDMMC, 41U),  /*!<  AU size not set properly */
+
 };
 
 /*! @brief card operation voltage */
@@ -216,5 +237,5 @@ status_t SDMMC_ExecuteTuning(SDMMCHOST_TYPE *base,
 #if defined(__cplusplus)
 }
 #endif
-
+/* @} */
 #endif /* _FSL_SDMMC_COMMON_H_ */

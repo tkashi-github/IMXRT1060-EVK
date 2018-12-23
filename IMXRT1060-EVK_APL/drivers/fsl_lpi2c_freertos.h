@@ -40,10 +40,6 @@ typedef struct _lpi2c_rtos_handle
     status_t async_status;
     SemaphoreHandle_t mutex;     /*!< Mutex to lock the handle during a trasfer */
     SemaphoreHandle_t semaphore; /*!< Semaphore to notify and unblock task when transfer ends */
-#if (configSUPPORT_STATIC_ALLOCATION != 0)
-	StaticSemaphore_t resMutex;
-	StaticSemaphore_t resSemaphore;
-#endif
 } lpi2c_rtos_handle_t;
 /*! \endcond */
 
