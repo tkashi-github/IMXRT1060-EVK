@@ -46,6 +46,7 @@ extern "C"
 #include <stdalign.h>
 
 /* CMSIS */
+#include "os_tick.h"
 #include "cmsis_os.h"
 #include "cmsis_os2.h"
 

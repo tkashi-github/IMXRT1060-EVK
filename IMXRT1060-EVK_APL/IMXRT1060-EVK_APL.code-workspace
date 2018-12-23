@@ -47,7 +47,10 @@
 			"board.h": "c",
 			"cameratask.h": "c",
 			"fsl_camera_device.h": "c",
-			"spiflash.h": "c"
+			"spiflash.h": "c",
+			"common.h": "c",
+			"cmsis_os.h": "c",
+			"os_tick.h": "c"
 		},
 		"C_Cpp.default.defines": [
 			"__GNUC__",

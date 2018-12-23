@@ -33,6 +33,11 @@
 #include "common/common.h"
 #include "board.h"
 #include "mimiclib/mimiclib.h"
+#include "ff.h"
+#include "pin_mux.h"
+#include "fsl_gpio.h"
+#include "fsl_iomuxc.h"
+
 
 void MemDump(uintptr_t addr, size_t ByteCnt)
 {
@@ -67,8 +72,22 @@ void MemDump(uintptr_t addr, size_t ByteCnt)
 	mimic_printf("-------------------------------------------------------------------\r\n");
 }
 
-#if 0
-#include "ff.h"
+void reboot(void){
+	gpio_pin_config_t stGpioConfig;
+
+	stGpioConfig.direction = kGPIO_DigitalOutput;
+	stGpioConfig.outputLogic = 0;
+	stGpioConfig.interruptMode = kGPIO_NoIntmode;
+	IOMUXC_SetPinMux(IOMUXC_GPIO_B1_13_GPIO2_IO29, 0);
+	GPIO_PinInit(GPIO2, 29, &stGpioConfig);
+	uint8_t u8Out = 0;
+	for(;;){
+		mimic_printf("Wainting Reset (%lu msec)\r\n", osKernelGetTickCount());
+		GPIO_PinWrite(GPIO2, 29, u8Out);
+		u8Out ^= 1;
+		vTaskDelay(2000);
+	}
+}
 
 TCHAR *GetFileExt(TCHAR szExt[], const TCHAR szFilePath[], size_t SizeExt)
 {
@@ -100,5 +119,3 @@ TCHAR *GetFileExt(TCHAR szExt[], const TCHAR szFilePath[], size_t SizeExt)
 
 	return pret;
 }
-
-#endif

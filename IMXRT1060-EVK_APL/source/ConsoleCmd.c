@@ -53,6 +53,7 @@
 
 #include "SensorTask/SensorTask.h"
 #include "SPIFlash/SPIFlash.h"
+#include "common/common.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -72,6 +73,7 @@ static void CmdTask(uint32_t argc, const char *argv[]);
 
 static void CmdNvic(uint32_t argc, const char *argv[]);
 static void CmdPing(uint32_t argc, const char *argv[]);
+static void CmdReboot(uint32_t argc, const char *argv[]);
 
 stCmdTable_t g_stCmdTable[] = {
 	{"HELP", CmdHelp, "Help"},			/* Help Command*/
@@ -79,6 +81,7 @@ stCmdTable_t g_stCmdTable[] = {
 	{"ARG", CmdArg, "Argment Test"},	/* Argment Command*/
 	{"TICK", CmdTick, "Tick Test"},		/* Tick Command*/
 	{"LOAD", CmdLoad, "CPU Load"},		/* LOAD Command*/
+	{"REBOOT",CmdReboot,"Reboot"},
 	{"NVIC", CmdNvic, "NVIC"},
 	{"LS", FileCmd_ls, "LS"},			/** */
 	{"MKDIR", FileCmd_mkdir, "mkdir"},  /** */
@@ -293,3 +296,8 @@ static void CmdPing(uint32_t argc, const char *argv[])
 		sys_msleep(1000);
 	}
 }
+
+static void CmdReboot(uint32_t argc, const char *argv[]){
+	reboot();
+}
+

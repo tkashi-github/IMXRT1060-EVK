@@ -45,7 +45,7 @@ extern "C"
 
 extern void MemDump(uintptr_t addr, size_t ByteCnt);
 extern TCHAR *GetFileExt(TCHAR szExt[], const TCHAR szFilePath[], size_t SizeExt);
-
+extern void reboot(void);
 
 #ifdef __cplusplus
 }

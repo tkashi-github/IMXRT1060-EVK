@@ -41,6 +41,7 @@
 
 #include "OSResource.h"
 #include "common/update.h"
+#include "common/common.h"
 #include "mimiclib/mimiclib.h"
 #include "Task/LanTask/LanTask.h"
 
@@ -66,8 +67,7 @@ void InitialTask(void const *argument)
 		f_unlink("IMXRT1060-EVK_APL_crc16_end.bin");
 		f_rename("IMXRT1060-EVK_APL_crc16.bin", "IMXRT1060-EVK_APL_crc16_end.bin");
 		mimic_printf("Call SYSTEM RESET\r\n");
-		vTaskDelay(100);
-		NVIC_SystemReset();
+		reboot();
 	}
 	mimic_printf("[%s (%d)] Storage Init Complete (%lu msec)\r\n", __FUNCTION__, __LINE__, xTaskGetTickCount());
 	osThreadSuspend(osThreadGetId());
