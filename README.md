@@ -6,6 +6,7 @@
  * Modify MCUX_IDE_DIR in WriteDebugApl.bat/WriteDebugBoot.bat.
  * For MCUXpressoIDE_10.2.1_795
  * Maybe, MMC or MMC compatible card support.
+ * Update Main Program by BIN File. (please put "IMXRT1060-EVK_APL_crc16.bin" root file system)
  * TODO : License
 
 
