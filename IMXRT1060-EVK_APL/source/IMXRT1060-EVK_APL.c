@@ -132,18 +132,11 @@ DefALLOCATE_ITCM static void GPIOMonitor(void){
 			if(u32CDPinCnt < DefSDCardDetectTime){
 				u32CDPinCnt++;
 			}else if(u32CDPinCnt == DefSDCardDetectTime){
-				stTaskMsgBlock_t stTaskMsg;
-				BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-				memset(&stTaskMsg, 0, sizeof(stTaskMsg));
-
 				if(u32LastCDPin == 0){
-					stTaskMsg.enMsgId = enSDInsterted;
+					PostMsgStorageTaskInsertFromISR(true);
 				}else{
-					stTaskMsg.enMsgId = enSDRemoved;
+					PostMsgStorageTaskInsertFromISR(false);
 				}
-
-				xStreamBufferSendFromISR(g_sbhStorageTask[enUSDHC1], &stTaskMsg, sizeof(stTaskMsg), &xHigherPriorityTaskWoken);
-				portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 				u32CDPinCnt++;
 			}else{
 				/* nop */

@@ -1166,6 +1166,7 @@ void BOARD_InitUSDHC(void)
                                                  Pull / Keep Select Field: Keeper
                                                  Pull Up / Down Config. Field: 100K Ohm Pull Down
                                                  Hyst. Enable Field: Hysteresis Disabled */
+#if 0
 	IOMUXC_SetPinConfig(
 		IOMUXC_GPIO_B1_12_GPIO2_IO28, /* GPIO_B1_12 PAD functional properties : */
 		0x017089u);					  /* Slew Rate Field: Fast Slew Rate
@@ -1176,6 +1177,7 @@ void BOARD_InitUSDHC(void)
                                                  Pull / Keep Select Field: Pull
                                                  Pull Up / Down Config. Field: 47K Ohm Pull Up
                                                  Hyst. Enable Field: Hysteresis Enabled */
+#endif
 	IOMUXC_SetPinConfig(
 		IOMUXC_GPIO_B1_14_USDHC1_VSELECT, /* GPIO_B1_14 PAD functional properties : */
 		0x0170A1u);						  /* Slew Rate Field: Fast Slew Rate

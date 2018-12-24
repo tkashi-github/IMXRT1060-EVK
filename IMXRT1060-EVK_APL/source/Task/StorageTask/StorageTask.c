@@ -286,6 +286,7 @@ DefALLOCATE_ITCM void StorageTask(void const *argument)
 	s_stSD[enSlotNo].usrParam.cd = &s_sdCardDetect[enSlotNo];
 
 	NVIC_SetPriority(enIRQn, kIRQ_PRIORITY_USDHC);
+	SD_HostInit(&s_stSD[enSlotNo]);
 
 	for (;;)
 	{
