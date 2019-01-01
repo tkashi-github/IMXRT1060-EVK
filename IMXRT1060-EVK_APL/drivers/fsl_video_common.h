@@ -2,7 +2,7 @@
  * Copyright (c) 2017, NXP Semiconductors, Inc.
  * All rights reserved.
  *
- * 
+ *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
@@ -71,6 +71,7 @@ typedef enum _video_resolution
     kVIDEO_ResolutionQQCIF = FSL_VIDEO_RESOLUTION(88, 72),     /*!< QQCIF, 88 * 72 */
     kVIDEO_Resolution720P = FSL_VIDEO_RESOLUTION(1280, 720),   /*!< 720P, 1280 * 720 */
     kVIDEO_Resolution1080P = FSL_VIDEO_RESOLUTION(1920, 1080), /*!< 1080P, 1920 * 1280*/
+    kVIDEO_ResolutionWXGA = FSL_VIDEO_RESOLUTION(1280, 800),   /*!< WXGA, 1280 * 800 */
 } video_resolution_t;
 
 /*!

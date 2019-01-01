@@ -356,7 +356,8 @@
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
 								</inputType>
 							</tool>
-							<tool id="com.crt.advproject.tool.debug.debug.538545683" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug"/>
+							<tool id="com.crt.advproject.tool.debug.debug.538545683" name="MCU Debugger"/>
+							<tool id="com.crt.advproject.tool.debug.debug.1235705042" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug"/>
 						</toolChain>
 					</folderInfo>
 					<folderInfo id="com.crt.advproject.config.exe.debug.1582687583.610206090" name="/" resourcePath="lwip">
@@ -374,7 +375,8 @@
 							</tool>
 							<tool id="com.crt.advproject.link.cpp.exe.debug.1163576932" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.338120575"/>
 							<tool id="com.crt.advproject.link.exe.debug.1002048020" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1141689835"/>
-							<tool id="com.crt.advproject.tool.debug.debug.146577330" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug"/>
+							<tool id="com.crt.advproject.tool.debug.debug.146577330" name="MCU Debugger"/>
+							<tool id="com.crt.advproject.tool.debug.debug.357132746" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
@@ -736,7 +738,8 @@
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
 								</inputType>
 							</tool>
-							<tool id="com.crt.advproject.tool.debug.release.239543577" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.release"/>
+							<tool id="com.crt.advproject.tool.debug.release.239543577" name="MCU Debugger"/>
+							<tool id="com.crt.advproject.tool.debug.release.620481879" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.release"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>

@@ -10,7 +10,7 @@
 #include "fsl_camera.h"
 #include "fsl_camera_device.h"
 #include "fsl_ov7725.h"
-#include "mimiclib/mimiclib.h"
+
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -388,20 +388,17 @@ status_t OV7725_Init(camera_device_handle_t *handle, const camera_config_t *conf
     status = OV7725_ReadReg(handle, OV7725_PID_REG, &pid);
     if (kStatus_Success != status)
     {
-        mimic_printf("[%s (%d)] TP\r\n", __FUNCTION__, __LINE__);
         return status;
     }
 
     status = OV7725_ReadReg(handle, OV7725_VER_REG, &ver);
     if (kStatus_Success != status)
     {
-        mimic_printf("[%s (%d)] TP\r\n", __FUNCTION__, __LINE__);
         return status;
     }
 
     if (OV7725_REVISION != (((uint32_t)pid << 8U) | (uint32_t)ver))
     {
-		mimic_printf("[%s (%d)] TP\r\n", __FUNCTION__, __LINE__);
         return kStatus_Fail;
     }
 

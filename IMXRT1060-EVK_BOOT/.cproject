@@ -282,7 +282,8 @@
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
 								</inputType>
 							</tool>
-							<tool id="com.crt.advproject.tool.debug.debug.1920277928" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug"/>
+							<tool id="com.crt.advproject.tool.debug.debug.1920277928" name="MCU Debugger"/>
+							<tool id="com.crt.advproject.tool.debug.debug.1531855110" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug"/>
 						</toolChain>
 					</folderInfo>
 					<folderInfo id="com.crt.advproject.config.exe.debug.591182084.841196865" name="/" resourcePath="CMSIS/DSP">
@@ -299,7 +300,8 @@
 							</tool>
 							<tool id="com.crt.advproject.link.cpp.exe.debug.1855408623" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1817781815"/>
 							<tool id="com.crt.advproject.link.exe.debug.943963035" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.129351138"/>
-							<tool id="com.crt.advproject.tool.debug.debug.345965960" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug"/>
+							<tool id="com.crt.advproject.tool.debug.debug.345965960" name="MCU Debugger"/>
+							<tool id="com.crt.advproject.tool.debug.debug.152786615" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug"/>
 						</toolChain>
 					</folderInfo>
 					<fileInfo id="com.crt.advproject.config.exe.debug.591182084.843207245" name="StorageTask.c" rcbsApplicability="disable" resourcePath="source/Task/StorageTask/StorageTask.c" toolsToInvoke="com.crt.advproject.gcc.exe.debug.658337211.932332381">
@@ -613,7 +615,8 @@
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
 								</inputType>
 							</tool>
-							<tool id="com.crt.advproject.tool.debug.release.1045692424" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.release"/>
+							<tool id="com.crt.advproject.tool.debug.release.1045692424" name="MCU Debugger"/>
+							<tool id="com.crt.advproject.tool.debug.release.1108236532" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.release"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
