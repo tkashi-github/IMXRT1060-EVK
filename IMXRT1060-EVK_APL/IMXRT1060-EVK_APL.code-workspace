@@ -50,7 +50,8 @@
 			"spiflash.h": "c",
 			"common.h": "c",
 			"cmsis_os.h": "c",
-			"os_tick.h": "c"
+			"os_tick.h": "c",
+			"clock_config.h": "c"
 		},
 		"C_Cpp.default.defines": [
 			"__GNUC__",
