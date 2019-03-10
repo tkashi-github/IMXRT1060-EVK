@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding= "UTF-8" ?>
-<configuration name="MIMXRT1062xxxxA" version="1.4" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.4 http://mcuxpresso.nxp.com/XSD/mex_configuration_1.4.xsd" uuid="3266d5ba-6201-4841-9b19-c3e38d19fd9d" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<configuration name="MIMXRT1062xxxxA" version="1.5" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.5 http://mcuxpresso.nxp.com/XSD/mex_configuration_1.5.xsd" uuid="3266d5ba-6201-4841-9b19-c3e38d19fd9d" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.5" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <common>
       <processor>MIMXRT1062xxxxA</processor>
       <package>MIMXRT1062DVL6A</package>
@@ -15,9 +15,9 @@
       <generate_extended_information>false</generate_extended_information>
    </preferences>
    <tools>
-      <pins name="Pins" version="4.1" enabled="true" update_project_code="true">
+      <pins name="Pins" version="5.0" enabled="true" update_project_code="true">
          <pins_profile>
-            <processor_version>4.0.1</processor_version>
+            <processor_version>5.0.2</processor_version>
             <power_domains/>
             <pin_labels>
                <pin_label pin_num="E3" pin_signal="GPIO_EMC_00" label="SEMC_D0" identifier="SEMC_D0"/>
@@ -216,7 +216,7 @@
          </pins_profile>
          <functions_list>
             <function name="BOARD_InitPins">
-               <description>Configures pin routing and optionally pin electrical features.&amp;lt;br/&amp;gt;</description>
+               <description>Configures pin routing and optionally pin electrical features.</description>
                <options>
                   <callFromInitBoot>true</callFromInitBoot>
                   <coreID>core0</coreID>
@@ -232,7 +232,7 @@
                <pins/>
             </function>
             <function name="BOARD_InitDEBUG_UART">
-               <description>Configures pin routing and optionally pin electrical features.&amp;lt;br/&amp;gt;</description>
+               <description>Configures pin routing and optionally pin electrical features.</description>
                <options>
                   <callFromInitBoot>true</callFromInitBoot>
                   <coreID>core0</coreID>
@@ -285,7 +285,7 @@
                </pins>
             </function>
             <function name="BOARD_InitSDRAM">
-               <description>Configures pin routing and optionally pin electrical features.&amp;lt;br/&amp;gt;</description>
+               <description>Configures pin routing and optionally pin electrical features.</description>
                <options>
                   <coreID>core0</coreID>
                   <enableClock>true</enableClock>
@@ -350,7 +350,7 @@
                </pins>
             </function>
             <function name="BOARD_InitCSI">
-               <description>Configures pin routing and optionally pin electrical features.&amp;lt;br/&amp;gt;</description>
+               <description>Configures pin routing and optionally pin electrical features.</description>
                <options>
                   <coreID>core0</coreID>
                   <enableClock>true</enableClock>
@@ -422,7 +422,7 @@
                </pins>
             </function>
             <function name="BOARD_InitLCD">
-               <description>Configures pin routing and optionally pin electrical features.&amp;lt;br/&amp;gt;</description>
+               <description>Configures pin routing and optionally pin electrical features.</description>
                <options>
                   <coreID>core0</coreID>
                   <enableClock>true</enableClock>
@@ -593,7 +593,7 @@
                </pins>
             </function>
             <function name="BOARD_InitCAN">
-               <description>Configures pin routing and optionally pin electrical features.&amp;lt;br/&amp;gt;</description>
+               <description>Configures pin routing and optionally pin electrical features.</description>
                <options>
                   <coreID>core0</coreID>
                   <enableClock>true</enableClock>
@@ -621,7 +621,7 @@
                </pins>
             </function>
             <function name="BOARD_InitENET">
-               <description>Configures pin routing and optionally pin electrical features.&amp;lt;br/&amp;gt;</description>
+               <description>Configures pin routing and optionally pin electrical features.</description>
                <options>
                   <coreID>core0</coreID>
                   <enableClock>true</enableClock>
@@ -657,7 +657,7 @@
                </pins>
             </function>
             <function name="BOARD_InitUSDHC">
-               <description>Configures pin routing and optionally pin electrical features.&amp;lt;br/&amp;gt;</description>
+               <description>Configures pin routing and optionally pin electrical features.</description>
                <options>
                   <coreID>core0</coreID>
                   <enableClock>true</enableClock>
@@ -689,7 +689,7 @@
                </pins>
             </function>
             <function name="BOARD_InitHyperFlash">
-               <description>Configures pin routing and optionally pin electrical features.&amp;lt;br/&amp;gt;</description>
+               <description>Configures pin routing and optionally pin electrical features.</description>
                <options>
                   <coreID>core0</coreID>
                   <enableClock>true</enableClock>
@@ -728,9 +728,9 @@
             </function>
          </functions_list>
       </pins>
-      <clocks name="Clocks" version="4.1" enabled="true" update_project_code="true">
+      <clocks name="Clocks" version="5.0" enabled="true" update_project_code="true">
          <clocks_profile>
-            <processor_version>4.0.1</processor_version>
+            <processor_version>5.0.2</processor_version>
          </clocks_profile>
          <clock_configurations>
             <clock_configuration name="BOARD_BootClockRUN">
@@ -746,9 +746,9 @@
             </clock_configuration>
          </clock_configurations>
       </clocks>
-      <periphs name="Peripherals" version="4.1" enabled="true" update_project_code="true">
+      <periphs name="Peripherals" version="5.0" enabled="true" update_project_code="true">
          <peripherals_profile>
-            <processor_version>4.0.1</processor_version>
+            <processor_version>5.0.2</processor_version>
          </peripherals_profile>
          <functional_groups>
             <functional_group name="BOARD_InitPeripherals" uuid="e0eb9952-282b-4f6b-b480-bb8a333f67bc" called_from_default_init="true" id_prefix="" core="core0">

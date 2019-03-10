@@ -69,10 +69,10 @@ DefALLOCATE_ITCM void LcdTask(void const *argument)
 
 	tick = xTaskGetTickCount();
 	DrvELCDIFInit();
-	
+
 	for (;;)
 	{
-		DrvELCDIFFillFrameBuffer(tick % 65535);
+		//DrvELCDIFFillFrameBuffer(tick % 65535);
 		vTaskDelayUntil((TickType_t *const) & tick, 100);
 	}
 

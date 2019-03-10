@@ -149,8 +149,8 @@ void DrvELCDIFInit(void)
 }
 
 void DrvELCDIFFillFrameBuffer(uint16_t u16color){
-	for(uint32_t i=0;i<DEF_IMG_WIDTH;i++){
-		for(uint32_t j=0;j<DEF_IMG_HEIGHT;j++){
+	for(uint32_t i=0;i<DEF_IMG_HEIGHT;i++){
+		for(uint32_t j=0;j<DEF_IMG_WIDTH;j++){
 			s_u16frameBuffer[i][j] = u16color;
 		}
 	}

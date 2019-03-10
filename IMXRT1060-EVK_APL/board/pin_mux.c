@@ -614,6 +614,9 @@ void BOARD_InitLCD(void)
 	CLOCK_EnableClock(kCLOCK_Iomuxc); /* iomuxc clock (iomuxc_clk_enable): 0x03u */
 
 	IOMUXC_SetPinMux(
+    	IOMUXC_GPIO_AD_B0_02_GPIO1_IO02,        /* GPIO_AD_B0_02 is configured as GPIO1_IO02 */
+    	0U);
+	IOMUXC_SetPinMux(
 		IOMUXC_GPIO_B0_00_LCD_CLK, /* GPIO_B0_00 is configured as LCD_CLK */
 		0U);					   /* Software Input On Field: Input Path is determined by functionality */
 	IOMUXC_SetPinMux(
@@ -680,6 +683,16 @@ void BOARD_InitLCD(void)
 						  (~(IOMUXC_GPR_GPR27_GPIO_MUX2_GPIO_SEL_MASK))) /* Mask bits to zero which are setting */
 						 | IOMUXC_GPR_GPR27_GPIO_MUX2_GPIO_SEL(0x00u)	/* GPIO2 and GPIO7 share same IO MUX function, GPIO_MUX2 selects one GPIO function.: 0x00u */
 	);
+  	IOMUXC_SetPinConfig(
+      IOMUXC_GPIO_AD_B0_02_GPIO1_IO02,        /* GPIO_AD_B0_02 PAD functional properties : */
+      0x10B0u);                               /* Slew Rate Field: Slow Slew Rate
+                                                 Drive Strength Field: R0/6
+                                                 Speed Field: medium(100MHz)
+                                                 Open Drain Enable Field: Open Drain Disabled
+                                                 Pull / Keep Enable Field: Pull/Keeper Enabled
+                                                 Pull / Keep Select Field: Keeper
+                                                 Pull Up / Down Config. Field: 100K Ohm Pull Down
+                                                 Hyst. Enable Field: Hysteresis Disabled */
 	IOMUXC_SetPinConfig(
 		IOMUXC_GPIO_B0_00_LCD_CLK, /* GPIO_B0_00 PAD functional properties : */
 		0x01B0B0u);				   /* Slew Rate Field: Slow Slew Rate
