@@ -1,5 +1,5 @@
 /**
- * @file DrvELCDIF.h
+ * @file LcdTask.h
  * @brief TODO
  * @author Takashi Kashiwagi
  * @date 2019/03/10
@@ -31,23 +31,50 @@
  * - 2019/03/10: Takashi Kashiwagi: v0.1 for IMXRT1060-EVK
  */
 
-#ifndef __cplusplus
-#if __STDC_VERSION__ < 201112L
-#error /** Only C11 */
-#endif
-#endif
-#pragma once
-#ifdef __cplusplus
-extern "C"
+
+/*
+ * Copyright (c) 2017, NXP Semiconductors, Inc.
+ * All rights reserved.
+ *
+ * 
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
+
+#include "LcdTask/LcdTask.h"
+
+#include "board.h"
+#include "mimiclib/mimiclib.h"
+
+#include "pin_mux.h"
+#include "board.h"
+#include "clock_config.h"
+#include "fsl_common.h"
+#include "common.h"
+
+/** LCD Driver */
+#include "ELCDIF/DrvELCDIF.h"
+
+
+
+
+/**
+ * @brief Task Entry
+ * @param [in]  argument nouse
+ * @return void
+ */
+DefALLOCATE_ITCM void LcdTask(void const *argument)
 {
-#endif
+	TickType_t tick;
 
-/** User Typedefine */
-#include "UserTypedef.h"
-#include "OSResource.h"
+	tick = xTaskGetTickCount();
+	DrvELCDIFInit();
+	
+	for (;;)
+	{
+		DrvELCDIFFillFrameBuffer(tick % 65535);
+		vTaskDelayUntil((TickType_t *const) & tick, 100);
+	}
 
-extern void DrvELCDIFInit(void);
-extern void DrvELCDIFFillFrameBuffer(uint16_t u16color);
-#ifdef __cplusplus
+	vTaskSuspend(NULL);
 }
-#endif

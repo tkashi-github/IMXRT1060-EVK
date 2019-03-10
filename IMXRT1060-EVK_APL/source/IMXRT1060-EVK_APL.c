@@ -43,6 +43,7 @@
 #include "CPUFunc.h"
 #include "UART/DrvLPUART.h"
 #include "CameraTask/CameraTask.h"
+#include "ELCDIF/DrvELCDIF.h"
 
 #ifdef __cplusplus
 extern "C"

@@ -43,6 +43,7 @@
 #include "Task/LanTask/LanTask.h"
 #include "SensorTask/SensorTask.h"
 #include "CameraTask/CameraTask.h"
+#include "LcdTask/LcdTask.h"
 
 /** typedef Task Table */
 typedef struct{
@@ -60,6 +61,7 @@ DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_StorageTaskHandle;
 DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_LanTaskHandle;
 DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_SensorTaskHandle;
 DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_CameraTaskHandle;
+DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_LcdTaskHandle;
 
 /** Task Control Block (STATIC ALLOCATION)*/
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_InitialTaskTCB;
@@ -68,6 +70,7 @@ DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_StorageTaskTCB;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_LanTaskTCB;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_SensorTaskTCB;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_CameraTaskTCB;
+DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_LcdTaskTCB;
 
 /** Task Stack (STATIC ALLOCATION)*/
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_InitialTaskStack[8192/sizeof(uint32_t)];
@@ -76,6 +79,7 @@ DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_StorageTaskStack[8192/sizeof(
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_LanTaskStack[8192/sizeof(uint32_t)];
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_SensorTaskStack[8192/sizeof(uint32_t)];
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_CameraTaskStack[8192/sizeof(uint32_t)];
+DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_LcdTaskStack[8192/sizeof(uint32_t)];
 
 /** Task Table */
 static const stOSdefTable_t s_stTaskTable[] = {
@@ -102,6 +106,12 @@ static const stOSdefTable_t s_stTaskTable[] = {
 		(osThreadFunc_t)LanTask,
 		NULL,
 		{"LanTask", osThreadDetached, &s_LanTaskTCB, sizeof(s_LanTaskTCB), s_LanTaskStack, sizeof(s_LanTaskStack), osPriorityBelowNormal, 0, 0},
+	},
+	{	/** LcdTask */
+		&g_LcdTaskHandle,
+		(osThreadFunc_t)LcdTask,
+		NULL,
+		{"LcdTask", osThreadDetached, &s_LcdTaskTCB, sizeof(s_LcdTaskTCB), s_LcdTaskStack, sizeof(s_LcdTaskStack), osPriorityBelowNormal, 0, 0},
 	},
 #if 0	/** IMXRT1060-EVK doesn't have FXOS8700 */
 	{	/** SensorTask */

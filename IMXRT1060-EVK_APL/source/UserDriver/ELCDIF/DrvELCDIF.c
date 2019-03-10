@@ -31,6 +31,16 @@
  * - 2019/03/10: Takashi Kashiwagi: v0.1 for IMXRT1060-EVK
  */
 
+
+/*
+ * Copyright (c) 2017, NXP Semiconductors, Inc.
+ * All rights reserved.
+ *
+ * 
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
+
 #include "ELCDIF/DrvELCDIF.h"
 
 #include "board.h"
@@ -64,11 +74,11 @@
 #define LCD_BL_GPIO_PIN 31
 
 
-__attribute__((section("NonCacheable.init"))) alinas(64) static uint16_t s_u16frameBuffer[DEF_IMG_HEIGHT][DEF_IMG_WIDTH];
+__attribute__((section(".bss.$VRAM"))) alignas(64) static uint16_t s_u16frameBuffer[DEF_IMG_HEIGHT][DEF_IMG_WIDTH];
 
 
 /* Initialize the LCD_DISP. */
-void DrvELCDIFInitLcd(void)
+static void DrvELCDIFInitLcd(void)
 {
 	/** TODO: Change to PWN */
     gpio_pin_config_t config = {
@@ -80,7 +90,7 @@ void DrvELCDIFInitLcd(void)
     GPIO_PinInit(LCD_BL_GPIO, LCD_BL_GPIO_PIN, &config);
 }
 
-void DrvELCDIFInitLcdifPixelClock(void)
+static void DrvELCDIFInitLcdifPixelClock(void)
 {
     /*
      * The desired output frame rate is 60Hz. So the pixel clock frequency is:
@@ -124,10 +134,24 @@ void DrvELCDIFInit(void)
         .vfp = DEF_VFP,
         .vbp = DEF_VBP,
         .polarityFlags = DEF_POL_FLAGS,
-        .bufferAddr = (uint32_t)s_frameBuffer[0],
+        .bufferAddr = (uint32_t)s_u16frameBuffer,
         .pixelFormat = kELCDIF_PixelFormatRGB565,
         .dataBus = kELCDIF_DataBus16Bit,
     };
+	DrvELCDIFInitLcd();
+	DrvELCDIFInitLcdifPixelClock();
 
     ELCDIF_RgbModeInit(LCDIF, &config);
+	memset(s_u16frameBuffer, 0, sizeof(s_u16frameBuffer));
+	ELCDIF_RgbModeStart(LCDIF);
+
+	ELCDIF_SetNextBufferAddr(LCDIF, (uint32_t)s_u16frameBuffer);
+}
+
+void DrvELCDIFFillFrameBuffer(uint16_t u16color){
+	for(uint32_t i=0;i<DEF_IMG_WIDTH;i++){
+		for(uint32_t j=0;j<DEF_IMG_HEIGHT;j++){
+			s_u16frameBuffer[i][j] = u16color;
+		}
+	}
 }

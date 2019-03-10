@@ -225,6 +225,7 @@ void BOARD_InitBootPins(void)
 	BOARD_InitUSDHC();
 	BOARD_InitENET();
 	BOARD_InitCSI();
+	BOARD_InitLCD();
 }
 
 /*

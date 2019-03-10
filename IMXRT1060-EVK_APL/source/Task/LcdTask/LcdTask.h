@@ -1,5 +1,5 @@
 /**
- * @file DrvELCDIF.h
+ * @file LcdTask.h
  * @brief TODO
  * @author Takashi Kashiwagi
  * @date 2019/03/10
@@ -45,9 +45,8 @@ extern "C"
 /** User Typedefine */
 #include "UserTypedef.h"
 #include "OSResource.h"
+extern void LcdTask(void const *argument);
 
-extern void DrvELCDIFInit(void);
-extern void DrvELCDIFFillFrameBuffer(uint16_t u16color);
 #ifdef __cplusplus
 }
 #endif
