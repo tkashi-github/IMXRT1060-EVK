@@ -413,24 +413,24 @@ void BOARD_ConfigMPU(void)
     MPU->RBAR = ARM_MPU_RBAR(3, 0x20000000U);
     MPU->RASR = ARM_MPU_RASR(1, ARM_MPU_AP_FULL, 1, 1, 0, 0, 0, ARM_MPU_REGION_SIZE_256KB);
     
-	/* Region 3 setting: Memory with VRAM, shareable,noncache*/
-    MPU->RBAR = ARM_MPU_RBAR(3, 0x20200000U);
+	/* Region 4 setting: Memory with VRAM, shareable,noncache*/
+    MPU->RBAR = ARM_MPU_RBAR(4, 0x20200000U);
     MPU->RASR = ARM_MPU_RASR(1, ARM_MPU_AP_FULL, 0, 1, 0, 1, 0, ARM_MPU_REGION_SIZE_256KB);
 
-	/* Region 3 setting: Memory with Normal, shareable, outer and inner noncache*/
-    MPU->RBAR = ARM_MPU_RBAR(3, 0x20240000U);
+	/* Region 5 setting: Memory with Normal, shareable, outer and inner noncache*/
+    MPU->RBAR = ARM_MPU_RBAR(5, 0x20240000U);
     MPU->RASR = ARM_MPU_RASR(1, ARM_MPU_AP_FULL, 1, 1, 1, 1, 0, ARM_MPU_REGION_SIZE_256KB);
 
-    /* Region 5 setting: Memory with Normal type, shareable, outer and inner write back write/read acllocate */
-    MPU->RBAR = ARM_MPU_RBAR(5, 0x80000000U);
+    /* Region 6 setting: Memory with Normal type, shareable, outer and inner write back write/read acllocate */
+    MPU->RBAR = ARM_MPU_RBAR(6, 0x80000000U);
     MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 1, 1, 1, 1, 0, ARM_MPU_REGION_SIZE_32MB);
 
-    /* Region 6 setting: Memory with Normal type, shareable       outer and inner noncache  */
-    MPU->RBAR = ARM_MPU_RBAR(6, 0x80000000U);
+    /* Region 7 setting: Memory with Normal type, shareable       outer and inner noncache  */
+    MPU->RBAR = ARM_MPU_RBAR(7, 0x80000000U);
     MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 1, 1, 0, 0, 0, ARM_MPU_REGION_SIZE_16MB);	/** for Nocache section */
     
-	/* Region 7 setting: Memory with Normal type, shareable   outer and inner write back write/read acllocate  */
-    MPU->RBAR = ARM_MPU_RBAR(7, 0x80000000U);
+	/* Region 8 setting: Memory with Normal type, shareable   outer and inner write back write/read acllocate  */
+    MPU->RBAR = ARM_MPU_RBAR(8, 0x80000000U);
     MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 1, 1, 1, 1, 0, ARM_MPU_REGION_SIZE_4MB);	/** for .text section */
     /* Enable MPU */
     ARM_MPU_Enable(MPU_CTRL_PRIVDEFENA_Msk);
