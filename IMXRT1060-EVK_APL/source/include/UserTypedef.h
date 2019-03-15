@@ -57,6 +57,7 @@ extern "C"
 #include "timers.h"
 #include "semphr.h"
 #include "stream_buffer.h"
+#include "queue.h"
 
 /*  */
 #include "MIMXRT1062.h"
@@ -93,6 +94,7 @@ typedef enum{
 	enLanLinkChange,
 	enLanRestart,
 	enCameraBtn,
+	enTouchEvent,
 	enMsgID_MAX,
 }enMsgID_t;
 

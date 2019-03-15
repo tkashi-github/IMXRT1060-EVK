@@ -296,15 +296,6 @@ void CameraTask(void const *argument){
 
     memset(s_frameBuffer, 0, sizeof(s_frameBuffer));
 
-	for(uint32_t i=0;i<0x7F;i++){
-		uint8_t u8ReadBuffer[8] = {0};
-		status_t sts = BOARD_LPI2C_Receive(LPI2C1, i, OV7725_PID_REG, 1, u8ReadBuffer, 2);
-		if (kStatus_Success == sts)
-		{
-			mimic_printf("[%s (%d)] BOARD_LPI2C_Receive OK (i=%lu, 0x%02X%02X)\r\n", __FUNCTION__, __LINE__, i, u8ReadBuffer[0], u8ReadBuffer[1]);
-		}
-	}
-
 	sts = CAMERA_RECEIVER_Init(&cameraReceiver, &cameraConfig, CallBackCameraDriverReceived, NULL);
     if(kStatus_Success != sts){
 		mimic_printf("\r\n[%s (%d)] CAMERA_RECEIVER_Init NG (%d)\r\n", __FUNCTION__, __LINE__, sts);

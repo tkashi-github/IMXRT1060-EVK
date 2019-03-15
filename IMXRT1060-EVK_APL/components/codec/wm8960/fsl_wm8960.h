@@ -271,9 +271,9 @@ extern "C" {
  * codec_config->master = slave
  *
  * @param handle WM8960 handle structure.
- * @param wm8960_config WM8960 configuration structure.
+ * @param wm8960_configure WM8960 configuration structure.
  */
-status_t WM8960_Init(codec_handle_t *handle, void *wm8960_config);
+status_t WM8960_Init(codec_handle_t *handle, void *wm8960_configure);
 
 /*!
  * @brief Deinit the WM8960 codec.

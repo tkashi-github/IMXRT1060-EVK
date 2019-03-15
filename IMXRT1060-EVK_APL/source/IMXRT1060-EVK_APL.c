@@ -100,7 +100,8 @@ int main(void) {
 	CreateBinarySemaphore();
 	CreateEventGroup();
 	CreateStreamBuffer();
-
+	CreateMsgQueue();
+	
 	{
 		lpuart_config_t lpuart_config;
 		LPUART_GetDefaultConfig(&lpuart_config);

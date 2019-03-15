@@ -215,6 +215,11 @@ void BOARD_InitDebugConsole(void);
 
 void BOARD_ConfigMPU(void);
 #if defined(SDK_I2C_BASED_COMPONENT_USED) && SDK_I2C_BASED_COMPONENT_USED
+
+#include "fsl_lpi2c_freertos.h"
+#include "OSresource.h"
+
+extern lpi2c_rtos_handle_t g_hndI2CRTOS[5];
 void BOARD_LPI2C_Init(LPI2C_Type *base, uint32_t clkSrc_Hz);
 status_t BOARD_LPI2C_Send(LPI2C_Type *base,
                         uint8_t deviceAddress,

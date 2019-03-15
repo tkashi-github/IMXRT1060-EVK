@@ -44,6 +44,7 @@
 #include "SensorTask/SensorTask.h"
 #include "CameraTask/CameraTask.h"
 #include "LcdTask/LcdTask.h"
+#include "TouchScreenTask/TouchScreenTask.h"
 
 /** typedef Task Table */
 typedef struct{
@@ -62,6 +63,7 @@ DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_LanTaskHandle;
 DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_SensorTaskHandle;
 DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_CameraTaskHandle;
 DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_LcdTaskHandle;
+DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_TouchScreenTaskHandle;
 
 /** Task Control Block (STATIC ALLOCATION)*/
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_InitialTaskTCB;
@@ -71,6 +73,7 @@ DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_LanTaskTCB;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_SensorTaskTCB;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_CameraTaskTCB;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_LcdTaskTCB;
+DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_TouchScreenTaskTCB;
 
 /** Task Stack (STATIC ALLOCATION)*/
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_InitialTaskStack[8192/sizeof(uint32_t)];
@@ -80,6 +83,7 @@ DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_LanTaskStack[8192/sizeof(uint
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_SensorTaskStack[8192/sizeof(uint32_t)];
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_CameraTaskStack[8192/sizeof(uint32_t)];
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_LcdTaskStack[8192/sizeof(uint32_t)];
+DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_TouchScreenTaskStack[8192/sizeof(uint32_t)];
 
 /** Task Table */
 static const stOSdefTable_t s_stTaskTable[] = {
@@ -111,7 +115,13 @@ static const stOSdefTable_t s_stTaskTable[] = {
 		&g_LcdTaskHandle,
 		(osThreadFunc_t)LcdTask,
 		NULL,
-		{"LcdTask", osThreadDetached, &s_LcdTaskTCB, sizeof(s_LcdTaskTCB), s_LcdTaskStack, sizeof(s_LcdTaskStack), osPriorityBelowNormal, 0, 0},
+		{"LcdTask", osThreadDetached, &s_LcdTaskTCB, sizeof(s_LcdTaskTCB), s_LcdTaskStack, sizeof(s_LcdTaskStack), osPriorityAboveNormal, 0, 0},
+	},
+	{	/** LcdTask */
+		&g_TouchScreenTaskHandle,
+		(osThreadFunc_t)TouchScreenTask,
+		NULL,
+		{"TouchScreenTask", osThreadDetached, &s_TouchScreenTaskTCB, sizeof(s_TouchScreenTaskTCB), s_TouchScreenTaskStack, sizeof(s_TouchScreenTaskStack), osPriorityBelowNormal, 0, 0},
 	},
 #if 0	/** IMXRT1060-EVK doesn't have FXOS8700 */
 	{	/** SensorTask */
@@ -296,6 +306,10 @@ DefALLOCATE_BSS_DTCM alignas(32) StreamBufferHandle_t g_sbhCameraTask;
 DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_CameraTaskStorage[sizeof(stTaskMsgBlock_t) * 32 + 1];	/** +1 はマニュアルの指示 */
 DefALLOCATE_BSS_DTCM alignas(32) static StaticStreamBuffer_t s_ssbSCameraTaskStreamBuffer;
 
+DefALLOCATE_BSS_DTCM alignas(32) StreamBufferHandle_t g_sbhTouchScreenTask;
+DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_u8TouchScreenTaskStorage[sizeof(stTaskMsgBlock_t) * 32 + 1];	/** +1 はマニュアルの指示 */
+DefALLOCATE_BSS_DTCM alignas(32) static StaticStreamBuffer_t s_ssbTouchScreenTaskStreamBuffer;
+
 static stStreamBuffer_t s_stStreamBufferTable[] = {
 	{
 		&g_sbhStorageTask[enUSDHC1], 
@@ -328,6 +342,7 @@ static stStreamBuffer_t s_stStreamBufferTable[] = {
 
 	{&g_sbhLanTask, sizeof(s_LanTaskStorage), sizeof(stTaskMsgBlock_t), s_LanTaskStorage, &s_ssbSLanTaskStreamBuffer},
 	{&g_sbhCameraTask, sizeof(s_CameraTaskStorage), sizeof(stTaskMsgBlock_t), s_CameraTaskStorage, &s_ssbSCameraTaskStreamBuffer},
+	{&g_sbhTouchScreenTask, sizeof(s_u8TouchScreenTaskStorage), sizeof(stTaskMsgBlock_t), s_u8TouchScreenTaskStorage, &s_ssbTouchScreenTaskStreamBuffer},
 
 	{NULL, 0, 0, NULL, NULL},
 };
@@ -338,6 +353,37 @@ void CreateStreamBuffer(void){
 		*s_stStreamBufferTable[i].pID = xStreamBufferCreateStatic(
 			s_stStreamBufferTable[i].BufferSize, s_stStreamBufferTable[i].xTriggerLevel, 
 			s_stStreamBufferTable[i].pu8Buffer, s_stStreamBufferTable[i].pxStreamBufferStruct);
+		i++;
+	}
+}
+
+
+typedef struct{
+	QueueHandle_t    *pID;
+	uint32_t         QueueLength;
+	uint32_t         ItemSize;
+	uint8_t          *pu8Buffer;
+	StaticQueue_t    *pxMsgQueueStruct;
+}stMsgQueue_t;
+
+DefALLOCATE_BSS_DTCM alignas(32) QueueHandle_t g_mqLcdTask;
+DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_u8LcdTskStorage[sizeof(stTaskMsgBlock_t) * 32];
+DefALLOCATE_BSS_DTCM alignas(32) static StaticQueue_t g_sqLcdTask;
+
+static stMsgQueue_t s_stMsgQueueTable[] = {
+	{&g_mqLcdTask, 32, sizeof(stTaskMsgBlock_t), s_u8LcdTskStorage, &g_sqLcdTask},
+	{NULL, 0, 0, NULL, NULL},
+};
+
+void CreateMsgQueue(void){
+	uint32_t i=0;
+
+	while(s_stMsgQueueTable[i].pID != NULL){
+		*s_stMsgQueueTable[i].pID = xQueueCreateStatic(
+			s_stMsgQueueTable[i].QueueLength, 
+			s_stMsgQueueTable[i].ItemSize, 
+			s_stMsgQueueTable[i].pu8Buffer, 
+			s_stMsgQueueTable[i].pxMsgQueueStruct);
 		i++;
 	}
 }

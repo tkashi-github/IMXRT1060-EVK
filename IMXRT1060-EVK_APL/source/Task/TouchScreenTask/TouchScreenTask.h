@@ -1,5 +1,5 @@
 /**
- * @file LcdTask.h
+ * @file TouchScreenTask.h
  * @brief TODO
  * @author Takashi Kashiwagi
  * @date 2019/03/10
@@ -30,7 +30,6 @@
  * @par Update:
  * - 2019/03/10: Takashi Kashiwagi: v0.1 for IMXRT1060-EVK
  */
-
 #ifndef __cplusplus
 #if __STDC_VERSION__ < 201112L
 #error /** Only C11 */
@@ -44,11 +43,14 @@ extern "C"
 
 /** User Typedefine */
 #include "UserTypedef.h"
-#include "OSResource.h"
 #include "fsl_ft5406_rt.h"
 
-extern void LcdTask(void const *argument);
-extern _Bool PostMsgLcdTaskMouseMove(uint32_t u32X, uint32_t u32Y, touch_event_t enTouchEvent);
+#define DefCTP_INT_PORT	(GPIO1)
+#define DefCTP_INT_PIN	(11)
+
+
+extern void TouchScreenTask(void const *argument);
+extern _Bool PostMsgTouchScreenTouchEvent(void);
 
 #ifdef __cplusplus
 }

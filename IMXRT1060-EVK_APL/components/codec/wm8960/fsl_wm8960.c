@@ -36,9 +36,9 @@ static uint16_t reg_cache[WM8960_CACHEREGNUM];
  * Code
  ******************************************************************************/
 
-status_t WM8960_Init(codec_handle_t *handle, void *wm8960_config)
+status_t WM8960_Init(codec_handle_t *handle, void *wm8960_configure)
 {
-    wm8960_config_t *config = (wm8960_config_t *)wm8960_config;
+    wm8960_config_t *config = (wm8960_config_t *)wm8960_configure;
 
     memcpy(reg_cache, wm8960_reg, sizeof(wm8960_reg));
 
@@ -584,18 +584,18 @@ status_t WM8960_SetMute(codec_handle_t *handle, wm8960_module_t module, bool isE
 status_t WM8960_ConfigDataFormat(codec_handle_t *handle, uint32_t sysclk, uint32_t sample_rate, uint32_t bits)
 {
     status_t retval = kStatus_Success;
-    uint32_t div = 0;
+    uint32_t divider = 0;
     uint16_t val = 0;
 
-    /* Compute sample rate div, dac and adc are the same sample rate */
-    div = sysclk / sample_rate;
-    if (div == 256)
+    /* Compute sample rate divider, dac and adc are the same sample rate */
+    divider = sysclk / sample_rate;
+    if (divider == 256)
     {
         val = 0;
     }
-    else if (div > 256)
+    else if (divider > 256)
     {
-        val = (((div / 256U) << 6U) | ((div / 256U) << 3U));
+        val = (((divider / 256U) << 6U) | ((divider / 256U) << 3U));
     }
     else
     {
@@ -604,14 +604,14 @@ status_t WM8960_ConfigDataFormat(codec_handle_t *handle, uint32_t sysclk, uint32
 
     retval = WM8960_WriteReg(handle, WM8960_CLOCK1, val);
 
-    /* Compute bclk div */
-    div /= bits * 2;
-    switch (div)
+    /* Compute bclk divider */
+    divider /= bits * 2;
+    switch (divider)
     {
         case 4:
         case 5:
         case 6:
-            val = (0x1C0 | div);
+            val = (0x1C0 | divider);
             break;
         case 8:
             val = 0x1C7;

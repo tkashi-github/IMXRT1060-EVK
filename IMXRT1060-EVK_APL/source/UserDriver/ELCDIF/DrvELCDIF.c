@@ -81,9 +81,22 @@ __attribute__((section(".bss.$VRAM"))) alignas(64) static uint16_t s_u16frameBuf
 static void DrvELCDIFInitLcd(void)
 {
 	/** TODO: Change to PWN */
+    volatile uint32_t i = 0x100U;
+
     gpio_pin_config_t config = {
         kGPIO_DigitalOutput, 0,
     };
+
+    /* Reset the LCD. */
+    GPIO_PinInit(LCD_DISP_GPIO, LCD_DISP_GPIO_PIN, &config);
+
+    GPIO_PinWrite(LCD_DISP_GPIO, LCD_DISP_GPIO_PIN, 0);
+
+    while (i--)
+    {
+    }
+
+    GPIO_PinWrite(LCD_DISP_GPIO, LCD_DISP_GPIO_PIN, 1);
 
     /* Backlight. */
     config.outputLogic = 1;

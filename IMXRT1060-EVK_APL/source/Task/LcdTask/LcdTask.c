@@ -78,3 +78,28 @@ DefALLOCATE_ITCM void LcdTask(void const *argument)
 
 	vTaskSuspend(NULL);
 }
+
+
+_Bool PostMsgLcdTaskMouseMove(uint32_t u32X, uint32_t u32Y, touch_event_t enTouchEvent){
+	_Bool bret = false;
+	stTaskMsgBlock_t stTaskMsg;
+	memset(&stTaskMsg, 0, sizeof(stTaskMsgBlock_t));
+	stTaskMsg.enMsgId = enTouchEvent;
+	stTaskMsg.param[0] = u32X;
+	stTaskMsg.param[1] = u32Y;
+	stTaskMsg.param[2] = (uint32_t)enTouchEvent;
+
+	if(pdFALSE != xPortIsInsideInterrupt()){
+		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+		if(pdFALSE != xQueueSendFromISR(g_mqLcdTask, &stTaskMsg, &xHigherPriorityTaskWoken)){
+			bret = true;
+		}
+		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+	}else{
+		if(pdFALSE != xQueueSend(g_mqLcdTask, &stTaskMsg, 10)){
+			bret = true;
+		}
+	}
+
+	return bret;
+}

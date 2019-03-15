@@ -51,6 +51,13 @@ typedef enum _codec_protocol
     kCODEC_BusPCMB = 0x4            /*!< PCM B mode */
 } codec_protocol_t;
 
+/*! @brief codec type for some special processing. */
+typedef enum _codec_type
+{
+    kCODEC_TypeOthers = 0x0,
+    kCODEC_TypeWM8960 = 0x1
+} codec_type_t;
+
 typedef struct codec_handle codec_handle_t;
 
 /*! @brief Codec common operation */

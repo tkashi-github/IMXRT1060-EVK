@@ -56,14 +56,15 @@ status_t CODEC_I2C_ReadReg(uint8_t i2cAddr,
     uint8_t data[4];
     uint8_t i = 0;
     status_t status;
+    uint8_t width = (uint8_t) regWidth;
 
-    status = i2cReceiveFunc(i2cAddr, reg, addrType, data, regWidth);
+    status = i2cReceiveFunc(i2cAddr, reg, addrType, data, width);
 
     if (kStatus_Success == status)
     {
-        while (regWidth--)
+        while (width--)
         {
-            ((uint8_t *)value)[i++] = data[regWidth];
+            ((uint8_t *)value)[i++] = data[width];
         }
     }
 
