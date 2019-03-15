@@ -123,10 +123,22 @@ DefALLOCATE_ITCM void TouchScreenTask(void const *argument)
 
 	s_hndFT5406.hndRtos = &g_hndI2CRTOS[1];
 
-	if(kStatus_Success != FT5406_RT_Init(&s_hndFT5406, LPI2C1)){
-		mimic_printf("[%s (%d)] FT5406_RT_Init NG\r\n", __FUNCTION__, __LINE__);
-	}else{
+	if(kStatus_Success == FT5406_RT_Init(&s_hndFT5406, LPI2C1)){
 		mimic_printf("[%s (%d)] FT5406_RT_Init OK\r\n", __FUNCTION__, __LINE__);
+	}else{
+		mimic_printf("[%s (%d)] FT5406_RT_Init NG\r\n", __FUNCTION__, __LINE__);
+	}
+
+	{
+		/** Test Read */
+		uint32_t u32PosX;
+		uint32_t u32PosY;
+		touch_event_t touch_event;
+		if(kStatus_Success == FT5406_RT_GetSingleTouch(&s_hndFT5406, &touch_event, (int)&u32PosX, (int)&u32PosY)){
+			mimic_printf("[%s (%d)] FT5406_RT_GetSingleTouch OK\r\n", __FUNCTION__, __LINE__);
+		}else{
+			mimic_printf("[%s (%d)] FT5406_RT_GetSingleTouch NG\r\n", __FUNCTION__, __LINE__);
+		}
 	}
 	for (;;)
 	{
@@ -159,4 +171,24 @@ DefALLOCATE_ITCM _Bool PostMsgTouchScreenTouchEvent(void)
 		}
 	}
 	return true;
+}
+
+
+void CmdCTPTest(void){
+	TickType_t tick;
+	mimic_printf("CTP Test\r\n");
+
+	tick = xTaskGetTickCount();
+	while (mimic_kbhit() == false)
+	{
+		uint32_t u32PosX;
+		uint32_t u32PosY;
+		touch_event_t touch_event;
+		if(kStatus_Success == FT5406_RT_GetSingleTouch(&s_hndFT5406, &touch_event, (int)&u32PosX, (int)&u32PosY)){
+			mimic_printf("\r[%s (%d)] X=%3u, Y=%3d\r\n", __FUNCTION__, __LINE__, u32PosX, u32PosY);
+		}else{
+			break;
+		}
+		vTaskDelayUntil((TickType_t *const) & tick, 20);
+	}
 }

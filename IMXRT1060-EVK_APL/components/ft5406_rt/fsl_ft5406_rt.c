@@ -62,8 +62,11 @@ status_t FT5406_RT_Init(ft5406_rt_handle_t *handle, LPI2C_Type *base)
     xfer->dataSize = 1;
     xfer->flags = kLPI2C_TransferDefaultFlag;
 
+#if 0
     status = LPI2C_MasterTransferBlocking(handle->base, &handle->xfer);
-
+#else
+	status = BOARD_LPI2C_Send(handle->base, xfer->slaveAddress, xfer->subaddress, xfer->subaddressSize, xfer->data, xfer->dataSize);
+#endif
     /* prepare transfer structure for reading touch data */
     xfer->slaveAddress = FT5406_RT_I2C_ADDRESS;
     xfer->direction = kLPI2C_Read;
@@ -97,15 +100,9 @@ status_t FT5406_RT_ReadTouchData(ft5406_rt_handle_t *handle)
     {
         return kStatus_InvalidArgument;
     }
-/** TODO:
- * BOARD_LPI2C_Send(LPI2C_Type *base,
-                          uint8_t deviceAddress,
-                          uint32_t subAddress,
-                          uint8_t subAddressSize,
-                          uint8_t *txBuff,
-                          uint8_t txBuffSize
-						  */
-    return LPI2C_MasterTransferBlocking(handle->base, &handle->xfer);
+    //return LPI2C_MasterTransferBlocking(handle->base, &handle->xfer);
+
+	return BOARD_LPI2C_Receive(handle->base, handle->xfer.slaveAddress, handle->xfer.subaddress, handle->xfer.subaddressSize, handle->xfer.data, handle->xfer.dataSize);
 }
 
 status_t FT5406_RT_GetSingleTouch(ft5406_rt_handle_t *handle, touch_event_t *touch_event, int *touch_x, int *touch_y)

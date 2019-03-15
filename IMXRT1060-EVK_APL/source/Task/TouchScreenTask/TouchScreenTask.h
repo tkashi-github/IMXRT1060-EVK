@@ -51,6 +51,7 @@ extern "C"
 
 extern void TouchScreenTask(void const *argument);
 extern _Bool PostMsgTouchScreenTouchEvent(void);
+extern void CmdCTPTest(void);
 
 #ifdef __cplusplus
 }

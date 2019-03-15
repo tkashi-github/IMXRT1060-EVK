@@ -89,7 +89,7 @@ int main(void) {
 	//NVIC_SetPriority(PendSV_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY + 1);
 	InstallIRQHandler(PendSV_IRQn, (uint32_t)xPortPendSVHandler);
 	//EnableIRQ(PendSV_IRQn);
-
+	NVIC_SetPriority(GPIO1_Combined_0_15_IRQn, kIRQ_PRIORITY_GPIO);
 	BOARD_InitBootPeripherals();
 
 	
@@ -119,6 +119,7 @@ int main(void) {
 }
 
 #define DefSDCardDetectTime	(100u)
+#include "StorageTask/StorageTask.h"
 
 /** GPIOのチャタリング対策 */
 DefALLOCATE_ITCM static void GPIOMonitor(void){
@@ -226,4 +227,16 @@ void GetRunCount(uint32_t *p32Last, uint32_t *pu32Max)
 	}
 }
 
+#include "TouchScreenTask/TouchScreenTask.h"
+
+DefALLOCATE_ITCM void GPIO1_Combined_0_15_IRQHandler(void)
+{
+	uint32_t u32Pins = GPIO_PortGetInterruptFlags(GPIO1);
+
+	if((u32Pins & (1<<11)) != 0){
+		PostMsgTouchScreenTouchEvent();
+	}
+
+	GPIO_PortClearInterruptFlags(GPIO1, u32Pins);
+}
 

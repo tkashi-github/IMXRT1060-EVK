@@ -55,6 +55,8 @@
 #include "SPIFlash/SPIFlash.h"
 #include "common/common.h"
 
+#include "TouchScreenTask/TouchScreenTask.h"
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -95,6 +97,7 @@ stCmdTable_t g_stCmdTable[] = {
 	{"SB", CmdStorageBenchMark, "StorageBenchMark"},
 	{"SENSOR", CmdSensor, "Combo Sensor"},
 	{"SFROM", CmdSFROM, "SerialFlashTest"},
+	{"CTP", CmdCTPTest, "CTP Test"},
 	{NULL, NULL, NULL}, /* Terminator */
 };
 
