@@ -41,13 +41,10 @@ extern clock_ip_name_t s_enetClock[FSL_FEATURE_SOC_ENET_COUNT];
 
 status_t PHY_Init(ENET_Type *base, uint32_t phyAddr, uint32_t srcClock_Hz)
 {
-    uint32_t bssReg;
     uint32_t counter = PHY_TIMEOUT_COUNT;
     uint32_t idReg = 0;
     status_t result = kStatus_Success;
     uint32_t instance = ENET_GetInstance(base);
-    uint32_t timeDelay;
-    uint32_t ctlReg = 0;
 
 #if !(defined(FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL) && FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL)
     /* Set SMI first. */

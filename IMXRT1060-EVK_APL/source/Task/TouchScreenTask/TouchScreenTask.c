@@ -39,6 +39,7 @@
 #include "fsl_iomuxc.h"
 #include "fsl_ft5406_rt.h"
 
+#include "LcdTask/LcdTask.h"
 
 static ft5406_rt_handle_t s_hndFT5406;
 
@@ -64,7 +65,7 @@ DefALLOCATE_ITCM static inline void TouchScreenTaskActual(void)
 		{
 		case enTouchEvent:
 			touch_event = kTouch_Reserved;
-			if(kStatus_Success == FT5406_RT_GetSingleTouch(&s_hndFT5406, &touch_event, (int)&u32PosX, (int)&u32PosY)){
+			if(kStatus_Success == FT5406_RT_GetSingleTouch(&s_hndFT5406, &touch_event, (int*)&u32PosX, (int*)&u32PosY)){
 
 				switch(touch_event){
 				case kTouch_Down:
@@ -134,7 +135,7 @@ DefALLOCATE_ITCM void TouchScreenTask(void const *argument)
 		uint32_t u32PosX;
 		uint32_t u32PosY;
 		touch_event_t touch_event;
-		if(kStatus_Success == FT5406_RT_GetSingleTouch(&s_hndFT5406, &touch_event, (int)&u32PosX, (int)&u32PosY)){
+		if(kStatus_Success == FT5406_RT_GetSingleTouch(&s_hndFT5406, &touch_event, (int*)&u32PosX, (int*)&u32PosY)){
 			mimic_printf("[%s (%d)] FT5406_RT_GetSingleTouch OK\r\n", __FUNCTION__, __LINE__);
 		}else{
 			mimic_printf("[%s (%d)] FT5406_RT_GetSingleTouch NG\r\n", __FUNCTION__, __LINE__);
@@ -174,7 +175,7 @@ DefALLOCATE_ITCM _Bool PostMsgTouchScreenTouchEvent(void)
 }
 
 
-void CmdCTPTest(void){
+void CmdCTPTest(uint32_t argc, const char *argv[]){
 	TickType_t tick;
 	mimic_printf("CTP Test\r\n");
 
@@ -184,8 +185,8 @@ void CmdCTPTest(void){
 		uint32_t u32PosX;
 		uint32_t u32PosY;
 		touch_event_t touch_event;
-		if(kStatus_Success == FT5406_RT_GetSingleTouch(&s_hndFT5406, &touch_event, (int)&u32PosX, (int)&u32PosY)){
-			mimic_printf("\r[%s (%d)] X=%3u, Y=%3d\r\n", __FUNCTION__, __LINE__, u32PosX, u32PosY);
+		if(kStatus_Success == FT5406_RT_GetSingleTouch(&s_hndFT5406, &touch_event, (int*)&u32PosX, (int*)&u32PosY)){
+			mimic_printf("\r[%s (%d)] X=%3u, Y=%3d", __FUNCTION__, __LINE__, u32PosX, u32PosY);
 		}else{
 			break;
 		}

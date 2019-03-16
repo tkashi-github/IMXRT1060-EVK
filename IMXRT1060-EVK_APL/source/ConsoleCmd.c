@@ -250,7 +250,6 @@ static void CmdNvic(uint32_t argc, const char *argv[]){
 static void CmdPing(uint32_t argc, const char *argv[])
 {
 	int s;
-	int ret;
 	ip_addr_t ping_addr;
 
 	if(argc != 2){
@@ -283,7 +282,7 @@ static void CmdPing(uint32_t argc, const char *argv[])
 		return;
 	}
 
-	ret = lwip_setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+	lwip_setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
 
 	for(uint32_t i=0;i<4;i++)
 	{

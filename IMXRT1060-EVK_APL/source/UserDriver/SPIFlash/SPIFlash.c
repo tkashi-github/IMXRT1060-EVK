@@ -336,7 +336,6 @@ status_t flexspi_nor_get_vendor_id(FLEXSPI_Type *base, uint8_t *vendorId)
 
 status_t SPIFlashInit(void)
 {
-    uint32_t i = 0;
     flexspi_config_t config;
     status_t status;
     uint8_t vendorID = 0;
@@ -413,7 +412,7 @@ _Bool SPIFlashWriteData(uint32_t u32StartSectorNo, const uint8_t pu8[], uint32_t
 			uint8_t *pu8 = (uint8_t *)(FlexSPI_AMBA_BASE + (i + u32StartSectorNo) * SECTOR_SIZE);
 
 			if(pu8[j] != 0xFF){
-				MemDump(s_nor_read_buffer, sizeof(s_nor_read_buffer));
+				MemDump((uintptr_t)s_nor_read_buffer, sizeof(s_nor_read_buffer));
 				mimic_printf("NG\r\n ");
 				bret = false;
 				goto _END;
@@ -460,7 +459,7 @@ _Bool SPIFlashWriteData(uint32_t u32StartSectorNo, const uint8_t pu8[], uint32_t
 			if (memcmp(s_nor_read_buffer, s_nor_program_buffer, sizeof(s_nor_program_buffer)) != 0)
 			{
 				mimic_printf("Program data -  read out data value incorrect !\r\n");
-				MemDump(s_nor_read_buffer, sizeof(s_nor_read_buffer));
+				MemDump((uintptr_t)s_nor_read_buffer, sizeof(s_nor_read_buffer));
 				bret = false;
 				goto _END;
 			}

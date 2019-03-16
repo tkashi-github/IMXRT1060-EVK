@@ -6269,7 +6269,7 @@ static void putc_bfd (		/* Buffered write with code conversion */
 		}
 	}
 	tp = (TCHAR*)pb->bs;
-	dc = tchar2uni(&tp);	/* UTF-8 ==> UTF-16 */
+	dc = tchar2uni((const TCHAR**)&tp);	/* UTF-8 ==> UTF-16 */
 	if (dc == 0xFFFFFFFF) return;
 	wc = (WCHAR)dc;
 	hs = (WCHAR)(dc >> 16);

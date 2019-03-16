@@ -100,7 +100,6 @@
 									<listOptionValue builtIn="false" value="../amazon-freertos/include"/>
 									<listOptionValue builtIn="false" value="../drivers"/>
 									<listOptionValue builtIn="false" value="../CMSIS"/>
-									<listOptionValue builtIn="false" value="../drivers/freertos"/>
 									<listOptionValue builtIn="false" value="../CMSIS_driver"/>
 									<listOptionValue builtIn="false" value="../mbedTLS/include/mbedtls"/>
 									<listOptionValue builtIn="false" value="../mbedTLS/port/ksdk"/>
@@ -192,16 +191,8 @@
 									<listOptionValue builtIn="false" value="../amazon-freertos/include"/>
 									<listOptionValue builtIn="false" value="../drivers"/>
 									<listOptionValue builtIn="false" value="../CMSIS"/>
-									<listOptionValue builtIn="false" value="../xip"/>
-									<listOptionValue builtIn="false" value="../drivers/freertos"/>
 									<listOptionValue builtIn="false" value="../CMSIS_driver"/>
-									<listOptionValue builtIn="false" value="../utilities"/>
-									<listOptionValue builtIn="false" value="../mbedTLS/include/mbedtls"/>
-									<listOptionValue builtIn="false" value="../mbedTLS/port/ksdk"/>
 									<listOptionValue builtIn="false" value="../sdmmc/inc"/>
-									<listOptionValue builtIn="false" value="../emwin"/>
-									<listOptionValue builtIn="false" value="../emwin/emWin_Config"/>
-									<listOptionValue builtIn="false" value="../emwin/emWin_header"/>
 									<listOptionValue builtIn="false" value="../fatfs"/>
 									<listOptionValue builtIn="false" value="../fatfs/fatfs_include"/>
 									<listOptionValue builtIn="false" value="../lwip/port/arch"/>
@@ -383,9 +374,10 @@
 					</folderInfo>
 					<folderInfo id="com.crt.advproject.config.exe.debug.1582687583.248253218" name="/" resourcePath="CMSIS">
 						<toolChain id="com.crt.advproject.toolchain.exe.debug.660416676" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
+							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.GNU_ELF" id="com.crt.advproject.platform.exe.debug" name="ARM-based MCU (Debug)" superClass="com.crt.advproject.platform.exe.debug"/>
 							<tool id="com.crt.advproject.cpp.exe.debug.1660301508" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.2119372199"/>
 							<tool id="com.crt.advproject.gcc.exe.debug.1329056377" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.1750685015">
-								<option id="gnu.c.compiler.option.warnings.allwarn.2008394295" superClass="gnu.c.compiler.option.warnings.allwarn" useByScannerDiscovery="false" value="false" valueType="boolean"/>
+								<option id="gnu.c.compiler.option.warnings.allwarn.2008394295" name="All warnings (-Wall)" superClass="gnu.c.compiler.option.warnings.allwarn" useByScannerDiscovery="false" value="false" valueType="boolean"/>
 								<inputType id="com.crt.advproject.compiler.input.1990935834" superClass="com.crt.advproject.compiler.input"/>
 							</tool>
 							<tool id="com.crt.advproject.gas.exe.debug.1198959719" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.1662387357">

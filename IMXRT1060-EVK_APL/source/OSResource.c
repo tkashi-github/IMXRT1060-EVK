@@ -60,8 +60,8 @@ DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_InitialTaskHandle;
 DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_ConsoleTaskHandle;
 DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_StorageTaskHandle;
 DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_LanTaskHandle;
-DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_SensorTaskHandle;
-DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_CameraTaskHandle;
+//DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_SensorTaskHandle;
+//DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_CameraTaskHandle;
 DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_LcdTaskHandle;
 DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_TouchScreenTaskHandle;
 
@@ -70,8 +70,8 @@ DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_InitialTaskTCB;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_ConsoleTaskTCB;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_StorageTaskTCB;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_LanTaskTCB;
-DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_SensorTaskTCB;
-DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_CameraTaskTCB;
+//DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_SensorTaskTCB;
+//DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_CameraTaskTCB;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_LcdTaskTCB;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_TouchScreenTaskTCB;
 
@@ -80,8 +80,8 @@ DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_InitialTaskStack[8192/sizeof(
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_ConsoleTaskStack[8192/sizeof(uint32_t)];
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_StorageTaskStack[8192/sizeof(uint32_t)];
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_LanTaskStack[8192/sizeof(uint32_t)];
-DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_SensorTaskStack[8192/sizeof(uint32_t)];
-DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_CameraTaskStack[8192/sizeof(uint32_t)];
+//DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_SensorTaskStack[8192/sizeof(uint32_t)];
+//DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_CameraTaskStack[8192/sizeof(uint32_t)];
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_LcdTaskStack[8192/sizeof(uint32_t)];
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_TouchScreenTaskStack[8192/sizeof(uint32_t)];
 
@@ -185,7 +185,7 @@ static stEventFlagTable_t s_stEventFlagTable[] = {
 
 	{&g_efFSReady, {"EF_FSREADY", 0, &s_xFSReadyEventGroupBuffer, sizeof(StaticEventGroup_t)}},
 	{&g_efCameraSensor, {"EF_CAMERA_SENSOR", 0, &s_xCameraSensorEventGroupBuffer, sizeof(StaticEventGroup_t)}},
-	{NULL, NULL},
+	{NULL, {NULL, 0, NULL, 0}},
 };
 
 void CreateEventGroup(void){	
@@ -240,7 +240,7 @@ static stBinarySemaphoreTable_t s_stBinarySemaphoreTable[] = {
 	{&g_bsIdComboSensor, {"BS_COMBOSENSOR", 0, &s_xComboSensor, sizeof(StaticSemaphore_t)}, 1, 1},
 	{&g_bsIdCameraTask, {"BS_CAMERATASKMSG", 0, &s_xCameraTask, sizeof(StaticSemaphore_t)}, 1, 1},
 
-	{NULL, NULL},
+	{NULL, {NULL, 0, NULL, 0}, 0, 0},
 };
 
 void CreateBinarySemaphore(void){	/** CMSIS RTOS2にすること */

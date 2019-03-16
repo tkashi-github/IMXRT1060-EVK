@@ -67,7 +67,7 @@ extern osThreadId_t g_InitialTaskHandle;
 extern osThreadId_t g_ConsoleTaskHandle;
 extern osThreadId_t g_LEDTaskHandle;
 extern osThreadId_t g_LanTaskHandle;
-extern osThreadId_t g_CameraTaskHandle;
+//extern osThreadId_t g_CameraTaskHandle;
 
 /** Event Group */
 extern osEventFlagsId_t g_efLPUART[];

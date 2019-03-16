@@ -66,12 +66,15 @@ static void SDMMCHOST_ReTuningCallback(SDMMCHOST_TYPE *base, void *userData);
  */
 static void SDMMCHOST_CardDetectDeinit(void);
 
+#if 0
 /*!
  * @brief card detect deinit function.
  * @param host base address.
  * @param host detect card configuration.
  */
 static status_t SDMMCHOST_CardDetectInit(SDMMCHOST_TYPE *base, const sdmmchost_detect_card_t *cd);
+#endif
+
 /*******************************************************************************
  * Variables
  ******************************************************************************/
@@ -208,7 +211,7 @@ void SDMMCHOST_ErrorRecovery(SDMMCHOST_TYPE *base)
         USDHC_Reset(base, kUSDHC_ResetData, 100U);
     }
 }
-
+#if 0
 static status_t SDMMCHOST_CardDetectInit(SDMMCHOST_TYPE *base, const sdmmchost_detect_card_t *cd)
 {
     sdmmchost_detect_card_type_t cdType = kSDMMCHOST_DetectCardByGpioCD;
@@ -259,6 +262,7 @@ static status_t SDMMCHOST_CardDetectInit(SDMMCHOST_TYPE *base, const sdmmchost_d
 
     return kStatus_Success;
 }
+#endif
 
 static void SDMMCHOST_CardDetectDeinit(void)
 {
