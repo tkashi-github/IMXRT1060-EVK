@@ -236,7 +236,7 @@ DefALLOCATE_ITCM void GPIO1_Combined_0_15_IRQHandler(void)
 	if((u32Pins & (1<<11)) != 0){
 		PostMsgTouchScreenTouchEvent();
 	}
-
+	
 	GPIO_PortClearInterruptFlags(GPIO1, u32Pins);
 }
 

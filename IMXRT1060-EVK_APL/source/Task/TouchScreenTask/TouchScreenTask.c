@@ -116,11 +116,12 @@ DefALLOCATE_ITCM static inline void TouchScreenTaskActual(void)
  */
 DefALLOCATE_ITCM void TouchScreenTask(void const *argument)
 {
-	gpio_pin_config_t gpio_config = {kGPIO_DigitalInput, 0, kGPIO_IntRisingEdge};
+	gpio_pin_config_t gpio_config = {kGPIO_DigitalInput, 0, kGPIO_IntFallingEdge};
 
 	GPIO_PinInit(DefCTP_INT_PORT, DefCTP_INT_PIN, &gpio_config);
 	EnableIRQ(GPIO1_Combined_0_15_IRQn);
 	GPIO_PortEnableInterrupts(DefCTP_INT_PORT, 1U << DefCTP_INT_PIN);
+	GPIO_PortClearInterruptFlags(DefCTP_INT_PORT, 1U << DefCTP_INT_PIN);
 
 	s_hndFT5406.hndRtos = &g_hndI2CRTOS[1];
 
@@ -186,10 +187,11 @@ void CmdCTPTest(uint32_t argc, const char *argv[]){
 		uint32_t u32PosY;
 		touch_event_t touch_event;
 		if(kStatus_Success == FT5406_RT_GetSingleTouch(&s_hndFT5406, &touch_event, (int*)&u32PosX, (int*)&u32PosY)){
-			mimic_printf("\r[%s (%d)] X=%3u, Y=%3d", __FUNCTION__, __LINE__, u32PosX, u32PosY);
+			mimic_printf("\r[%s (%d)] X=%3u, Y=%3d, INT:0x%08lX", __FUNCTION__, __LINE__, u32PosX, u32PosY, GPIO_PinRead(GPIO1, DefCTP_INT_PIN));
 		}else{
 			break;
 		}
 		vTaskDelayUntil((TickType_t *const) & tick, 20);
 	}
+	mimic_printf("\r\n");
 }
