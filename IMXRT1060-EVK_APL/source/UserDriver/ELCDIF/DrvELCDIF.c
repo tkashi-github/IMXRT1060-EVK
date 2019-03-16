@@ -55,9 +55,6 @@
 /** FSL */
 #include "fsl_elcdif.h"
 
-
-#define DEF_IMG_HEIGHT 272
-#define DEF_IMG_WIDTH 480
 #define DEF_HSW 41
 #define DEF_HFP 4
 #define DEF_HBP 8
@@ -74,7 +71,7 @@
 #define LCD_BL_GPIO_PIN 31
 
 
-__attribute__((section(".bss.$VRAM"))) alignas(64) static uint16_t s_u16frameBuffer[DEF_IMG_HEIGHT][DEF_IMG_WIDTH];
+__attribute__((section(".bss.$VRAM"))) alignas(64) uint16_t g_u16frameBuffer[DEF_IMG_HEIGHT][DEF_IMG_WIDTH];
 
 
 /* Initialize the LCD_DISP. */
@@ -147,7 +144,7 @@ void DrvELCDIFInit(void)
         .vfp = DEF_VFP,
         .vbp = DEF_VBP,
         .polarityFlags = DEF_POL_FLAGS,
-        .bufferAddr = (uint32_t)s_u16frameBuffer,
+        .bufferAddr = (uint32_t)g_u16frameBuffer,
         .pixelFormat = kELCDIF_PixelFormatRGB565,
         .dataBus = kELCDIF_DataBus16Bit,
     };
@@ -155,16 +152,16 @@ void DrvELCDIFInit(void)
 	DrvELCDIFInitLcdifPixelClock();
 
     ELCDIF_RgbModeInit(LCDIF, &config);
-	memset(s_u16frameBuffer, 0, sizeof(s_u16frameBuffer));
+	memset(g_u16frameBuffer, 0, sizeof(g_u16frameBuffer));
 	ELCDIF_RgbModeStart(LCDIF);
 
-	ELCDIF_SetNextBufferAddr(LCDIF, (uint32_t)s_u16frameBuffer);
+	ELCDIF_SetNextBufferAddr(LCDIF, (uint32_t)g_u16frameBuffer);
 }
 
 void DrvELCDIFFillFrameBuffer(uint16_t u16color){
 	for(uint32_t i=0;i<DEF_IMG_HEIGHT;i++){
 		for(uint32_t j=0;j<DEF_IMG_WIDTH;j++){
-			s_u16frameBuffer[i][j] = u16color;
+			g_u16frameBuffer[i][j] = u16color;
 		}
 	}
 }

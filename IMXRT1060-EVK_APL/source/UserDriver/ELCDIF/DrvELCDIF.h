@@ -46,8 +46,13 @@ extern "C"
 #include "UserTypedef.h"
 #include "OSResource.h"
 
+#define DEF_IMG_HEIGHT 272
+#define DEF_IMG_WIDTH 480
+
 extern void DrvELCDIFInit(void);
 extern void DrvELCDIFFillFrameBuffer(uint16_t u16color);
+extern uint16_t g_u16frameBuffer[DEF_IMG_HEIGHT][DEF_IMG_WIDTH];
+
 #ifdef __cplusplus
 }
 #endif

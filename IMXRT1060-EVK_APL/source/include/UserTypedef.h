@@ -95,6 +95,7 @@ typedef enum{
 	enLanRestart,
 	enCameraBtn,
 	enTouchEvent,
+	enCurEv,
 	enMsgID_MAX,
 }enMsgID_t;
 

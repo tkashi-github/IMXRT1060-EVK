@@ -190,6 +190,7 @@ extern uint32_t g_u32CurrentRun;
 static uint32_t s_u32LastRun = 0u;
 static uint32_t s_u32RunMax = 0u;
 
+#include "lvgl.h"
 _Bool g_bInitEnd = false;
 DefALLOCATE_ITCM void vApplicationTickHook(void)
 {
@@ -214,6 +215,7 @@ DefALLOCATE_ITCM void vApplicationTickHook(void)
 	}else{
 		g_u32CurrentRun = 0u;
 	}
+	lv_tick_inc(1);
 }
 
 void GetRunCount(uint32_t *p32Last, uint32_t *pu32Max)

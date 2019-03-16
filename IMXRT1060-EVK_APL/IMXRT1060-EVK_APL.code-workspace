@@ -29,6 +29,7 @@
 			"${workspaceFolder}/fatfs/fatfs_include",
 			"${workspaceFolder}/amazon-freertos/include",
 			"${workspaceFolder}/xip",
+			"${workspaceFolder}/lvgl",
 		],
 		"files.associations": {
 			"mimiclib.h": "c",
