@@ -262,6 +262,7 @@ void PWM_GetDefaultConfig(pwm_config_t *config)
  *
  * return Returns kStatusFail if there was error setting up the signal; kStatusSuccess otherwise
  */
+#include "mimiclib/mimiclib.h"
 status_t PWM_SetupPwm(PWM_Type *base,
                       pwm_submodule_t subModule,
                       const pwm_signal_param_t *chnlParams,
@@ -287,9 +288,11 @@ status_t PWM_SetupPwm(PWM_Type *base,
     }
 
     /* Divide the clock by the prescale value */
+	mimic_printf("[%s (%d)] srcClock_Hz = %lu, pwmFreq_Hz = %lu\r\n", __FUNCTION__, __LINE__, srcClock_Hz, pwmFreq_Hz);
     pwmClock = (srcClock_Hz / (1U << ((base->SM[subModule].CTRL & PWM_CTRL_PRSC_MASK) >> PWM_CTRL_PRSC_SHIFT)));
+	mimic_printf("[%s (%d)] pwmClock = %lu\r\n", __FUNCTION__, __LINE__, pwmClock);
     pulseCnt = (pwmClock / pwmFreq_Hz);
-
+	mimic_printf("[%s (%d)] pulseCnt = %lu\r\n", __FUNCTION__, __LINE__, pulseCnt);
     /* Setup each PWM channel */
     for (i = 0; i < numOfChnls; i++)
     {

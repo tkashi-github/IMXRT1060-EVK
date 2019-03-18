@@ -180,7 +180,7 @@ void LV_Init(void)
 
 static lv_res_t slider_action(lv_obj_t *slider)
 {
-	mimic_printf("New slider value: %d\n", lv_slider_get_value(slider));
+	mimic_printf("New slider value: %d\r\n", lv_slider_get_value(slider));
 
 	return LV_RES_OK;
 }
@@ -255,7 +255,7 @@ DefALLOCATE_ITCM void LcdTask(void const *argument)
 
 	for (;;)
 	{
-		if (pdFALSE != xQueueReceive(g_mqLcdTask, &stTaskMsg, 5))
+		if (pdFALSE != xQueueReceive(g_mqLcdTask, &stTaskMsg, 4))
 		{
 			switch (stTaskMsg.enMsgId)
 			{
@@ -307,3 +307,14 @@ _Bool PostMsgLcdTaskMouseMove(uint32_t u32X, uint32_t u32Y, touch_event_t enTouc
 
 	return bret;
 }
+#if 0
+#include "fsl_pwm.h"
+#include "PWM/DrvPWM.h"
+void CmdLcdBackLightTest(uint32_t argc, const char *argv[]){
+
+	mimic_printf("EnabledInterrupts = 0x%08lX\r\n", PWM_GetEnabledInterrupts(BOARD_PWM_BASEADDR, kPWM_Control_Module_3));
+	mimic_printf("StatusFlags       = 0x%08lX\r\n", PWM_GetStatusFlags(BOARD_PWM_BASEADDR, kPWM_Control_Module_3));
+
+	mimic_printf("\r\n");
+}
+#endif

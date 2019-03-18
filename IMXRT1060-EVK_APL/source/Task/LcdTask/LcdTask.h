@@ -49,7 +49,7 @@ extern "C"
 
 extern void LcdTask(void const *argument);
 extern _Bool PostMsgLcdTaskMouseMove(uint32_t u32X, uint32_t u32Y, touch_event_t enTouchEvent);
-
+//extern void CmdLcdBackLightTest(uint32_t argc, const char *argv[]);
 #ifdef __cplusplus
 }
 #endif

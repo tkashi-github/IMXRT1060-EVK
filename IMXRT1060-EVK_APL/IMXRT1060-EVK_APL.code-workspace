@@ -55,7 +55,10 @@
 			"clock_config.h": "c",
 			"drvelcdif.h": "c",
 			"cpufunc.h": "c",
-			"touchscreentask.h": "c"
+			"touchscreentask.h": "c",
+			"fsl_pwm.h": "c",
+			"drvpwm.h": "c",
+			"pin_mux.h": "c"
 		},
 		"C_Cpp.default.defines": [
 			"__GNUC__",

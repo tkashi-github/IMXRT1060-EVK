@@ -736,17 +736,64 @@
             <clock_configuration name="BOARD_BootClockRUN">
                <description></description>
                <options/>
-               <dependencies/>
-               <clock_sources/>
+               <dependencies>
+                  <dependency resourceType="PinSignal" resourceId="XTALOSC24M.rtc_xtali" description="&apos;RTC_XTALI&apos; (Pins tool id: XTALOSC24M.rtc_xtali, Clocks tool id: XTALOSC24M.RTC_XTALI) needs to be routed" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                     <feature name="routed" evaluation="">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="PinSignal" resourceId="XTALOSC24M.rtc_xtali" description="&apos;RTC_XTALI&apos; (Pins tool id: XTALOSC24M.rtc_xtali, Clocks tool id: XTALOSC24M.RTC_XTALI) needs to have &apos;INPUT&apos; direction" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                     <feature name="direction" evaluation="">
+                        <data>INPUT</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="PinSignal" resourceId="XTALOSC24M.rtc_xtalo" description="&apos;RTC_XTALO&apos; (Pins tool id: XTALOSC24M.rtc_xtalo, Clocks tool id: XTALOSC24M.RTC_XTALO) needs to be routed" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                     <feature name="routed" evaluation="">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="PinSignal" resourceId="XTALOSC24M.rtc_xtalo" description="&apos;RTC_XTALO&apos; (Pins tool id: XTALOSC24M.rtc_xtalo, Clocks tool id: XTALOSC24M.RTC_XTALO) needs to have &apos;OUTPUT&apos; direction" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                     <feature name="direction" evaluation="">
+                        <data>OUTPUT</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="PinSignal" resourceId="ENET.enet_tx_clk" description="&apos;ENET TX clock&apos; (Pins tool id: ENET.enet_tx_clk, Clocks tool id: IOMUXC_GPR.ENET_TX_CLK) needs to be routed" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                     <feature name="routed" evaluation="">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+               </dependencies>
+               <clock_sources>
+                  <clock_source id="IOMUXC_GPR.ENET_TX_CLK_EXT.outFreq" value="125 MHz" locked="false" enabled="true"/>
+                  <clock_source id="XTALOSC24M.OSC.outFreq" value="24 MHz" locked="false" enabled="true"/>
+                  <clock_source id="XTALOSC24M.RTC_OSC.outFreq" value="32.768 kHz" locked="false" enabled="true"/>
+               </clock_sources>
                <clock_outputs>
+                  <clock_output id="CKIL_SYNC_CLK_ROOT.outFreq" value="32.768 kHz" locked="false" accuracy=""/>
                   <clock_output id="CLK_1M.outFreq" value="1 MHz" locked="false" accuracy=""/>
                </clock_outputs>
-               <clock_settings/>
+               <clock_settings>
+                  <setting id="CCM_CCR_COSC_EN_CFG" value="Disabled" locked="false"/>
+                  <setting id="CCM_ANALOG.PLL2.denom" value="1" locked="false"/>
+                  <setting id="CCM_ANALOG.PLL2.num" value="0" locked="false"/>
+               </clock_settings>
                <called_from_default_init>true</called_from_default_init>
             </clock_configuration>
          </clock_configurations>
       </clocks>
       <periphs name="Peripherals" version="5.0" enabled="true" update_project_code="true">
+         <dependencies>
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.ewm" description="EWM Driver not found in the toolchain/IDE project." problem_level="2" source="Peripherals">
+               <feature name="enabled" evaluation="equal">
+                  <data type="Boolean">true</data>
+               </feature>
+            </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.ewm" description="Unsupported version of the EWM Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}." problem_level="1" source="Peripherals">
+               <feature name="version" evaluation="equivalent">
+                  <data type="Version">2.0.1</data>
+               </feature>
+            </dependency>
+         </dependencies>
          <peripherals_profile>
             <processor_version>5.0.2</processor_version>
          </peripherals_profile>
@@ -754,8 +801,36 @@
             <functional_group name="BOARD_InitPeripherals" uuid="e0eb9952-282b-4f6b-b480-bb8a333f67bc" called_from_default_init="true" id_prefix="" core="core0">
                <description></description>
                <options/>
-               <dependencies/>
-               <instances/>
+               <dependencies>
+                  <dependency resourceType="ClockOutput" resourceId="CKIL_SYNC_CLK_ROOT" description="CKIL_SYNC_CLK_ROOT is inactive." problem_level="2" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="frequency" evaluation="greaterThan">
+                        <data type="Frequency" unit="Hz">0</data>
+                     </feature>
+                  </dependency>
+               </dependencies>
+               <instances>
+                  <instance name="EWM_1" type="ewm" type_id="ewm_4792127f422c23cc3392826dba86b9fd" mode="basic" peripheral="EWM" enabled="true">
+                     <config_set name="fsl_ewm" quick_selection="default">
+                        <struct name="ewmConfig">
+                           <setting name="enableEwm" value="true"/>
+                           <setting name="enableEwmInput" value="false"/>
+                           <setting name="setInputAssertLogic" value="false"/>
+                           <setting name="clockSource" value="kEWM_LpoClockSource0"/>
+                           <setting name="prescaler" value="0"/>
+                           <setting name="compareLowValue" value="0"/>
+                           <setting name="compareHighValue" value="0xFF"/>
+                        </struct>
+                        <struct name="ewmIntConfig">
+                           <setting name="enableInterrupt" value="false"/>
+                           <struct name="interrupt">
+                              <setting name="IRQn" value="EWM_IRQn"/>
+                              <setting name="enable_priority" value="false"/>
+                              <setting name="enable_custom_name" value="false"/>
+                           </struct>
+                        </struct>
+                     </config_set>
+                  </instance>
+               </instances>
             </functional_group>
          </functional_groups>
          <components>

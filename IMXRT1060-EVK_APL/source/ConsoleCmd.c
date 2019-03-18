@@ -98,6 +98,7 @@ stCmdTable_t g_stCmdTable[] = {
 	{"SENSOR", CmdSensor, "Combo Sensor"},
 	{"SFROM", CmdSFROM, "SerialFlashTest"},
 	{"CTP", CmdCTPTest, "CTP Test"},
+//	{"BKL", CmdLcdBackLightTest, "BackLight Test"},
 	{NULL, NULL, NULL}, /* Terminator */
 };
 

@@ -681,7 +681,7 @@ void BOARD_InitLCD(void)
 		IOMUXC_GPIO_B1_03_LCD_DATA15, /* GPIO_B1_03 is configured as LCD_DATA15 */
 		0U);						  /* Software Input On Field: Input Path is determined by functionality */
 	IOMUXC_SetPinMux(
-		IOMUXC_GPIO_B1_15_GPIO2_IO31, /* GPIO_B1_15 is configured as GPIO2_IO31 */
+		IOMUXC_GPIO_B1_15_GPIO2_IO31, /* GPIO_B1_15 is configured as FLEXPWM4_PWMA03 */
 		0U);						  /* Software Input On Field: Input Path is determined by functionality */
 	IOMUXC_GPR->GPR27 = ((IOMUXC_GPR->GPR27 &
 						  (~(IOMUXC_GPR_GPR27_GPIO_MUX2_GPIO_SEL_MASK))) /* Mask bits to zero which are setting */
