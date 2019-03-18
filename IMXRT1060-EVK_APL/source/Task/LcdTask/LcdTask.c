@@ -180,7 +180,7 @@ void LV_Init(void)
 
 static lv_res_t slider_action(lv_obj_t *slider)
 {
-	mimic_printf("New slider value: %d\r\n", lv_slider_get_value(slider));
+	//mimic_printf("New slider value: %d\r\n", lv_slider_get_value(slider));
 
 	return LV_RES_OK;
 }

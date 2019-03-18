@@ -215,6 +215,8 @@ DefALLOCATE_ITCM void vApplicationTickHook(void)
 	}else{
 		g_u32CurrentRun = 0u;
 	}
+
+	GPIO_PortToggle(GPIO2,0x80000000);
 	lv_tick_inc(1);
 }
 

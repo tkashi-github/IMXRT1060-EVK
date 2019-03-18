@@ -72,7 +72,6 @@ _Bool DrvPWMInit(void)
 
 	/* Use full cycle reload */
 	pwmConfig.reloadLogic = kPWM_ReloadPwmFullCycle;
-	/* PWM A & PWM B form a complementary PWM pair */
 	pwmConfig.pairOperation = kPWM_Independent;
 	pwmConfig.enableDebugMode = true;
 
