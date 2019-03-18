@@ -98,13 +98,11 @@ static void DrvELCDIFInitLcd(void)
 	
 
     GPIO_PinWrite(LCD_DISP_GPIO, LCD_DISP_GPIO_PIN, 1);
-#if 1
+
     /* Backlight. */
-    config.outputLogic = 1;
+   	config.outputLogic = 1;
     GPIO_PinInit(LCD_BL_GPIO, LCD_BL_GPIO_PIN, &config);
-#else
 	DrvPWMInit();
-#endif
 }
 
 static void DrvELCDIFInitLcdifPixelClock(void)

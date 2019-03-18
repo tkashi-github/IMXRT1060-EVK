@@ -681,7 +681,7 @@ void BOARD_InitLCD(void)
 		IOMUXC_GPIO_B1_03_LCD_DATA15, /* GPIO_B1_03 is configured as LCD_DATA15 */
 		0U);						  /* Software Input On Field: Input Path is determined by functionality */
 	IOMUXC_SetPinMux(
-		IOMUXC_GPIO_B1_15_GPIO2_IO31, /* GPIO_B1_15 is configured as FLEXPWM4_PWMA03 */
+		IOMUXC_GPIO_B1_15_FLEXPWM4_PWMA03, /* GPIO_B1_15 is configured as FLEXPWM4_PWMA03 */
 		0U);						  /* Software Input On Field: Input Path is determined by functionality */
 	IOMUXC_GPR->GPR27 = ((IOMUXC_GPR->GPR27 &
 						  (~(IOMUXC_GPR_GPR27_GPIO_MUX2_GPIO_SEL_MASK))) /* Mask bits to zero which are setting */
@@ -898,7 +898,7 @@ void BOARD_InitLCD(void)
                                                  Pull Up / Down Config. Field: 100K Ohm Pull Up
                                                  Hyst. Enable Field: Hysteresis Enabled */
 	IOMUXC_SetPinConfig(
-		IOMUXC_GPIO_B1_15_GPIO2_IO31, /* GPIO_B1_15 PAD functional properties : */
+		IOMUXC_GPIO_B1_15_FLEXPWM4_PWMA03, /* GPIO_B1_15 PAD functional properties : */
 		0x10B0u);					  /* Slew Rate Field: Slow Slew Rate
                                                  Drive Strength Field: R0/6
                                                  Speed Field: medium(100MHz)

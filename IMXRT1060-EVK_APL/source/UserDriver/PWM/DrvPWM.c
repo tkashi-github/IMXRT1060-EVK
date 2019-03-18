@@ -63,11 +63,13 @@ _Bool DrvPWMInit(void)
 	uint16_t deadTimeVal;
 	pwm_signal_param_t pwmSignal[2];
 	uint32_t pwmSourceClockInHz;
-	uint32_t pwmFrequencyInHz = 1000;
+	uint32_t pwmFrequencyInHz = 1000000;
 	pwm_config_t pwmConfig;
 
-	XBARA_Init(XBARA1);
-	XBARA_SetSignalsConnection(XBARA1, kXBARA1_InputLogicHigh, kXBARA1_OutputFlexpwm1234Fault3);
+	mimic_printf("[%s (%d)] TP\r\n", __FUNCTION__, __LINE__);
+	vTaskDelay(100);
+
+
 	PWM_GetDefaultConfig(&pwmConfig);
 
 	/* Use full cycle reload */
@@ -75,13 +77,18 @@ _Bool DrvPWMInit(void)
 	pwmConfig.pairOperation = kPWM_Independent;
 	pwmConfig.enableDebugMode = true;
 
+	mimic_printf("[%s (%d)] TP\r\n", __FUNCTION__, __LINE__);
+	vTaskDelay(100);
+
 	/* Initialize submodule 3 the same way as submodule 1 */
 	if (PWM_Init(BOARD_PWM_BASEADDR, kPWM_Module_3, &pwmConfig) == kStatus_Fail)
 	{
 		mimic_printf("PWM initialization failed\n");
 		return false;
 	}
-
+	mimic_printf("[%s (%d)] TP\r\n", __FUNCTION__, __LINE__);
+	vTaskDelay(100);
+#if 0
 	pwmSourceClockInHz = PWM_SRC_CLK_FREQ;
 
 	memset(pwmSignal, 0, sizeof(pwmSignal));
@@ -89,7 +96,7 @@ _Bool DrvPWMInit(void)
 	/* Set deadtime count, we set this to about 650ns */
 	deadTimeVal = ((uint64_t)pwmSourceClockInHz * 650) / 150000000;
 	mimic_printf("[%s (%d)] pwmSourceClockInHz = %lu, deadTimeVal = %u\r\n", __FUNCTION__, __LINE__, pwmSourceClockInHz, deadTimeVal);
-
+	vTaskDelay(100);
 	pwmSignal[0].pwmChannel = kPWM_PwmA;
 	pwmSignal[0].level = kPWM_HighTrue;
 	pwmSignal[0].dutyCyclePercent = 0; /* 1 percent dutycycle */
@@ -98,15 +105,25 @@ _Bool DrvPWMInit(void)
 	PWM_SetupPwm(BOARD_PWM_BASEADDR, kPWM_Module_3, pwmSignal, 1, kPWM_SignedCenterAligned, pwmFrequencyInHz,
 				 pwmSourceClockInHz);
 
+	mimic_printf("[%s (%d)] TP\r\n", __FUNCTION__, __LINE__);
+	vTaskDelay(100);
 	PWM_SetPwmLdok(BOARD_PWM_BASEADDR, kPWM_Control_Module_3, true);
 
+	mimic_printf("[%s (%d)] TP\r\n", __FUNCTION__, __LINE__);
+	vTaskDelay(100);
 	PWM_StartTimer(BOARD_PWM_BASEADDR, kPWM_Control_Module_3);
 
+	mimic_printf("[%s (%d)] TP\r\n", __FUNCTION__, __LINE__);
+	vTaskDelay(100);
 	/* Update duty cycles for all 3 PWM signals */
 	PWM_UpdatePwmDutycycle(BOARD_PWM_BASEADDR, kPWM_Module_0, kPWM_PwmA, kPWM_SignedCenterAligned, 100);
 
+	mimic_printf("[%s (%d)] TP\r\n", __FUNCTION__, __LINE__);
+	vTaskDelay(100);
 	/* Set the load okay bit for all submodules to load registers from their buffer */
 	PWM_SetPwmLdok(BOARD_PWM_BASEADDR, kPWM_Control_Module_3, true);
-
+	mimic_printf("[%s (%d)] TP\r\n", __FUNCTION__, __LINE__);
+	vTaskDelay(100);
+#endif
 	return true;
 }
