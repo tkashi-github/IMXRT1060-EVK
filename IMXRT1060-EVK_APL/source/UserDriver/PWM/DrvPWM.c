@@ -69,6 +69,11 @@ _Bool DrvPWMInit(void)
 	mimic_printf("[%s (%d)] TP\r\n", __FUNCTION__, __LINE__);
 	vTaskDelay(100);
 
+XBARA_Init(XBARA1);
+    XBARA_SetSignalsConnection(XBARA1, kXBARA1_InputLogicHigh, kXBARA1_OutputFlexpwm1Fault0);
+    XBARA_SetSignalsConnection(XBARA1, kXBARA1_InputLogicHigh, kXBARA1_OutputFlexpwm1Fault1);
+    XBARA_SetSignalsConnection(XBARA1, kXBARA1_InputLogicHigh, kXBARA1_OutputFlexpwm1234Fault2);
+    XBARA_SetSignalsConnection(XBARA1, kXBARA1_InputLogicHigh, kXBARA1_OutputFlexpwm1234Fault3);
 
 	PWM_GetDefaultConfig(&pwmConfig);
 
@@ -88,7 +93,7 @@ _Bool DrvPWMInit(void)
 	}
 	mimic_printf("[%s (%d)] TP\r\n", __FUNCTION__, __LINE__);
 	vTaskDelay(100);
-#if 0
+
 	pwmSourceClockInHz = PWM_SRC_CLK_FREQ;
 
 	memset(pwmSignal, 0, sizeof(pwmSignal));
@@ -99,7 +104,7 @@ _Bool DrvPWMInit(void)
 	vTaskDelay(100);
 	pwmSignal[0].pwmChannel = kPWM_PwmA;
 	pwmSignal[0].level = kPWM_HighTrue;
-	pwmSignal[0].dutyCyclePercent = 0; /* 1 percent dutycycle */
+	pwmSignal[0].dutyCyclePercent = 50; /* 1 percent dutycycle */
 	pwmSignal[0].deadtimeValue = deadTimeVal;
 
 	PWM_SetupPwm(BOARD_PWM_BASEADDR, kPWM_Module_3, pwmSignal, 1, kPWM_SignedCenterAligned, pwmFrequencyInHz,
@@ -107,6 +112,7 @@ _Bool DrvPWMInit(void)
 
 	mimic_printf("[%s (%d)] TP\r\n", __FUNCTION__, __LINE__);
 	vTaskDelay(100);
+#if 1
 	PWM_SetPwmLdok(BOARD_PWM_BASEADDR, kPWM_Control_Module_3, true);
 
 	mimic_printf("[%s (%d)] TP\r\n", __FUNCTION__, __LINE__);
