@@ -45,6 +45,7 @@
 #include "CameraTask/CameraTask.h"
 #include "LcdTask/LcdTask.h"
 #include "TouchScreenTask/TouchScreenTask.h"
+#include "TempMoniTask/TempMoniTask.h"
 
 /** typedef Task Table */
 typedef struct{
@@ -64,6 +65,7 @@ DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_LanTaskHandle;
 //DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_CameraTaskHandle;
 DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_LcdTaskHandle;
 DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_TouchScreenTaskHandle;
+DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_TempMoniTaskHandle;
 
 /** Task Control Block (STATIC ALLOCATION)*/
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_InitialTaskTCB;
@@ -74,7 +76,7 @@ DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_LanTaskTCB;
 //DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_CameraTaskTCB;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_LcdTaskTCB;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_TouchScreenTaskTCB;
-
+DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_TempMoniTaskTCB;
 /** Task Stack (STATIC ALLOCATION)*/
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_InitialTaskStack[8192/sizeof(uint32_t)];
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_ConsoleTaskStack[8192/sizeof(uint32_t)];
@@ -84,6 +86,7 @@ DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_LanTaskStack[8192/sizeof(uint
 //DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_CameraTaskStack[8192/sizeof(uint32_t)];
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_LcdTaskStack[8192/sizeof(uint32_t)];
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_TouchScreenTaskStack[8192/sizeof(uint32_t)];
+DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_TempMoniTaskStack[8192/sizeof(uint32_t)];
 
 /** Task Table */
 static const stOSdefTable_t s_stTaskTable[] = {
@@ -122,6 +125,12 @@ static const stOSdefTable_t s_stTaskTable[] = {
 		(osThreadFunc_t)TouchScreenTask,
 		NULL,
 		{"TouchScreenTask", osThreadDetached, &s_TouchScreenTaskTCB, sizeof(s_TouchScreenTaskTCB), s_TouchScreenTaskStack, sizeof(s_TouchScreenTaskStack), osPriorityBelowNormal, 0, 0},
+	},
+	{	/** TempMoniTask */
+		&g_TempMoniTaskHandle,
+		(osThreadFunc_t)TempMoniTask,
+		NULL,
+		{"TempMoniTask", osThreadDetached, &s_TempMoniTaskTCB, sizeof(s_TempMoniTaskTCB), s_TempMoniTaskStack, sizeof(s_TempMoniTaskStack), osPriorityBelowNormal, 0, 0},
 	},
 #if 0	/** IMXRT1060-EVK doesn't have FXOS8700 */
 	{	/** SensorTask */

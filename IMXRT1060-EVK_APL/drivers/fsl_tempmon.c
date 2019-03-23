@@ -38,7 +38,7 @@
 
 static uint32_t s_hotTemp;    /*!< The value of TEMPMON_TEMPSENSE0[TEMP_VALUE] at room temperature .*/
 static uint32_t s_hotCount;   /*!< The value of TEMPMON_TEMPSENSE0[TEMP_VALUE] at the hot temperature.*/
-static float s_hotT_ROOM;     /*!< The value of s_hotTemp minus room temperature(25¡æ).*/
+static float s_hotT_ROOM;     /*!< The value of s_hotTemp minus room temperature(25ï¿½ï¿½).*/
 static uint32_t s_roomC_hotC; /*!< The value of s_roomCount minus s_hotCount.*/
 
 /*******************************************************************************

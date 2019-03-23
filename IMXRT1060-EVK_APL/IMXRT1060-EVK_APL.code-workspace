@@ -58,7 +58,8 @@
 			"touchscreentask.h": "c",
 			"fsl_pwm.h": "c",
 			"drvpwm.h": "c",
-			"pin_mux.h": "c"
+			"pin_mux.h": "c",
+			"tempmonitask.h": "c"
 		},
 		"C_Cpp.default.defines": [
 			"__GNUC__",
