@@ -102,7 +102,9 @@ static void DrvELCDIFInitLcd(void)
     /* Backlight. */
    	config.outputLogic = 1;
     GPIO_PinInit(LCD_BL_GPIO, LCD_BL_GPIO_PIN, &config);
-	DrvPWMInit();
+	
+	/** ただのDCDCがつながってるので無理っぽい */
+	//DrvPWMInit();
 }
 
 static void DrvELCDIFInitLcdifPixelClock(void)
