@@ -50,25 +50,19 @@
 #include "fsl_common.h"
 #include "common.h"
 
-/** LCD Driver */
-#include "ELCDIF/DrvELCDIF.h"
-
 /** 
  * Window System 
  * https://littlevgl.com/
  * https://mcuoneclipse.com/2018/08/12/tutorial-open-source-embedded-gui-library-littlevgl-with-i-mx-rt1050-evk/
 */
 #include "lvgl.h"
-void LCD_WritePixel(int32_t x, int32_t y, uint16_t color)
-{
-	g_u16frameBuffer[y][x] = color;
-}
+
 
 /* Flush the content of the internal buffer the specific area on the display
  * You can use DMA or any hardware acceleration to do this operation in the background but
  * 'lv_flush_ready()' has to be called when finished
  * This function is required only when LV_VDB_SIZE != 0 in lv_conf.h*/
-static void ex_disp_flush(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv_color_t *color_p)
+DefALLOCATE_ITCM static void ex_disp_flush(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv_color_t *color_p)
 {
 	/*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
 	int32_t x;
@@ -78,7 +72,7 @@ static void ex_disp_flush(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const 
 		for (x = x1; x <= x2; x++)
 		{
 			/* Put a pixel to the display. */
-			LCD_WritePixel(x, y, color_p->full);
+			DrvELCDIFWritePixel(x, y, color_p->full);
 			color_p++;
 		}
 	}
@@ -89,7 +83,7 @@ static void ex_disp_flush(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const 
 
 /* Write a pixel array (called 'map') to the a specific area on the display
  * This function is required only when LV_VDB_SIZE == 0 in lv_conf.h*/
-static void ex_disp_map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv_color_t *color_p)
+DefALLOCATE_ITCM static void ex_disp_map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv_color_t *color_p)
 {
 	/*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
 	int32_t x;
@@ -100,7 +94,7 @@ static void ex_disp_map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv
 		for (x = x1; x <= x2; x++)
 		{
 			/* Put a pixel to the display.*/
-			LCD_WritePixel(x, y, color_p->full);
+			DrvELCDIFWritePixel(x, y, color_p->full);
 			color_p++;
 		}
 	}
@@ -108,7 +102,7 @@ static void ex_disp_map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv
 
 /* Write a pixel array (called 'map') to the a specific area on the display
  * This function is required only when LV_VDB_SIZE == 0 in lv_conf.h*/
-static void ex_disp_fill(int32_t x1, int32_t y1, int32_t x2, int32_t y2, lv_color_t color)
+DefALLOCATE_ITCM static void ex_disp_fill(int32_t x1, int32_t y1, int32_t x2, int32_t y2, lv_color_t color)
 {
 	/*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
 	int32_t x;
@@ -119,30 +113,34 @@ static void ex_disp_fill(int32_t x1, int32_t y1, int32_t x2, int32_t y2, lv_colo
 		for (x = x1; x <= x2; x++)
 		{
 			/* Put a pixel to the display.*/
-			LCD_WritePixel(x, y, color.full);
+			DrvELCDIFWritePixel(x, y, color.full);
 		}
 	}
 }
 
-static uint32_t s_u32PosX = 0;
-static uint32_t s_u32PosY = 0;
-static touch_event_t s_enLastTouchEvent = kTouch_Up;
+DefALLOCATE_DATA_DTCM static uint32_t s_u32PosX = 0;
+DefALLOCATE_DATA_DTCM static uint32_t s_u32PosY = 0;
+DefALLOCATE_DATA_DTCM static touch_event_t s_enLastTouchEvent = kTouch_Up;
 
 /* Read the touchpad and store it in 'data'
  * Return false if no more data read; true for ready again */
-static bool ex_tp_read(lv_indev_data_t *data)
+DefALLOCATE_ITCM static bool ex_tp_read(lv_indev_data_t *data)
 {
 	/* Read the touchpad */
-	if ((s_enLastTouchEvent == kTouch_Down) || (s_enLastTouchEvent == kTouch_Contact))
+	if (osSemaphoreAcquire(g_bsIdMousePosition, 10) == osOK)
 	{
-		data->state = LV_INDEV_STATE_PR;
+		if ((s_enLastTouchEvent == kTouch_Down) || (s_enLastTouchEvent == kTouch_Contact))
+		{
+			data->state = LV_INDEV_STATE_PR;
+		}
+		else
+		{
+			data->state = LV_INDEV_STATE_REL;
+		}
+		data->point.x = s_u32PosX;
+		data->point.y = s_u32PosY;
+		osSemaphoreRelease(g_bsIdMousePosition);
 	}
-	else
-	{
-		data->state = LV_INDEV_STATE_REL;
-	}
-	data->point.x = s_u32PosX;
-	data->point.y = s_u32PosY;
 	return false; /*false: no more data to read because we are no buffering*/
 }
 
@@ -232,89 +230,37 @@ void SampleSlider(void)
  */
 DefALLOCATE_ITCM void LcdTask(void const *argument)
 {
-	TickType_t LastTick;
-	stTaskMsgBlock_t stTaskMsg;
+	TickType_t tick;
 
-	LastTick = xTaskGetTickCount();
 	DrvELCDIFInit();
 
+	/** Init GUI Library */
 	LV_Init();
 
-	/*Create a Label on the currently active screen*/
-	lv_obj_t *label1 = lv_label_create(lv_scr_act(), NULL);
-
-	/*Modify the Label's text*/
-	lv_label_set_text(label1, "Hello world!");
-
-	/* Align the Label to the center
-     * NULL means align on parent (which is the screen now)
-     * 0, 0 at the end means an x, y offset after alignment*/
-	lv_obj_align(label1, NULL, LV_ALIGN_CENTER, 0, 0);
-
+	/** Create Slider */
 	SampleSlider();
 
+	tick = xTaskGetTickCount();
 	for (;;)
 	{
-		if (pdFALSE != xQueueReceive(g_mqLcdTask, &stTaskMsg, 4))
-		{
-			switch (stTaskMsg.enMsgId)
-			{
-			case enCurEv:
-				s_u32PosY = stTaskMsg.param[0];
-				s_u32PosX = stTaskMsg.param[1];
-				s_enLastTouchEvent = (touch_event_t)stTaskMsg.param[2];
-				break;
-			default:
-				break;
-			}
-		}
-		if (LastTick != xTaskGetTickCount())
-		{
-			LastTick = xTaskGetTickCount();
-			lv_task_handler();
-		}
+		lv_task_handler();
+		vTaskDelayUntil((TickType_t *const) & tick, 4);
 	}
 
 	vTaskSuspend(NULL);
 }
 
-_Bool PostMsgLcdTaskMouseMove(uint32_t u32X, uint32_t u32Y, touch_event_t enTouchEvent)
+DefALLOCATE_ITCM _Bool SetLcdTaskMouseMove(uint32_t u32X, uint32_t u32Y, touch_event_t enTouchEvent)
 {
 	_Bool bret = false;
-	stTaskMsgBlock_t stTaskMsg;
-	memset(&stTaskMsg, 0, sizeof(stTaskMsgBlock_t));
-	stTaskMsg.enMsgId = enCurEv;
-	stTaskMsg.param[0] = u32X;
-	stTaskMsg.param[1] = u32Y;
-	stTaskMsg.param[2] = (uint32_t)enTouchEvent;
-
-	if (pdFALSE != xPortIsInsideInterrupt())
+	if (osSemaphoreAcquire(g_bsIdMousePosition, 10) == osOK)
 	{
-		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-		if (pdFALSE != xQueueSendFromISR(g_mqLcdTask, &stTaskMsg, &xHigherPriorityTaskWoken))
-		{
-			bret = true;
-		}
-		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-	}
-	else
-	{
-		if (pdFALSE != xQueueSend(g_mqLcdTask, &stTaskMsg, 10))
-		{
-			bret = true;
-		}
+		s_u32PosY = u32X;
+		s_u32PosX = u32Y;
+		s_enLastTouchEvent = enTouchEvent;
+		bret = true;
+		osSemaphoreRelease(g_bsIdMousePosition);
 	}
 
 	return bret;
 }
-#if 0
-#include "fsl_pwm.h"
-#include "PWM/DrvPWM.h"
-void CmdLcdBackLightTest(uint32_t argc, const char *argv[]){
-
-	mimic_printf("EnabledInterrupts = 0x%08lX\r\n", PWM_GetEnabledInterrupts(BOARD_PWM_BASEADDR, kPWM_Control_Module_3));
-	mimic_printf("StatusFlags       = 0x%08lX\r\n", PWM_GetStatusFlags(BOARD_PWM_BASEADDR, kPWM_Control_Module_3));
-
-	mimic_printf("\r\n");
-}
-#endif

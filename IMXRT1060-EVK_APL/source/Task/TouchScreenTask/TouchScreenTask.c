@@ -54,9 +54,8 @@ DefALLOCATE_ITCM static inline void TouchScreenTaskActual(void)
 	
 	static uint32_t s_u32LastX = 0;;
 	static uint32_t s_u32LastY = 0;
-	
 
-	if (sizeof(stTaskMsg) == xStreamBufferReceive(g_sbhTouchScreenTask, &stTaskMsg, sizeof(stTaskMsg), portMAX_DELAY))
+	if (pdFALSE != xQueueReceive(g_mqTouchScreenTask, &stTaskMsg, portMAX_DELAY))
 	{
 		uint32_t u32PosX;
 		uint32_t u32PosY;
@@ -71,14 +70,14 @@ DefALLOCATE_ITCM static inline void TouchScreenTaskActual(void)
 				case kTouch_Down:
 				case kTouch_Up:
 					if(s_LastTouchEvent != touch_event){
-						PostMsgLcdTaskMouseMove(u32PosX, u32PosY, touch_event);
+						SetLcdTaskMouseMove(u32PosX, u32PosY, touch_event);
 					}
 					s_u32LastX = u32PosX;
 					s_u32LastY = u32PosY;
 					break;
 				case kTouch_Contact:
 					if((s_u32LastX != u32PosX) && (s_u32LastY != u32PosY)){
-						PostMsgLcdTaskMouseMove(u32PosX, u32PosY, touch_event);
+						SetLcdTaskMouseMove(u32PosX, u32PosY, touch_event);
 					}
 					s_u32LastX = u32PosX;
 					s_u32LastY = u32PosY;
@@ -144,6 +143,7 @@ DefALLOCATE_ITCM void TouchScreenTask(void const *argument)
 	}
 	for (;;)
 	{
+		//vTaskDelay(1000);
 		TouchScreenTaskActual();
 	}
 
@@ -152,27 +152,28 @@ DefALLOCATE_ITCM void TouchScreenTask(void const *argument)
 
 DefALLOCATE_ITCM _Bool PostMsgTouchScreenTouchEvent(void)
 {
+	_Bool bret = true;
 	alignas(8) stTaskMsgBlock_t stTaskMsg = {0};
 
 	stTaskMsg.enMsgId = enTouchEvent;
 	if (pdFALSE != xPortIsInsideInterrupt())
 	{
 		BaseType_t xHigherPriorityTaskWoken;
-		if (sizeof(stTaskMsg) != xStreamBufferSendFromISR(g_sbhTouchScreenTask, &stTaskMsg, sizeof(stTaskMsg), &xHigherPriorityTaskWoken))
+		if (pdFALSE == xQueueSendFromISR(g_mqTouchScreenTask, &stTaskMsg, &xHigherPriorityTaskWoken))
 		{
-			return false;
+			bret = false;
 		}
 		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 	}
 	else
 	{
-		if (sizeof(stTaskMsg) != xStreamBufferSend(g_sbhTouchScreenTask, &stTaskMsg, sizeof(stTaskMsg), 50))
+		if (pdFALSE == xQueueSend(g_mqTouchScreenTask, &stTaskMsg, 10))
 		{
 			mimic_printf("[%s (%d)] xStreamBufferSend NG\r\n", __FUNCTION__, __LINE__);
-			return false;
+			bret = false;
 		}
 	}
-	return true;
+	return bret;
 }
 
 

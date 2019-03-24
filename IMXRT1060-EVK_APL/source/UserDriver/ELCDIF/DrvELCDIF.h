@@ -53,6 +53,12 @@ extern void DrvELCDIFInit(void);
 extern void DrvELCDIFFillFrameBuffer(uint16_t u16color);
 extern uint16_t g_u16frameBuffer[DEF_IMG_HEIGHT][DEF_IMG_WIDTH];
 
+
+static inline void DrvELCDIFWritePixel(int32_t x, int32_t y, uint16_t color)
+{
+	g_u16frameBuffer[y][x] = color;
+}
+
 #ifdef __cplusplus
 }
 #endif
