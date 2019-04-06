@@ -219,14 +219,12 @@ DefALLOCATE_BSS_DTCM alignas(4) osSemaphoreId_t g_bsIdLPUARTTxSemaphore[1+enLPUA
 DefALLOCATE_BSS_DTCM alignas(4) osSemaphoreId_t g_bsIdStorageTaskMsg;
 DefALLOCATE_BSS_DTCM alignas(4) osSemaphoreId_t g_bsIdComboSensor;
 DefALLOCATE_BSS_DTCM alignas(4) osSemaphoreId_t g_bsIdCameraTask;
-DefALLOCATE_BSS_DTCM alignas(4) osSemaphoreId_t g_bsIdMousePosition;
 
 DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xLPUARTRxSemaphoreBuffer[1+enLPUART_MAX];
 DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xLPUARTTxSemaphoreBuffer[1+enLPUART_MAX];
 DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xStorageTaskMsgBuffer;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xComboSensor;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xCameraTask;
-DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xMousePosition;
 
 static stBinarySemaphoreTable_t s_stBinarySemaphoreTable[] = {
 	{&g_bsIdLPUARTRxSemaphore[enLPUART1], {"BS_LPUART1RX", 0, &s_xLPUARTRxSemaphoreBuffer[enLPUART1], sizeof(StaticSemaphore_t)}, 1, 1},
@@ -250,7 +248,6 @@ static stBinarySemaphoreTable_t s_stBinarySemaphoreTable[] = {
 	{&g_bsIdStorageTaskMsg, {"BS_STORAGETASKMSG", 0, &s_xStorageTaskMsgBuffer, sizeof(StaticSemaphore_t)}, 1, 1},
 	{&g_bsIdComboSensor, {"BS_COMBOSENSOR", 0, &s_xComboSensor, sizeof(StaticSemaphore_t)}, 1, 1},
 	{&g_bsIdCameraTask, {"BS_CAMERATASKMSG", 0, &s_xCameraTask, sizeof(StaticSemaphore_t)}, 1, 1},
-	{&g_bsIdMousePosition, {"BS_MOUSEPOSITION", 0, &s_xMousePosition, sizeof(StaticSemaphore_t)}, 1, 1},
 
 	{NULL, {NULL, 0, NULL, 0}, 0, 0},
 };
@@ -281,7 +278,6 @@ static stQueueTable_t s_stQueueTable[] = {
 	{&g_StorageTaskQueueId, 32, sizeof(stTaskMsgBlock_t), {0}},
 	{NULL, 0, 0, {0}},
 };
-
 
 void CreateQueue(void){
 	uint32_t i=0;
@@ -380,16 +376,11 @@ typedef struct{
 }stMsgQueue_t;
 
 DefALLOCATE_BSS_DTCM alignas(32) QueueHandle_t g_mqLcdTask;
-DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_u8LcdTskMsgQueue[sizeof(stTaskMsgBlock_t) * 32];
+DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_u8LcdTskStorage[sizeof(stTaskMsgBlock_t) * 32];
 DefALLOCATE_BSS_DTCM alignas(32) static StaticQueue_t g_sqLcdTask;
 
-DefALLOCATE_BSS_DTCM alignas(32) QueueHandle_t g_mqTouchScreenTask;
-DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_u8TouchScreenTaskMsgQueue[sizeof(stTaskMsgBlock_t) * 32];
-DefALLOCATE_BSS_DTCM alignas(32) static StaticQueue_t g_sqTouchScreenTask;
-
 static stMsgQueue_t s_stMsgQueueTable[] = {
-	{&g_mqLcdTask, 32, sizeof(stTaskMsgBlock_t), s_u8LcdTskMsgQueue, &g_sqLcdTask},
-	{&g_mqTouchScreenTask, 32, sizeof(stTaskMsgBlock_t), s_u8TouchScreenTaskMsgQueue, &g_sqTouchScreenTask},
+	{&g_mqLcdTask, 32, sizeof(stTaskMsgBlock_t), s_u8LcdTskStorage, &g_sqLcdTask},
 	{NULL, 0, 0, NULL, NULL},
 };
 

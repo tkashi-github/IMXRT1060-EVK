@@ -46,15 +46,10 @@ extern "C"
 #include "UserTypedef.h"
 #include "OSResource.h"
 #include "fsl_ft5406_rt.h"
-/** LCD Driver */
-#include "ELCDIF/DrvELCDIF.h"
 
 extern void LcdTask(void const *argument);
-extern _Bool SetLcdTaskMouseMove(uint32_t u32X, uint32_t u32Y, touch_event_t enTouchEvent);
-
+extern _Bool PostMsgLcdTaskMouseMove(uint32_t u32X, uint32_t u32Y, touch_event_t enTouchEvent);
 //extern void CmdLcdBackLightTest(uint32_t argc, const char *argv[]);
-
-
 #ifdef __cplusplus
 }
 #endif

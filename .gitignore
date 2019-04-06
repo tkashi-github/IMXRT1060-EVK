@@ -1,3 +1,5 @@
 .metadata
 IMXRT1060-EVK_BOOT/Debug
 IMXRT1060-EVK_APL/Debug
+IMXRT1060-EVK_BOOT/.vscode/ipch
+IMXRT1060-EVK_APL/.vscode/ipch

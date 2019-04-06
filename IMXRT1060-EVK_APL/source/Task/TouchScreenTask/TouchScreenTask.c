@@ -54,8 +54,9 @@ DefALLOCATE_ITCM static inline void TouchScreenTaskActual(void)
 	
 	static uint32_t s_u32LastX = 0;;
 	static uint32_t s_u32LastY = 0;
+	
 
-	if (pdFALSE != xQueueReceive(g_mqTouchScreenTask, &stTaskMsg, portMAX_DELAY))
+	if (sizeof(stTaskMsg) == xStreamBufferReceive(g_sbhTouchScreenTask, &stTaskMsg, sizeof(stTaskMsg), portMAX_DELAY))
 	{
 		uint32_t u32PosX;
 		uint32_t u32PosY;
@@ -70,14 +71,14 @@ DefALLOCATE_ITCM static inline void TouchScreenTaskActual(void)
 				case kTouch_Down:
 				case kTouch_Up:
 					if(s_LastTouchEvent != touch_event){
-						SetLcdTaskMouseMove(u32PosX, u32PosY, touch_event);
+						PostMsgLcdTaskMouseMove(u32PosX, u32PosY, touch_event);
 					}
 					s_u32LastX = u32PosX;
 					s_u32LastY = u32PosY;
 					break;
 				case kTouch_Contact:
 					if((s_u32LastX != u32PosX) && (s_u32LastY != u32PosY)){
-						SetLcdTaskMouseMove(u32PosX, u32PosY, touch_event);
+						PostMsgLcdTaskMouseMove(u32PosX, u32PosY, touch_event);
 					}
 					s_u32LastX = u32PosX;
 					s_u32LastY = u32PosY;
@@ -143,8 +144,7 @@ DefALLOCATE_ITCM void TouchScreenTask(void const *argument)
 	}
 	for (;;)
 	{
-		vTaskDelay(1000);
-		//TouchScreenTaskActual();
+		TouchScreenTaskActual();
 	}
 
 	vTaskSuspend(NULL);
@@ -152,28 +152,27 @@ DefALLOCATE_ITCM void TouchScreenTask(void const *argument)
 
 DefALLOCATE_ITCM _Bool PostMsgTouchScreenTouchEvent(void)
 {
-	_Bool bret = true;
 	alignas(8) stTaskMsgBlock_t stTaskMsg = {0};
 
 	stTaskMsg.enMsgId = enTouchEvent;
 	if (pdFALSE != xPortIsInsideInterrupt())
 	{
 		BaseType_t xHigherPriorityTaskWoken;
-		if (pdFALSE == xQueueSendFromISR(g_mqTouchScreenTask, &stTaskMsg, &xHigherPriorityTaskWoken))
+		if (sizeof(stTaskMsg) != xStreamBufferSendFromISR(g_sbhTouchScreenTask, &stTaskMsg, sizeof(stTaskMsg), &xHigherPriorityTaskWoken))
 		{
-			bret = false;
+			return false;
 		}
 		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 	}
 	else
 	{
-		if (pdFALSE == xQueueSend(g_mqTouchScreenTask, &stTaskMsg, 10))
+		if (sizeof(stTaskMsg) != xStreamBufferSend(g_sbhTouchScreenTask, &stTaskMsg, sizeof(stTaskMsg), 50))
 		{
 			mimic_printf("[%s (%d)] xStreamBufferSend NG\r\n", __FUNCTION__, __LINE__);
-			bret = false;
+			return false;
 		}
 	}
-	return bret;
+	return true;
 }
 
 

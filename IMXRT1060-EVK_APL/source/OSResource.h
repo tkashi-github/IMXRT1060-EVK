@@ -80,12 +80,10 @@ extern osSemaphoreId_t g_bsIdLPUARTTxSemaphore[];
 extern osSemaphoreId_t g_bsIdStorageTaskMsg;
 extern osSemaphoreId_t g_bsIdComboSensor;
 extern osSemaphoreId_t g_bsIdCameraTask;
-extern osSemaphoreId_t g_bsIdMousePosition;
 
 /** Queue */
 extern osMessageQueueId_t g_StorageTaskQueueId;
 extern QueueHandle_t g_mqLcdTask;
-extern QueueHandle_t g_mqTouchScreenTask;
 
 /** Stream Buffer */
 extern StreamBufferHandle_t g_sbhLPUARTTx[1+enLPUART_MAX];
