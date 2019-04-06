@@ -1,0 +1,7 @@
+ExitOnError 1
+r
+h
+loadfile "D:\Workspace\IMXRT1060-EVK\IMXRT1060-EVK_APL\Debug\IMXRT1060-EVK_APL.hex"
+qc
+
+qc

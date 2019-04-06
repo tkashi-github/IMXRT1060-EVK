@@ -143,8 +143,8 @@ DefALLOCATE_ITCM void TouchScreenTask(void const *argument)
 	}
 	for (;;)
 	{
-		//vTaskDelay(1000);
-		TouchScreenTaskActual();
+		vTaskDelay(1000);
+		//TouchScreenTaskActual();
 	}
 
 	vTaskSuspend(NULL);

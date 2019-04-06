@@ -48,7 +48,7 @@
 
 #include <stdint.h>
 #include "fsl_device_registers.h"
-
+#include "core_cm7.h"
 
 
 /* ----------------------------------------------------------------------------
@@ -108,8 +108,8 @@ WDOG2->WMCR &= ~WDOG_WMCR_PDE_MASK;
         SCB_EnableDCache();
     }
 #endif
-
-  SystemInitHook();
+    return;
+  //SystemInitHook();
 }
 
 /* ----------------------------------------------------------------------------
