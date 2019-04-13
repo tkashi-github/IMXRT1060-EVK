@@ -96,11 +96,11 @@ int main(void) {
 	while(osOK != osKernelInitialize());
 
 	CreateTask();
-	CreateQueue();
+	CreateMsgQueue();
 	CreateBinarySemaphore();
 	CreateEventGroup();
 	CreateStreamBuffer();
-	CreateMsgQueue();
+
 	
 	{
 		lpuart_config_t lpuart_config;

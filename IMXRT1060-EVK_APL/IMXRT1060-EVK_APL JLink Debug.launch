@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="com.nxp.mcuxpresso.core.debug.support.segger.launchConfigurationType">
+<stringAttribute key="InstructionTraceInfo" value="eJzFlMFO4zAQhu8r7TtYvrNNmjYEiYAgbaWVmm7VGPaITDotWRK7sh2Wffu1G6dqGoM4IOGTbf3zjf3P2JfXr1WJXkDIgrMY+z88jIDlfF2wbYzvyOwswtdX379dgqpAPU5A0aKUZoNQsQU1A6pqARKl9A8X9y1HU9KCdTeaAA1dZHfL5a8VmU6wAU1JeksloJv1WoNkjM98jJZ6CkyZwIERTX6TE9E4CKMwjPzwSKxEDY3+Zw9q9OfehT906qfktq8PPW98fszf0FLagLQX4L8h1K79VSfaYRiNAj8IPXcMETSHWc0YlN0TjS/CUeQ5b6CTJFxAVmyf9KTacaYFyOR1epbIOc+fY7yoy7KZY6QRK9hmSmO08V82sC34pu0tc4nO6a0g19ekgurzSrSoq0cQMR41bmT1bseFgjVKql1KVf5kvULJv7yEhNdMGfl+zwQYy2x3owlV1KzbmqB5wZ79wyqlrymV2rtAl7zNa/vUjWkyW0qzcEL89yAfP8vwczBBgxkcvLRtthR8U5T6g7AuSluOh4Ss5uieljUc/Bi8pR8cFbgV9vt3/5RV9aHGto/b0dinb6qHAwevfWoO3t7cjMxO7/p+ikbS+TX3W92f9T+2IbE6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="/>
 <stringAttribute key="com.crt.ctrlcenter.OFSemuDetails" value="JLink260114942"/>
 <stringAttribute key="com.crt.ctrlcenter.serialNumber" value="USB 260114942"/>
 <intAttribute key="com.nxp.mcuxpresso.core.debug.support.segger.launches.JLinkLaunchConfigHandler.version" value="1"/>

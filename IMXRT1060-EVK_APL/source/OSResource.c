@@ -272,22 +272,30 @@ typedef struct{
 	osMessageQueueId_t *pID;
 	uint32_t	u32BlockNum;
 	uint32_t	u32SizeofBlock;
-	osMessageQueueAttr_t stAttr;	/** 今のところ使い道がない */
+	osMessageQueueAttr_t stAttr;
 }stQueueTable_t;
 
-DefALLOCATE_BSS_DTCM alignas(32) osMessageQueueId_t g_StorageTaskQueueId = NULL;
+DefALLOCATE_BSS_DTCM alignas(32) osMessageQueueId_t g_mqLcdTask;
+DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_u8LcdTskMsgQueue[sizeof(stTaskMsgBlock_t) * 32];
+DefALLOCATE_BSS_DTCM alignas(32) static StaticQueue_t g_sqLcdTask;
+
+DefALLOCATE_BSS_DTCM alignas(32) osMessageQueueId_t g_mqTouchScreenTask;
+DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_u8TouchScreenTaskMsgQueue[sizeof(stTaskMsgBlock_t) * 32];
+DefALLOCATE_BSS_DTCM alignas(32) static StaticQueue_t g_sqTouchScreenTask;
+
 
 static stQueueTable_t s_stQueueTable[] = {
-	{&g_StorageTaskQueueId, 32, sizeof(stTaskMsgBlock_t), {0}},
+	{&g_mqLcdTask, 32, sizeof(stTaskMsgBlock_t), {"MQLcdTask", 0, &g_sqLcdTask, sizeof(StaticQueue_t), s_u8LcdTskMsgQueue, sizeof(s_u8LcdTskMsgQueue)}},
+	{&g_mqTouchScreenTask, 32, sizeof(stTaskMsgBlock_t), {"MQTouchScreenTask", 0, &g_sqTouchScreenTask, sizeof(StaticQueue_t), s_u8TouchScreenTaskMsgQueue, sizeof(s_u8TouchScreenTaskMsgQueue)}},
 	{NULL, 0, 0, {0}},
 };
 
 
-void CreateQueue(void){
+void CreateMsgQueue(void){
 	uint32_t i=0;
 
 	while(s_stQueueTable[i].pID != NULL){
-		*s_stQueueTable[i].pID = osMessageQueueNew(s_stQueueTable[i].u32BlockNum, s_stQueueTable[i].u32SizeofBlock, NULL);
+		*s_stQueueTable[i].pID = osMessageQueueNew(s_stQueueTable[i].u32BlockNum, s_stQueueTable[i].u32SizeofBlock, &s_stQueueTable[i].stAttr);
 		i++;
 	}
 }
@@ -366,42 +374,6 @@ void CreateStreamBuffer(void){
 		*s_stStreamBufferTable[i].pID = xStreamBufferCreateStatic(
 			s_stStreamBufferTable[i].BufferSize, s_stStreamBufferTable[i].xTriggerLevel, 
 			s_stStreamBufferTable[i].pu8Buffer, s_stStreamBufferTable[i].pxStreamBufferStruct);
-		i++;
-	}
-}
-
-
-typedef struct{
-	QueueHandle_t    *pID;
-	uint32_t         QueueLength;
-	uint32_t         ItemSize;
-	uint8_t          *pu8Buffer;
-	StaticQueue_t    *pxMsgQueueStruct;
-}stMsgQueue_t;
-
-DefALLOCATE_BSS_DTCM alignas(32) QueueHandle_t g_mqLcdTask;
-DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_u8LcdTskMsgQueue[sizeof(stTaskMsgBlock_t) * 32];
-DefALLOCATE_BSS_DTCM alignas(32) static StaticQueue_t g_sqLcdTask;
-
-DefALLOCATE_BSS_DTCM alignas(32) QueueHandle_t g_mqTouchScreenTask;
-DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_u8TouchScreenTaskMsgQueue[sizeof(stTaskMsgBlock_t) * 32];
-DefALLOCATE_BSS_DTCM alignas(32) static StaticQueue_t g_sqTouchScreenTask;
-
-static stMsgQueue_t s_stMsgQueueTable[] = {
-	{&g_mqLcdTask, 32, sizeof(stTaskMsgBlock_t), s_u8LcdTskMsgQueue, &g_sqLcdTask},
-	{&g_mqTouchScreenTask, 32, sizeof(stTaskMsgBlock_t), s_u8TouchScreenTaskMsgQueue, &g_sqTouchScreenTask},
-	{NULL, 0, 0, NULL, NULL},
-};
-
-void CreateMsgQueue(void){
-	uint32_t i=0;
-
-	while(s_stMsgQueueTable[i].pID != NULL){
-		*s_stMsgQueueTable[i].pID = xQueueCreateStatic(
-			s_stMsgQueueTable[i].QueueLength, 
-			s_stMsgQueueTable[i].ItemSize, 
-			s_stMsgQueueTable[i].pu8Buffer, 
-			s_stMsgQueueTable[i].pxMsgQueueStruct);
 		i++;
 	}
 }

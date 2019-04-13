@@ -255,7 +255,8 @@ DefALLOCATE_ITCM void LcdTask(void const *argument)
 
 	for (;;)
 	{
-		if (pdFALSE != xQueueReceive(g_mqLcdTask, &stTaskMsg, 4))
+		uint8_t msg_prio; /* Message priority is ignored */
+		if (osOK == osMessageQueueGet(g_mqLcdTask, &stTaskMsg, &msg_prio, 4))
 		{
 			switch (stTaskMsg.enMsgId)
 			{
@@ -268,6 +269,7 @@ DefALLOCATE_ITCM void LcdTask(void const *argument)
 				break;
 			}
 		}
+
 		if (LastTick != xTaskGetTickCount())
 		{
 			LastTick = xTaskGetTickCount();
@@ -287,34 +289,9 @@ _Bool PostMsgLcdTaskMouseMove(uint32_t u32X, uint32_t u32Y, touch_event_t enTouc
 	stTaskMsg.param[0] = u32X;
 	stTaskMsg.param[1] = u32Y;
 	stTaskMsg.param[2] = (uint32_t)enTouchEvent;
-
-	if (pdFALSE != xPortIsInsideInterrupt())
+	if (osOK == osMessageQueuePut(g_mqLcdTask, &stTaskMsg, 0, 10))
 	{
-		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-		if (pdFALSE != xQueueSendFromISR(g_mqLcdTask, &stTaskMsg, &xHigherPriorityTaskWoken))
-		{
-			bret = true;
-		}
-		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+		bret = true;
 	}
-	else
-	{
-		if (pdFALSE != xQueueSend(g_mqLcdTask, &stTaskMsg, 10))
-		{
-			bret = true;
-		}
-	}
-
 	return bret;
 }
-#if 0
-#include "fsl_pwm.h"
-#include "PWM/DrvPWM.h"
-void CmdLcdBackLightTest(uint32_t argc, const char *argv[]){
-
-	mimic_printf("EnabledInterrupts = 0x%08lX\r\n", PWM_GetEnabledInterrupts(BOARD_PWM_BASEADDR, kPWM_Control_Module_3));
-	mimic_printf("StatusFlags       = 0x%08lX\r\n", PWM_GetStatusFlags(BOARD_PWM_BASEADDR, kPWM_Control_Module_3));
-
-	mimic_printf("\r\n");
-}
-#endif

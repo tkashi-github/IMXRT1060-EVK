@@ -83,9 +83,7 @@ extern osSemaphoreId_t g_bsIdCameraTask;
 extern osSemaphoreId_t g_bsIdMousePosition;
 
 /** Queue */
-extern osMessageQueueId_t g_StorageTaskQueueId;
-extern QueueHandle_t g_mqLcdTask;
-extern QueueHandle_t g_mqTouchScreenTask;
+extern osMessageQueueId_t g_mqLcdTask;
 
 /** Stream Buffer */
 extern StreamBufferHandle_t g_sbhLPUARTTx[1+enLPUART_MAX];
@@ -97,7 +95,7 @@ extern StreamBufferHandle_t g_sbhCameraTask;
 extern StreamBufferHandle_t g_sbhTouchScreenTask;
 
 extern void CreateTask(void);
-extern void CreateQueue(void);
+extern void CreateMsgQueue(void);
 extern void CreateBinarySemaphore(void);
 extern void CreateEventGroup(void);
 extern void CreateStreamBuffer(void);
