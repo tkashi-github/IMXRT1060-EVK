@@ -240,16 +240,25 @@ DefALLOCATE_ITCM void LcdTask(void const *argument)
 
 	LV_Init();
 
-	/*Create a Label on the currently active screen*/
-	lv_obj_t *label1 = lv_label_create(lv_scr_act(), NULL);
+	{
+		static lv_style_t style;
+		lv_style_copy(&style, &lv_style_plain);
+		style.line.width = 10;                         /*10 px thick arc*/
+		style.line.color = LV_COLOR_HEX3(0x258);       /*Blueish arc color*/
 
-	/*Modify the Label's text*/
-	lv_label_set_text(label1, "Hello world!");
+		style.body.border.color = LV_COLOR_HEX3(0xBBB); /*Gray background color*/
+		style.body.border.width = 10;
+		style.body.padding.hor = 0;
 
-	/* Align the Label to the center
-     * NULL means align on parent (which is the screen now)
-     * 0, 0 at the end means an x, y offset after alignment*/
-	lv_obj_align(label1, NULL, LV_ALIGN_CENTER, 0, 0);
+		/*Create a Preloader object*/
+		lv_obj_t *preload = lv_preload_create(lv_scr_act(), NULL);
+		if(preload != NULL){
+			lv_obj_set_size(preload, 100, 100);
+			lv_obj_align(preload, NULL, LV_ALIGN_CENTER, 0, 0);
+			//lv_preload_set_spin_time(preload, 1000);
+			lv_preload_set_style(preload, LV_PRELOAD_STYLE_MAIN, &style);
+		}
+	}
 
 	SampleSlider();
 

@@ -51,12 +51,12 @@ DefALLOCATE_ITCM static inline void TouchScreenTaskActual(void)
 	stTaskMsgBlock_t stTaskMsg = {0};
 	static touch_event_t s_LastTouchEvent = kTouch_Reserved;
 	touch_event_t touch_event;
+	uint8_t msg_prio; /* Message priority is ignored */
 	
 	static uint32_t s_u32LastX = 0;;
 	static uint32_t s_u32LastY = 0;
 	
-
-	if (sizeof(stTaskMsg) == xStreamBufferReceive(g_sbhTouchScreenTask, &stTaskMsg, sizeof(stTaskMsg), portMAX_DELAY))
+	if (osOK == osMessageQueueGet(g_mqTouchScreenTask, &stTaskMsg, &msg_prio, portMAX_DELAY))
 	{
 		uint32_t u32PosX;
 		uint32_t u32PosY;
@@ -155,24 +155,11 @@ DefALLOCATE_ITCM _Bool PostMsgTouchScreenTouchEvent(void)
 	alignas(8) stTaskMsgBlock_t stTaskMsg = {0};
 
 	stTaskMsg.enMsgId = enTouchEvent;
-	if (pdFALSE != xPortIsInsideInterrupt())
+	if (osOK == osMessageQueuePut(g_mqTouchScreenTask, &stTaskMsg, 0, 50))
 	{
-		BaseType_t xHigherPriorityTaskWoken;
-		if (sizeof(stTaskMsg) != xStreamBufferSendFromISR(g_sbhTouchScreenTask, &stTaskMsg, sizeof(stTaskMsg), &xHigherPriorityTaskWoken))
-		{
-			return false;
-		}
-		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+		return true;
 	}
-	else
-	{
-		if (sizeof(stTaskMsg) != xStreamBufferSend(g_sbhTouchScreenTask, &stTaskMsg, sizeof(stTaskMsg), 50))
-		{
-			mimic_printf("[%s (%d)] xStreamBufferSend NG\r\n", __FUNCTION__, __LINE__);
-			return false;
-		}
-	}
-	return true;
+	return false;
 }
 
 
