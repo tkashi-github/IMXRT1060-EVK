@@ -286,3 +286,64 @@ _Bool DrvLPUARTInit(enLPUART_t enLPUARTNo, const lpuart_config_t *config)
 
 
 
+
+static const uint32_t s_u32BaseAddr[] = UART_BASE_ADDRS;
+
+_Bool DrvUARTSend(enUART_t enUARTNo, const uint8_t pu8data[], const uint32_t ByteCnt)
+{
+    _Bool bret = false;
+    if ((enUARTNo >= enUART_MIN) && (enUARTNo <= enUART_MAX))
+	{
+		if (xSemaphoreTake(g_bsIdUARTTxSemaphore[enUARTNo], portMAX_DELAY) == pdTRUE)
+		{
+			if (pu8data != NULL)
+			{
+				if(pdFALSE != xPortIsInsideInterrupt()){
+					BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+					if(xStreamBufferSendFromISR(g_sbhUARTTx[enUARTNo], pu8data, ByteCnt, &xHigherPriorityTaskWoken) >= ByteCnt){
+						/** MCU Specification !! */
+						
+						UART_EnableInterrupts((UART_Type *)s_u32BaseAddr[enUARTNo], kUART_TxEmptyEnable);
+						/** End */
+						bret = true;
+					}
+					portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+				}else{
+					if(xStreamBufferSend(g_sbhUARTTx[enUARTNo], pu8data, ByteCnt, 10) >= ByteCnt){
+						/** MCU Specification !! */
+						UART_EnableInterrupts((UART_Type *)s_u32BaseAddr[enUARTNo], kUART_TxEmptyEnable);
+						/** End */
+						bret = true;
+					}
+				}
+				/** MCU Specification !! */
+				if ((UART_GetEnabledInterrupts((UART_Type *)s_u32BaseAddr[enUARTNo]) & kUART_TxEmptyEnable) == 0)
+				{
+					UART_EnableInterrupts((UART_Type *)s_u32BaseAddr[enUARTNo], kUART_TxEmptyEnable);
+					
+				}
+				/** End */
+			}
+			xSemaphoreGive(g_bsIdUARTTxSemaphore[enUARTNo]);
+		}
+	}
+	return bret;
+}
+
+_Bool DrvUARTRecv(enUART_t enUARTNo, uint8_t pu8data[], const uint32_t ByteCnt, uint32_t u32Timeout)
+{
+	_Bool bret = false;
+    if ((enUARTNo >= enUART_MIN) || (enUARTNo <= enUART_MAX))
+	{
+		if (xSemaphoreTake(g_bsIdUARTRxSemaphore[enUARTNo], portMAX_DELAY) == pdTRUE)
+		{
+			if(xStreamBufferReceive(g_sbhUARTRx[enUARTNo], pu8data, ByteCnt, u32Timeout) >= ByteCnt)
+			{
+				bret = true;
+			}
+			xSemaphoreGive(g_bsIdUARTRxSemaphore[enUARTNo]);
+		}
+	}
+	return bret;
+}

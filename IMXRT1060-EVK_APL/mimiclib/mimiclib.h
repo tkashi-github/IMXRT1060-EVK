@@ -150,7 +150,7 @@ static inline void RTOS_GetChar(TCHAR *ch)
 {
 	if (ch != NULL)
 	{
-		xStreamBufferReceive(g_sbhLPUARTRx[kStdioPort], ch, sizeof(TCHAR), portMAX_DELAY);
+		DrvUARTRecv(kStdioPort, (uint8_t *)ch, sizeof(TCHAR), portMAX_DELAY);
 	}
 }
 /**
@@ -160,19 +160,7 @@ static inline void RTOS_GetChar(TCHAR *ch)
  */
 static inline void RTOS_PutChar(TCHAR ch)
 {
-
-	if(pdFALSE != xPortIsInsideInterrupt()){
-		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-
-		if(xStreamBufferSendFromISR(g_sbhLPUARTTx[kStdioPort], &ch, sizeof(TCHAR), &xHigherPriorityTaskWoken) >= 1){
-			LPUART1->CTRL |=LPUART_CTRL_TIE_MASK;
-		}
-		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-	}else{
-		if(xStreamBufferSend(g_sbhLPUARTTx[kStdioPort], &ch, sizeof(TCHAR), 10) >= 1){
-			LPUART1->CTRL |=LPUART_CTRL_TIE_MASK;
-		}
-	}
+	DrvUARTSend(kStdioPort, (const uint8_t *)&ch, sizeof(TCHAR));
 }
 /**
  * @brief puts (with Semapore)
@@ -181,32 +169,8 @@ static inline void RTOS_PutChar(TCHAR ch)
  */
 static inline void RTOS_PutString(const TCHAR pszStr[])
 {
-	if (xSemaphoreTake(g_bsIdLPUARTTxSemaphore[kStdioPort], portMAX_DELAY) == pdTRUE)
-	{
-		if (pszStr != NULL)
-		{
-			uint32_t ByteCnt = mimic_tcslen(pszStr)*sizeof(TCHAR);
-
-			if(pdFALSE != xPortIsInsideInterrupt()){
-				BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-
-				if(xStreamBufferSendFromISR(g_sbhLPUARTTx[kStdioPort], pszStr, ByteCnt, &xHigherPriorityTaskWoken) >= ByteCnt){
-					LPUART1->CTRL |=LPUART_CTRL_TIE_MASK;
-				}
-				portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-			}else{
-				if(xStreamBufferSend(g_sbhLPUARTTx[kStdioPort], pszStr, ByteCnt, 10) >= ByteCnt){
-					LPUART1->CTRL |=LPUART_CTRL_TIE_MASK;
-				}
-			}
-			uint32_t ctrl = LPUART1->CTRL;
-			if ((ctrl & LPUART_CTRL_TIE_MASK) != LPUART_CTRL_TIE_MASK)
-			{
-				LPUART1->CTRL |= LPUART_CTRL_TIE_MASK;
-			}
-		}
-		xSemaphoreGive(g_bsIdLPUARTTxSemaphore[kStdioPort]);
-	}
+	uint32_t ByteCnt = mimic_tcslen(pszStr)*sizeof(TCHAR);
+	DrvUARTSend(kStdioPort, (const uint8_t *)pszStr, ByteCnt);
 }
 
 /**
@@ -215,7 +179,7 @@ static inline void RTOS_PutString(const TCHAR pszStr[])
  * @return false There are no characters in Buffer
  */
 static inline _Bool RTOS_kbhit(void){
-	return (_Bool)!xStreamBufferIsEmpty(g_sbhLPUARTRx[kStdioPort]);
+	return (_Bool)!DrvUARTIsRxBufferEmpty(kStdioPort);
 }
 
 #endif

@@ -57,6 +57,19 @@ extern void LPUART7_IRQHandler(void);
 extern void LPUART8_IRQHandler(void);
 
 extern _Bool DrvLPUARTInit(enLPUART_t enLPUARTNo, const lpuart_config_t *config);
+extern _Bool DrvUARTInit(enUART_t enUARTNo, const uart_config_t *config);
+extern _Bool DrvUARTSend(enUART_t enUARTNo, const uint8_t pu8data[], const uint32_t ByteCnt);
+extern _Bool DrvUARTRecv(enUART_t enUARTNo, uint8_t pu8data[], const uint32_t ByteCnt, uint32_t u32Timeout);
+
+static inline _Bool DrvUARTIsRxBufferEmpty(enUART_t enUARTNo)
+{
+    _Bool bret = false;
+    if ((enUARTNo >= enUART_MIN) || (enUARTNo <= enUART_MAX))
+	{
+        bret = (_Bool)xStreamBufferIsEmpty(g_sbhUARTRx[enUARTNo]);
+    }
+    return bret;
+}
 
 #ifdef __cplusplus
 }
