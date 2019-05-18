@@ -6,7 +6,7 @@
  * Generated linker script file for MIMXRT1062xxxxA
  * Created from linkscript.ldt by FMCreateLinkLibraries
  * Using Freemarker v2.3.23
- * MCUXpresso IDE v10.3.0 [Build 2200] [2018-12-03] on 2019/04/13 19:55:37
+ * MCUXpresso IDE v10.3.1 [Build 2233] [2019-02-20] on 2019/05/18 22:54:38
  */
 
 INCLUDE "IMXRT1060-EVK_APL_Debug_library.ld"

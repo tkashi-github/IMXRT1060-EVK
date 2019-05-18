@@ -57,16 +57,16 @@ extern void LPUART7_IRQHandler(void);
 extern void LPUART8_IRQHandler(void);
 
 extern _Bool DrvLPUARTInit(enLPUART_t enLPUARTNo, const lpuart_config_t *config);
-extern _Bool DrvUARTInit(enUART_t enUARTNo, const uart_config_t *config);
-extern _Bool DrvUARTSend(enUART_t enUARTNo, const uint8_t pu8data[], const uint32_t ByteCnt);
-extern _Bool DrvUARTRecv(enUART_t enUARTNo, uint8_t pu8data[], const uint32_t ByteCnt, uint32_t u32Timeout);
+extern _Bool DrvUARTInit(enLPUART_t enUARTNo, const lpuart_config_t *config);
+extern _Bool DrvUARTSend(enLPUART_t enUARTNo, const uint8_t pu8data[], const uint32_t ByteCnt);
+extern _Bool DrvUARTRecv(enLPUART_t enUARTNo, uint8_t pu8data[], const uint32_t ByteCnt, uint32_t u32Timeout);
 
-static inline _Bool DrvUARTIsRxBufferEmpty(enUART_t enUARTNo)
+static inline _Bool DrvUARTIsRxBufferEmpty(enLPUART_t enUARTNo)
 {
     _Bool bret = false;
-    if ((enUARTNo >= enUART_MIN) || (enUARTNo <= enUART_MAX))
+    if ((enUARTNo >= enLPUART_MIN) || (enUARTNo <= enLPUART_MAX))
 	{
-        bret = (_Bool)xStreamBufferIsEmpty(g_sbhUARTRx[enUARTNo]);
+        bret = (_Bool)xStreamBufferIsEmpty(g_sbhLPUARTRx[enUARTNo]);
     }
     return bret;
 }
