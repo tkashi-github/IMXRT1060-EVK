@@ -5,6 +5,8 @@
 		}
 	],
 	"settings": {
+		"editor.insertSpaces": false,
+		"editor.tabSize": 4,
 		"files.encoding": "utf8",
 		"c-cpp-flylint.clang.standard": [
 			"c11"
