@@ -240,6 +240,7 @@ DefALLOCATE_ITCM void LcdTask(void const *argument)
 
 	LV_Init();
 
+#if 0
 	{
 		static lv_style_t style;
 		lv_style_copy(&style, &lv_style_plain);
@@ -259,6 +260,7 @@ DefALLOCATE_ITCM void LcdTask(void const *argument)
 			lv_preload_set_style(preload, LV_PRELOAD_STYLE_MAIN, &style);
 		}
 	}
+#endif
 
 	SampleSlider();
 

@@ -341,7 +341,7 @@
 								<option id="com.crt.advproject.link.gcc.nanofloat.1744023783" name="Enable printf float " superClass="com.crt.advproject.link.gcc.nanofloat" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.gcc.nanofloat.scanf.613813990" name="Enable scanf float " superClass="com.crt.advproject.link.gcc.nanofloat.scanf" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.toram.23305107" name="Link application to RAM" superClass="com.crt.advproject.link.toram" useByScannerDiscovery="false" value="true" valueType="boolean"/>
-								<option defaultValue="com.crt.advproject.heapAndStack.mcuXpressoStyle" id="com.crt.advproject.link.memory.heapAndStack.style.806545297" name="Heap and Stack placement" superClass="com.crt.advproject.link.memory.heapAndStack.style" useByScannerDiscovery="false" value="com.crt.advproject.heapAndStack.mcuXpressoStyle" valueType="enumerated"/>
+								<option defaultValue="com.crt.advproject.heapAndStack.mcuXpressoStyle" id="com.crt.advproject.link.memory.heapAndStack.style.806545297" name="Heap and Stack placement" superClass="com.crt.advproject.link.memory.heapAndStack.style" useByScannerDiscovery="false" value="Default" valueType="enumerated"/>
 								<option id="com.crt.advproject.link.stackOffset.544487094" name="Stack offset" superClass="com.crt.advproject.link.stackOffset" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.gcc.multicore.slave.127991145" name="Multicore configuration" superClass="com.crt.advproject.link.gcc.multicore.slave" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.gcc.multicore.master.1079651954" name="Multicore master" superClass="com.crt.advproject.link.gcc.multicore.master" useByScannerDiscovery="false"/>
@@ -797,7 +797,7 @@
 	<storageModule moduleId="com.crt.config">
 		<projectStorage>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#13;
 &lt;TargetConfig&gt;&#13;
-&lt;Properties property_3="NXP" property_4="MIMXRT1062xxxxA" property_count="5" version="100200"/&gt;&#13;
+&lt;Properties property_3="NXP" property_4="MIMXRT1062xxxxA" property_count="5" version="100300"/&gt;&#13;
 &lt;infoList vendor="NXP"&gt;&#13;
 &lt;info chip="MIMXRT1062xxxxA" name="MIMXRT1062xxxxA"&gt;&#13;
 &lt;chip&gt;&#13;
@@ -806,14 +806,9 @@
 &lt;vendor&gt;NXP&lt;/vendor&gt;&#13;
 &lt;memory can_program="true" id="Flash" is_ro="true" size="0" type="Flash"/&gt;&#13;
 &lt;memory id="RAM" size="1024" type="RAM"/&gt;&#13;
-&lt;memoryInstance derived_from="RAM" edited="true" id="Prgram" location="0x80000000" size="0x400000"/&gt;&#13;
-&lt;memoryInstance derived_from="RAM" edited="true" id="NonCache" location="0x80400000" size="0x800000"/&gt;&#13;
-&lt;memoryInstance derived_from="RAM" edited="true" id="HEAP" location="0x80c00000" size="0x1400000"/&gt;&#13;
-&lt;memoryInstance derived_from="RAM" edited="true" id="SRAM_ITC" location="0x0" size="0x40000"/&gt;&#13;
-&lt;memoryInstance derived_from="RAM" edited="true" id="SRAM_DTC" location="0x20000400" size="0x3fc00"/&gt;&#13;
-&lt;memoryInstance derived_from="RAM" edited="true" id="VRAM" location="0x20200000" size="0x40000"/&gt;&#13;
-&lt;memoryInstance derived_from="RAM" edited="true" id="SRAM_OC2" location="0x20240000" size="0x20000"/&gt;&#13;
-&lt;memoryInstance derived_from="RAM" edited="true" id="MAIN_STACK" location="0x20260000" size="0x20000"/&gt;&#13;
+&lt;memoryInstance derived_from="RAM" id="SRAM_DTC" location="0x20000000" size="0x20000"/&gt;&#13;
+&lt;memoryInstance derived_from="RAM" id="SRAM_ITC" location="0x0" size="0x20000"/&gt;&#13;
+&lt;memoryInstance derived_from="RAM" id="SRAM_OC" location="0x20200000" size="0xc0000"/&gt;&#13;
 &lt;peripheralInstance derived_from="AIPSTZ1" id="AIPSTZ1" location="0x4007C000"/&gt;&#13;
 &lt;peripheralInstance derived_from="AIPSTZ1" id="AIPSTZ2" location="0x4017C000"/&gt;&#13;
 &lt;peripheralInstance derived_from="AIPSTZ1" id="AIPSTZ3" location="0x4027C000"/&gt;&#13;

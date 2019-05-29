@@ -37,7 +37,6 @@
 #include "version.h"
 #include "FreeRTOS.h"
 #include "task.h"
-#include "CPUFunc.h"
 
 #include "FileCmd.h"
 #include "mimiclib/mimiclib.h"

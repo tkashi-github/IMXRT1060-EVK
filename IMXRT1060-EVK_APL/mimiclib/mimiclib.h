@@ -150,7 +150,7 @@ static inline void RTOS_GetChar(TCHAR *ch)
 {
 	if (ch != NULL)
 	{
-		DrvUARTRecv(kStdioPort, (uint8_t *)ch, sizeof(TCHAR), portMAX_DELAY);
+		DrvLPUARTRecv(kStdioPort, (uint8_t *)ch, sizeof(TCHAR), portMAX_DELAY);
 	}
 }
 /**
@@ -160,7 +160,7 @@ static inline void RTOS_GetChar(TCHAR *ch)
  */
 static inline void RTOS_PutChar(TCHAR ch)
 {
-	DrvUARTSend(kStdioPort, (const uint8_t *)&ch, sizeof(TCHAR));
+	DrvLPUARTSend(kStdioPort, (const uint8_t *)&ch, sizeof(TCHAR));
 }
 /**
  * @brief puts (with Semapore)
@@ -170,7 +170,7 @@ static inline void RTOS_PutChar(TCHAR ch)
 static inline void RTOS_PutString(const TCHAR pszStr[])
 {
 	uint32_t ByteCnt = mimic_tcslen(pszStr)*sizeof(TCHAR);
-	DrvUARTSend(kStdioPort, (const uint8_t *)pszStr, ByteCnt);
+	DrvLPUARTSend(kStdioPort, (const uint8_t *)pszStr, ByteCnt);
 }
 
 /**

@@ -289,60 +289,57 @@ _Bool DrvLPUARTInit(enLPUART_t enLPUARTNo, const lpuart_config_t *config)
 
 static const uint32_t s_u32BaseAddr[] = LPUART_BASE_ADDRS;
 
-_Bool DrvUARTSend(enLPUART_t enUARTNo, const uint8_t pu8data[], const uint32_t ByteCnt)
+_Bool DrvLPUARTSend(enLPUART_t enUARTNo, const uint8_t pu8data[], const uint32_t ByteCnt)
 {
     _Bool bret = false;
-    if ((enUARTNo >= enLPUART_MIN) && (enUARTNo <= enLPUART_MAX))
+    if ((enUARTNo >= enLPUART_MIN) && (enUARTNo <= enLPUART_MAX) && (pu8data != NULL) && (ByteCnt > 0))
 	{
-		if (xSemaphoreTake(g_bsIdLPUARTTxSemaphore[enUARTNo], portMAX_DELAY) == pdTRUE)
+		if (osSemaphoreAcquire(g_bsIdLPUARTTxSemaphore[enUARTNo], portMAX_DELAY) == osOK)
 		{
-			if (pu8data != NULL)
-			{
-				if(pdFALSE != xPortIsInsideInterrupt()){
-					BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+			if(pdFALSE != xPortIsInsideInterrupt()){
+				BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-					if(xStreamBufferSendFromISR(g_sbhLPUARTTx[enUARTNo], pu8data, ByteCnt, &xHigherPriorityTaskWoken) >= ByteCnt){
-						/** MCU Specification !! */
-						
-						LPUART_EnableInterrupts((LPUART_Type *)s_u32BaseAddr[enUARTNo], kLPUART_TxDataRegEmptyInterruptEnable);
-						/** End */
-						bret = true;
-					}
-					portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-				}else{
-					if(xStreamBufferSend(g_sbhLPUARTTx[enUARTNo], pu8data, ByteCnt, 10) >= ByteCnt){
-						/** MCU Specification !! */
-						LPUART_EnableInterrupts((LPUART_Type *)s_u32BaseAddr[enUARTNo], kLPUART_TxDataRegEmptyInterruptEnable);
-						/** End */
-						bret = true;
-					}
-				}
-				/** MCU Specification !! */
-				if ((LPUART_GetEnabledInterrupts((LPUART_Type *)s_u32BaseAddr[enUARTNo]) & kLPUART_TxDataRegEmptyInterruptEnable) == 0)
-				{
-					LPUART_EnableInterrupts((LPUART_Type *)s_u32BaseAddr[enUARTNo], kLPUART_TxDataRegEmptyInterruptEnable);
+				if(xStreamBufferSendFromISR(g_sbhLPUARTTx[enUARTNo], pu8data, ByteCnt, &xHigherPriorityTaskWoken) >= ByteCnt){
+					/** MCU Specification !! */
 					
+					LPUART_EnableInterrupts((LPUART_Type *)s_u32BaseAddr[enUARTNo], kLPUART_TxDataRegEmptyInterruptEnable);
+					/** End */
+					bret = true;
 				}
-				/** End */
+				portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+			}else{
+				if(xStreamBufferSend(g_sbhLPUARTTx[enUARTNo], pu8data, ByteCnt, 10) >= ByteCnt){
+					/** MCU Specification !! */
+					LPUART_EnableInterrupts((LPUART_Type *)s_u32BaseAddr[enUARTNo], kLPUART_TxDataRegEmptyInterruptEnable);
+					/** End */
+					bret = true;
+				}
 			}
-			xSemaphoreGive(g_bsIdLPUARTTxSemaphore[enUARTNo]);
+			/** MCU Specification !! */
+			if ((LPUART_GetEnabledInterrupts((LPUART_Type *)s_u32BaseAddr[enUARTNo]) & kLPUART_TxDataRegEmptyInterruptEnable) == 0)
+			{
+				LPUART_EnableInterrupts((LPUART_Type *)s_u32BaseAddr[enUARTNo], kLPUART_TxDataRegEmptyInterruptEnable);
+				
+			}
+			/** End */
+			osSemaphoreRelease(g_bsIdLPUARTTxSemaphore[enUARTNo]);
 		}
 	}
 	return bret;
 }
 
-_Bool DrvUARTRecv(enLPUART_t enUARTNo, uint8_t pu8data[], const uint32_t ByteCnt, uint32_t u32Timeout)
+_Bool DrvLPUARTRecv(enLPUART_t enUARTNo, uint8_t pu8data[], const uint32_t ByteCnt, uint32_t u32Timeout)
 {
 	_Bool bret = false;
     if ((enUARTNo >= enLPUART_MIN) && (enUARTNo <= enLPUART_MAX))
 	{
-		if (xSemaphoreTake(g_bsIdLPUARTRxSemaphore[enUARTNo], portMAX_DELAY) == pdTRUE)
+		if (osSemaphoreAcquire(g_bsIdLPUARTRxSemaphore[enUARTNo], portMAX_DELAY) == osOK)
 		{
 			if(xStreamBufferReceive(g_sbhLPUARTRx[enUARTNo], pu8data, ByteCnt, u32Timeout) >= ByteCnt)
 			{
 				bret = true;
 			}
-			xSemaphoreGive(g_bsIdLPUARTRxSemaphore[enUARTNo]);
+			osSemaphoreRelease(g_bsIdLPUARTRxSemaphore[enUARTNo]);
 		}
 	}
 	return bret;
