@@ -109,7 +109,7 @@ _Bool CheckROM(void)
 		if(memcmp((void*)(kROM_BIN_TOP + 4), (void*)0x80000000, u32BinSize + 2) == 0){
 			mimic_printf("memcpy OK\r\n");
 			vTaskDelay(100u);
-			CM7_DisableIRQ();
+			DisableGlobalIRQ();
 			ARM_MPU_Disable();
 			SCB_DisableDCache();
 			SCB_DisableICache();
