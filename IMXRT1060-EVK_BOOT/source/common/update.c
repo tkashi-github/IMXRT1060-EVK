@@ -34,7 +34,6 @@
 #include "board.h"
 #include "mimiclib/mimiclib.h"
 #include "ff.h"
-#include "CPUFunc.h"
 
 #define kROM_BIN_TOP	(0x60400000)
 #define kBinBufferSize (4 * 1024 * 1024)

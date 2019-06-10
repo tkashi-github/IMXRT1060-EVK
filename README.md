@@ -18,6 +18,21 @@
  * FatFs
  * lwip
  * lvgl
- 
+
+ ## IMXRT1060-EVK_BOOT
+  This project is a bootloader. A main functions are as follows.
+  * Console (source/Task/consoleTask.c, h)
+  * File System (source/Task/StorageTask.c, h)
+  * Load another binary and jump (update.c)
+
+ ## IMXRT1060-EVK_APL
+  This project is a sample application. A main functions are as follows.
+  * Console (source/Task/consoleTask.c, h)
+  * File System (source/Task/StorageTask.c, h)
+  * Lan (lwip)
+  * Temperature Monitor (source/Task/TempMonieTask.c, h)
+  * Touch screen (source/Task/TouchScreenTask.c, h)
+  * GUI (lvgl)
+
 # !!indent is Tab and width is 4!!
  

@@ -40,7 +40,7 @@
 #include "MIMXRT1062.h"
 #include "UserTypedef.h"
 #include "OSResource.h"
-#include "CPUFunc.h"
+
 #include "UART/DrvLPUART.h"
 /* TODO: insert other include files here. */
 
