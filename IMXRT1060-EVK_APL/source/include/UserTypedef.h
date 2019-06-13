@@ -109,12 +109,66 @@ typedef struct{
 	uint32_t           param[3];
 }stTaskMsgBlock_t;
 
+/** SAI */
+typedef enum{
+	enSoundTask1 = 0,
+	enSoundTask12,
+	enNumOfSoundTask,
+}enSoundTask_t;
+
+/** SAI */
+typedef enum{
+	enSAI1 = 0,
+	enSAI2,
+	enNumOfSAI,
+}enSAI_t;
+
 /** SD Card Slots */
 typedef enum{
 	enUSDHC1 = 0,
 	enUSDHC2,
 	enNumOfSD,
 }enSD_t;
+
+typedef enum{
+	enAudioFileWAV = 0,
+	enAudioFileMAX,
+}enAudioFileType_t;
+
+/*! @brief Audio sample rate */
+typedef enum{
+	enSampleRateNone = 0,
+    enSampleRate8KHz = 8000U,     /*!< Sample rate 8000 Hz */
+    enSampleRate11025Hz = 11025U, /*!< Sample rate 11025 Hz */
+    enSampleRate12KHz = 12000U,   /*!< Sample rate 12000 Hz */
+    enSampleRate16KHz = 16000U,   /*!< Sample rate 16000 Hz */
+    enSampleRate22050Hz = 22050U, /*!< Sample rate 22050 Hz */
+    enSampleRate24KHz = 24000U,   /*!< Sample rate 24000 Hz */
+    enSampleRate32KHz = 32000U,   /*!< Sample rate 32000 Hz */
+    enSampleRate44100Hz = 44100U, /*!< Sample rate 44100 Hz */
+    enSampleRate48KHz = 48000U,   /*!< Sample rate 48000 Hz */
+    enSampleRate96KHz = 96000U    /*!< Sample rate 96000 Hz */
+} enSampleRate_t;
+
+/*! @brief Audio word width */
+typedef enum{
+	enWordWidthNone = 0,
+    enWordWidth8bits = 8U,   /*!< Audio data width 8 bits */
+    enWordWidth16bits = 16U, /*!< Audio data width 16 bits */
+    enWordWidth24bits = 24U, /*!< Audio data width 24 bits */
+    enWordWidth32bits = 32U  /*!< Audio data width 32 bits */
+} enWorWidth_t;
+
+#define kAudioMaxOfSampleRate       (96000u)
+#define kAudioMaxOfChannels         (2u)
+#define kAudioMaxOfPCMBytes         (4u)
+#define DefAudioBufDiv			    (10u)
+#define DefAudioBufBase			    (4u)
+#define kAudioBufferMaxSize 	    ((kAudioMaxOfSampleRate * kAudioMaxOfPCMBytes * kAudioMaxOfChannels) / DefAudioBufDiv)
+#define kAudioBufferNum 		    (DefAudioBufBase * DefAudioBufDiv)
+#define kAudioRxBufferMaxSize 	    ((kAudioMaxOfSampleRate * kAudioMaxOfPCMBytes * kAudioMaxOfChannels) / DefAudioBufDiv)
+#define kAudioRxBufferNum 		    (DefAudioBufBase * DefAudioBufDiv)
+#define kSAIQueSize				    (kAudioRxBufferNum * 2)
 
 /** for TCHAR */
 #define _INC_TCHAR

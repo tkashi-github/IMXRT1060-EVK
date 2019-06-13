@@ -73,6 +73,9 @@ extern osThreadId_t g_LanTaskHandle;
 extern osEventFlagsId_t g_efLPUART[];
 extern osEventFlagsId_t g_efFSReady;
 extern osEventFlagsId_t g_efCameraSensor;
+extern osEventFlagsId_t g_efSAITx[enNumOfSAI];
+extern osEventFlagsId_t g_efSAIRx[enNumOfSAI];
+extern osEventFlagsId_t g_efSoundTaskEventGroup[enNumOfSoundTask];
 
 /** Binary Semaphore */
 extern osSemaphoreId_t g_bsIdLPUARTRxSemaphore[];
@@ -85,6 +88,8 @@ extern osSemaphoreId_t g_bsIdMousePosition;
 /** Queue */
 extern osMessageQueueId_t g_mqLcdTask;
 extern osMessageQueueId_t g_mqTouchScreenTask;
+extern osMessageQueueId_t g_mqPlayCtrlTask;
+extern osMessageQueueId_t g_mqSoundTask;
 
 /** Stream Buffer */
 extern StreamBufferHandle_t g_sbhLPUARTTx[1+enLPUART_MAX];

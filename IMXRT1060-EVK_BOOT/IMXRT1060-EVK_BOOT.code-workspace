@@ -42,7 +42,8 @@
 			"fsl_common.h": "c",
 			"storagetask.h": "c",
 			"usertypedef.h": "c",
-			"filecmd.h": "c"
+			"filecmd.h": "c",
+			"fsl_device_registers.h": "c"
 		},
 		"C_Cpp.default.defines": [
 			"FSL_RTOS_FREE_RTOS",

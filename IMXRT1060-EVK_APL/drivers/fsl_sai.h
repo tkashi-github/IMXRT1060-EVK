@@ -199,6 +199,7 @@ typedef struct _sai_config
 /*! @brief Audio sample rate */
 typedef enum _sai_sample_rate
 {
+    kSAI_SampleRateNone = 0u,
     kSAI_SampleRate8KHz = 8000U,     /*!< Sample rate 8000 Hz */
     kSAI_SampleRate11025Hz = 11025U, /*!< Sample rate 11025 Hz */
     kSAI_SampleRate12KHz = 12000U,   /*!< Sample rate 12000 Hz */
@@ -216,6 +217,7 @@ typedef enum _sai_sample_rate
 /*! @brief Audio word width */
 typedef enum _sai_word_width
 {
+    kSAI_WordWidthNone = 0u,
     kSAI_WordWidth8bits = 8U,   /*!< Audio data width 8 bits */
     kSAI_WordWidth16bits = 16U, /*!< Audio data width 16 bits */
     kSAI_WordWidth24bits = 24U, /*!< Audio data width 24 bits */

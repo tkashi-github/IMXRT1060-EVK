@@ -46,6 +46,8 @@
 #include "LcdTask/LcdTask.h"
 #include "TouchScreenTask/TouchScreenTask.h"
 #include "TempMoniTask/TempMoniTask.h"
+#include "Task/SoundTask/SoundTask.h"
+#include "Task/PlayCtrl/PlayCtrl.h"
 
 /** typedef Task Table */
 typedef struct{
@@ -66,6 +68,8 @@ DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_LanTaskHandle;
 DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_LcdTaskHandle;
 DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_TouchScreenTaskHandle;
 DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_TempMoniTaskHandle;
+DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_hndSoundTask;
+DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_hndPlayCtrl;
 
 /** Task Control Block (STATIC ALLOCATION)*/
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_InitialTaskTCB;
@@ -77,6 +81,9 @@ DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_LanTaskTCB;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_LcdTaskTCB;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_TouchScreenTaskTCB;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_TempMoniTaskTCB;
+DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_SoundTaskTCB;
+DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_PlayCtrlTCB;
+
 /** Task Stack (STATIC ALLOCATION)*/
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_InitialTaskStack[8192/sizeof(uint32_t)];
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_ConsoleTaskStack[8192/sizeof(uint32_t)];
@@ -87,6 +94,8 @@ DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_LanTaskStack[8192/sizeof(uint
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_LcdTaskStack[8192/sizeof(uint32_t)];
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_TouchScreenTaskStack[8192/sizeof(uint32_t)];
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_TempMoniTaskStack[8192/sizeof(uint32_t)];
+DefALLOCATE_BSS_ITCM alignas(32) static uint32_t s_SoundTaskSTACK[8192/sizeof(uint32_t)];
+DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_PlayCtrlSTACK[16384/sizeof(uint32_t)];
 
 /** Task Table */
 static const stOSdefTable_t s_stTaskTable[] = {
@@ -147,6 +156,18 @@ static const stOSdefTable_t s_stTaskTable[] = {
 		{"CameraTask", osThreadDetached, &s_CameraTaskTCB, sizeof(s_CameraTaskTCB), s_CameraTaskStack, sizeof(s_CameraTaskStack), osPriorityBelowNormal, 0, 0},
 	},
 #endif
+	{	/** SoundTask1 */
+		&g_hndSoundTask,
+		(osThreadFunc_t)SoundTask,
+		(void*)0,
+		{"SoundTask1", osThreadDetached, &s_SoundTaskTCB, sizeof(s_SoundTaskTCB), s_SoundTaskSTACK, sizeof(s_SoundTaskSTACK), osPriorityHigh, 0, 0},
+	},
+	{	/** PlayCtrl */
+		&g_hndPlayCtrl,
+		(osThreadFunc_t)PlayCtrl,
+		NULL,
+		{"PlayCtrl", osThreadDetached, &s_PlayCtrlTCB, sizeof(s_PlayCtrlTCB), s_PlayCtrlSTACK, sizeof(s_PlayCtrlSTACK), osPriorityAboveNormal, 0, 0},
+	},
 	// Terminate
 	{	
 		NULL,
@@ -176,11 +197,17 @@ typedef struct{
 DefALLOCATE_BSS_DTCM alignas(4) osEventFlagsId_t g_efLPUART[1+enLPUART_MAX];
 DefALLOCATE_BSS_DTCM alignas(4) osEventFlagsId_t g_efFSReady;
 DefALLOCATE_BSS_DTCM alignas(4) osEventFlagsId_t g_efCameraSensor;
+DefALLOCATE_BSS_DTCM alignas(32) osEventFlagsId_t g_efSAITx[enNumOfSAI];
+DefALLOCATE_BSS_DTCM alignas(32) osEventFlagsId_t g_efSAIRx[enNumOfSAI];
+DefALLOCATE_BSS_DTCM alignas(32) osEventFlagsId_t g_efSoundTaskEventGroup[enNumOfSoundTask];
 
 /** StaticEventGroup_t */
 DefALLOCATE_BSS_DTCM alignas(4) static StaticEventGroup_t s_xLPUARTEventGroupBuffer[1+enLPUART_MAX];
 DefALLOCATE_BSS_DTCM alignas(4) static StaticEventGroup_t s_xFSReadyEventGroupBuffer;
 DefALLOCATE_BSS_DTCM alignas(4) static StaticEventGroup_t s_xCameraSensorEventGroupBuffer;
+DefALLOCATE_BSS_DTCM alignas(32) static StaticEventGroup_t s_segSAITxEventGroupBuffer[enNumOfSAI];
+DefALLOCATE_BSS_DTCM alignas(32) static StaticEventGroup_t s_segSAIRxEventGroupBuffer[enNumOfSAI];
+DefALLOCATE_BSS_DTCM alignas(32) static StaticEventGroup_t s_segSoundTaskEventGroupBuffer[enNumOfSoundTask];
 
 static stEventFlagTable_t s_stEventFlagTable[] = {
 	{&g_efLPUART[enLPUART1], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART1], sizeof(StaticEventGroup_t)}},
@@ -192,6 +219,14 @@ static stEventFlagTable_t s_stEventFlagTable[] = {
 	{&g_efLPUART[enLPUART7], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART7], sizeof(StaticEventGroup_t)}},
 	{&g_efLPUART[enLPUART8], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART8], sizeof(StaticEventGroup_t)}},
 
+	{&g_efSAITx[enSAI1], {"EF_SAITx1", 0, &s_segSAITxEventGroupBuffer[enSAI1], sizeof(StaticEventGroup_t)}},
+	{&g_efSAITx[enSAI2], {"EF_SAITx2", 0, &s_segSAITxEventGroupBuffer[enSAI2], sizeof(StaticEventGroup_t)}},
+
+	{&g_efSAIRx[enSAI1], {"EF_SAIRx1", 0, &s_segSAIRxEventGroupBuffer[enSAI1], sizeof(StaticEventGroup_t)}},
+	{&g_efSAIRx[enSAI2], {"EF_SAIRx2", 0, &s_segSAIRxEventGroupBuffer[enSAI2], sizeof(StaticEventGroup_t)}},
+
+	{&g_efSoundTaskEventGroup[enSAI1], {"EF_SoundTask1", 0, &s_segSoundTaskEventGroupBuffer[enSoundTask1], sizeof(StaticEventGroup_t)}},
+	{&g_efSoundTaskEventGroup[enSAI2], {"EF_SoundTask2", 0, &s_segSoundTaskEventGroupBuffer[enSoundTask2], sizeof(StaticEventGroup_t)}},
 	{&g_efFSReady, {"EF_FSREADY", 0, &s_xFSReadyEventGroupBuffer, sizeof(StaticEventGroup_t)}},
 	{&g_efCameraSensor, {"EF_CAMERA_SENSOR", 0, &s_xCameraSensorEventGroupBuffer, sizeof(StaticEventGroup_t)}},
 	{NULL, {NULL, 0, NULL, 0}},
@@ -283,10 +318,19 @@ DefALLOCATE_BSS_DTCM alignas(32) osMessageQueueId_t g_mqTouchScreenTask;
 DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_u8TouchScreenTaskMsgQueue[sizeof(stTaskMsgBlock_t) * 32];
 DefALLOCATE_BSS_DTCM alignas(32) static StaticQueue_t g_sqTouchScreenTask;
 
+DefALLOCATE_BSS_DTCM alignas(32) osMessageQueueId_t g_mqPlayCtrlTask;
+DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_u8PlayCtrlTaskMsgQueue[sizeof(stTaskMsgBlock_t) * 32];
+DefALLOCATE_BSS_DTCM alignas(32) static StaticQueue_t g_sqPlayCtrlTask;
+
+DefALLOCATE_BSS_DTCM alignas(32) osMessageQueueId_t g_mqSoundTask;
+DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_u8SoundTaskMsgQueue[sizeof(stTaskMsgBlock_t) * 32];
+DefALLOCATE_BSS_DTCM alignas(32) static StaticQueue_t g_sqSoundTask;
 
 static stQueueTable_t s_stQueueTable[] = {
 	{&g_mqLcdTask, 32, sizeof(stTaskMsgBlock_t), {"MQLcdTask", 0, &g_sqLcdTask, sizeof(StaticQueue_t), s_u8LcdTskMsgQueue, sizeof(s_u8LcdTskMsgQueue)}},
 	{&g_mqTouchScreenTask, 32, sizeof(stTaskMsgBlock_t), {"MQTouchScreenTask", 0, &g_sqTouchScreenTask, sizeof(StaticQueue_t), s_u8TouchScreenTaskMsgQueue, sizeof(s_u8TouchScreenTaskMsgQueue)}},
+	{&g_mqPlayCtrlTask, 32, sizeof(stTaskMsgBlock_t), {"MQPlayCtrlTask", 0, &g_sqPlayCtrlTask, sizeof(StaticQueue_t), s_u8PlayCtrlTaskMsgQueue, sizeof(s_u8PlayCtrlTaskMsgQueue)}},
+	{&g_mqSoundTask, 32, sizeof(stTaskMsgBlock_t), {"MQSoundTask", 0, &g_sqSoundTask, sizeof(StaticQueue_t), s_u8SoundTaskMsgQueue, sizeof(s_u8SoundTaskMsgQueue)}},
 	{NULL, 0, 0, {0}},
 };
 

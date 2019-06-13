@@ -1,6 +1,9 @@
 .metadata
+FreeRTOS_TAD_logs
+CMSIS_DSP/Debug
 IMXRT1060-EVK_BOOT/Debug
 IMXRT1060-EVK_APL/Debug
+CMSIS_DSP/.vscode/ipch
 IMXRT1060-EVK_BOOT/.vscode/ipch
 IMXRT1060-EVK_APL/.vscode/ipch
 IMXRT1060-EVK.rtf
@@ -21,6 +24,13 @@ IMXRT1060-EVK.rtf
 .mcuxpressoide_packages_support/MIMXRT1062xxxxA_support/com.crt.advproject.config.exe.debug.xml
 .mcuxpressoide_packages_support/MIMXRT1062xxxxA_support/com.crt.advproject.config.exe.release.xml
 .mcuxpressoide_packages_support/MIMXRT1062xxxxA_support/info.properties
+.mcuxpressoide_packages_support/MIMXRT1064xxxxA_support/MIMXRT1064_dir_part.xml
+.mcuxpressoide_packages_support/MIMXRT1064xxxxA_support/MIMXRT1064_list.xml
+.mcuxpressoide_packages_support/MIMXRT1064xxxxA_support/MIMXRT1064_internal.xml
+.mcuxpressoide_packages_support/MIMXRT1064xxxxA_support/MIMXRT1064_internal_peripheral.xml
+.mcuxpressoide_packages_support/MIMXRT1064xxxxA_support/com.crt.advproject.config.exe.debug.xml
+.mcuxpressoide_packages_support/MIMXRT1064xxxxA_support/com.crt.advproject.config.exe.release.xml
+.mcuxpressoide_packages_support/MIMXRT1064xxxxA_support/info.properties
 IMXRT1060-EVK_APL/.settings/language.settings.xml
 IMXRT1060-EVK_APL/.settings/org.eclipse.cdt.codan.core.prefs
 IMXRT1060-EVK_APL/.settings/org.eclipse.cdt.managedbuilder.core.prefs

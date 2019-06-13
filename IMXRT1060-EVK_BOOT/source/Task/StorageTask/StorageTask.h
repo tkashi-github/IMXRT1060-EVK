@@ -32,7 +32,7 @@
  */
 #ifndef __cplusplus
 #if __STDC_VERSION__ < 201112L
-#error /** Only C11 */
+#error /* Only C11 */
 #endif
 #endif
 #pragma once

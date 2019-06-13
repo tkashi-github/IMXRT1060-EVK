@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding= "UTF-8" ?>
-<configuration name="MIMXRT1062xxxxA" version="1.5" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.5 http://mcuxpresso.nxp.com/XSD/mex_configuration_1.5.xsd" uuid="3266d5ba-6201-4841-9b19-c3e38d19fd9d" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.5" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<configuration name="MIMXRT1062xxxxA" version="1.6" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.6 http://mcuxpresso.nxp.com/XSD/mex_configuration_1.6.xsd" uuid="3266d5ba-6201-4841-9b19-c3e38d19fd9d" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <common>
       <processor>MIMXRT1062xxxxA</processor>
       <package>MIMXRT1062DVL6A</package>
@@ -13,11 +13,12 @@
    <preferences>
       <validate_boot_init_only>true</validate_boot_init_only>
       <generate_extended_information>false</generate_extended_information>
+      <generate_code_modified_registers_only>false</generate_code_modified_registers_only>
    </preferences>
    <tools>
-      <pins name="Pins" version="5.0" enabled="true" update_project_code="true">
+      <pins name="Pins" version="6.0" enabled="true" update_project_code="true">
          <pins_profile>
-            <processor_version>5.0.2</processor_version>
+            <processor_version>6.0.1</processor_version>
             <power_domains/>
             <pin_labels>
                <pin_label pin_num="E3" pin_signal="GPIO_EMC_00" label="SEMC_D0" identifier="SEMC_D0"/>
@@ -728,9 +729,9 @@
             </function>
          </functions_list>
       </pins>
-      <clocks name="Clocks" version="5.0" enabled="true" update_project_code="true">
+      <clocks name="Clocks" version="6.0" enabled="true" update_project_code="true">
          <clocks_profile>
-            <processor_version>5.0.2</processor_version>
+            <processor_version>6.0.1</processor_version>
          </clocks_profile>
          <clock_configurations>
             <clock_configuration name="BOARD_BootClockRUN">
@@ -781,7 +782,13 @@
             </clock_configuration>
          </clock_configurations>
       </clocks>
-      <periphs name="Peripherals" version="5.0" enabled="true" update_project_code="true">
+      <dcdx name="DCDx" version="2.0" enabled="false" update_project_code="true">
+         <dcdx_profile>
+            <processor_version>N/A</processor_version>
+         </dcdx_profile>
+         <dcdx_configurations/>
+      </dcdx>
+      <periphs name="Peripherals" version="6.0" enabled="true" update_project_code="true">
          <dependencies>
             <dependency resourceType="SWComponent" resourceId="platform.drivers.ewm" description="EWM Driver not found in the toolchain/IDE project." problem_level="2" source="Peripherals">
                <feature name="enabled" evaluation="equal">
@@ -795,7 +802,7 @@
             </dependency>
          </dependencies>
          <peripherals_profile>
-            <processor_version>5.0.2</processor_version>
+            <processor_version>6.0.1</processor_version>
          </peripherals_profile>
          <functional_groups>
             <functional_group name="BOARD_InitPeripherals" uuid="e0eb9952-282b-4f6b-b480-bb8a333f67bc" called_from_default_init="true" id_prefix="" core="core0">
@@ -825,6 +832,7 @@
                            <struct name="interrupt">
                               <setting name="IRQn" value="EWM_IRQn"/>
                               <setting name="enable_priority" value="false"/>
+                              <setting name="priority" value="0"/>
                               <setting name="enable_custom_name" value="false"/>
                            </struct>
                         </struct>
@@ -837,7 +845,17 @@
             <component name="system" type_id="system_54b53072540eeeb8f8e9343e71f28176">
                <config_set_global name="global_system_definitions"/>
             </component>
+            <component name="msg" type_id="msg_6e2baaf3b97dbeef01c0043275f9a0e7">
+               <config_set_global name="global_messages"/>
+            </component>
          </components>
       </periphs>
+      <tee name="TEE" version="1.0" enabled="false" update_project_code="true">
+         <tee_profile>
+            <processor_version>N/A</processor_version>
+         </tee_profile>
+         <global_options/>
+         <user_memory_regions/>
+      </tee>
    </tools>
 </configuration>

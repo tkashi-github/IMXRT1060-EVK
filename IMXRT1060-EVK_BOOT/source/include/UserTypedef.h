@@ -32,7 +32,7 @@
  */
 #ifndef __cplusplus
 #if __STDC_VERSION__ < 201112L
-#error /** Only C11 */
+#error /* Only C11 */
 #endif
 #endif
 #pragma once
@@ -58,7 +58,7 @@ extern "C"
 #include "stream_buffer.h"
 
 /*  */
-#include "MIMXRT1062.h"
+#include "fsl_device_registers.h"
 
 /** version.h */
 #include "version.h"

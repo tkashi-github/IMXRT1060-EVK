@@ -45,6 +45,8 @@ extern "C"
 #include "UserTypedef.h"
 #include "OSResource.h"
 
+#define kStdioPort enLPUART1
+
 #include "fsl_lpuart.h"
 
 extern void LPUART1_IRQHandler(void);
