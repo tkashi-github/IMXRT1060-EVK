@@ -1,8 +1,7 @@
 /**
- * @file TouchScreenTask.c
- * @brief TODO
- * @author Takashi Kashiwagi
- * @date 2019/03/10
+ * @brief		Touch screen Control
+ * @author		Takashi Kashiwagi
+ * @date		2019/03/10
  * @version     0.1
  * @details 
  * --
@@ -52,10 +51,11 @@ DefALLOCATE_ITCM static inline void TouchScreenTaskActual(void)
 	static touch_event_t s_LastTouchEvent = kTouch_Reserved;
 	touch_event_t touch_event;
 	uint8_t msg_prio; /* Message priority is ignored */
-	
-	static uint32_t s_u32LastX = 0;;
+
+	static uint32_t s_u32LastX = 0;
+	;
 	static uint32_t s_u32LastY = 0;
-	
+
 	if (osOK == osMessageQueueGet(g_mqTouchScreenTask, &stTaskMsg, &msg_prio, portMAX_DELAY))
 	{
 		uint32_t u32PosX;
@@ -65,19 +65,23 @@ DefALLOCATE_ITCM static inline void TouchScreenTaskActual(void)
 		{
 		case enTouchEvent:
 			touch_event = kTouch_Reserved;
-			if(kStatus_Success == FT5406_RT_GetSingleTouch(&s_hndFT5406, &touch_event, (int*)&u32PosX, (int*)&u32PosY)){
+			if (kStatus_Success == FT5406_RT_GetSingleTouch(&s_hndFT5406, &touch_event, (int *)&u32PosX, (int *)&u32PosY))
+			{
 
-				switch(touch_event){
+				switch (touch_event)
+				{
 				case kTouch_Down:
 				case kTouch_Up:
-					if(s_LastTouchEvent != touch_event){
+					if (s_LastTouchEvent != touch_event)
+					{
 						PostMsgLcdTaskMouseMove(u32PosX, u32PosY, touch_event);
 					}
 					s_u32LastX = u32PosX;
 					s_u32LastY = u32PosY;
 					break;
 				case kTouch_Contact:
-					if((s_u32LastX != u32PosX) && (s_u32LastY != u32PosY)){
+					if ((s_u32LastX != u32PosX) && (s_u32LastY != u32PosY))
+					{
 						PostMsgLcdTaskMouseMove(u32PosX, u32PosY, touch_event);
 					}
 					s_u32LastX = u32PosX;
@@ -108,7 +112,6 @@ DefALLOCATE_ITCM static inline void TouchScreenTaskActual(void)
 	}
 }
 
-
 /**
  * @brief TouchScreenTask Entry
  * @param [in]  argument nouse
@@ -125,9 +128,12 @@ DefALLOCATE_ITCM void TouchScreenTask(void const *argument)
 
 	s_hndFT5406.hndRtos = &g_hndI2CRTOS[1];
 
-	if(kStatus_Success == FT5406_RT_Init(&s_hndFT5406, LPI2C1)){
+	if (kStatus_Success == FT5406_RT_Init(&s_hndFT5406, LPI2C1))
+	{
 		mimic_printf("[%s (%d)] FT5406_RT_Init OK\r\n", __FUNCTION__, __LINE__);
-	}else{
+	}
+	else
+	{
 		mimic_printf("[%s (%d)] FT5406_RT_Init NG\r\n", __FUNCTION__, __LINE__);
 	}
 
@@ -136,9 +142,12 @@ DefALLOCATE_ITCM void TouchScreenTask(void const *argument)
 		uint32_t u32PosX;
 		uint32_t u32PosY;
 		touch_event_t touch_event;
-		if(kStatus_Success == FT5406_RT_GetSingleTouch(&s_hndFT5406, &touch_event, (int*)&u32PosX, (int*)&u32PosY)){
+		if (kStatus_Success == FT5406_RT_GetSingleTouch(&s_hndFT5406, &touch_event, (int *)&u32PosX, (int *)&u32PosY))
+		{
 			mimic_printf("[%s (%d)] FT5406_RT_GetSingleTouch OK\r\n", __FUNCTION__, __LINE__);
-		}else{
+		}
+		else
+		{
 			mimic_printf("[%s (%d)] FT5406_RT_GetSingleTouch NG\r\n", __FUNCTION__, __LINE__);
 		}
 	}
@@ -162,8 +171,8 @@ DefALLOCATE_ITCM _Bool PostMsgTouchScreenTouchEvent(void)
 	return false;
 }
 
-
-void CmdCTPTest(uint32_t argc, const char *argv[]){
+void CmdCTPTest(uint32_t argc, const char *argv[])
+{
 	TickType_t tick;
 	mimic_printf("CTP Test\r\n");
 
@@ -173,9 +182,12 @@ void CmdCTPTest(uint32_t argc, const char *argv[]){
 		uint32_t u32PosX;
 		uint32_t u32PosY;
 		touch_event_t touch_event;
-		if(kStatus_Success == FT5406_RT_GetSingleTouch(&s_hndFT5406, &touch_event, (int*)&u32PosX, (int*)&u32PosY)){
+		if (kStatus_Success == FT5406_RT_GetSingleTouch(&s_hndFT5406, &touch_event, (int *)&u32PosX, (int *)&u32PosY))
+		{
 			mimic_printf("\r[%s (%d)] X=%3u, Y=%3d, INT:0x%08lX", __FUNCTION__, __LINE__, u32PosX, u32PosY, GPIO_PinRead(GPIO1, DefCTP_INT_PIN));
-		}else{
+		}
+		else
+		{
 			break;
 		}
 		vTaskDelayUntil((TickType_t *const) & tick, 20);

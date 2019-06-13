@@ -1,9 +1,8 @@
 /**
- * @file StorageTask.c
- * @brief TODO
- * @author Takashi Kashiwagi
- * @date 2018/10/28
- * @version     0.1
+ * @brief		Storage/FileSystem Control
+ * @author		Takashi Kashiwagi
+ * @date		2018/10/28
+ * @version		0.1
  * @details 
  * --
  * License Type <MIT License>
@@ -37,7 +36,6 @@
 #include "fsl_sd.h"
 #include "ff.h"
 
-
 static void StorageInserted(bool isInserted, void *userData);
 static void StorageRemoved(bool isInserted, void *userData);
 
@@ -67,7 +65,8 @@ DefALLOCATE_ITCM static void StorageInserted(bool isInserted, void *userData)
 	if ((enSlotNo >= enUSDHC1) && (enSlotNo <= enUSDHC2))
 	{
 		TickType_t tTimeout = portMAX_DELAY;
-		if(pdFALSE != xPortIsInsideInterrupt()){
+		if (pdFALSE != xPortIsInsideInterrupt())
+		{
 			tTimeout = 0;
 		}
 
@@ -77,11 +76,14 @@ DefALLOCATE_ITCM static void StorageInserted(bool isInserted, void *userData)
 			memset(&stTaskMsg, 0, sizeof(stTaskMsgBlock_t));
 			stTaskMsg.enMsgId = enSDInsterted;
 
-			if(pdFALSE != xPortIsInsideInterrupt()){
+			if (pdFALSE != xPortIsInsideInterrupt())
+			{
 				BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 				xStreamBufferSendFromISR(g_sbhStorageTask[enSlotNo], &stTaskMsg, sizeof(stTaskMsg), &xHigherPriorityTaskWoken);
 				portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-			}else{
+			}
+			else
+			{
 				xStreamBufferSend(g_sbhStorageTask[enSlotNo], &stTaskMsg, sizeof(stTaskMsg), 10);
 			}
 			osSemaphoreRelease(g_bsIdStorageTaskMsg);
@@ -96,7 +98,8 @@ DefALLOCATE_ITCM static void StorageRemoved(bool isInserted, void *userData)
 	if ((enSlotNo >= enUSDHC1) && (enSlotNo <= enUSDHC2))
 	{
 		TickType_t tTimeout = portMAX_DELAY;
-		if(pdFALSE != xPortIsInsideInterrupt()){
+		if (pdFALSE != xPortIsInsideInterrupt())
+		{
 			tTimeout = 0;
 		}
 
@@ -106,11 +109,14 @@ DefALLOCATE_ITCM static void StorageRemoved(bool isInserted, void *userData)
 			memset(&stTaskMsg, 0, sizeof(stTaskMsgBlock_t));
 			stTaskMsg.enMsgId = enSDInsterted;
 
-			if(pdFALSE != xPortIsInsideInterrupt()){
+			if (pdFALSE != xPortIsInsideInterrupt())
+			{
 				BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 				xStreamBufferSendFromISR(g_sbhStorageTask[enSlotNo], &stTaskMsg, sizeof(stTaskMsg), &xHigherPriorityTaskWoken);
 				portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-			}else{
+			}
+			else
+			{
 				xStreamBufferSend(g_sbhStorageTask[enSlotNo], &stTaskMsg, sizeof(stTaskMsg), 10);
 			}
 			osSemaphoreRelease(g_bsIdStorageTaskMsg);
@@ -152,7 +158,6 @@ DefALLOCATE_ITCM static _Bool StorageInit(enSD_t enSlotNo, sd_card_t *card)
 		mimic_printf("card->blockSize        = %lu\r\n", card->blockSize);
 		mimic_printf("<Initial Time = %lu msec>\r\n", osKernelGetTickCount() - StartTick);
 		bret = true;
-		
 	}
 	else
 	{
@@ -233,8 +238,8 @@ DefALLOCATE_ITCM static void StorageTaskActual(enSD_t enSlotNo)
 		switch (stTaskMsg.enMsgId)
 		{
 		case enSDInsterted:
-			if(bSDIn== false)
-			{ 
+			if (bSDIn == false)
+			{
 				if (StorageInit(enSlotNo, &s_stSD[enSlotNo]) != false)
 				{
 					StorageMount(enSlotNo);
@@ -243,7 +248,8 @@ DefALLOCATE_ITCM static void StorageTaskActual(enSD_t enSlotNo)
 			}
 			break;
 		case enSDRemoved:
-			if(bSDIn != false){
+			if (bSDIn != false)
+			{
 				StorageDeinit(enSlotNo, &s_stSD[enSlotNo]);
 				StorageUnmount(enSlotNo);
 				bSDIn = false;
@@ -436,8 +442,8 @@ DefALLOCATE_ITCM _Bool PostMsgStorageTaskInsertFromISR(_Bool bInsert)
 	/** begin */
 	memset(&stTaskMsg, 0, sizeof(stTaskMsg));
 
-	
-	if(pdFALSE != xPortIsInsideInterrupt()){
+	if (pdFALSE != xPortIsInsideInterrupt())
+	{
 		tTimeout = 0;
 	}
 
@@ -454,14 +460,19 @@ DefALLOCATE_ITCM _Bool PostMsgStorageTaskInsertFromISR(_Bool bInsert)
 			stTaskMsg.enMsgId = enSDRemoved;
 		}
 
-		if(pdFALSE != xPortIsInsideInterrupt()){
+		if (pdFALSE != xPortIsInsideInterrupt())
+		{
 			BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-			if(sizeof(stTaskMsg) != xStreamBufferSendFromISR(g_sbhStorageTask[enUSDHC1], &stTaskMsg, sizeof(stTaskMsg), &xHigherPriorityTaskWoken)){
+			if (sizeof(stTaskMsg) != xStreamBufferSendFromISR(g_sbhStorageTask[enUSDHC1], &stTaskMsg, sizeof(stTaskMsg), &xHigherPriorityTaskWoken))
+			{
 				bret = false;
 			}
 			portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-		}else{
-			if(sizeof(stTaskMsg) != xStreamBufferSend(g_sbhStorageTask[enUSDHC1], &stTaskMsg, sizeof(stTaskMsg), 10)){
+		}
+		else
+		{
+			if (sizeof(stTaskMsg) != xStreamBufferSend(g_sbhStorageTask[enUSDHC1], &stTaskMsg, sizeof(stTaskMsg), 10))
+			{
 				bret = false;
 			}
 		}

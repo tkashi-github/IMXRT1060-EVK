@@ -1,8 +1,7 @@
 /**
- * @file LcdTask.h
- * @brief TODO
- * @author Takashi Kashiwagi
- * @date 2019/03/10
+ * @brief		GUI Library wrapper 
+ * @author		Takashi Kashiwagi
+ * @date		2019/03/10
  * @version     0.1
  * @details 
  * --

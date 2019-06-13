@@ -18,8 +18,8 @@
 <stringAttribute key="com.nxp.mcuxpresso.segger.endian" value="little"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.halt.target" value="-halt"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.if" value="SWD"/>
-<stringAttribute key="com.nxp.mcuxpresso.segger.init.register" value="-noir"/>
-<stringAttribute key="com.nxp.mcuxpresso.segger.jlinkscriptfile" value="D:\Workspace\IMXRT1060-EVK\IMXRT1060-EVK_APL\evkbimxrt1050_sdram_init.jlinkscript"/>
+<stringAttribute key="com.nxp.mcuxpresso.segger.init.register" value="-ir"/>
+<stringAttribute key="com.nxp.mcuxpresso.segger.jlinkscriptfile" value="D:\Workspace\IMXRT1060-EVK\IMXRT1060-EVK_BOOT\evkmimxrt1060_sdram_init.jlinkscript"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.options" value=""/>
 <intAttribute key="com.nxp.mcuxpresso.segger.port" value="2331"/>
 <booleanAttribute key="com.nxp.mcuxpresso.segger.powertarget 50" value="false"/>
@@ -27,7 +27,7 @@
 <stringAttribute key="com.nxp.mcuxpresso.segger.rtos" value="true;GDBServer/RTOSPlugin_FreeRTOS"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.select" value="USB=260114942"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.silent" value="-nosilent"/>
-<stringAttribute key="com.nxp.mcuxpresso.segger.singlerun" value="-singlerun"/>
+<stringAttribute key="com.nxp.mcuxpresso.segger.singlerun" value=""/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.speed" value="auto"/>
 <intAttribute key="com.nxp.mcuxpresso.segger.swoport" value="2332"/>
 <intAttribute key="com.nxp.mcuxpresso.segger.telnetport" value="2333"/>

@@ -1,9 +1,8 @@
 /**
- * @file TouchScreenTask.h
- * @brief TODO
- * @author Takashi Kashiwagi
- * @date 2019/03/10
- * @version     0.1
+ * @brief		Touch screen Control
+ * @author		Takashi Kashiwagi
+ * @date		2019/03/10
+ * @version		0.1
  * @details 
  * --
  * License Type <MIT License>
@@ -45,13 +44,12 @@ extern "C"
 #include "UserTypedef.h"
 #include "fsl_ft5406_rt.h"
 
-#define DefCTP_INT_PORT	(GPIO1)
-#define DefCTP_INT_PIN	(11)
+#define DefCTP_INT_PORT (GPIO1)
+#define DefCTP_INT_PIN (11)
 
-
-extern void TouchScreenTask(void const *argument);
-extern _Bool PostMsgTouchScreenTouchEvent(void);
-extern void CmdCTPTest(uint32_t argc, const char *argv[]);
+	extern void TouchScreenTask(void const *argument);
+	extern _Bool PostMsgTouchScreenTouchEvent(void);
+	extern void CmdCTPTest(uint32_t argc, const char *argv[]);
 
 #ifdef __cplusplus
 }

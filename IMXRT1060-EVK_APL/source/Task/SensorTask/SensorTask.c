@@ -1,8 +1,7 @@
 /**
- * @file SensorTask.h
- * @brief TODO
- * @author Takashi Kashiwagi
- * @date 2018/11/11
+ * @brief 		FXOS8700 wrapper
+ * @author		Takashi Kashiwagi
+ * @date		2018/11/11
  * @version     0.1
  * @details 
  * --
