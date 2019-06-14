@@ -1,8 +1,7 @@
 /**
- * @file StorageTask.h
- * @brief TODO
- * @author Takashi Kashiwagi
- * @date 2018/10/28
+ * @brief		Storage/FileSystem Control
+ * @author		Takashi Kashiwagi
+ * @date		2018/10/28
  * @version     0.1
  * @details 
  * --
@@ -45,27 +44,27 @@ extern "C"
 #include "UserTypedef.h"
 #include "diskio.h"
 
-extern void StorageTask(void const *argument);
-extern _Bool PostMsgStorageTaskInsertFromISR(_Bool bInsert);
-/*!
+	extern void StorageTask(void const *argument);
+	extern _Bool PostMsgStorageTaskInsertFromISR(_Bool bInsert);
+	/*!
  * @brief Initializes Storage.
  *
  * @param physicalDrive Physical drive number.
  * @retval STA_NOINIT Failed.
  * @retval RES_OK Success.
  */
-extern DSTATUS StorageInitialize(uint8_t physicalDrive);
+	extern DSTATUS StorageInitialize(uint8_t physicalDrive);
 
-/*!
+	/*!
  * Gets Storage status
  *
  * @param physicalDrive Physical drive number.
  * @retval STA_NOINIT Failed.
  * @retval RES_OK Success.
  */
-extern DSTATUS StorageStatus(uint8_t physicalDrive);
+	extern DSTATUS StorageStatus(uint8_t physicalDrive);
 
-/*!
+	/*!
  * @brief Reads Storage.
  *
  * @param physicalDrive Physical drive number.
@@ -75,9 +74,9 @@ extern DSTATUS StorageStatus(uint8_t physicalDrive);
  * @retval RES_PARERR Failed.
  * @retval RES_OK Success.
  */
-extern DRESULT StorageRead(uint8_t physicalDrive, uint8_t *buffer, uint32_t sector, uint8_t count);
+	extern DRESULT StorageRead(uint8_t physicalDrive, uint8_t *buffer, uint32_t sector, uint8_t count);
 
-/*!
+	/*!
  * @brief Writes Storage.
  *
  * @param physicalDrive Physical drive number.
@@ -87,9 +86,9 @@ extern DRESULT StorageRead(uint8_t physicalDrive, uint8_t *buffer, uint32_t sect
  * @retval RES_PARERR Failed.
  * @retval RES_OK Success.
  */
-extern DRESULT StorageWrite(uint8_t physicalDrive, const uint8_t *buffer, uint32_t sector, uint8_t count);
+	extern DRESULT StorageWrite(uint8_t physicalDrive, const uint8_t *buffer, uint32_t sector, uint8_t count);
 
-/*!
+	/*!
  * @brief Storage IO operation.
  *
  * @param physicalDrive Physical drive number.
@@ -98,11 +97,9 @@ extern DRESULT StorageWrite(uint8_t physicalDrive, const uint8_t *buffer, uint32
  * @retval RES_PARERR Failed.
  * @retval RES_OK Success.
  */
-extern DRESULT StorageIoctl(uint8_t physicalDrive, uint8_t command, void *buffer);
+	extern DRESULT StorageIoctl(uint8_t physicalDrive, uint8_t command, void *buffer);
 
-
-extern void CmdStorageDump(uint32_t argc, const char *argv[]);
+	extern void CmdStorageDump(uint32_t argc, const char *argv[]);
 #ifdef __cplusplus
 }
 #endif
-

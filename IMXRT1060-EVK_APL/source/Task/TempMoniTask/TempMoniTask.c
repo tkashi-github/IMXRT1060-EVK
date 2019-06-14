@@ -1,8 +1,7 @@
 /**
- * @file TempMoniTask.c
- * @brief TODO
- * @author Takashi Kashiwagi
- * @date 2019/03/24
+ * @brief		Temperature Monitor
+ * @author		Takashi Kashiwagi
+ * @date		2019/03/24
  * @version     0.1
  * @details 
  * --

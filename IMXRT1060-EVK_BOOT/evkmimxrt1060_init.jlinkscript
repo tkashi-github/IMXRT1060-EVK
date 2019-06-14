@@ -1,0 +1,131 @@
+/*
+ * Copyright 2018 NXP
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * o Redistributions of source code must retain the above copyright notice, this list
+ *   of conditions and the following disclaimer.
+ *
+ * o Redistributions in binary form must reproduce the above copyright notice, this
+ *   list of conditions and the following disclaimer in the documentation and/or
+ *   other materials provided with the distribution.
+ *
+ * o Neither the name of the copyright holder nor the names of its
+ *   contributors may be used to endorse or promote products derived from this
+ *   software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+ 
+void Load_Dcdc_Trim()
+{
+  unsigned int ocotp_base;  
+  unsigned int dcdc_base;  
+  unsigned int ocotp_fuse_bank0_base;  
+  unsigned int reg;
+  unsigned int index;
+  unsigned int trim_value;
+  unsigned int dcdc_trim_loaded;
+
+  ocotp_base = 0x401F4000;
+  ocotp_fuse_bank0_base = 0x401F4000 + 0x400;
+  dcdc_base = 0x40080000;
+
+  dcdc_trim_loaded = 0;
+
+  reg = MEM_ReadU32(ocotp_fuse_bank0_base + 0x90);
+  if (reg & (1<<10))
+  {
+      trim_value = (reg & (0x1F << 11)) >> 11;
+      reg = (MEM_ReadU32(dcdc_base + 0x4) & ~(0x1F << 24)) | (trim_value << 24);
+      MEM_WriteU32(dcdc_base + 0x4, reg);
+      dcdc_trim_loaded = 1;
+  }
+
+  // DCDC_VOLT_CHANG_EN
+  reg = MEM_ReadU32(ocotp_fuse_bank0_base + 0x80);
+  if (reg & (1<<30))
+  {
+    index = (reg & (3 << 28)) >> 28;
+    if (index < 4)
+    {
+      reg = (MEM_ReadU32(dcdc_base + 0xC) & ~(0x1F)) | (0xF + index);
+      MEM_WriteU32(dcdc_base + 0xC, reg);
+      dcdc_trim_loaded = 1;
+    }
+  }
+
+  if (dcdc_trim_loaded)
+  {
+      // delay 1ms for dcdc to get stable
+      SYS_Sleep(1);
+      Report("DCDC trim value loaded.");
+  }
+}
+ 
+void Clock_Init() 
+{
+  unsigned int reg;
+  // Enable all clocks
+  MEM_WriteU32(0x400FC068,0xffffffff);
+  MEM_WriteU32(0x400FC06C,0xffffffff);
+  MEM_WriteU32(0x400FC070,0xffffffff);
+  MEM_WriteU32(0x400FC074,0xffffffff);
+  MEM_WriteU32(0x400FC078,0xffffffff);
+  MEM_WriteU32(0x400FC07C,0xffffffff);
+  MEM_WriteU32(0x400FC080,0xffffffff);
+
+  // PERCLK_PODF: 1 divide by 2
+  MEM_WriteU32(0x400FC01C, 0x04900001);
+  // Enable SYS PLL but keep it bypassed.
+  MEM_WriteU32(0x400D8030, 0x00012001);
+  do
+  {
+    reg = MEM_ReadU32(0x400D8030);
+  }while((reg & 0x80000000) == 0);
+  // Disable bypass of SYS PLL
+  MEM_WriteU32(0x400D8030, 0x00002001);
+  
+  // PFD2_FRAC: 29, PLL2 PFD2=528*18/PFD2_FRAC=327
+  // Ungate SYS PLL PFD2
+  MEM_WriteU32(0x400D8100, 0x001d0000);
+  
+  // SEMC_PODF: 001, AHB_PODF: 011, IPG_PODF: 01
+  // SEMC_ALT_CLK_SEL: 0 PLL2 (SYS PLL) PFD2
+  // SEMC_CLK_SEL: 1 SEMC_ALT_CLK
+  MEM_WriteU32(0x400FC014, 0x00010D40);
+
+  Report("Clock Init Done");
+}
+
+/* ConfigTarget */
+void ConfigTargetSettings(void)
+{
+  Report("Config JTAG Speed to 4000kHz");
+  JTAG_Speed = 4000;
+}
+
+/* SetupTarget */
+void SetupTarget(void) {
+
+  Report("Enabling i.MXRT SDRAM");
+  Load_Dcdc_Trim();
+  Clock_Init();
+}
+
+/* AfterResetTarget */
+void AfterResetTarget(void) {
+
+  Load_Dcdc_Trim();
+  Clock_Init();
+}

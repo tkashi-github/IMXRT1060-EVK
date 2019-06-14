@@ -1,8 +1,7 @@
 /**
- * @file LanTask.h
- * @brief TODO
- * @author Takashi Kashiwagi
- * @date 2018/10/28
+ * @brief		Ethernet connecter sensce Task
+ * @author		Takashi Kashiwagi
+ * @date		2018/10/28
  * @version     0.1
  * @details 
  * --

@@ -40,7 +40,7 @@
 #include "MIMXRT1062.h"
 #include "UserTypedef.h"
 #include "OSResource.h"
-#include "CPUFunc.h"
+
 #include "UART/DrvLPUART.h"
 /* TODO: insert other include files here. */
 
@@ -173,7 +173,7 @@ void vApplicationTickHook(void)
 		if (cnt >= 1000u)
 		{	/** 1 sec */
 			cnt = 0u;
-			uint32_t primask = CM7_DisableIRQ();
+			uint32_t primask = DisableGlobalIRQ();
 
 			s_u32LastRun = g_u32CurrentRun;
 			g_u32CurrentRun = 0u;
@@ -181,7 +181,7 @@ void vApplicationTickHook(void)
 			{
 				s_u32RunMax = s_u32LastRun;
 			}
-			CM7_SetIRQ(primask);
+			EnableGlobalIRQ(primask);
 		}else{
 			cnt++;
 		}
@@ -195,10 +195,10 @@ void GetRunCount(uint32_t *p32Last, uint32_t *pu32Max)
 {
 	if ((p32Last != NULL) && (pu32Max != NULL))
 	{
-		uint32_t primask = CM7_DisableIRQ();
+		uint32_t primask = DisableGlobalIRQ();
 		*p32Last = s_u32LastRun;
 		*pu32Max = s_u32RunMax;
-		CM7_SetIRQ(primask);
+		EnableGlobalIRQ(primask);
 	}
 }
 
