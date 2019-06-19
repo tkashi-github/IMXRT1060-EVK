@@ -68,11 +68,11 @@ status_t FXOS8700Init(void)
 	sts = BOARD_LPI2C_Receive(LPI2C1, DEF_COMBO_SENSOR_DEVICE_ADDR, FXOS8700_WHO_AM_I, 1, u8ReadBuffer, 1);
 	if (kStatus_Success != sts)
 	{
-		mimic_printf("[%s (%d)] BOARD_LPI2C_Receive NG (sts=%d)\r\n", __FUNCTION__, __LINE__, sts);
+		mimic_printf("[%s (%d)] BOARD_LPI2C_Receive NG (sts=%d)\r\n", __func__, __LINE__, sts);
 		return kStatus_Fail;
 	}
 	
-	mimic_printf("[%s (%d)] FXOS8700_WHO_AM_I : 0x%02X\r\n", __FUNCTION__, __LINE__, u8ReadBuffer[0]);
+	mimic_printf("[%s (%d)] FXOS8700_WHO_AM_I : 0x%02X\r\n", __func__, __LINE__, u8ReadBuffer[0]);
 
 	
     /* Put the device into standby mode so that configuration can be applied.*/
@@ -81,17 +81,17 @@ status_t FXOS8700Init(void)
 		sts = BOARD_LPI2C_Receive(LPI2C1, DEF_COMBO_SENSOR_DEVICE_ADDR, s_stInitTable[i].u8Register, 1, u8ReadBuffer, 1);
 		if (kStatus_Success != sts)
 		{
-			mimic_printf("[%s (%d)] BOARD_LPI2C_Receive NG (sts=%d)\r\n", __FUNCTION__, __LINE__, sts);
+			mimic_printf("[%s (%d)] BOARD_LPI2C_Receive NG (sts=%d)\r\n", __func__, __LINE__, sts);
 			return kStatus_Fail;
 		}
-		mimic_printf("[%s (%d)] s_stInitTable[%d].u8Register = 0x%02X : 0x%02X\r\n", __FUNCTION__, __LINE__, i, s_stInitTable[i].u8Register, u8ReadBuffer[0]);
+		mimic_printf("[%s (%d)] s_stInitTable[%d].u8Register = 0x%02X : 0x%02X\r\n", __func__, __LINE__, i, s_stInitTable[i].u8Register, u8ReadBuffer[0]);
 		u8ReadBuffer[0] &= ~s_stInitTable[i].u8Mask;
 		u8TxTmp[0] = s_stInitTable[i].u8Value;
 		u8TxTmp[0] |= u8ReadBuffer[0];
 		sts = BOARD_LPI2C_Send(LPI2C1, DEF_COMBO_SENSOR_DEVICE_ADDR, s_stInitTable[i].u8Register, 1, u8TxTmp, 1);
 		if (kStatus_Success != sts)
 		{
-			mimic_printf("[%s (%d)] BOARD_LPI2C_Receive NG (sts=%d)\r\n", __FUNCTION__, __LINE__, sts);
+			mimic_printf("[%s (%d)] BOARD_LPI2C_Receive NG (sts=%d)\r\n", __func__, __LINE__, sts);
 			return kStatus_Fail;
 		}
  	}
@@ -115,7 +115,7 @@ status_t FXOS8700ReadStatus(uint8_t *pu8sts)
 		return kStatus_Fail;
 	}
 	*pu8sts = u8ReadBuffer[0];
-	//mimic_printf("[%s (%d)] *pu8sts = 0x%02X\r\n", __FUNCTION__, __LINE__, *pu8sts);
+	//mimic_printf("[%s (%d)] *pu8sts = 0x%02X\r\n", __func__, __LINE__, *pu8sts);
 	*pu8sts &= FXOS8700_DR_STATUS_ZYXDR_MASK;
 
 	return sts;

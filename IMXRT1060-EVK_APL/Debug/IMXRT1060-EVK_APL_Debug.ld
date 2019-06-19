@@ -1,12 +1,12 @@
 /*
  * GENERATED FILE - DO NOT EDIT
- * Copyright (c) 2008 - 2013 Code Red Technologies Ltd, 
- * Copyright 2015, 2018 NXP
+ * Copyright (c) 2008-2013 Code Red Technologies Ltd,
+ * Copyright 2015, 2018-2019 NXP
  * (c) NXP Semiconductors 2013-2019
  * Generated linker script file for MIMXRT1062xxxxA
  * Created from linkscript.ldt by FMCreateLinkLibraries
  * Using Freemarker v2.3.23
- * MCUXpresso IDE v10.3.1 [Build 2233] [2019-02-20] on 2019/05/25 0:57:43
+ * MCUXpresso IDE v11.0.0 [Build 2516] [2019-06-05] on 2019/06/19 22:19:59
  */
 
 INCLUDE "IMXRT1060-EVK_APL_Debug_library.ld"
@@ -16,7 +16,7 @@ ENTRY(ResetISR)
 
 SECTIONS
 {
-    /* MAIN TEXT SECTION */
+     /* MAIN TEXT SECTION */
     .text : ALIGN(4)
     {
         FILL(0xff)
@@ -74,14 +74,14 @@ SECTIONS
 
         *(.after_vectors*)
 
-    } > Prgram
+    } > Program
 
     .text : ALIGN(4)
     {
        *(.text*)
        *(.rodata .rodata.* .constdata .constdata.*)
        . = ALIGN(4);
-    } > Prgram
+    } > Program
     /*
      * for exception handling/unwind - some Newlib functions (in common
      * with C++ and STDC++) use this. 
@@ -89,14 +89,14 @@ SECTIONS
     .ARM.extab : ALIGN(4) 
     {
         *(.ARM.extab* .gnu.linkonce.armextab.*)
-    } > Prgram
+    } > Program
 
     __exidx_start = .;
 
     .ARM.exidx : ALIGN(4)
     {
         *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-    } > Prgram
+    } > Program
     __exidx_end = .;
  
     _etext = .;
@@ -120,11 +120,13 @@ SECTIONS
         *(.ramfunc.$RAM2)
         *(.ramfunc.$NonCache)
        *(.NonCacheable.init)
-        *(.data.$RAM2*)
-        *(.data.$NonCache*)
+        *(.data.$RAM2)
+        *(.data.$NonCache)
+        *(.data.$RAM2.*)
+        *(.data.$NonCache.*)
         . = ALIGN(4) ;
         PROVIDE(__end_data_RAM2 = .) ;
-     } > NonCache AT>Prgram
+     } > NonCache AT>Program
     /* DATA section for HEAP */
 
     .data_RAM3 : ALIGN(4)
@@ -133,11 +135,13 @@ SECTIONS
         PROVIDE(__start_data_RAM3 = .) ;
         *(.ramfunc.$RAM3)
         *(.ramfunc.$HEAP)
-        *(.data.$RAM3*)
-        *(.data.$HEAP*)
+        *(.data.$RAM3)
+        *(.data.$HEAP)
+        *(.data.$RAM3.*)
+        *(.data.$HEAP.*)
         . = ALIGN(4) ;
         PROVIDE(__end_data_RAM3 = .) ;
-     } > HEAP AT>Prgram
+     } > HEAP AT>Program
     /* DATA section for SRAM_ITC */
 
     .data_RAM4 : ALIGN(4)
@@ -146,11 +150,13 @@ SECTIONS
         PROVIDE(__start_data_RAM4 = .) ;
         *(.ramfunc.$RAM4)
         *(.ramfunc.$SRAM_ITC)
-        *(.data.$RAM4*)
-        *(.data.$SRAM_ITC*)
+        *(.data.$RAM4)
+        *(.data.$SRAM_ITC)
+        *(.data.$RAM4.*)
+        *(.data.$SRAM_ITC.*)
         . = ALIGN(4) ;
         PROVIDE(__end_data_RAM4 = .) ;
-     } > SRAM_ITC AT>Prgram
+     } > SRAM_ITC AT>Program
     /* DATA section for SRAM_DTC */
 
     .data_RAM5 : ALIGN(4)
@@ -159,11 +165,13 @@ SECTIONS
         PROVIDE(__start_data_RAM5 = .) ;
         *(.ramfunc.$RAM5)
         *(.ramfunc.$SRAM_DTC)
-        *(.data.$RAM5*)
-        *(.data.$SRAM_DTC*)
+        *(.data.$RAM5)
+        *(.data.$SRAM_DTC)
+        *(.data.$RAM5.*)
+        *(.data.$SRAM_DTC.*)
         . = ALIGN(4) ;
         PROVIDE(__end_data_RAM5 = .) ;
-     } > SRAM_DTC AT>Prgram
+     } > SRAM_DTC AT>Program
     /* DATA section for VRAM */
 
     .data_RAM6 : ALIGN(4)
@@ -172,11 +180,13 @@ SECTIONS
         PROVIDE(__start_data_RAM6 = .) ;
         *(.ramfunc.$RAM6)
         *(.ramfunc.$VRAM)
-        *(.data.$RAM6*)
-        *(.data.$VRAM*)
+        *(.data.$RAM6)
+        *(.data.$VRAM)
+        *(.data.$RAM6.*)
+        *(.data.$VRAM.*)
         . = ALIGN(4) ;
         PROVIDE(__end_data_RAM6 = .) ;
-     } > VRAM AT>Prgram
+     } > VRAM AT>Program
     /* DATA section for SRAM_OC2 */
 
     .data_RAM7 : ALIGN(4)
@@ -185,11 +195,13 @@ SECTIONS
         PROVIDE(__start_data_RAM7 = .) ;
         *(.ramfunc.$RAM7)
         *(.ramfunc.$SRAM_OC2)
-        *(.data.$RAM7*)
-        *(.data.$SRAM_OC2*)
+        *(.data.$RAM7)
+        *(.data.$SRAM_OC2)
+        *(.data.$RAM7.*)
+        *(.data.$SRAM_OC2.*)
         . = ALIGN(4) ;
         PROVIDE(__end_data_RAM7 = .) ;
-     } > SRAM_OC2 AT>Prgram
+     } > SRAM_OC2 AT>Program
     /* DATA section for MAIN_STACK */
 
     .data_RAM8 : ALIGN(4)
@@ -198,20 +210,23 @@ SECTIONS
         PROVIDE(__start_data_RAM8 = .) ;
         *(.ramfunc.$RAM8)
         *(.ramfunc.$MAIN_STACK)
-        *(.data.$RAM8*)
-        *(.data.$MAIN_STACK*)
+        *(.data.$RAM8)
+        *(.data.$MAIN_STACK)
+        *(.data.$RAM8.*)
+        *(.data.$MAIN_STACK.*)
         . = ALIGN(4) ;
         PROVIDE(__end_data_RAM8 = .) ;
-     } > MAIN_STACK AT>Prgram
+     } > MAIN_STACK AT>Program
     /* MAIN DATA SECTION */
-    .uninit_RESERVED : ALIGN(4)
+    .uninit_RESERVED (NOLOAD) :
     {
-        KEEP(*(.bss.$RESERVED*))
         . = ALIGN(4) ;
+        KEEP(*(.bss.$RESERVED*))
+       . = ALIGN(4) ;
         _end_uninit_RESERVED = .;
-    } > Prgram
+    } > Program
 
-    /* Main DATA section (Prgram) */
+    /* Main DATA section (Program) */
     .data : ALIGN(4)
     {
        FILL(0xff)
@@ -221,154 +236,198 @@ SECTIONS
        *(.data*)
        . = ALIGN(4) ;
        _edata = . ;
-    } > Prgram AT>Prgram
+    } > Program AT>Program
 
     /* BSS section for NonCache */
-    .bss_RAM2 : ALIGN(4)
+    .bss_RAM2 :
     {
+       . = ALIGN(4) ;
        PROVIDE(__start_bss_RAM2 = .) ;
-       *(.bss.$RAM2*)
-       *(.bss.$NonCache*)
+       *(.bss.$RAM2)
+       *(.bss.$NonCache)
+       *(.bss.$RAM2.*)
+       *(.bss.$NonCache.*)
        . = ALIGN (. != 0 ? 4 : 1) ; /* avoid empty segment */
        PROVIDE(__end_bss_RAM2 = .) ;
-    } > NonCache 
+    } > NonCache
 
     /* BSS section for HEAP */
-    .bss_RAM3 : ALIGN(4)
+    .bss_RAM3 :
     {
+       . = ALIGN(4) ;
        PROVIDE(__start_bss_RAM3 = .) ;
-       *(.bss.$RAM3*)
-       *(.bss.$HEAP*)
+       *(.bss.$RAM3)
+       *(.bss.$HEAP)
+       *(.bss.$RAM3.*)
+       *(.bss.$HEAP.*)
        . = ALIGN (. != 0 ? 4 : 1) ; /* avoid empty segment */
        PROVIDE(__end_bss_RAM3 = .) ;
-    } > HEAP 
+    } > HEAP
 
     /* BSS section for SRAM_ITC */
-    .bss_RAM4 : ALIGN(4)
+    .bss_RAM4 :
     {
+       . = ALIGN(4) ;
        PROVIDE(__start_bss_RAM4 = .) ;
-       *(.bss.$RAM4*)
-       *(.bss.$SRAM_ITC*)
+       *(.bss.$RAM4)
+       *(.bss.$SRAM_ITC)
+       *(.bss.$RAM4.*)
+       *(.bss.$SRAM_ITC.*)
        . = ALIGN (. != 0 ? 4 : 1) ; /* avoid empty segment */
        PROVIDE(__end_bss_RAM4 = .) ;
-    } > SRAM_ITC 
+    } > SRAM_ITC
 
     /* BSS section for SRAM_DTC */
-    .bss_RAM5 : ALIGN(4)
+    .bss_RAM5 :
     {
+       . = ALIGN(4) ;
        PROVIDE(__start_bss_RAM5 = .) ;
-       *(.bss.$RAM5*)
-       *(.bss.$SRAM_DTC*)
+       *(.bss.$RAM5)
+       *(.bss.$SRAM_DTC)
+       *(.bss.$RAM5.*)
+       *(.bss.$SRAM_DTC.*)
        . = ALIGN (. != 0 ? 4 : 1) ; /* avoid empty segment */
        PROVIDE(__end_bss_RAM5 = .) ;
-    } > SRAM_DTC 
+    } > SRAM_DTC
 
     /* BSS section for VRAM */
-    .bss_RAM6 : ALIGN(4)
+    .bss_RAM6 :
     {
+       . = ALIGN(4) ;
        PROVIDE(__start_bss_RAM6 = .) ;
-       *(.bss.$RAM6*)
-       *(.bss.$VRAM*)
+       *(.bss.$RAM6)
+       *(.bss.$VRAM)
+       *(.bss.$RAM6.*)
+       *(.bss.$VRAM.*)
        . = ALIGN (. != 0 ? 4 : 1) ; /* avoid empty segment */
        PROVIDE(__end_bss_RAM6 = .) ;
-    } > VRAM 
+    } > VRAM
 
     /* BSS section for SRAM_OC2 */
-    .bss_RAM7 : ALIGN(4)
+    .bss_RAM7 :
     {
+       . = ALIGN(4) ;
        PROVIDE(__start_bss_RAM7 = .) ;
-       *(.bss.$RAM7*)
-       *(.bss.$SRAM_OC2*)
+       *(.bss.$RAM7)
+       *(.bss.$SRAM_OC2)
+       *(.bss.$RAM7.*)
+       *(.bss.$SRAM_OC2.*)
        . = ALIGN (. != 0 ? 4 : 1) ; /* avoid empty segment */
        PROVIDE(__end_bss_RAM7 = .) ;
-    } > SRAM_OC2 
+    } > SRAM_OC2
 
     /* BSS section for MAIN_STACK */
-    .bss_RAM8 : ALIGN(4)
+    .bss_RAM8 :
     {
+       . = ALIGN(4) ;
        PROVIDE(__start_bss_RAM8 = .) ;
-       *(.bss.$RAM8*)
-       *(.bss.$MAIN_STACK*)
+       *(.bss.$RAM8)
+       *(.bss.$MAIN_STACK)
+       *(.bss.$RAM8.*)
+       *(.bss.$MAIN_STACK.*)
        . = ALIGN (. != 0 ? 4 : 1) ; /* avoid empty segment */
        PROVIDE(__end_bss_RAM8 = .) ;
-    } > MAIN_STACK 
+    } > MAIN_STACK
 
     /* MAIN BSS SECTION */
-    .bss : ALIGN(4)
+    .bss :
     {
+        . = ALIGN(4) ;
         _bss = .;
         *(.bss*)
         *(COMMON)
         . = ALIGN(4) ;
         _ebss = .;
         PROVIDE(end = .);
-    } > Prgram
+    } > Program
 
     /* NOINIT section for NonCache */
-    .noinit_RAM2 (NOLOAD) : ALIGN(4)
+    .noinit_RAM2 (NOLOAD) :
     {
-       *(.NonCacheable)
-       *(.noinit.$RAM2*)
-       *(.noinit.$NonCache*)
        . = ALIGN(4) ;
-    } > NonCache 
+       *(.NonCacheable)
+       *(.noinit.$RAM2)
+       *(.noinit.$NonCache)
+       *(.noinit.$RAM2.*)
+       *(.noinit.$NonCache.*)
+       . = ALIGN(4) ;
+    } > NonCache
 
     /* NOINIT section for HEAP */
-    .noinit_RAM3 (NOLOAD) : ALIGN(4)
+    .noinit_RAM3 (NOLOAD) :
     {
-       *(.noinit.$RAM3*)
-       *(.noinit.$HEAP*)
        . = ALIGN(4) ;
-    } > HEAP 
+       *(.noinit.$RAM3)
+       *(.noinit.$HEAP)
+       *(.noinit.$RAM3.*)
+       *(.noinit.$HEAP.*)
+       . = ALIGN(4) ;
+    } > HEAP
 
     /* NOINIT section for SRAM_ITC */
-    .noinit_RAM4 (NOLOAD) : ALIGN(4)
+    .noinit_RAM4 (NOLOAD) :
     {
-       *(.noinit.$RAM4*)
-       *(.noinit.$SRAM_ITC*)
        . = ALIGN(4) ;
-    } > SRAM_ITC 
+       *(.noinit.$RAM4)
+       *(.noinit.$SRAM_ITC)
+       *(.noinit.$RAM4.*)
+       *(.noinit.$SRAM_ITC.*)
+       . = ALIGN(4) ;
+    } > SRAM_ITC
 
     /* NOINIT section for SRAM_DTC */
-    .noinit_RAM5 (NOLOAD) : ALIGN(4)
+    .noinit_RAM5 (NOLOAD) :
     {
-       *(.noinit.$RAM5*)
-       *(.noinit.$SRAM_DTC*)
        . = ALIGN(4) ;
-    } > SRAM_DTC 
+       *(.noinit.$RAM5)
+       *(.noinit.$SRAM_DTC)
+       *(.noinit.$RAM5.*)
+       *(.noinit.$SRAM_DTC.*)
+       . = ALIGN(4) ;
+    } > SRAM_DTC
 
     /* NOINIT section for VRAM */
-    .noinit_RAM6 (NOLOAD) : ALIGN(4)
+    .noinit_RAM6 (NOLOAD) :
     {
-       *(.noinit.$RAM6*)
-       *(.noinit.$VRAM*)
        . = ALIGN(4) ;
-    } > VRAM 
+       *(.noinit.$RAM6)
+       *(.noinit.$VRAM)
+       *(.noinit.$RAM6.*)
+       *(.noinit.$VRAM.*)
+       . = ALIGN(4) ;
+    } > VRAM
 
     /* NOINIT section for SRAM_OC2 */
-    .noinit_RAM7 (NOLOAD) : ALIGN(4)
+    .noinit_RAM7 (NOLOAD) :
     {
-       *(.noinit.$RAM7*)
-       *(.noinit.$SRAM_OC2*)
        . = ALIGN(4) ;
-    } > SRAM_OC2 
+       *(.noinit.$RAM7)
+       *(.noinit.$SRAM_OC2)
+       *(.noinit.$RAM7.*)
+       *(.noinit.$SRAM_OC2.*)
+       . = ALIGN(4) ;
+    } > SRAM_OC2
 
     /* NOINIT section for MAIN_STACK */
-    .noinit_RAM8 (NOLOAD) : ALIGN(4)
+    .noinit_RAM8 (NOLOAD) :
     {
-       *(.noinit.$RAM8*)
-       *(.noinit.$MAIN_STACK*)
        . = ALIGN(4) ;
-    } > MAIN_STACK 
+       *(.noinit.$RAM8)
+       *(.noinit.$MAIN_STACK)
+       *(.noinit.$RAM8.*)
+       *(.noinit.$MAIN_STACK.*)
+       . = ALIGN(4) ;
+    } > MAIN_STACK
 
     /* DEFAULT NOINIT SECTION */
-    .noinit (NOLOAD): ALIGN(4)
+    .noinit (NOLOAD):
     {
+         . = ALIGN(4) ;
         _noinit = .;
-        *(.noinit*) 
+        *(.noinit*)
          . = ALIGN(4) ;
         _end_noinit = .;
-    } > Prgram
+    } > Program
 
      _StackSize = 0x4000;
      /* Reserve space in memory for Stack */

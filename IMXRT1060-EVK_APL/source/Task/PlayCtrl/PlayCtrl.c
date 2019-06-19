@@ -1,4 +1,5 @@
 /**
+ * @file		PlayCtrl.c
  * @brief		TOOD
  * @date		2019/06/13
  * @version     0.1
@@ -35,7 +36,7 @@
 #include "ff.h"
 #include "common/common.h"
 #include "SoundTask/SoundTask.h"
-#include "common/AudioFileList.h"
+#include "AudioFile/AudioFileList.h"
 #include "PlayCtrl/PlayCtrlAudio.h"
 
 typedef enum
@@ -103,7 +104,6 @@ DefALLOCATE_DATA_DTCM static stCodecCondition_t s_stPlayCondition = {
 	kSAI_WordWidth16bits,
 	enAudioFileWAV,
 	2,
-	{192000, 0},
 };
 
 DefALLOCATE_DATA_DTCM static uint8_t *s_pu8PCMBufferRecPCMBuffer = NULL;
@@ -112,14 +112,12 @@ DefALLOCATE_DATA_DTCM static stCodecCondition_t s_stRecCondition = {
 	kSAI_WordWidth16bits,
 	enAudioFileWAV,
 	2,
-	{192000, 0},
 };
 
 DefALLOCATE_ITCM static void StopPlayRecProcess(void)
 {
-	PostMsgSoundTaskStop(enSAI1, __FUNCTION__, __LINE__);
+	PostMsgSoundTaskStop(enSAI1, __func__, __LINE__);
 	s_enPlayCtrlState = enPlayCtrlStateStop;
-	SpectrumBarTaskStop();
 }
 
 /**
@@ -134,10 +132,10 @@ DefALLOCATE_ITCM static void S0_E0(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 {
 	if (enPlayCtrlEventStop != enEvent)
 	{
-		mimic_printf("[%s (%d)] Unexpected Event No!!(%d)\r\n", __FUNCTION__, __LINE__, enEvent);
+		mimic_printf("[%s (%d)] Unexpected Event No!!(%d)\r\n", __func__, __LINE__, enEvent);
 		return;
 	}
-	mimic_printf("[%s (%d)] PlayTask is already Stopped.\r\n", __FUNCTION__, __LINE__);
+	mimic_printf("[%s (%d)] PlayTask is already Stopped.\r\n", __func__, __LINE__);
 }
 
 /**
@@ -152,7 +150,7 @@ DefALLOCATE_ITCM static void S0_E1(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 {
 	if (enPlayCtrlEventStart != enEvent)
 	{
-		mimic_printf("[%s (%d)] Unexpected Event No!!(%d)\r\n", __FUNCTION__, __LINE__, enEvent);
+		mimic_printf("[%s (%d)] Unexpected Event No!!(%d)\r\n", __func__, __LINE__, enEvent);
 		return;
 	}
 	/** Init Track No */
@@ -169,7 +167,7 @@ DefALLOCATE_ITCM static void S0_E1(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 
 		if (s_pu8PCMBufferPlayPCMBuffer == NULL)
 		{
-			mimic_printf("*** Play Stop <%s (%d)>\r\n", __FUNCTION__, __LINE__);
+			mimic_printf("*** Play Stop <%s (%d)>\r\n", __func__, __LINE__);
 			StopPlayRecProcess();
 			return;
 		}
@@ -193,7 +191,7 @@ DefALLOCATE_ITCM static void S0_E3(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 {
 	if (enPlayCtrlEventRec != enEvent)
 	{
-		mimic_printf("[%s (%d)] Unexpected Event No!!(%d)\r\n", __FUNCTION__, __LINE__, enEvent);
+		mimic_printf("[%s (%d)] Unexpected Event No!!(%d)\r\n", __func__, __LINE__, enEvent);
 		return;
 	}
 
@@ -218,13 +216,13 @@ DefALLOCATE_ITCM static void S1_E0(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 {
 	if (enPlayCtrlEventStop != enEvent)
 	{
-		mimic_printf("[%s (%d)] Unexpected Event No!!(%d)\r\n", __FUNCTION__, __LINE__, enEvent);
+		mimic_printf("[%s (%d)] Unexpected Event No!!(%d)\r\n", __func__, __LINE__, enEvent);
 		return;
 	}
 
 	/** Stop */
 	ClosePlayProcess();
-	mimic_printf("*** Play Stop <%s (%d)>\r\n", __FUNCTION__, __LINE__);
+	mimic_printf("*** Play Stop <%s (%d)>\r\n", __func__, __LINE__);
 
 	StopPlayRecProcess();
 }
@@ -248,7 +246,7 @@ DefALLOCATE_ITCM static void S1_E2(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 		/** Check PCM Buffer */
 		if (s_pu8PCMBufferPlayPCMBuffer == NULL)
 		{
-			mimic_printf("*** Play Stop <%s (%d)>\r\n", __FUNCTION__, __LINE__);
+			mimic_printf("*** Play Stop <%s (%d)>\r\n", __func__, __LINE__);
 			/** 再生停止処理 */
 			StopPlayRecProcess();
 			return;
@@ -267,7 +265,7 @@ DefALLOCATE_ITCM static void S1_E2(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 				/** 今のファイルクローズ */
 				ClosePlayProcess();
 				/** 停止した */
-				mimic_printf("*** Play Stop <%s (%d)>\r\n", __FUNCTION__, __LINE__);
+				mimic_printf("*** Play Stop <%s (%d)>\r\n", __func__, __LINE__);
 				/** 再生停止処理 */
 				StopPlayRecProcess();
 			}
@@ -286,7 +284,7 @@ DefALLOCATE_ITCM static void S1_E2(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 			if (GetNextTrackNo(&s_u32NowTrackNo) == false)
 			{
 				/** ない */
-				mimic_printf("*** Play Stop <%s (%d)>\r\n", __FUNCTION__, __LINE__);
+				mimic_printf("*** Play Stop <%s (%d)>\r\n", __func__, __LINE__);
 				/** 再生停止処理 */
 				StopPlayRecProcess();
 			}
@@ -312,7 +310,7 @@ DefALLOCATE_ITCM static void S2_E0(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 {
 	if (enPlayCtrlEventStop != enEvent)
 	{
-		mimic_printf("[%s (%d)] Unexpected Event No!!(%d)\r\n", __FUNCTION__, __LINE__, enEvent);
+		mimic_printf("[%s (%d)] Unexpected Event No!!(%d)\r\n", __func__, __LINE__, enEvent);
 		return;
 	}
 
@@ -335,7 +333,7 @@ DefALLOCATE_ITCM static void S2_E4(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 
 	if (enPlayCtrlEventRecording != enEvent)
 	{
-		mimic_printf("[%s (%d)] Unexpected Event No!!(%d)\r\n", __FUNCTION__, __LINE__, enEvent);
+		mimic_printf("[%s (%d)] Unexpected Event No!!(%d)\r\n", __func__, __LINE__, enEvent);
 		return;
 	}
 
@@ -358,7 +356,7 @@ DefALLOCATE_ITCM static void S2_E4(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 		s_pu8PCMBufferRecPCMBuffer = OpenRecAudioFile(s_szCurrentFilePath, &s_stRecCondition, &s_u32RecPCMBufferSize, true);
 		if (s_pu8PCMBufferRecPCMBuffer == NULL)
 		{
-			mimic_printf("[%s (%d)] OpenRecAudioFile NG : <%s>\r\n", __FUNCTION__, __LINE__, s_szCurrentFilePath);
+			mimic_printf("[%s (%d)] OpenRecAudioFile NG : <%s>\r\n", __func__, __LINE__, s_szCurrentFilePath);
 			StopPlayRecProcess();
 			return;
 		}
@@ -416,7 +414,7 @@ DefALLOCATE_ITCM static void PlayCtrlDoMatrix(enPlayCtrlEvent_t enEvent, uint32_
 
 	if ((enEvent < enPlayCtrlEventStop) || (enEvent >= enPlayCtrlEventMAX))
 	{
-		mimic_printf("[%s (%d)] Unkown Event No!!(%d)\r\n", __FUNCTION__, __LINE__, enEvent);
+		mimic_printf("[%s (%d)] Unkown Event No!!(%d)\r\n", __func__, __LINE__, enEvent);
 		return;
 	}
 	enState = s_enPlayCtrlState;
@@ -436,7 +434,7 @@ DefALLOCATE_ITCM static void PlayCtrlDoMatrix(enPlayCtrlEvent_t enEvent, uint32_
  */
 DefALLOCATE_ITCM static void XXXXX(enPlayCtrlEvent_t enEvent, uint32_t param[], uintptr_t inptr, uintptr_t outptr)
 {
-	mimic_printf("[%s (%d)] Nop!(S%d_E%d)\r\n", __FUNCTION__, __LINE__, s_enPlayCtrlState, enEvent);
+	mimic_printf("[%s (%d)] Nop!(S%d_E%d)\r\n", __func__, __LINE__, s_enPlayCtrlState, enEvent);
 }
 
 /** 
@@ -457,7 +455,7 @@ DefALLOCATE_ITCM static void CloseRecProcess(void)
 {
 	if (IsRecAudioFileOpend() != false)
 	{
-		mimic_printf("[%s (%d)] File Close <%s>\r\n", __FUNCTION__, __LINE__, s_szCurrentFilePath);
+		mimic_printf("[%s (%d)] File Close <%s>\r\n", __func__, __LINE__, s_szCurrentFilePath);
 		CloseRecAudioFile(&s_stRecCondition, s_pu8PCMBufferRecPCMBuffer);
 	}
 }
@@ -478,7 +476,7 @@ DefALLOCATE_ITCM static uint8_t *OpenNextPlayFile(uint32_t u32NowTrackNo, TCHAR 
 	/** トラック番号からファイル名を取得する */
 	if (GetAudioFilePath(u32NowTrackNo, szCurrentFilePath) == false)
 	{
-		mimic_printf("[%s (%d)] GetAudioFilePath NG :  u32NowTrackNo = %lu\r\n", __FUNCTION__, __LINE__, u32NowTrackNo);
+		mimic_printf("[%s (%d)] GetAudioFilePath NG :  u32NowTrackNo = %lu\r\n", __func__, __LINE__, u32NowTrackNo);
 		return NULL;
 	}
 
@@ -489,7 +487,7 @@ DefALLOCATE_ITCM static uint8_t *OpenNextPlayFile(uint32_t u32NowTrackNo, TCHAR 
 	pu8PCMBuffer = OpenPlayAudioFile(szCurrentFilePath, pst, pu32BufSize);
 	if (pu8PCMBuffer == NULL)
 	{
-		mimic_printf("[%s (%d)] OpenPlayAudioFile NG :  <%s>\r\n", __FUNCTION__, __LINE__, szCurrentFilePath);
+		mimic_printf("[%s (%d)] OpenPlayAudioFile NG :  <%s>\r\n", __func__, __LINE__, szCurrentFilePath);
 		return NULL;
 	}
 
@@ -501,7 +499,7 @@ DefALLOCATE_ITCM static uint8_t *OpenNextPlayFile(uint32_t u32NowTrackNo, TCHAR 
 		mimic_printf("*** Init Sound Device ***\r\n");
 		if (PostSyncMsgSoundTaskDeviceInit(enSAI1, pst->enSample, pst->enBitsWidth, false) == false)
 		{
-			mimic_printf("[%s (%d)] PostSyncMsgSoundTaskDeviceInit NG\r\n", __FUNCTION__, __LINE__);
+			mimic_printf("[%s (%d)] PostSyncMsgSoundTaskDeviceInit NG\r\n", __func__, __LINE__);
 			ClosePlayAudioFile(pst, pu8PCMBuffer);
 			return NULL;
 		}
@@ -511,7 +509,6 @@ DefALLOCATE_ITCM static uint8_t *OpenNextPlayFile(uint32_t u32NowTrackNo, TCHAR 
 
 	mimic_printf("*** Now Play[%03d] :  <%s>\r\n\r\n", u32NowTrackNo, szCurrentFilePath);
 	SetPlayFileName(szCurrentFilePath);
-	SpectrumBarTaskRun();
 	return pu8PCMBuffer;
 }
 
@@ -586,7 +583,7 @@ DefALLOCATE_ITCM static _Bool PostMsgPlayCtrlPlaying(void)
 
 	if (sizeof(stTaskMsg) != xStreamBufferSend(g_sbhPlayCtrl, &stTaskMsg, sizeof(stTaskMsg), DefPostMsgTimeout_PrivateEvent))
 	{
-		mimic_printf("[%s (%d)] xStreamBufferSend NG\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] xStreamBufferSend NG\r\n", __func__, __LINE__);
 		return false;
 	}
 
@@ -601,7 +598,7 @@ DefALLOCATE_ITCM static _Bool PostMsgPlayCtrlRecording(void)
 
 	if (sizeof(stTaskMsg) != xStreamBufferSend(g_sbhPlayCtrl, &stTaskMsg, sizeof(stTaskMsg), DefPostMsgTimeout_PrivateEvent))
 	{
-		mimic_printf("[%s (%d)] xStreamBufferSend NG\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] xStreamBufferSend NG\r\n", __func__, __LINE__);
 		return false;
 	}
 
@@ -626,7 +623,7 @@ DefALLOCATE_ITCM _Bool PostMsgPlayCtrlStart(uint32_t u32TrackNo)
 
 	if (sizeof(stTaskMsg) != xStreamBufferSend(g_sbhPlayCtrl, &stTaskMsg, sizeof(stTaskMsg), 50))
 	{
-		mimic_printf("[%s (%d)] xStreamBufferSend NG\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] xStreamBufferSend NG\r\n", __func__, __LINE__);
 		return false;
 	}
 	return true;
@@ -643,14 +640,14 @@ DefALLOCATE_ITCM _Bool PostSyncMsgPlayCtrlStop(void)
 	stTaskMsg.wakeupbits = 1;
 	if (sizeof(stTaskMsg) != xStreamBufferSend(g_sbhPlayCtrl, &stTaskMsg, sizeof(stTaskMsg), 50))
 	{
-		mimic_printf("[%s (%d)] xStreamBufferSend NG\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] xStreamBufferSend NG\r\n", __func__, __LINE__);
 		return false;
 	}
 	/** Sync */
 	uint32_t uxBits = osEventFlagsWait(g_efMsgPlayCtrl, 1, osFlagsWaitAny, 500);
 	if (uxBits != 1u)
 	{
-		mimic_printf("[%s (%d)] osEventFlagsWait NG\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] osEventFlagsWait NG\r\n", __func__, __LINE__);
 		return false;
 	}
 	return true;
@@ -670,7 +667,7 @@ DefALLOCATE_ITCM _Bool PostMsgPlayCtrlRec(void)
 
 	if (sizeof(stTaskMsg) != xStreamBufferSend(g_sbhPlayCtrl, &stTaskMsg, sizeof(stTaskMsg), 50))
 	{
-		mimic_printf("[%s (%d)] xStreamBufferSend NG\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] xStreamBufferSend NG\r\n", __func__, __LINE__);
 		return false;
 	}
 
@@ -732,7 +729,7 @@ DefALLOCATE_ITCM static void PlayCtrlActual(void)
 			enEvent = enPlayCtrlEventRecording;
 			break;
 		default:
-			mimic_printf("[%s (%d)] Unkown Msg\r\n", __FUNCTION__, __LINE__);
+			mimic_printf("[%s (%d)] Unkown Msg\r\n", __func__, __LINE__);
 			break;
 		}
 
@@ -762,7 +759,6 @@ DefALLOCATE_ITCM static void PlayCtrlActual(void)
  */
 DefALLOCATE_ITCM void PlayCtrl(void const *argument)
 {
-	DebugTraceX("DEBUG", dbgMINOR, "Start");
 
 	for (;;)
 	{
@@ -840,9 +836,9 @@ DefALLOCATE_ITCM _Bool PlayCtrlSetRecCondition(const stCodecCondition_t *pst)
 	{
 		return false;
 	}
-	primask = CM7_DisableIRQ();
+	primask = DisableGlobalIRQ();
 	s_stRecCondition = *pst;
-	CM7_SetIRQ(primask);
+	EnableGlobalIRQ(primask);
 
 	return true;
 }
@@ -890,7 +886,7 @@ void CmdRec(uint32_t argc, const char *argv[])
 			}
 			else
 			{
-				mimic_printf("[%s (%d)] PlayCtrlSetRecCondition NG\r\n", __FUNCTION__, __LINE__);
+				mimic_printf("[%s (%d)] PlayCtrlSetRecCondition NG\r\n", __func__, __LINE__);
 			}
 			return;
 		}

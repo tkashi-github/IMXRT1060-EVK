@@ -96,6 +96,16 @@ typedef enum{
 	enCameraBtn,
 	enTouchEvent,
 	enCurEv,
+	enSoundTaskInit,
+	enSoundTaskStart,
+	enSoundTaskSendAudioData,
+	enSoundTaskRcvAudioData,
+	enSoundTaskStop,
+	enPlayStop,
+	enPlayStart,
+	enPlaying,
+	enRec,
+	enRecording,
 	enMsgID_MAX,
 }enMsgID_t;
 
@@ -109,10 +119,12 @@ typedef struct{
 	uint32_t           param[3];
 }stTaskMsgBlock_t;
 
+
+
 /** SAI */
 typedef enum{
 	enSoundTask1 = 0,
-	enSoundTask12,
+	enSoundTask2,
 	enNumOfSoundTask,
 }enSoundTask_t;
 
@@ -158,6 +170,13 @@ typedef enum{
     enWordWidth24bits = 24U, /*!< Audio data width 24 bits */
     enWordWidth32bits = 32U  /*!< Audio data width 32 bits */
 } enWorWidth_t;
+
+typedef struct{
+	enSampleRate_t   	enSample;
+	enWorWidth_t    	enBitsWidth;
+	enAudioFileType_t   enFileType;
+	uint16_t            nChannels;
+}stCodecCondition_t;
 
 #define kAudioMaxOfSampleRate       (96000u)
 #define kAudioMaxOfChannels         (2u)

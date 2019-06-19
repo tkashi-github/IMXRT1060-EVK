@@ -264,7 +264,7 @@ status_t MT9M114_Init(camera_device_handle_t *handle, const camera_config_t *con
     }
     if (MT9M114_CHIP_ID != chip_id)
     {
-		mimic_printf("[%s (%d)] chip_id = 0x%04X\r\n", __FUNCTION__, __LINE__, chip_id);
+		mimic_printf("[%s (%d)] chip_id = 0x%04X\r\n", __func__, __LINE__, chip_id);
         return kStatus_Fail;
     }
 

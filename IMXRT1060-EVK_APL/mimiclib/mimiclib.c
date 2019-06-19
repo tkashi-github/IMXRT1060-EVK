@@ -55,9 +55,10 @@ _Bool mimic_kbhit(void){
 #endif
 
 
-void mimic_printf(const char* fmt, ...){
+void mimic_printf(const char* fmt, ...)
+{
 	va_list arg;
-	char szBuffer[1024];
+	char szBuffer[512];
 
 	va_start(arg, fmt);
 	mimic_tcsvprintf(szBuffer, sizeof(szBuffer), fmt, arg);
@@ -68,6 +69,15 @@ void mimic_printf(const char* fmt, ...){
 #else
 	fputs(szBuffer, stdout);
 #endif
+}
+
+void mimic_sprintf(TCHAR szDst[], uint32_t u32MaxElementOfszDst, const char* fmt, ...)
+{
+	va_list arg;
+
+	va_start(arg, fmt);
+	mimic_tcsvprintf(szDst, u32MaxElementOfszDst, fmt, arg);
+	va_end(arg);
 }
 
 #ifdef DefBSP_IMXRT1060_EVK

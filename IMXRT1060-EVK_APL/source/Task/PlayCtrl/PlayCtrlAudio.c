@@ -30,7 +30,7 @@
  */
 #include "PlayCtrl/PlayCtrlAudio.h"
 #include "SoundTask/SoundTask.h"
-#include "mimiclib/mimiclibh"
+#include "mimiclib/mimiclib.h"
 
 static TCHAR s_szWAV[768];
 static volatile _Bool s_bPlayFileOpen = false;
@@ -71,7 +71,7 @@ DefALLOCATE_ITCM uint8_t *OpenPlayAudioFile(const TCHAR szFilePath[], stCodecCon
 		(pst == NULL) ||
 		(pu32PCMBufferSize == NULL))
 	{
-		mimic_printf("[%s (%d)] Param Error\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] Param Error\r\n", __func__, __LINE__);
 		return NULL;
 	}
 
@@ -105,7 +105,7 @@ DefALLOCATE_ITCM uint32_t ReadPlayAudioFile(const stCodecCondition_t *pst, uint8
 {
 	if ((pst == NULL) || (pu8PCMBuffer == NULL))
 	{
-		mimic_printf("[%s (%d)] Param Error\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] Param Error\r\n", __func__, __LINE__);
 		return 0;
 	}
 	switch (pst->enFileType)
@@ -113,7 +113,7 @@ DefALLOCATE_ITCM uint32_t ReadPlayAudioFile(const stCodecCondition_t *pst, uint8
 	case enAudioFileWAV:
 		return ReadWavFile(pu8PCMBuffer, u32PCMBufferSize);
 	default:
-		mimic_printf("[%s (%d)] Param Error\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] Param Error\r\n", __func__, __LINE__);
 		return 0;
 	}
 }
@@ -125,10 +125,10 @@ DefALLOCATE_ITCM uint32_t ReadPlayAudioFile(const stCodecCondition_t *pst, uint8
  */
 DefALLOCATE_ITCM void ClosePlayAudioFile(const stCodecCondition_t *pst, uint8_t *pu8PCMBuffer)
 {
-	//mimic_printf("[%s (%d)] ENTER (%lu)\r\n", __FUNCTION__, __LINE__);
+	//mimic_printf("[%s (%d)] ENTER (%lu)\r\n", __func__, __LINE__);
 	if (pst == NULL)
 	{
-		mimic_printf("[%s (%d)] Param Error\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] Param Error\r\n", __func__, __LINE__);
 		return;
 	}
 	if (s_bPlayFileOpen != false)
@@ -148,7 +148,7 @@ DefALLOCATE_ITCM void ClosePlayAudioFile(const stCodecCondition_t *pst, uint8_t 
 		}
 		s_bPlayFileOpen = false;
 	}
-	//mimic_printf("[%s (%d)] EXIT (%lu)\r\n", __FUNCTION__, __LINE__);
+	//mimic_printf("[%s (%d)] EXIT (%lu)\r\n", __func__, __LINE__);
 }
 
 /**
@@ -175,11 +175,11 @@ DefALLOCATE_ITCM uint8_t *OpenRecAudioFile(const TCHAR szFilePath[], const stCod
 			((uint16_t)SoundTaskGetCurrentWordWidth(enSAI1) != (uint32_t)pst->enBitsWidth) ||
 			(bForceInit != false))
 		{
-			mimic_printf("[%s (%d)] Change SampleRate Or BitsWidth\r\n", __FUNCTION__, __LINE__);
+			mimic_printf("[%s (%d)] Change SampleRate Or BitsWidth\r\n", __func__, __LINE__);
 
 			if (PostSyncMsgSoundTaskDeviceInit(enSAI1, (uint32_t)pst->enSample, (uint32_t)pst->enBitsWidth, true) == false)
 			{
-				mimic_printf("[%s (%d)] PostSyncMsgSoundTaskDeviceInit NG\r\n", __FUNCTION__, __LINE__);
+				mimic_printf("[%s (%d)] PostSyncMsgSoundTaskDeviceInit NG\r\n", __func__, __LINE__);
 				return NULL;
 			}
 		}
@@ -187,7 +187,7 @@ DefALLOCATE_ITCM uint8_t *OpenRecAudioFile(const TCHAR szFilePath[], const stCod
 		pu8PCMBuffer = (uint8_t *)pvPortMalloc(*pu32PCMBufferSize);
 		if (pu8PCMBuffer == NULL)
 		{
-			mimic_printf("[%s (%d)] pvPortMalloc NG\r\n", __FUNCTION__, __LINE__);
+			mimic_printf("[%s (%d)] pvPortMalloc NG\r\n", __func__, __LINE__);
 			return NULL;
 		}
 
@@ -226,7 +226,7 @@ DefALLOCATE_ITCM _Bool WriteRecAudioFile(const stCodecCondition_t *pst, const ui
 {
 	if ((pst == NULL) || (pu8PCMBuffer == NULL) || (s_bRecFileOpen == false))
 	{
-		mimic_printf("[%s (%d)] Param Error\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] Param Error\r\n", __func__, __LINE__);
 		return false;
 	}
 

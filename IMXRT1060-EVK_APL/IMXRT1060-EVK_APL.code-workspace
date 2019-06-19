@@ -62,7 +62,8 @@
 			"drvpwm.h": "c",
 			"pin_mux.h": "c",
 			"tempmonitask.h": "c",
-			"drvlpuart.h": "c"
+			"drvlpuart.h": "c",
+			"audiofilelist.h": "c"
 		},
 		"C_Cpp.default.defines": [
 			"__GNUC__",
@@ -85,5 +86,6 @@
 			"FSL_SDK_ENABLE_DRIVER_CACHE_CONTROL",
 			"SDK_I2C_BASED_COMPONENT_USED",
 		],
+		"editor.autoClosingBrackets": "never",
 	}
 }

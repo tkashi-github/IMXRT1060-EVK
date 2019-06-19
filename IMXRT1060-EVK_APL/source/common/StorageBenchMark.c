@@ -53,13 +53,13 @@ void CmdStorageBenchMark(uint32_t argc, const char *argv[]){
 
 	pu32WriteBuffer = (uint32_t*)pvPortMalloc(65536);
 	if(pu32WriteBuffer == NULL){
-		mimic_printf("[%s (%d)] pu32WriteBuffer NG\r\n", __FUNCTION__, __LINE__);		
+		mimic_printf("[%s (%d)] pu32WriteBuffer NG\r\n", __func__, __LINE__);		
 		goto _END;
 	}
 
 	pu32ReadBuffer = (uint32_t*)pvPortMalloc(65536);
 	if(pu32ReadBuffer == NULL){
-		mimic_printf("[%s (%d)] pu32WriteBuffer NG\r\n", __FUNCTION__, __LINE__);		
+		mimic_printf("[%s (%d)] pu32WriteBuffer NG\r\n", __func__, __LINE__);		
 		goto _END;
 	}
 
@@ -74,11 +74,11 @@ void CmdStorageBenchMark(uint32_t argc, const char *argv[]){
 		uint32_t ProgressCnt = 0;
 		char Progress[] = {'\\', '|', '/', '-'};
 
-		//mimic_printf("[%s (%d)] u32BlockSize = %lu\r\n", __FUNCTION__, __LINE__, u32BlockSize);	
+		//mimic_printf("[%s (%d)] u32BlockSize = %lu\r\n", __func__, __LINE__, u32BlockSize);	
 		for(uint32_t j=0;j<u32PtnCnt;j++){
 			uint32_t u32Ptn = au32Ptn[j];
 				
-			//mimic_printf("[%s (%d)] u32Ptn = 0x%08lX\r\n", __FUNCTION__, __LINE__, u32Ptn);	
+			//mimic_printf("[%s (%d)] u32Ptn = 0x%08lX\r\n", __func__, __LINE__, u32Ptn);	
 
 			/** Make Test Ptn */
 			for(uint32_t k=0;k<(u32BlockSize/sizeof(uint32_t));k++){
@@ -98,16 +98,16 @@ void CmdStorageBenchMark(uint32_t argc, const char *argv[]){
 				ProgressCnt %= 4;
 
 				sprintf(szFilePath, "A:/%03lu.dat", k);
-				//mimic_printf("[%s (%d)] fopen = <%s>\r\n", __FUNCTION__, __LINE__, szFilePath);
+				//mimic_printf("[%s (%d)] fopen = <%s>\r\n", __func__, __LINE__, szFilePath);
 				fres = f_open(&stFIL, szFilePath, FA_WRITE | FA_CREATE_ALWAYS);
 				if(FR_OK != fres){
-					mimic_printf("[%s (%d)] f_open NG (%d)\r\n", __FUNCTION__, __LINE__, fres);
+					mimic_printf("[%s (%d)] f_open NG (%d)\r\n", __func__, __LINE__, fres);
 					f_close(&stFIL);
 					goto _END;
 				}
 
 
-				//mimic_printf("[%s (%d)] f_write\r\n", __FUNCTION__, __LINE__);
+				//mimic_printf("[%s (%d)] f_write\r\n", __func__, __LINE__);
 				StartTick = osKernelGetTickCount();
 
 				for(uint32_t l=0;l<u32LoopCnt;l++){
@@ -115,24 +115,24 @@ void CmdStorageBenchMark(uint32_t argc, const char *argv[]){
 
 					fres = f_write(&stFIL, pu32WriteBuffer, u32BlockSize, (UINT*)&bw);
 					if(FR_OK != fres){
-						mimic_printf("[%s (%d)] f_write NG (%d)\r\n", __FUNCTION__, __LINE__, fres);
+						mimic_printf("[%s (%d)] f_write NG (%d)\r\n", __func__, __LINE__, fres);
 						f_close(&stFIL);
 						goto _END;
 					}
 				}
 				WriteTick = osKernelGetTickCount() - StartTick;
-				//mimic_printf("[%s (%d)] f_write time = <%lu msec>\r\n", __FUNCTION__, __LINE__, WriteTick);
+				//mimic_printf("[%s (%d)] f_write time = <%lu msec>\r\n", __func__, __LINE__, WriteTick);
 				f_close(&stFIL);
 				dfpWriteTime += (double)WriteTick;
 
 				fres = f_open(&stFIL, szFilePath, FA_READ | FA_OPEN_EXISTING);
 				if(FR_OK != fres){
-					mimic_printf("[%s (%d)] f_open NG (%d)\r\n", __FUNCTION__, __LINE__, fres);
+					mimic_printf("[%s (%d)] f_open NG (%d)\r\n", __func__, __LINE__, fres);
 					f_close(&stFIL);
 					goto _END;
 				}
 
-				//mimic_printf("[%s (%d)] f_read\r\n", __FUNCTION__, __LINE__);
+				//mimic_printf("[%s (%d)] f_read\r\n", __func__, __LINE__);
 				
 				
 
@@ -142,7 +142,7 @@ void CmdStorageBenchMark(uint32_t argc, const char *argv[]){
 					StartTick = osKernelGetTickCount();
 					fres = f_read(&stFIL, pu32ReadBuffer, u32BlockSize, (UINT*)&br);
 					if(FR_OK != fres){
-						mimic_printf("[%s (%d)] f_write NG (%d)\r\n", __FUNCTION__, __LINE__, fres);
+						mimic_printf("[%s (%d)] f_write NG (%d)\r\n", __func__, __LINE__, fres);
 						f_close(&stFIL);
 						goto _END;
 					}

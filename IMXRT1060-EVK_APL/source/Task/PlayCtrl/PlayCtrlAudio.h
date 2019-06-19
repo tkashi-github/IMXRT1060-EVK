@@ -43,7 +43,6 @@ extern "C"
 #include "UserTypedef.h"
 #include "SoundTask/SoundTask.h"
 #include "PlayCtrl/PlayCtrlWav.h"
-#include "PlayCtrl/PlayCtrlFlac.h"
 
 extern uint8_t *OpenPlayAudioFile(const TCHAR szFilePath[], stCodecCondition_t *pst, uint32_t *pu32PCMBufferSize);
 extern uint32_t ReadPlayAudioFile(const stCodecCondition_t *pst, uint8_t pu8PCMBuffer[], uint32_t u32PCMBufferSize);

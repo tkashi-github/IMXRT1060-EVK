@@ -45,7 +45,7 @@ static _Bool WaveFilaHeaderCheck(stRIFFChunkDescriptor_t *pstHeader)
 
 	if ((memcmp(pstHeader->riffId, "RIFF", 4) == 0) && (memcmp(pstHeader->waveId, "WAVE", 4) == 0))
 	{
-		//mimic_printf("[%s (%d)] riffSize = %lu\r\n", __FUNCTION__, __LINE__, pstHeader->riffSize);
+		//mimic_printf("[%s (%d)] riffSize = %lu\r\n", __func__, __LINE__, pstHeader->riffSize);
 		bret = true;
 	}
 	return bret;
@@ -119,7 +119,7 @@ static _Bool ChunkDataRead(FIL *pFile, uint32_t u32ChunkSize, uint8_t pu8Buffer[
 	}
 	else
 	{
-		mimic_printf("[%s (%d)] f_read NG : <%s>\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] f_read NG : <%s>\r\n", __func__, __LINE__);
 	}
 
 	return bret;
@@ -135,7 +135,7 @@ static uint32_t ActualWAVFileRead(const TCHAR szFilePath[], uint8_t pu8Buffer[],
 	/** begin */
 	if (FR_OK != f_open(&stFile, szFilePath, FA_READ))
 	{
-		mimic_printf("[%s (%d)] f_open NG : <%s>\r\n", __FUNCTION__, __LINE__, szFilePath);
+		mimic_printf("[%s (%d)] f_open NG : <%s>\r\n", __func__, __LINE__, szFilePath);
 		return 0;
 	}
 
@@ -150,14 +150,14 @@ static uint32_t ActualWAVFileRead(const TCHAR szFilePath[], uint8_t pu8Buffer[],
 			if (memcmp(stChunkHeader.ckId, "fmt ", 4) == 0)
 			{
 				/** Read fmt Chunk */
-				mimic_printf("[%s (%d)] Read fmt Chunk\r\n", __FUNCTION__, __LINE__);
+				mimic_printf("[%s (%d)] Read fmt Chunk\r\n", __func__, __LINE__);
 
 				bOK = FormatChunkRead(&stFile, stChunkHeader.ckSize, pstFormat);
 			}
 			else if (memcmp(stChunkHeader.ckId, "data", 4) == 0)
 			{
 				/** Read data Chunk */
-				mimic_printf("[%s (%d)] Read data Chunk(stChunkHeader.ckSize = %lu)\r\n", __FUNCTION__, __LINE__, stChunkHeader.ckSize);
+				mimic_printf("[%s (%d)] Read data Chunk(stChunkHeader.ckSize = %lu)\r\n", __func__, __LINE__, stChunkHeader.ckSize);
 				if ((u32ReadByte + stChunkHeader.ckSize) > MaxArraySize)
 				{
 					bOK = false;
@@ -171,7 +171,7 @@ static uint32_t ActualWAVFileRead(const TCHAR szFilePath[], uint8_t pu8Buffer[],
 			else
 			{
 				/** Skip */
-				mimic_printf("[%s (%d)] Unkown Chunk : <%c%c%c%c>\r\n", __FUNCTION__, __LINE__, stChunkHeader.ckId[0], stChunkHeader.ckId[1], stChunkHeader.ckId[2], stChunkHeader.ckId[3]);
+				mimic_printf("[%s (%d)] Unkown Chunk : <%c%c%c%c>\r\n", __func__, __LINE__, stChunkHeader.ckId[0], stChunkHeader.ckId[1], stChunkHeader.ckId[2], stChunkHeader.ckId[3]);
 
 				/** Dummy read */
 				ChunkDataRead(&stFile, stChunkHeader.ckSize, &pu8Buffer[u32ReadByte]);
@@ -218,13 +218,13 @@ uint32_t WAVFileRead(const TCHAR szFilePath[], uint8_t pu8Buffer[], size_t MaxAr
 			default:
 				break;
 			}
-			mimic_printf("[%s (%d)] Total Samples = %lu * %u\r\n", __FUNCTION__, __LINE__, u32Samples, pstFormat->nChannels);
-			mimic_printf("[%s (%d)] Play Time     = %f\r\n", __FUNCTION__, __LINE__, (double)u32Samples / (double)pstFormat->nSamplesPerSec);
+			mimic_printf("[%s (%d)] Total Samples = %lu * %u\r\n", __func__, __LINE__, u32Samples, pstFormat->nChannels);
+			mimic_printf("[%s (%d)] Play Time     = %f\r\n", __func__, __LINE__, (double)u32Samples / (double)pstFormat->nSamplesPerSec);
 		}
 	}
 	else
 	{
-		mimic_printf("[%s (%d)] Parameter Error\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] Parameter Error\r\n", __func__, __LINE__);
 	}
 
 	return u32Samples;
@@ -240,7 +240,7 @@ _Bool WAVFileReadFormatChunk(const TCHAR szFilePath[], stFormatChunkData_t *pstF
 	/** begin */
 	if (FR_OK != f_open(&stFile, szFilePath, FA_READ))
 	{
-		mimic_printf("[%s (%d)] f_open NG : <%s>\r\n", __FUNCTION__, __LINE__, szFilePath);
+		mimic_printf("[%s (%d)] f_open NG : <%s>\r\n", __func__, __LINE__, szFilePath);
 		return false;
 	}
 
@@ -259,7 +259,7 @@ _Bool WAVFileReadFormatChunk(const TCHAR szFilePath[], stFormatChunkData_t *pstF
 			else
 			{
 				/** Skip */
-				//mimic_printf("[%s (%d)] Unkown Chunk : <%c%c%c%c>\r\n", __FUNCTION__, __LINE__, stChunkHeader.ckId[0], stChunkHeader.ckId[1], stChunkHeader.ckId[2], stChunkHeader.ckId[3]);
+				//mimic_printf("[%s (%d)] Unkown Chunk : <%c%c%c%c>\r\n", __func__, __LINE__, stChunkHeader.ckId[0], stChunkHeader.ckId[1], stChunkHeader.ckId[2], stChunkHeader.ckId[3]);
 
 				/** Dummy read */
 				if (FR_OK != f_lseek(&stFile, f_tell(&stFile) + stChunkHeader.ckSize))
@@ -289,7 +289,7 @@ uint32_t WAVFileReadPCMData(FIL *fp, uint8_t pu8[], uint32_t BufferSize, uint32_
 	uint32_t u32ReadByte = 0;
 
 	/** begin */
-	//mimic_printf("[%s (%d)] *pu32RemainChunk = %lu\r\n", __FUNCTION__, __LINE__, *pu32RemainChunk);
+	//mimic_printf("[%s (%d)] *pu32RemainChunk = %lu\r\n", __func__, __LINE__, *pu32RemainChunk);
 	while (*pu32RemainChunk > 0)
 	{
 		if ((BufferSize - u32ReadByte) > *pu32RemainChunk)
@@ -330,7 +330,7 @@ uint32_t WAVFileReadPCMData(FIL *fp, uint8_t pu8[], uint32_t BufferSize, uint32_
 			if ((BufferSize - u32ReadByte) > stChunkHeader.ckSize)
 			{
 				/** pu8にchunkごと読み込める */
-				//mimic_printf("[%s (%d)] stChunkHeader.ckSize = %lu\r\n", __FUNCTION__, __LINE__, stChunkHeader.ckSize);
+				//mimic_printf("[%s (%d)] stChunkHeader.ckSize = %lu\r\n", __func__, __LINE__, stChunkHeader.ckSize);
 				if (false != ChunkDataRead(fp, stChunkHeader.ckSize, &pu8[u32ReadByte]))
 				{
 					u32ReadByte += stChunkHeader.ckSize;
@@ -346,7 +346,7 @@ uint32_t WAVFileReadPCMData(FIL *fp, uint8_t pu8[], uint32_t BufferSize, uint32_
 				/** 残りを読み込む */
 				uint32_t u32;
 				u32 = BufferSize - u32ReadByte;
-				//mimic_printf("[%s (%d)] u32 = %lu\r\n", __FUNCTION__, __LINE__, u32);
+				//mimic_printf("[%s (%d)] u32 = %lu\r\n", __func__, __LINE__, u32);
 				if (false != ChunkDataRead(fp, u32, &pu8[u32ReadByte]))
 				{
 					u32ReadByte += u32;
@@ -360,7 +360,7 @@ uint32_t WAVFileReadPCMData(FIL *fp, uint8_t pu8[], uint32_t BufferSize, uint32_
 		else
 		{
 			/** Skip */
-			//mimic_printf("[%s (%d)] Unkown Chunk(size=%lu) : <%c%c%c%c>\r\n", __FUNCTION__, __LINE__, stChunkHeader.ckSize, stChunkHeader.ckId[0], stChunkHeader.ckId[1], stChunkHeader.ckId[2], stChunkHeader.ckId[3]);
+			//mimic_printf("[%s (%d)] Unkown Chunk(size=%lu) : <%c%c%c%c>\r\n", __func__, __LINE__, stChunkHeader.ckSize, stChunkHeader.ckId[0], stChunkHeader.ckId[1], stChunkHeader.ckId[2], stChunkHeader.ckId[3]);
 
 			/** Dummy read */
 			if (FR_OK != f_lseek(fp, f_tell(fp) + stChunkHeader.ckSize))
@@ -422,18 +422,18 @@ _Bool WAVWritePCMData(FIL *pWav, const uint8_t pu8[], uint32_t numberOfSamples, 
 
 	if (FR_OK != f_write(pWav, pu8, numberOfSamples * (BitPerSample / 8), (UINT *)&bw))
 	{
-		mimic_printf("[%s (%d)] f_write NG\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] f_write NG\r\n", __func__, __LINE__);
 		return false;
 	}
 
 	if (bw != (numberOfSamples * BitPerSample / 8))
 	{
-		mimic_printf("[%s (%d)] f_write NG\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] f_write NG\r\n", __func__, __LINE__);
 		return false;
 	}
 
 	*pu32OutByte += (numberOfSamples * (BitPerSample >> 3));
-	//mimic_printf("[%s (%d)] *pu32OutByte = %lu\r\n", __FUNCTION__, __LINE__, *pu32OutByte);
+	//mimic_printf("[%s (%d)] *pu32OutByte = %lu\r\n", __func__, __LINE__, *pu32OutByte);
 
 	return true;
 }
@@ -451,21 +451,21 @@ _Bool WAVUpdateDataSize(FIL *pWav, uint32_t u32OutByte)
 
 	if (FR_OK != f_lseek(pWav, 4))
 	{
-		mimic_printf("[%s (%d)] f_lseek NG\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] f_lseek NG\r\n", __func__, __LINE__);
 	}
 
 	if (FR_OK != f_write(pWav, &RiffSize, 4, (UINT *)&bw))
 	{
-		mimic_printf("[%s (%d)] f_write NG\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] f_write NG\r\n", __func__, __LINE__);
 	}
 	if (FR_OK != f_lseek(pWav, 40))
 	{
-		mimic_printf("[%s (%d)] f_lseek NG\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] f_lseek NG\r\n", __func__, __LINE__);
 	}
 
 	if (FR_OK != f_write(pWav, &DataSize, 4, (UINT *)&bw))
 	{
-		mimic_printf("[%s (%d)] f_write NG\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] f_write NG\r\n", __func__, __LINE__);
 	}
 
 	return true;

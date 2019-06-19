@@ -180,7 +180,7 @@ DefALLOCATE_ITCM static void LanTaskActual(void){
 			break;
 		case enLanRestart:
 			s_bInited = false;
-			mimic_printf("[%s (%d)] Restart!\r\n", __FUNCTION__, __LINE__);
+			mimic_printf("[%s (%d)] Restart!\r\n", __func__, __LINE__);
 			ResetPhy();
 			tcpip_init(NULL, NULL);
 			InitNetwork(false);
@@ -188,7 +188,7 @@ DefALLOCATE_ITCM static void LanTaskActual(void){
 			s_bLastLinkStatus = true;
 			break;
 		default:
-			mimic_printf("[%s (%d)] Unkown Msg (%d)\r\n", __FUNCTION__, __LINE__, stTaskMsg.enMsgId);
+			mimic_printf("[%s (%d)] Unkown Msg (%d)\r\n", __func__, __LINE__, stTaskMsg.enMsgId);
 			break;
 		}
 		
@@ -251,7 +251,7 @@ DefALLOCATE_ITCM _Bool PostMsgLanTaskRestart(void){
 	stTaskMsg.enMsgId = enLanRestart;
 
 	if(sizeof(stTaskMsg) != xStreamBufferSend(g_sbhLanTask, &stTaskMsg, sizeof(stTaskMsg), 50)){
-		mimic_printf("[%s (%d)] xStreamBufferSend NG\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] xStreamBufferSend NG\r\n", __func__, __LINE__);
 		return false;
 	}
 	
@@ -272,7 +272,7 @@ DefALLOCATE_ITCM _Bool PostMsgLanTaskLinkChange(void){
 
 	if(pdFALSE == xPortIsInsideInterrupt()){
 		if(sizeof(stTaskMsg) != xStreamBufferSend(g_sbhLanTask, &stTaskMsg, sizeof(stTaskMsg), 50)){
-			mimic_printf("[%s (%d)] xStreamBufferSend NG\r\n", __FUNCTION__, __LINE__);
+			mimic_printf("[%s (%d)] xStreamBufferSend NG\r\n", __func__, __LINE__);
 			return false;
 		}
 	}else{

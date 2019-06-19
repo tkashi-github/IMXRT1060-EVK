@@ -190,7 +190,7 @@ static void txCallback(I2S_Type *base, sai_edma_handle_t *handle, status_t statu
 	if (s_u32SendCount[enSAI] == s_u32BeginCount[enSAI])
 	{ /** すべて転送した */
 		DrvSAIImmidiateTxStop(enSAI);
-		PostMsgSoundTaskStop(enSAI, __FUNCTION__, __LINE__);
+		PostMsgSoundTaskStop(enSAI, __func__, __LINE__);
 	}
 	else
 	{
@@ -220,7 +220,7 @@ static void rxCallback(I2S_Type *base, sai_edma_handle_t *handle, status_t statu
 	{
 		/** オーバーランした */
 		DrvSAIImmidiateRxStop(enSAI);
-		PostMsgSoundTaskStop(enSAI, __FUNCTION__, __LINE__);
+		PostMsgSoundTaskStop(enSAI, __func__, __LINE__);
 	}
 	else
 	{
@@ -445,7 +445,7 @@ _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t
 #else
 	format.masterClockHz = (CLOCK_GetFreq(kCLOCK_AudioPllClk) / (SaiDivVal + 1U));
 #endif
-	//mimic_printf("[%s (%d)] format.masterClockHz = %lu\r\n", __FUNCTION__, __LINE__, format.masterClockHz);
+	//mimic_printf("[%s (%d)] format.masterClockHz = %lu\r\n", __func__, __LINE__, format.masterClockHz);
 
 	format.protocol = config.protocol;
 	format.stereo = kSAI_Stereo;
@@ -458,13 +458,13 @@ _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t
 	sts = CODEC_Init(&s_HndCodec[enSAI], &boardCodecConfig);
 	if (kStatus_Success != sts)
 	{
-		mimic_printf("[%s (%d)] CODEC_Init NG : %d\r\n", __FUNCTION__, __LINE__, sts);
+		mimic_printf("[%s (%d)] CODEC_Init NG : %d\r\n", __func__, __LINE__, sts);
 		return false;
 	}
 	sts = CODEC_Deinit(&s_HndCodec[enSAI]);
 	if (kStatus_Success != sts)
 	{
-		mimic_printf("[%s (%d)] CODEC_Init NG : %d\r\n", __FUNCTION__, __LINE__, sts);
+		mimic_printf("[%s (%d)] CODEC_Init NG : %d\r\n", __func__, __LINE__, sts);
 		return false;
 	}
 
@@ -472,13 +472,13 @@ _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t
 	sts = CODEC_Init(&s_HndCodec[enSAI], &boardCodecConfig);
 	if (kStatus_Success != sts)
 	{
-		mimic_printf("[%s (%d)] CODEC_Init NG : %d\r\n", __FUNCTION__, __LINE__, sts);
+		mimic_printf("[%s (%d)] CODEC_Init NG : %d\r\n", __func__, __LINE__, sts);
 		return false;
 	}
 	sts = CODEC_SetFormat(&s_HndCodec[enSAI], format.masterClockHz, format.sampleRate_Hz, format.bitWidth);
 	if (kStatus_Success != sts)
 	{
-		mimic_printf("[%s (%d)] CODEC_SetFormat NG : %d\r\n", __FUNCTION__, __LINE__, sts);
+		mimic_printf("[%s (%d)] CODEC_SetFormat NG : %d\r\n", __func__, __LINE__, sts);
 		return false;
 	}
 
@@ -572,10 +572,10 @@ void DrvSAIRxEDMABufferRestart(enSAI_t enSAI)
 	{
 		return;
 	}
-	//mimic_printf("[%s (%d)] ENTER\r\n", __FUNCTION__, __LINE__);
+	//mimic_printf("[%s (%d)] ENTER\r\n", __func__, __LINE__);
 
 	SAI_TransferTerminateReceiveEDMA(base[enSAI], s_phndSaiDmaRx[enSAI]);
-	//mimic_printf("[%s (%d)] s_phndSaiDmaRx[enSAI]->state = %d\r\n", __FUNCTION__, __LINE__, s_phndSaiDmaRx[enSAI]->state);
+	//mimic_printf("[%s (%d)] s_phndSaiDmaRx[enSAI]->state = %d\r\n", __func__, __LINE__, s_phndSaiDmaRx[enSAI]->state);
 	s_u32ReadIndex[enSAI] = 0;
 	s_u32FullBlock[enSAI] = 0;
 	for (uint32_t i = 0; i < kAudioRxBufferNum; i++)
@@ -585,11 +585,11 @@ void DrvSAIRxEDMABufferRestart(enSAI_t enSAI)
 		stxfer.data = &s_RxAudioBuff[enSAI][i * s_u32EDMARxBufSize[enSAI]];
 		if (kStatus_Success != SAI_TransferReceiveEDMA(base[enSAI], s_phndSaiDmaRx[enSAI], &stxfer))
 		{
-			mimic_printf("[%s (%d)] TP\r\n", __FUNCTION__, __LINE__);
+			mimic_printf("[%s (%d)] TP\r\n", __func__, __LINE__);
 		}
 	}
-	//mimic_printf("[%s (%d)] s_phndSaiDmaRx[enSAI]->state = %d\r\n", __FUNCTION__, __LINE__, s_phndSaiDmaRx[enSAI]->state);
-	//mimic_printf("[%s (%d)] EXIT\r\n", __FUNCTION__, __LINE__);
+	//mimic_printf("[%s (%d)] s_phndSaiDmaRx[enSAI]->state = %d\r\n", __func__, __LINE__, s_phndSaiDmaRx[enSAI]->state);
+	//mimic_printf("[%s (%d)] EXIT\r\n", __func__, __LINE__);
 }
 _Bool DrvSAIIsTxBufferEmpty(enSAI_t enSAI)
 {
@@ -716,7 +716,7 @@ _Bool DrvSAITx(enSAI_t enSAI, const uint8_t pu8[], uint32_t u32ByteCnt)
 				uint32_t u32EDMAError = EDMA_GetErrorStatusFlags(DMA0);
 				if ((kEDMA_ValidFlag & u32EDMAError) != 0)
 				{
-					mimic_printf("[%s (%d)] u32EDMAError = 0x%08lX\r\n", __FUNCTION__, __LINE__, u32EDMAError);
+					mimic_printf("[%s (%d)] u32EDMAError = 0x%08lX\r\n", __func__, __LINE__, u32EDMAError);
 				}
 			}
 		}
@@ -727,10 +727,10 @@ _Bool DrvSAITx(enSAI_t enSAI, const uint8_t pu8[], uint32_t u32ByteCnt)
 			uxBits = osEventFlagsWait(g_efSAITx[enSAI], 3, osFlagsWaitAny, 5000);
 			if (uxBits != 1)
 			{
-				mimic_printf("[%s (%d)] uxBits = 0x%08lX\r\n", __FUNCTION__, __LINE__, uxBits);
+				mimic_printf("[%s (%d)] uxBits = 0x%08lX\r\n", __func__, __LINE__, uxBits);
 				if ((uxBits & 0x80000000u) != 0)
 				{
-					mimic_printf("[%s (%d)] osEventFlagsWait NG(u32RemainSize = %lu)\r\n", __FUNCTION__, __LINE__, u32RemainSize);
+					mimic_printf("[%s (%d)] osEventFlagsWait NG(u32RemainSize = %lu)\r\n", __func__, __LINE__, u32RemainSize);
 				}
 				else
 				{
@@ -745,7 +745,7 @@ _Bool DrvSAITx(enSAI_t enSAI, const uint8_t pu8[], uint32_t u32ByteCnt)
 		}
 	}
 
-	//mimic_printf("[%s (%d)] TxDone : %lu bytes\r\n", __FUNCTION__, __LINE__, u32ByteCnt);
+	//mimic_printf("[%s (%d)] TxDone : %lu bytes\r\n", __func__, __LINE__, u32ByteCnt);
 	return true;
 }
 
@@ -760,7 +760,7 @@ _Bool DrvSAIRx(enSAI_t enSAI, uint8_t pu8[], uint32_t *pu32RxCnt)
 		uint32_t u32EDMAError = EDMA_GetErrorStatusFlags(DMA0);
 		if ((kEDMA_ValidFlag & u32EDMAError) != 0)
 		{
-			mimic_printf("[%s (%d)] EDMA_GetErrorStatusFlags = 0x%08lX\r\n", __FUNCTION__, __LINE__, u32EDMAError);
+			mimic_printf("[%s (%d)] EDMA_GetErrorStatusFlags = 0x%08lX\r\n", __func__, __LINE__, u32EDMAError);
 		}
 
 		if (s_u32FullBlock[enSAI] > 0)
@@ -803,7 +803,7 @@ _Bool DrvSAIRx(enSAI_t enSAI, uint8_t pu8[], uint32_t *pu32RxCnt)
 				sts = SAI_TransferReceiveEDMA(base[enSAI], s_phndSaiDmaRx[enSAI], &stxfer);
 				if (kStatus_Success != sts)
 				{
-					mimic_printf("[%s (%d)] SAI_TransferReceiveEDMA NG(%d)\r\n", __FUNCTION__, __LINE__, sts);
+					mimic_printf("[%s (%d)] SAI_TransferReceiveEDMA NG(%d)\r\n", __func__, __LINE__, sts);
 					return false;
 				}
 			}
@@ -820,25 +820,25 @@ _Bool DrvSAIRx(enSAI_t enSAI, uint8_t pu8[], uint32_t *pu32RxCnt)
 				if ((uxBits & 0x80000000u) != 0)
 				{
 					size_t u32ReadCnt = 0;
-					mimic_printf("[%s (%d)] s_phndSaiDmaRx[enSAI]->state = %d\r\n", __FUNCTION__, __LINE__, s_phndSaiDmaRx[enSAI]->state);
+					mimic_printf("[%s (%d)] s_phndSaiDmaRx[enSAI]->state = %d\r\n", __func__, __LINE__, s_phndSaiDmaRx[enSAI]->state);
 					if (kStatus_Success == SAI_TransferGetReceiveCountEDMA(base[enSAI], s_phndSaiDmaRx[enSAI], &u32ReadCnt))
 					{
-						mimic_printf("[%s (%d)] u32ReadCnt = %d\r\n", __FUNCTION__, __LINE__, u32ReadCnt);
+						mimic_printf("[%s (%d)] u32ReadCnt = %d\r\n", __func__, __LINE__, u32ReadCnt);
 					}
 					*pu32RxCnt = u32ReadCnt;
-					mimic_printf("[%s (%d)] osEventFlagsWait NG\r\n", __FUNCTION__, __LINE__);
-					mimic_printf("[%s (%d)] EDMA_GetErrorStatusFlags   = 0x%08lX\r\n", __FUNCTION__, __LINE__, EDMA_GetChannelStatusFlags(DMA0, kDmaRxChannel[enSAI]));
-					mimic_printf("[%s (%d)] EDMA_GetChannelStatusFlags = 0x%08lX\r\n", __FUNCTION__, __LINE__, EDMA_GetErrorStatusFlags(DMA0));
-					mimic_printf("[%s (%d)] TCD[%lu] CSR = 0x%08lX\r\n", __FUNCTION__, __LINE__, kDmaRxChannel[enSAI], s_phndSaiDmaRx[enSAI]->dmaHandle->base->TCD[kDmaRxChannel[enSAI]].CSR);
-					mimic_printf("[%s (%d)] EEI = 0x%08lX\r\n", __FUNCTION__, __LINE__, s_phndSaiDmaRx[enSAI]->dmaHandle->base->EEI);
-					mimic_printf("[%s (%d)] INT = 0x%08lX\r\n", __FUNCTION__, __LINE__, s_phndSaiDmaRx[enSAI]->dmaHandle->base->INT);
-					mimic_printf("[%s (%d)] CR  = 0x%08lX\r\n", __FUNCTION__, __LINE__, s_phndSaiDmaRx[enSAI]->dmaHandle->base->CR);
-					mimic_printf("[%s (%d)] ERQ = 0x%08lX\r\n", __FUNCTION__, __LINE__, s_phndSaiDmaRx[enSAI]->dmaHandle->base->ERQ);
+					mimic_printf("[%s (%d)] osEventFlagsWait NG\r\n", __func__, __LINE__);
+					mimic_printf("[%s (%d)] EDMA_GetErrorStatusFlags   = 0x%08lX\r\n", __func__, __LINE__, EDMA_GetChannelStatusFlags(DMA0, kDmaRxChannel[enSAI]));
+					mimic_printf("[%s (%d)] EDMA_GetChannelStatusFlags = 0x%08lX\r\n", __func__, __LINE__, EDMA_GetErrorStatusFlags(DMA0));
+					mimic_printf("[%s (%d)] TCD[%lu] CSR = 0x%08lX\r\n", __func__, __LINE__, kDmaRxChannel[enSAI], s_phndSaiDmaRx[enSAI]->dmaHandle->base->TCD[kDmaRxChannel[enSAI]].CSR);
+					mimic_printf("[%s (%d)] EEI = 0x%08lX\r\n", __func__, __LINE__, s_phndSaiDmaRx[enSAI]->dmaHandle->base->EEI);
+					mimic_printf("[%s (%d)] INT = 0x%08lX\r\n", __func__, __LINE__, s_phndSaiDmaRx[enSAI]->dmaHandle->base->INT);
+					mimic_printf("[%s (%d)] CR  = 0x%08lX\r\n", __func__, __LINE__, s_phndSaiDmaRx[enSAI]->dmaHandle->base->CR);
+					mimic_printf("[%s (%d)] ERQ = 0x%08lX\r\n", __func__, __LINE__, s_phndSaiDmaRx[enSAI]->dmaHandle->base->ERQ);
 				}
 				else
 				{
 					/** EDMAが停止 */
-					mimic_printf("[%s (%d)] Immidiate Stop !!\r\n", __FUNCTION__, __LINE__);
+					mimic_printf("[%s (%d)] Immidiate Stop !!\r\n", __func__, __LINE__);
 					uint32_t index = s_u32ReadIndex[enSAI] * s_u32EDMARxBufSize[enSAI];
 					size_t u32ReadCnt;
 					s_u32ReadIndex[enSAI] = 0;
@@ -924,7 +924,7 @@ _Bool DrvSAIWriteVolume(enSAI_t enSAI, uint16_t u16Vol)
 	{
 		if (u16Vol != WM8960_GetVolume(&s_HndCodec[enSAI], kWM8960_ModuleHP))
 		{
-			mimic_printf("[%s (%d)] Verify NG (u16Vol = %lu) \r\n", __FUNCTION__, __LINE__, u16Vol);
+			mimic_printf("[%s (%d)] Verify NG (u16Vol = %lu) \r\n", __func__, __LINE__, u16Vol);
 			return false;
 		}
 
@@ -932,7 +932,7 @@ _Bool DrvSAIWriteVolume(enSAI_t enSAI, uint16_t u16Vol)
 	}
 	else
 	{
-		mimic_printf("[%s (%d)] WM8960_SetVolume NG\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] WM8960_SetVolume NG\r\n", __func__, __LINE__);
 		return false;
 	}
 }

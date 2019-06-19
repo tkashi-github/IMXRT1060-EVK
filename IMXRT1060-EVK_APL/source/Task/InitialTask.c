@@ -61,7 +61,7 @@ void InitialTask(void const *argument)
 	g_bInitEnd = true;
 	SPIFlashInit();
 	PostMsgLanTaskRestart();
-	mimic_printf("[%s (%d)] All Task Started! (%lu msec)\r\n", __FUNCTION__, __LINE__, xTaskGetTickCount());
+	mimic_printf("[%s (%d)] All Task Started! (%lu msec)\r\n", __func__, __LINE__, xTaskGetTickCount());
 	osEventFlagsWait(g_efFSReady, 1, osFlagsWaitAny, portMAX_DELAY);   // Wait a maximum 
 	if(CheckBinFile("IMXRT1060-EVK_APL_crc16.bin") != false){
 		f_unlink("IMXRT1060-EVK_APL_crc16_end.bin");
@@ -69,7 +69,7 @@ void InitialTask(void const *argument)
 		mimic_printf("Call SYSTEM RESET\r\n");
 		reboot();
 	}
-	mimic_printf("[%s (%d)] Storage Init Complete (%lu msec)\r\n", __FUNCTION__, __LINE__, xTaskGetTickCount());
+	mimic_printf("[%s (%d)] Storage Init Complete (%lu msec)\r\n", __func__, __LINE__, xTaskGetTickCount());
 	osThreadSuspend(osThreadGetId());
 }
 

@@ -161,7 +161,7 @@ DefALLOCATE_ITCM static _Bool StorageInit(enSD_t enSlotNo, sd_card_t *card)
 	}
 	else
 	{
-		mimic_printf("[%s (%d)] SD_CardInit NG <%d> (Slot = %d)!\r\n", __FUNCTION__, __LINE__, sts, enSlotNo + 1);
+		mimic_printf("[%s (%d)] SD_CardInit NG <%d> (Slot = %d)!\r\n", __func__, __LINE__, sts, enSlotNo + 1);
 	}
 	return bret;
 }
@@ -176,7 +176,7 @@ DefALLOCATE_ITCM static void StorageDeinit(enSD_t enSlotNo, sd_card_t *card)
 	/** begin */
 	SD_PowerOffCard(card->host.base, card->usrParam.pwr);
 	SD_HostDeinit(card);
-	mimic_printf("[%s (%d)] StorageDeinit OK (Slot = %d)!\r\n", __FUNCTION__, __LINE__, enSlotNo + 1);
+	mimic_printf("[%s (%d)] StorageDeinit OK (Slot = %d)!\r\n", __func__, __LINE__, enSlotNo + 1);
 }
 
 static FATFS s_stFS[enNumOfSD]; /* File system object */
@@ -256,7 +256,7 @@ DefALLOCATE_ITCM static void StorageTaskActual(enSD_t enSlotNo)
 			}
 			break;
 		default:
-			mimic_printf("[%s (%d)] Unkown Msg (Slot = %d)!\r\n", __FUNCTION__, __LINE__, enSlotNo + 1);
+			mimic_printf("[%s (%d)] Unkown Msg (Slot = %d)!\r\n", __func__, __LINE__, enSlotNo + 1);
 			break;
 		}
 
@@ -284,7 +284,7 @@ DefALLOCATE_ITCM void StorageTask(void const *argument)
 	}
 
 	enIRQn = USDHC1_IRQn + enSlotNo;
-	mimic_printf("[%s (%d)] Start  (Slot = %d)!", __FUNCTION__, __LINE__, enSlotNo + 1);
+	mimic_printf("[%s (%d)] Start  (Slot = %d)!", __func__, __LINE__, enSlotNo + 1);
 
 	s_stSD[enSlotNo].host.base = BOARD_SD_HOST_BASEADDR;
 	s_stSD[enSlotNo].host.sourceClock_Hz = BOARD_SD_HOST_CLK_FREQ;

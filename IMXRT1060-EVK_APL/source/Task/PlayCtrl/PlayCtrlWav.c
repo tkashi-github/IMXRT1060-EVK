@@ -29,7 +29,7 @@
  * - 2019/06/13: Takashi Kashiwagi: v0.1 for IMXRT1060-EVK
  */
 #include "PlayCtrl/PlayCtrlWav.h"
-#include "mimiclib/mimiclibh"
+#include "mimiclib/mimiclib.h"
 
 static uint32_t s_u32RemainSize = 0;
 static FIL s_filPlayWav;
@@ -52,7 +52,7 @@ DefALLOCATE_ITCM uint8_t *OpenWavFile(const TCHAR szFilePath[], stCodecCondition
 	s_u32RemainSize = 0;
 	if (WAVFileReadFormatChunk(szFilePath, &stFormat) == false)
 	{
-		mimic_printf("[%s (%d)] WAVFileReadFormatChunk NG\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] WAVFileReadFormatChunk NG\r\n", __func__, __LINE__);
 		return NULL;
 	}
 	sizeofpcm = stFormat.wBitsPerSample / 8;
@@ -95,12 +95,12 @@ DefALLOCATE_ITCM uint8_t *OpenWavFile(const TCHAR szFilePath[], stCodecCondition
 DefALLOCATE_ITCM uint32_t ReadWavFile(uint8_t pu8PCMBuffer[], uint32_t u32PCMBufferSize)
 {
 	uint32_t u32ReadByte;
-	//mimic_printf("[%s (%d)] ENTER\r\n", __FUNCTION__, __LINE__);
+	//mimic_printf("[%s (%d)] ENTER\r\n", __func__, __LINE__);
 	memset(pu8PCMBuffer, 0, u32PCMBufferSize);
 
 	/** WAVファイルからPCMの読み出し */
 	u32ReadByte = WAVFileReadPCMData(&s_filPlayWav, pu8PCMBuffer, u32PCMBufferSize, &s_u32RemainSize);
-	//mimic_printf("[%s (%d)] AudioData = %lu bytes\r\n", __FUNCTION__, __LINE__, u32ReadByte);
+	//mimic_printf("[%s (%d)] AudioData = %lu bytes\r\n", __func__, __LINE__, u32ReadByte);
 	return u32ReadByte;
 }
 
@@ -126,12 +126,12 @@ DefALLOCATE_ITCM _Bool OpenRecWavFile(const TCHAR szFilePath[], const stCodecCon
 
 	if (FR_OK != f_open(&s_filRecWav, szFilePath, FA_CREATE_ALWAYS | FA_WRITE))
 	{
-		mimic_printf("[%s (%d)] pvPortMalloc NG\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] pvPortMalloc NG\r\n", __func__, __LINE__);
 		return false;
 	}
 	if (WAVCreateHeader(&s_filRecWav, (uint32_t)pst->enSample, (uint32_t)pst->nChannels, (uint32_t)pst->enBitsWidth) == false)
 	{
-		mimic_printf("[%s (%d)] WAVCreateHeader NG\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] WAVCreateHeader NG\r\n", __func__, __LINE__);
 		f_close(&s_filRecWav);
 		return false;
 	}

@@ -53,7 +53,7 @@ DefALLOCATE_ITCM static inline void TouchScreenTaskActual(void)
 	uint8_t msg_prio; /* Message priority is ignored */
 
 	static uint32_t s_u32LastX = 0;
-	;
+	
 	static uint32_t s_u32LastY = 0;
 
 	if (osOK == osMessageQueueGet(g_mqTouchScreenTask, &stTaskMsg, &msg_prio, portMAX_DELAY))
@@ -94,7 +94,7 @@ DefALLOCATE_ITCM static inline void TouchScreenTaskActual(void)
 			}
 			break;
 		default:
-			mimic_printf("[%s (%d)] Unkown Msg\r\n", __FUNCTION__, __LINE__);
+			mimic_printf("[%s (%d)] Unkown Msg\r\n", __func__, __LINE__);
 			break;
 		}
 
@@ -130,11 +130,11 @@ DefALLOCATE_ITCM void TouchScreenTask(void const *argument)
 
 	if (kStatus_Success == FT5406_RT_Init(&s_hndFT5406, LPI2C1))
 	{
-		mimic_printf("[%s (%d)] FT5406_RT_Init OK\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] FT5406_RT_Init OK\r\n", __func__, __LINE__);
 	}
 	else
 	{
-		mimic_printf("[%s (%d)] FT5406_RT_Init NG\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] FT5406_RT_Init NG\r\n", __func__, __LINE__);
 	}
 
 	{
@@ -144,11 +144,11 @@ DefALLOCATE_ITCM void TouchScreenTask(void const *argument)
 		touch_event_t touch_event;
 		if (kStatus_Success == FT5406_RT_GetSingleTouch(&s_hndFT5406, &touch_event, (int *)&u32PosX, (int *)&u32PosY))
 		{
-			mimic_printf("[%s (%d)] FT5406_RT_GetSingleTouch OK\r\n", __FUNCTION__, __LINE__);
+			mimic_printf("[%s (%d)] FT5406_RT_GetSingleTouch OK\r\n", __func__, __LINE__);
 		}
 		else
 		{
-			mimic_printf("[%s (%d)] FT5406_RT_GetSingleTouch NG\r\n", __FUNCTION__, __LINE__);
+			mimic_printf("[%s (%d)] FT5406_RT_GetSingleTouch NG\r\n", __func__, __LINE__);
 		}
 	}
 	for (;;)
@@ -184,7 +184,7 @@ void CmdCTPTest(uint32_t argc, const char *argv[])
 		touch_event_t touch_event;
 		if (kStatus_Success == FT5406_RT_GetSingleTouch(&s_hndFT5406, &touch_event, (int *)&u32PosX, (int *)&u32PosY))
 		{
-			mimic_printf("\r[%s (%d)] X=%3u, Y=%3d, INT:0x%08lX", __FUNCTION__, __LINE__, u32PosX, u32PosY, GPIO_PinRead(GPIO1, DefCTP_INT_PIN));
+			mimic_printf("\r[%s (%d)] X=%3u, Y=%3d, INT:0x%08lX", __func__, __LINE__, u32PosX, u32PosY, GPIO_PinRead(GPIO1, DefCTP_INT_PIN));
 		}
 		else
 		{

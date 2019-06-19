@@ -74,7 +74,7 @@ void BOARD_LPI2C_Init(LPI2C_Type *base, uint32_t clkSrc_Hz)
 		u32DeviceNo = 4;
 		break;
 	default:
-		mimic_printf("[%s (%d)] TP\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] TP\r\n", __func__, __LINE__);
 		return;
 	}
 
@@ -153,7 +153,7 @@ status_t BOARD_LPI2C_Send(LPI2C_Type *base,
 		u32DeviceNo = 4;
 		break;
 	default:
-		mimic_printf("[%s (%d)] TP\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] TP\r\n", __func__, __LINE__);
 		return kStatus_InvalidArgument;
 	}
 
@@ -168,7 +168,7 @@ status_t BOARD_LPI2C_Send(LPI2C_Type *base,
 
 	reVal = LPI2C_RTOS_Transfer(&g_hndI2CRTOS[u32DeviceNo], &stTransfer);
 	if(reVal != kStatus_Success){
-		mimic_printf("[%s (%d)] LPI2C_RTOS_Transfer NG (reVal = %d)\r\n", __FUNCTION__, __LINE__, reVal);
+		mimic_printf("[%s (%d)] LPI2C_RTOS_Transfer NG (reVal = %d)\r\n", __func__, __LINE__, reVal);
 	}
 #endif
     return reVal;
@@ -234,7 +234,7 @@ status_t BOARD_LPI2C_Receive(LPI2C_Type *base,
 		u32DeviceNo = 4;
 		break;
 	default:
-		mimic_printf("[%s (%d)] TP\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] TP\r\n", __func__, __LINE__);
 		return kStatus_InvalidArgument;
 	}
 	
@@ -249,7 +249,7 @@ status_t BOARD_LPI2C_Receive(LPI2C_Type *base,
 
 	reVal = LPI2C_RTOS_Transfer(&g_hndI2CRTOS[u32DeviceNo], &stTransfer);
 	if(reVal != kStatus_Success){
-		//mimic_printf("[%s (%d)] LPI2C_RTOS_Transfer NG (reVal = %d)\r\n", __FUNCTION__, __LINE__, reVal);
+		//mimic_printf("[%s (%d)] LPI2C_RTOS_Transfer NG (reVal = %d)\r\n", __func__, __LINE__, reVal);
 	}
 #endif
 	return reVal;

@@ -54,7 +54,7 @@ static void SensorTaskReadDataFromDevice(int16_t pi16Accel[], int16_t pi16Mag[])
 			osSemaphoreRelease(g_bsIdComboSensor);
 		}
 	}else{
-		mimic_printf("[%s (%d)] FXOS8700ReadData NG\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] FXOS8700ReadData NG\r\n", __func__, __LINE__);
 	}
 }
 /**
@@ -67,7 +67,7 @@ DefALLOCATE_ITCM void SensorTask(void const *argument)
 	TickType_t tick;
 	uint8_t u8sts;
 	if(kStatus_Success != FXOS8700Init()){
-		mimic_printf("[%s (%d)] FXOS8700Init NG\r\n", __FUNCTION__, __LINE__);
+		mimic_printf("[%s (%d)] FXOS8700Init NG\r\n", __func__, __LINE__);
 	}
 	tick = xTaskGetTickCount();
 	for (;;)
@@ -77,7 +77,7 @@ DefALLOCATE_ITCM void SensorTask(void const *argument)
 				SensorTaskReadDataFromDevice(s_ai16Accel, s_ai16Mag);
 			}
 		}else{
-			mimic_printf("[%s (%d)] FXOS8700ReadStatus NG\r\n", __FUNCTION__, __LINE__);
+			mimic_printf("[%s (%d)] FXOS8700ReadStatus NG\r\n", __func__, __LINE__);
 		}
 		vTaskDelayUntil((TickType_t *const) & tick, 100);
 	}

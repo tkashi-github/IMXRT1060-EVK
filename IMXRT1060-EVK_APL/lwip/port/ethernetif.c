@@ -617,7 +617,7 @@ static err_t enet_send_frame(struct ethernetif *ethernetif, unsigned char *data,
         do
         {
             result = ENET_SendFrame(ethernetif->base, &ethernetif->handle, data, length);
-			//mimic_printf("[%s (%d)] result = %ld\r\n", __FUNCTION__, __LINE__, result);
+			//mimic_printf("[%s (%d)] result = %ld\r\n", __func__, __LINE__, result);
             if (result == kStatus_ENET_TxFrameBusy)
             {
                 xEventGroupWaitBits(ethernetif->enetTransmitAccessEvent, ethernetif->txFlag, pdTRUE, (BaseType_t) false,
@@ -626,7 +626,7 @@ static err_t enet_send_frame(struct ethernetif *ethernetif, unsigned char *data,
 
         } while (result == kStatus_ENET_TxFrameBusy);
 
-		//mimic_printf("[%s (%d)] EXIT\r\n", __FUNCTION__, __LINE__);
+		//mimic_printf("[%s (%d)] EXIT\r\n", __func__, __LINE__);
         return ERR_OK;
     }
 #elif defined(FSL_FEATURE_SOC_ENET_COUNT) && (FSL_FEATURE_SOC_ENET_COUNT > 0)

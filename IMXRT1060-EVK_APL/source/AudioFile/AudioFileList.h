@@ -1,5 +1,5 @@
 /**
- * @file		PlayCtrl.h
+ * @file		AudioFileList.h
  * @brief		TOOD
  * @date		2019/06/13
  * @version     0.1
@@ -31,7 +31,7 @@
  */
 #ifndef __cplusplus
 #if __STDC_VERSION__ < 201112L
-#error /** Only C11 */
+#error /* Only C11 */
 #endif
 #endif
 #pragma once
@@ -40,41 +40,24 @@ extern "C"
 {
 #endif
 
-/** User Typedefine */
+/* User Typedefine */
 #include "UserTypedef.h"
-#include "AudioFile/wav/wav.h"
 
-	typedef enum
-	{
-		enPlayCtrlPlayAreaDir = 0,
-		enPlayCtrlPlayAreaALL,
-		enPlayCtrlPlayAreaMAX,
-	} enPlayCtrlPlayArea_t;
 
-	typedef enum
-	{
-		enPlayCtrlRepeatOff = 0,
-		enPlayCtrlRepeatOne,
-		enPlayCtrlRepeatALL,
-		enPlayCtrlRepeatMAX,
-	} enPlayCtrlRepeat_t;
+extern uint32_t MakeAudioFileListALL(void);
+extern uint32_t MakeAudioFileListCurrentDir(void);
+extern uint32_t GetAudioFileNumALL(void);
+extern uint32_t GetAudioFileNumCurrentDir(void);
 
-	extern void PlayCtrl(void const *argument);
-	extern _Bool PostMsgPlayCtrlStart(uint32_t u32TrackNo);
-	extern _Bool PostSyncMsgPlayCtrlStop(void);
-	extern _Bool PostMsgPlayCtrlRec(void);
-	extern void PostSyncMsgPlayCtrlPlayNext(void);
-	extern void PostSyncMsgPlayCtrlPlayPrev(void);
+extern _Bool GetAudioFilePathALL(uint32_t u32TrackNo, TCHAR szFilePath[]); 
+extern _Bool GetAudioFilePathCurrentDir(uint32_t u32TrackNo, TCHAR szFilePath[]);
+extern void DumpAudioFileListALL(void);
+extern void DumpAudioFileListCurrentDir(void);
+extern void CmdMakeAudioFileList(uint32_t argc, const char *argv[]);
 
-	extern _Bool PlayCtrlSoundDeviceStop(void);
-	extern _Bool PlayCtrlSetRepeat(enPlayCtrlRepeat_t enRepeat);
-	extern _Bool PlayCtrlSetPlayArea(enPlayCtrlPlayArea_t enPlayArea);
 
-	extern void CmdRepeat(uint32_t argc, const char *argv[]);
-	extern void CmdMode(uint32_t argc, const char *argv[]);
-	extern void CmdPlay(uint32_t argc, const char *argv[]);
-	extern void CmdStop(uint32_t argc, const char *argv[]);
-	extern void CmdRec(uint32_t argc, const char *argv[]);
+enAudioFileType_t GetAudioFileType(const TCHAR szFileName[]);
+
 #ifdef __cplusplus
 }
 #endif

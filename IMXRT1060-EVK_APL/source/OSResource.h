@@ -89,7 +89,7 @@ extern osSemaphoreId_t g_bsIdMousePosition;
 extern osMessageQueueId_t g_mqLcdTask;
 extern osMessageQueueId_t g_mqTouchScreenTask;
 extern osMessageQueueId_t g_mqPlayCtrlTask;
-extern osMessageQueueId_t g_mqSoundTask;
+extern osMessageQueueId_t g_mqSoundTask[enNumOfSoundTask];
 
 /** Stream Buffer */
 extern StreamBufferHandle_t g_sbhLPUARTTx[1+enLPUART_MAX];

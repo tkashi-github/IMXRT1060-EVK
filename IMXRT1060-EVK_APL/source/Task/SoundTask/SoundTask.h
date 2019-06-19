@@ -1,4 +1,5 @@
 /**
+ * @file		SoundTask.h
  * @brief		Sound Device Control Task
  * @author		Takashi Kashiwagi
  * @date		2019/06/13
@@ -31,7 +32,7 @@
  */
 #ifndef __cplusplus
 #if __STDC_VERSION__ < 201112L
-#error /** Only C11 */
+#error /* Only C11 */
 #endif
 #endif
 #pragma once
@@ -47,24 +48,24 @@ extern "C"
 void SoundTask(void const *argument);
 
 
-extern sai_sample_rate_t SoundTaskGetCurrentSampleRate(enSAI_t enSAI);
-extern sai_word_width_t SoundTaskGetCurrentWordWidth(enSAI_t enSAI);
-extern uint32_t SoundTaskGetCurrentVolume(enSAI_t enSAI);
-extern _Bool SoundTaskSetCurrentVolume(enSAI_t enSAI, uint32_t u32Vol);
+extern sai_sample_rate_t SoundTaskGetCurrentSampleRate(enSoundTask_t enSoundTaskNo);
+extern sai_word_width_t SoundTaskGetCurrentWordWidth(enSoundTask_t enSoundTaskNo);
+extern uint32_t SoundTaskGetCurrentVolume(enSoundTask_t enSoundTaskNo);
+extern _Bool SoundTaskSetCurrentVolume(enSoundTask_t enSoundTaskNo, uint32_t u32Vol);
 
-extern uint32_t SoundTaskReadCurrentVolume(enSAI_t enSAI);
-extern _Bool SoundTaskWriteCurrentVolume(enSAI_t enSAI, uint32_t u32Vol);
+extern uint32_t SoundTaskReadCurrentVolume(enSoundTask_t enSoundTaskNo);
+extern _Bool SoundTaskWriteCurrentVolume(enSoundTask_t enSoundTaskNo, uint32_t u32Vol);
 
 
-extern _Bool SoundTaskDeviceStop(enSAI_t enSAI);
-extern _Bool SoundTaskRxDMARestart(enSAI_t enSAI);
+extern _Bool SoundTaskDeviceStop(enSoundTask_t enSoundTaskNo);
+extern _Bool SoundTaskRxDMARestart(enSoundTask_t enSoundTaskNo);
 
-extern _Bool PostSyncMsgSoundTaskDeviceInit(enSAI_t enSAI, sai_sample_rate_t enSample, sai_word_width_t enWidth, _Bool bRec);
-extern _Bool PostMsgSoundTaskDeviceStart(enSAI_t enSAI);
-extern _Bool PostMsgSoundTaskSendAudioData(enSAI_t enSAI,  uint8_t pu8[], uint32_t u32ByteCnt);
-extern _Bool PostMsgSoundTaskRcvAudioData(enSAI_t enSAI, uint8_t pu8[], uint32_t *pu32br);
+extern _Bool PostSyncMsgSoundTaskDeviceInit(enSoundTask_t enSoundTaskNo, sai_sample_rate_t enSample, sai_word_width_t enWidth, _Bool bRec);
+extern _Bool PostMsgSoundTaskDeviceStart(enSoundTask_t enSoundTaskNo);
+extern _Bool PostMsgSoundTaskSendAudioData(enSoundTask_t enSoundTaskNo,  uint8_t pu8[], uint32_t u32ByteCnt);
+extern _Bool PostMsgSoundTaskRcvAudioData(enSoundTask_t enSoundTaskNo, uint8_t pu8[], uint32_t *pu32br);
 
-extern _Bool PostMsgSoundTaskStop(enSAI_t enSAI, const char *pszStr, uint32_t u32Line);
+extern _Bool PostMsgSoundTaskStop(enSoundTask_t enSoundTaskNo, const char *pszStr, uint32_t u32Line);
 
 
 #ifdef __cplusplus

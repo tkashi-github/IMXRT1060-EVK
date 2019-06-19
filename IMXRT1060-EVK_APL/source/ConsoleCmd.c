@@ -115,14 +115,14 @@ static void CmdHelp(uint32_t argc, const char *argv[])
 	uint32_t u32 = 0u;
 
 	/*-- begin --*/
-	mimic_printf("\r\n[%s (%d)] HELP\r\n", __FUNCTION__, __LINE__);
+	mimic_printf("\r\n[%s (%d)] HELP\r\n", __func__, __LINE__);
 
 	while (g_stCmdTable[u32].m_pszCmd != NULL)
 	{
 		mimic_printf("%03lu : %-20s %-20s\r\n", u32, g_stCmdTable[u32].m_pszCmd, g_stCmdTable[u32].m_pszComments);
 		u32++;
 	}
-	mimic_printf("[%s (%d)] ----\r\n", __FUNCTION__, __LINE__);
+	mimic_printf("[%s (%d)] ----\r\n", __func__, __LINE__);
 	return;
 }
 

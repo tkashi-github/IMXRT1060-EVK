@@ -322,15 +322,16 @@ DefALLOCATE_BSS_DTCM alignas(32) osMessageQueueId_t g_mqPlayCtrlTask;
 DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_u8PlayCtrlTaskMsgQueue[sizeof(stTaskMsgBlock_t) * 32];
 DefALLOCATE_BSS_DTCM alignas(32) static StaticQueue_t g_sqPlayCtrlTask;
 
-DefALLOCATE_BSS_DTCM alignas(32) osMessageQueueId_t g_mqSoundTask;
-DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_u8SoundTaskMsgQueue[sizeof(stTaskMsgBlock_t) * 32];
-DefALLOCATE_BSS_DTCM alignas(32) static StaticQueue_t g_sqSoundTask;
+DefALLOCATE_BSS_DTCM alignas(32) osMessageQueueId_t g_mqSoundTask[enNumOfSoundTask];
+DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_u8SoundTaskMsgQueue[enNumOfSoundTask][sizeof(stTaskMsgBlock_t) * 32];
+DefALLOCATE_BSS_DTCM alignas(32) static StaticQueue_t g_sqSoundTask[enNumOfSoundTask];
 
 static stQueueTable_t s_stQueueTable[] = {
 	{&g_mqLcdTask, 32, sizeof(stTaskMsgBlock_t), {"MQLcdTask", 0, &g_sqLcdTask, sizeof(StaticQueue_t), s_u8LcdTskMsgQueue, sizeof(s_u8LcdTskMsgQueue)}},
 	{&g_mqTouchScreenTask, 32, sizeof(stTaskMsgBlock_t), {"MQTouchScreenTask", 0, &g_sqTouchScreenTask, sizeof(StaticQueue_t), s_u8TouchScreenTaskMsgQueue, sizeof(s_u8TouchScreenTaskMsgQueue)}},
 	{&g_mqPlayCtrlTask, 32, sizeof(stTaskMsgBlock_t), {"MQPlayCtrlTask", 0, &g_sqPlayCtrlTask, sizeof(StaticQueue_t), s_u8PlayCtrlTaskMsgQueue, sizeof(s_u8PlayCtrlTaskMsgQueue)}},
-	{&g_mqSoundTask, 32, sizeof(stTaskMsgBlock_t), {"MQSoundTask", 0, &g_sqSoundTask, sizeof(StaticQueue_t), s_u8SoundTaskMsgQueue, sizeof(s_u8SoundTaskMsgQueue)}},
+	{&g_mqSoundTask[enSoundTask1], 32, sizeof(stTaskMsgBlock_t), {"MQSoundTask1", 0, &g_sqSoundTask[enSoundTask1], sizeof(StaticQueue_t), s_u8SoundTaskMsgQueue[enSoundTask1], sizeof(stTaskMsgBlock_t) * 32}},
+	{&g_mqSoundTask[enSoundTask2], 32, sizeof(stTaskMsgBlock_t), {"MQSoundTask1", 0, &g_sqSoundTask[enSoundTask2], sizeof(StaticQueue_t), s_u8SoundTaskMsgQueue[enSoundTask2], sizeof(stTaskMsgBlock_t) * 32}},
 	{NULL, 0, 0, {0}},
 };
 
