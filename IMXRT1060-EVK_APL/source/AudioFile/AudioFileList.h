@@ -43,6 +43,9 @@ extern "C"
 /* User Typedefine */
 #include "UserTypedef.h"
 
+/** Audio File List */
+#define kAudioFileMax	(1000u)
+#define kFilePathLenMax	(256)
 
 extern uint32_t MakeAudioFileListALL(void);
 extern uint32_t MakeAudioFileListCurrentDir(void);

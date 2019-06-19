@@ -94,7 +94,7 @@ DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_LanTaskStack[8192/sizeof(uint
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_LcdTaskStack[8192/sizeof(uint32_t)];
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_TouchScreenTaskStack[8192/sizeof(uint32_t)];
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_TempMoniTaskStack[8192/sizeof(uint32_t)];
-DefALLOCATE_BSS_ITCM alignas(32) static uint32_t s_SoundTaskSTACK[8192/sizeof(uint32_t)];
+DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_SoundTaskSTACK[8192/sizeof(uint32_t)];
 DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_PlayCtrlSTACK[16384/sizeof(uint32_t)];
 
 /** Task Table */
@@ -199,6 +199,7 @@ DefALLOCATE_BSS_DTCM alignas(4) osEventFlagsId_t g_efFSReady;
 DefALLOCATE_BSS_DTCM alignas(4) osEventFlagsId_t g_efCameraSensor;
 DefALLOCATE_BSS_DTCM alignas(32) osEventFlagsId_t g_efSAITx[enNumOfSAI];
 DefALLOCATE_BSS_DTCM alignas(32) osEventFlagsId_t g_efSAIRx[enNumOfSAI];
+DefALLOCATE_BSS_DTCM alignas(32) osEventFlagsId_t g_efPlayCtrlEventGroup;
 DefALLOCATE_BSS_DTCM alignas(32) osEventFlagsId_t g_efSoundTaskEventGroup[enNumOfSoundTask];
 
 /** StaticEventGroup_t */
@@ -207,6 +208,7 @@ DefALLOCATE_BSS_DTCM alignas(4) static StaticEventGroup_t s_xFSReadyEventGroupBu
 DefALLOCATE_BSS_DTCM alignas(4) static StaticEventGroup_t s_xCameraSensorEventGroupBuffer;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticEventGroup_t s_segSAITxEventGroupBuffer[enNumOfSAI];
 DefALLOCATE_BSS_DTCM alignas(32) static StaticEventGroup_t s_segSAIRxEventGroupBuffer[enNumOfSAI];
+DefALLOCATE_BSS_DTCM alignas(32) static StaticEventGroup_t s_segPlayCtrlEventGroupBuffer;
 DefALLOCATE_BSS_DTCM alignas(32) static StaticEventGroup_t s_segSoundTaskEventGroupBuffer[enNumOfSoundTask];
 
 static stEventFlagTable_t s_stEventFlagTable[] = {
@@ -224,6 +226,8 @@ static stEventFlagTable_t s_stEventFlagTable[] = {
 
 	{&g_efSAIRx[enSAI1], {"EF_SAIRx1", 0, &s_segSAIRxEventGroupBuffer[enSAI1], sizeof(StaticEventGroup_t)}},
 	{&g_efSAIRx[enSAI2], {"EF_SAIRx2", 0, &s_segSAIRxEventGroupBuffer[enSAI2], sizeof(StaticEventGroup_t)}},
+
+	{&g_efPlayCtrlEventGroup, {"EF_PLAYCTRL", 0, &s_segPlayCtrlEventGroupBuffer, sizeof(StaticEventGroup_t)}},
 
 	{&g_efSoundTaskEventGroup[enSAI1], {"EF_SoundTask1", 0, &s_segSoundTaskEventGroupBuffer[enSoundTask1], sizeof(StaticEventGroup_t)}},
 	{&g_efSoundTaskEventGroup[enSAI2], {"EF_SoundTask2", 0, &s_segSoundTaskEventGroupBuffer[enSoundTask2], sizeof(StaticEventGroup_t)}},

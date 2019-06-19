@@ -398,7 +398,7 @@ _Bool WAVCreateHeader(FIL *pWav, uint32_t sampleRate, uint16_t numChannels, uint
 	stFmt.data.wFormatTag = 0x01u;
 	stFmt.data.nChannels = numChannels;
 	stFmt.data.nSamplesPerSec = sampleRate;
-	stFmt.data.nBlockAlign = (SHORT)(numChannels * (bitsPerSample >> 3));
+	stFmt.data.nBlockAlign = (uint16_t)(numChannels * (bitsPerSample >> 3));
 	stFmt.data.nAvgBytesPerSec = sampleRate * stFmt.data.nBlockAlign;
 	stFmt.data.wBitsPerSample = bitsPerSample;
 	if (FR_OK != f_write(pWav, (uint8_t *)&stFmt, sizeof(stFmt), (UINT *)&bw))

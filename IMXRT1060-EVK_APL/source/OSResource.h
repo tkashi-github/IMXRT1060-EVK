@@ -75,6 +75,7 @@ extern osEventFlagsId_t g_efFSReady;
 extern osEventFlagsId_t g_efCameraSensor;
 extern osEventFlagsId_t g_efSAITx[enNumOfSAI];
 extern osEventFlagsId_t g_efSAIRx[enNumOfSAI];
+extern osEventFlagsId_t g_efPlayCtrlEventGroup;
 extern osEventFlagsId_t g_efSoundTaskEventGroup[enNumOfSoundTask];
 
 /** Binary Semaphore */

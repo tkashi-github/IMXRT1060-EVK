@@ -344,7 +344,7 @@ DefALLOCATE_ITCM static void S2_E4(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 		switch (s_stRecCondition.enFileType)
 		{
 		case enAudioFileWAV:
-			sprintf(s_szCurrentFilePath, _T("T%03lu.wav"), GetAudioFileNumALL());
+			mimic_sprintf(s_szCurrentFilePath, sizeof(s_szCurrentFilePath), _T("T%03lu.wav"), GetAudioFileNumALL());
 			mimic_printf("RecFileName : <%s>\r\n", s_szCurrentFilePath);
 			break;
 		default:
@@ -508,7 +508,7 @@ DefALLOCATE_ITCM static uint8_t *OpenNextPlayFile(uint32_t u32NowTrackNo, TCHAR 
 	PostMsgSoundTaskDeviceStart(enSAI1);
 
 	mimic_printf("*** Now Play[%03d] :  <%s>\r\n\r\n", u32NowTrackNo, szCurrentFilePath);
-	SetPlayFileName(szCurrentFilePath);
+
 	return pu8PCMBuffer;
 }
 
@@ -565,7 +565,7 @@ DefALLOCATE_ITCM static _Bool GetNextTrackNo(uint32_t *pu32TrackNo)
 	}
 	else
 	{
-		/** enPlayCtrlRepeatOne */
+		/* enPlayCtrlRepeatOne */
 		return true;
 	}
 }
@@ -576,33 +576,40 @@ DefALLOCATE_ITCM static _Bool GetNextTrackNo(uint32_t *pu32TrackNo)
 /** Private PostMsg */
 DefALLOCATE_ITCM static _Bool PostMsgPlayCtrlPlaying(void)
 {
-	/** var */
+	/*-- var --*/
 	alignas(8) stTaskMsgBlock_t stTaskMsg = {0};
-
+	_Bool bret = false;
 	stTaskMsg.enMsgId = enPlaying;
 
-	if (sizeof(stTaskMsg) != xStreamBufferSend(g_sbhPlayCtrl, &stTaskMsg, sizeof(stTaskMsg), DefPostMsgTimeout_PrivateEvent))
+	if (osOK == osMessageQueuePut(g_mqPlayCtrlTask, &stTaskMsg, 0, DefPostMsgTimeout_PrivateEvent))
 	{
-		mimic_printf("[%s (%d)] xStreamBufferSend NG\r\n", __func__, __LINE__);
-		return false;
+		bret = true;
+	}
+	else
+	{
+		mimic_printf("[%s (%d)] osMessageQueuePut NG\r\n", __func__, __LINE__);
 	}
 
-	return true;
+	return bret;
 }
 DefALLOCATE_ITCM static _Bool PostMsgPlayCtrlRecording(void)
 {
-	/** var */
+	/*-- var --*/
 	alignas(8) stTaskMsgBlock_t stTaskMsg = {0};
+	_Bool bret = false;
 
 	stTaskMsg.enMsgId = enRecording;
 
-	if (sizeof(stTaskMsg) != xStreamBufferSend(g_sbhPlayCtrl, &stTaskMsg, sizeof(stTaskMsg), DefPostMsgTimeout_PrivateEvent))
+	if (osOK == osMessageQueuePut(g_mqPlayCtrlTask, &stTaskMsg, 0, DefPostMsgTimeout_PrivateEvent))
 	{
-		mimic_printf("[%s (%d)] xStreamBufferSend NG\r\n", __func__, __LINE__);
-		return false;
+		bret = true;
+	}
+	else
+	{
+		mimic_printf("[%s (%d)] osMessageQueuePut NG\r\n", __func__, __LINE__);
 	}
 
-	return true;
+	return bret;
 }
 
 /** Public PostMsg */
@@ -615,42 +622,53 @@ DefALLOCATE_ITCM static _Bool PostMsgPlayCtrlRecording(void)
  */
 DefALLOCATE_ITCM _Bool PostMsgPlayCtrlStart(uint32_t u32TrackNo)
 {
-	/** var */
+	/*-- var --*/
 	alignas(8) stTaskMsgBlock_t stTaskMsg = {0};
+	_Bool bret = false;
 
 	stTaskMsg.enMsgId = enPlayStart;
 	stTaskMsg.param[0] = u32TrackNo;
 
-	if (sizeof(stTaskMsg) != xStreamBufferSend(g_sbhPlayCtrl, &stTaskMsg, sizeof(stTaskMsg), 50))
+	if (osOK == osMessageQueuePut(g_mqPlayCtrlTask, &stTaskMsg, 0, 50))
 	{
-		mimic_printf("[%s (%d)] xStreamBufferSend NG\r\n", __func__, __LINE__);
-		return false;
+		bret = true;
 	}
-	return true;
+	else
+	{
+		mimic_printf("[%s (%d)] osMessageQueuePut NG\r\n", __func__, __LINE__);
+	}
+
+	return bret;
 }
 DefALLOCATE_ITCM _Bool PostSyncMsgPlayCtrlStop(void)
 {
-	/** var */
+	/*-- var --*/
 	alignas(8) stTaskMsgBlock_t stTaskMsg = {0};
-
+	_Bool bret = false;
 	PlayCtrlSoundDeviceStop();
 
 	stTaskMsg.enMsgId = enPlayStop;
-	stTaskMsg.SyncEGHandle = g_efMsgPlayCtrl;
+	stTaskMsg.SyncEGHandle = g_efPlayCtrlEventGroup;
 	stTaskMsg.wakeupbits = 1;
-	if (sizeof(stTaskMsg) != xStreamBufferSend(g_sbhPlayCtrl, &stTaskMsg, sizeof(stTaskMsg), 50))
+	if (osOK == osMessageQueuePut(g_mqPlayCtrlTask, &stTaskMsg, 0, 50))
 	{
-		mimic_printf("[%s (%d)] xStreamBufferSend NG\r\n", __func__, __LINE__);
-		return false;
+		uint32_t uxBits = osEventFlagsWait(g_efPlayCtrlEventGroup, 1, osFlagsWaitAny, 500);
+		if (uxBits == 1u)
+		{
+			bret = true;
+		}
+		else
+		{
+			mimic_printf("[%s (%d)] osEventFlagsWait NG\r\n", __func__, __LINE__);
+		}
 	}
-	/** Sync */
-	uint32_t uxBits = osEventFlagsWait(g_efMsgPlayCtrl, 1, osFlagsWaitAny, 500);
-	if (uxBits != 1u)
+	else
 	{
-		mimic_printf("[%s (%d)] osEventFlagsWait NG\r\n", __func__, __LINE__);
-		return false;
+		mimic_printf("[%s (%d)] osMessageQueuePut NG\r\n", __func__, __LINE__);
 	}
-	return true;
+	/* Sync */
+	
+	return bret;
 }
 
 /**
@@ -660,18 +678,22 @@ DefALLOCATE_ITCM _Bool PostSyncMsgPlayCtrlStop(void)
  */
 DefALLOCATE_ITCM _Bool PostMsgPlayCtrlRec(void)
 {
-	/** var */
+	/*-- var --*/
 	alignas(8) stTaskMsgBlock_t stTaskMsg = {0};
+	_Bool bret = false;
 
 	stTaskMsg.enMsgId = enRec;
 
-	if (sizeof(stTaskMsg) != xStreamBufferSend(g_sbhPlayCtrl, &stTaskMsg, sizeof(stTaskMsg), 50))
+	if (osOK == osMessageQueuePut(g_mqPlayCtrlTask, &stTaskMsg, 0, 50))
 	{
-		mimic_printf("[%s (%d)] xStreamBufferSend NG\r\n", __func__, __LINE__);
-		return false;
+		bret = true;
+	}
+	else
+	{
+		mimic_printf("[%s (%d)] osMessageQueuePut NG\r\n", __func__, __LINE__);
 	}
 
-	return true;
+	return bret;
 }
 
 /** TODO 後でイベントとして発行するように改造する */
@@ -708,7 +730,9 @@ void PostSyncMsgPlayCtrlPlayPrev(void)
 DefALLOCATE_ITCM static void PlayCtrlActual(void)
 {
 	stTaskMsgBlock_t stTaskMsg = {0};
-	if (sizeof(stTaskMsg) <= xStreamBufferReceive(g_sbhPlayCtrl, &stTaskMsg, sizeof(stTaskMsg), portMAX_DELAY))
+	uint8_t msg_prio; /* Message priority is ignored */
+
+	if (osOK == osMessageQueueGet(g_mqPlayCtrlTask, &stTaskMsg, &msg_prio, portMAX_DELAY))
 	{
 		enPlayCtrlEvent_t enEvent = enPlayCtrlEventMAX;
 		switch (stTaskMsg.enMsgId)
@@ -867,10 +891,10 @@ void CmdRec(uint32_t argc, const char *argv[])
 {
 	uint32_t i;
 	stCodecCondition_t stRec[] = {
-		{enSampleRate44100Hz, enWordWidth16bits, enAudioFileWAV, 2, {0}},
-		{enSampleRate48KHz, enWordWidth16bits, enAudioFileWAV, 2, {0}},
-		{enSampleRate48KHz, enWordWidth24bits, enAudioFileWAV, 2, {0}},
-		{enSampleRate96KHz, enWordWidth24bits, enAudioFileWAV, 2, {0}},
+		{enSampleRate44100Hz, enWordWidth16bits, enAudioFileWAV, 2},
+		{enSampleRate48KHz, enWordWidth16bits, enAudioFileWAV, 2},
+		{enSampleRate48KHz, enWordWidth24bits, enAudioFileWAV, 2},
+		{enSampleRate96KHz, enWordWidth24bits, enAudioFileWAV, 2},
 	};
 	MakeAudioFileListALL();
 	MakeAudioFileListCurrentDir();

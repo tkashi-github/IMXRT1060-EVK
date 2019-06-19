@@ -45,7 +45,7 @@ static _Bool IsAudioFile(const TCHAR szFileName[])
 	TCHAR sztemp[5] = {0};
 	GetFileExt(sztemp, szFileName, 5);
 
-	bsp_tcsupper(sztemp);
+	mimic_tcsupper(sztemp);
 	//mimic_printf("%s (%s)\r\n", szFileName, sztemp);
 	if (memcmp(sztemp, _T("WAV"), 3 * sizeof(TCHAR)) == 0)
 	{
@@ -85,14 +85,14 @@ static void rMakeAudioFileListALL(const TCHAR szDirPath[])
 				if (stFInfo.fattrib & AM_DIR)
 				{
 					/** !!! Recursive Call */
-					snprintf(szTmp, kFilePathLenMax, "%s/%s", szDirPath, stFInfo.fname);
+					mimic_sprintf(szTmp, kFilePathLenMax, "%s/%s", szDirPath, stFInfo.fname);
 					rMakeAudioFileListALL(szTmp);
 				}
 				else
 				{
 					if (IsAudioFile(stFInfo.fname) != false)
 					{
-						snprintf(szTmp, kFilePathLenMax, "%s/%s", szDirPath, stFInfo.fname);
+						mimic_sprintf(szTmp, kFilePathLenMax, "%s/%s", szDirPath, stFInfo.fname);
 						strncpy(s_szAudioFileListAll[s_u32AudioFileNumAll], szTmp, kFilePathLenMax * sizeof(TCHAR));
 						s_u32AudioFileNumAll++;
 					}
@@ -194,7 +194,7 @@ _Bool GetAudioFilePathALL(uint32_t u32TrackNo, TCHAR szFilePath[])
 {
 	if (u32TrackNo < s_u32AudioFileNumAll)
 	{
-		bsp_tcscpy(szFilePath, s_szAudioFileListAll[u32TrackNo], kFilePathLenMax);
+		mimic_tcscpy(szFilePath, s_szAudioFileListAll[u32TrackNo], kFilePathLenMax);
 		return true;
 	}
 	else
@@ -206,7 +206,7 @@ _Bool GetAudioFilePathCurrentDir(uint32_t u32TrackNo, TCHAR szFilePath[])
 {
 	if (u32TrackNo < s_u32AudioFileNumDir)
 	{
-		bsp_tcscpy(szFilePath, s_szAudioFileListDir[u32TrackNo], kFilePathLenMax);
+		mimic_tcscpy(szFilePath, s_szAudioFileListDir[u32TrackNo], kFilePathLenMax);
 		return true;
 	}
 	else
@@ -247,7 +247,7 @@ enAudioFileType_t GetAudioFileType(const TCHAR szFileName[])
 	TCHAR sztemp[5] = {0};
 	GetFileExt(sztemp, szFileName, 5);
 
-	bsp_tcsupper(sztemp);
+	mimic_tcsupper(sztemp);
 	//mimic_printf("%s (%s)\r\n", szFileName, sztemp);
 	if (memcmp(sztemp, _T("WAV"), 3 * sizeof(TCHAR)) == 0)
 	{
