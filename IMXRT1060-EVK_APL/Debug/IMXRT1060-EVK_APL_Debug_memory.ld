@@ -6,7 +6,7 @@
  * Generated linker script file for MIMXRT1062xxxxA
  * Created from memory.ldt by FMCreateLinkMemory
  * Using Freemarker v2.3.23
- * MCUXpresso IDE v11.0.0 [Build 2516] [2019-06-05] on 2019/06/19 23:00:25
+ * MCUXpresso IDE v11.0.0 [Build 2516] [2019-06-05] on 2019/06/19 23:33:03
  */
 
 MEMORY
@@ -14,7 +14,7 @@ MEMORY
   /* Define each memory region */
   Program (rwx) : ORIGIN = 0x80000000, LENGTH = 0x400000 /* 4M bytes (alias RAM) */  
   NonCache (rwx) : ORIGIN = 0x80400000, LENGTH = 0xc00000 /* 12M bytes (alias RAM2) */  
-  HEAP (rwx) : ORIGIN = 0x81400000, LENGTH = 0x800000 /* 8M bytes (alias RAM3) */  
+  HEAP (rwx) : ORIGIN = 0x81000000, LENGTH = 0xc00000 /* 12M bytes (alias RAM3) */  
   SRAM_ITC (rwx) : ORIGIN = 0x0, LENGTH = 0x40000 /* 256K bytes (alias RAM4) */  
   SRAM_DTC (rwx) : ORIGIN = 0x20000400, LENGTH = 0x3fc00 /* 255K bytes (alias RAM5) */  
   VRAM (rwx) : ORIGIN = 0x20200000, LENGTH = 0x40000 /* 256K bytes (alias RAM6) */  
@@ -31,10 +31,10 @@ MEMORY
   __base_RAM2 = 0x80400000 ; /* RAM2 */  
   __top_NonCache = 0x80400000 + 0xc00000 ; /* 12M bytes */  
   __top_RAM2 = 0x80400000 + 0xc00000 ; /* 12M bytes */  
-  __base_HEAP = 0x81400000  ; /* HEAP */  
-  __base_RAM3 = 0x81400000 ; /* RAM3 */  
-  __top_HEAP = 0x81400000 + 0x800000 ; /* 8M bytes */  
-  __top_RAM3 = 0x81400000 + 0x800000 ; /* 8M bytes */  
+  __base_HEAP = 0x81000000  ; /* HEAP */  
+  __base_RAM3 = 0x81000000 ; /* RAM3 */  
+  __top_HEAP = 0x81000000 + 0xc00000 ; /* 12M bytes */  
+  __top_RAM3 = 0x81000000 + 0xc00000 ; /* 12M bytes */  
   __base_SRAM_ITC = 0x0  ; /* SRAM_ITC */  
   __base_RAM4 = 0x0 ; /* RAM4 */  
   __top_SRAM_ITC = 0x0 + 0x40000 ; /* 256K bytes */  

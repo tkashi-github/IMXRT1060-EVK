@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, NXP Semiconductors, Inc.
+ * Copyright  2018 NXP
  * All rights reserved.
  *
  *
@@ -38,7 +38,7 @@
 
 static uint32_t s_hotTemp;    /*!< The value of TEMPMON_TEMPSENSE0[TEMP_VALUE] at room temperature .*/
 static uint32_t s_hotCount;   /*!< The value of TEMPMON_TEMPSENSE0[TEMP_VALUE] at the hot temperature.*/
-static float s_hotT_ROOM;     /*!< The value of s_hotTemp minus room temperature(25ï¿½ï¿½).*/
+static float s_hotT_ROOM;     /*!< The value of s_hotTemp minus room temperature(25¡æ).*/
 static uint32_t s_roomC_hotC; /*!< The value of s_roomCount minus s_hotCount.*/
 
 /*******************************************************************************
@@ -65,11 +65,11 @@ void TEMPMON_Init(TEMPMON_Type *base, const tempmon_config_t *config)
 
     /* ready to read calibration data */
     calibrationData = OCOTP->ANA1;
-    s_hotTemp = (uint32_t)(calibrationData & TEMPMON_HOTTEMPMASK) >> TEMPMON_HOTTEMPSHIFT;
-    s_hotCount = (uint32_t)(calibrationData & TEMPMON_HOTCOUNTMASK) >> TEMPMON_HOTCOUNTSHIFT;
-    roomCount = (uint32_t)(calibrationData & TEMPMON_ROOMCOUNTMASK) >> TEMPMON_ROOMCOUNTSHIFT;
+    s_hotTemp       = (uint32_t)(calibrationData & TEMPMON_HOTTEMPMASK) >> TEMPMON_HOTTEMPSHIFT;
+    s_hotCount      = (uint32_t)(calibrationData & TEMPMON_HOTCOUNTMASK) >> TEMPMON_HOTCOUNTSHIFT;
+    roomCount       = (uint32_t)(calibrationData & TEMPMON_ROOMCOUNTMASK) >> TEMPMON_ROOMCOUNTSHIFT;
 
-    s_hotT_ROOM = s_hotTemp - TEMPMON_ROOMTEMP;
+    s_hotT_ROOM  = s_hotTemp - TEMPMON_ROOMTEMP;
     s_roomC_hotC = roomCount - s_hotCount;
 
     /* Set alarm temperature */

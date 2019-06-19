@@ -354,6 +354,7 @@ _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t
 	sai_config_t config;
 
 	sai_transfer_format_t format = {0};
+	uint32_t u32BclkSrcHz = 0;
 	status_t sts;
 
 	if ((enSAI < enSAI1) || (enSAI >= enNumOfSAI))
@@ -443,7 +444,7 @@ _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t
 	(defined FSL_FEATURE_PCC_HAS_SAI_DIVIDER && FSL_FEATURE_PCC_HAS_SAI_DIVIDER)
 	format.masterClockHz = kOverSampleRate * format.sampleRate_Hz;
 #else
-	format.masterClockHz = (CLOCK_GetFreq(kCLOCK_AudioPllClk) / (SaiDivVal + 1U));
+	u32BclkSrcHz = (CLOCK_GetFreq(kCLOCK_AudioPllClk) / (SaiDivVal + 1U));
 #endif
 	//mimic_printf("[%s (%d)] format.masterClockHz = %lu\r\n", __func__, __LINE__, format.masterClockHz);
 
@@ -475,7 +476,7 @@ _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t
 		mimic_printf("[%s (%d)] CODEC_Init NG : %d\r\n", __func__, __LINE__, sts);
 		return false;
 	}
-	sts = CODEC_SetFormat(&s_HndCodec[enSAI], format.masterClockHz, format.sampleRate_Hz, format.bitWidth);
+	sts = CODEC_SetFormat(&s_HndCodec[enSAI], u32BclkSrcHz, format.sampleRate_Hz, format.bitWidth);
 	if (kStatus_Success != sts)
 	{
 		mimic_printf("[%s (%d)] CODEC_SetFormat NG : %d\r\n", __func__, __LINE__, sts);
@@ -498,8 +499,8 @@ _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t
 	SAI_TransferTxCreateHandleEDMA(base[enSAI], s_phndSaiDmaTx[enSAI], txCallback, NULL, &s_hndDmaTx[enSAI]);
 	SAI_TransferRxCreateHandleEDMA(base[enSAI], s_phndSaiDmaRx[enSAI], rxCallback, NULL, &s_hndDmaRx[enSAI]);
 
-	SAI_TransferTxSetFormatEDMA(base[enSAI], s_phndSaiDmaTx[enSAI], &format, kSAIClockFreq, format.masterClockHz);
-	SAI_TransferRxSetFormatEDMA(base[enSAI], s_phndSaiDmaRx[enSAI], &format, kSAIClockFreq, format.masterClockHz);
+	SAI_TransferTxSetFormatEDMA(base[enSAI], s_phndSaiDmaTx[enSAI], &format, kSAIClockFreq, u32BclkSrcHz);
+	SAI_TransferRxSetFormatEDMA(base[enSAI], s_phndSaiDmaRx[enSAI], &format, kSAIClockFreq, u32BclkSrcHz);
 
 #if 1
 	{
