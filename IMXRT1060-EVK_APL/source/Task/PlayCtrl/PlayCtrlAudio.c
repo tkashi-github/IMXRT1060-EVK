@@ -32,7 +32,6 @@
 #include "SoundTask/SoundTask.h"
 #include "mimiclib/mimiclib.h"
 
-static TCHAR s_szWAV[768];
 static volatile _Bool s_bPlayFileOpen = false;
 static volatile _Bool s_bRecFileOpen = false;
 
@@ -165,9 +164,11 @@ DefALLOCATE_ITCM uint8_t *OpenRecAudioFile(const TCHAR szFilePath[], const stCod
 	uint32_t sizeofpcm;
 
 	sizeofpcm = pst->enBitsWidth / 8;
-	*pu32PCMBufferSize = pst->enSample * pst->nChannels * sizeofpcm; /** とりあえず2sec確保 */
+	*pu32PCMBufferSize = pst->enSample * pst->nChannels * sizeofpcm; 
 	*pu32PCMBufferSize /= DefAudioBufDiv;
 	*pu32PCMBufferSize *= DefAudioBufBase;
+
+	/** とりあえず(DefAudioBufBase / DefAudioBufDiv)sec確保 */
 
 	if (s_bRecFileOpen == false)
 	{

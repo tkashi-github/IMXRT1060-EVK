@@ -56,9 +56,10 @@ DefALLOCATE_ITCM uint8_t *OpenWavFile(const TCHAR szFilePath[], stCodecCondition
 		return NULL;
 	}
 	sizeofpcm = stFormat.wBitsPerSample / 8;
-	*pu32PCMBufferSize = stFormat.nSamplesPerSec * stFormat.nChannels * sizeofpcm; /** とりあえず1sec確保 */
+	*pu32PCMBufferSize = stFormat.nSamplesPerSec * stFormat.nChannels * sizeofpcm;
 	*pu32PCMBufferSize /= DefAudioBufDiv;
 	*pu32PCMBufferSize *= DefAudioBufBase;
+	/** とりあえず(DefAudioBufBase / DefAudioBufDiv)sec確保 */
 
 	pu8PCMBuffer = (uint8_t *)pvPortMalloc(*pu32PCMBufferSize);
 	if (pu8PCMBuffer == NULL)

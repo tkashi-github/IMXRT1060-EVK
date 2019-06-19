@@ -182,7 +182,7 @@ typedef struct{
 #define kAudioMaxOfChannels         (2u)
 #define kAudioMaxOfPCMBytes         (4u)
 #define DefAudioBufDiv			    (10u)
-#define DefAudioBufBase			    (4u)
+#define DefAudioBufBase			    (2u)
 #define kAudioBufferMaxSize 	    ((kAudioMaxOfSampleRate * kAudioMaxOfPCMBytes * kAudioMaxOfChannels) / DefAudioBufDiv)
 #define kAudioBufferNum 		    (DefAudioBufBase * DefAudioBufDiv)
 #define kAudioRxBufferMaxSize 	    ((kAudioMaxOfSampleRate * kAudioMaxOfPCMBytes * kAudioMaxOfChannels) / DefAudioBufDiv)

@@ -58,8 +58,8 @@
 static void txCallback(I2S_Type *base, sai_edma_handle_t *handle, status_t status, void *userData);
 static void rxCallback(I2S_Type *base, sai_edma_handle_t *handle, status_t status, void *userData);
 
-alignas(4) static uint8_t s_TxAudioBuff[enNumOfSAI][kAudioBufferMaxSize * kAudioBufferNum] __attribute__((section("NonCacheable.noinit")));
-alignas(4) static uint8_t s_RxAudioBuff[enNumOfSAI][kAudioRxBufferMaxSize * kAudioRxBufferNum] __attribute__((section("NonCacheable.noinit")));
+alignas(4) static uint8_t s_TxAudioBuff[enNumOfSAI][kAudioBufferMaxSize * kAudioBufferNum] __attribute__((section(".NonCacheable")));
+alignas(4) static uint8_t s_RxAudioBuff[enNumOfSAI][kAudioRxBufferMaxSize * kAudioRxBufferNum] __attribute__((section(".NonCacheable")));
 
 /**  */
 static volatile uint32_t s_u32EDMATxBufSize[enNumOfSAI] = {kAudioBufferMaxSize, kAudioBufferMaxSize};
