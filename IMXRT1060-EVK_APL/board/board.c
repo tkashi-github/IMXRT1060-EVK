@@ -432,13 +432,13 @@ void BOARD_ConfigMPU(void)
 	/* Region 8 setting: Memory with Normal type, shareable   outer and inner write back write/read acllocate  */
     MPU->RBAR = ARM_MPU_RBAR(8, 0x80000000U);
     MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 1, 1, 1, 1, 0, ARM_MPU_REGION_SIZE_4MB);	/** for .text section */
+
     /* Enable MPU */
     ARM_MPU_Enable(MPU_CTRL_PRIVDEFENA_Msk);
 
     /* Enable I cache and D cache */
-    SCB_EnableDCache();
     SCB_EnableICache();
-
+    SCB_EnableDCache();
 	return;
 }
 void BOARD_SD_Pin_Config(uint32_t speed, uint32_t strength)

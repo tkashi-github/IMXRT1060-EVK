@@ -188,6 +188,7 @@ typedef struct{
 #define kAudioRxBufferMaxSize 	    ((kAudioMaxOfSampleRate * kAudioMaxOfPCMBytes * kAudioMaxOfChannels) / DefAudioBufDiv)
 #define kAudioRxBufferNum 		    (DefAudioBufBase * DefAudioBufDiv)
 #define kSAIQueSize				    (kAudioRxBufferNum * 2)
+#define SAI_XFER_QUEUE_SIZE 		kSAIQueSize		/* for FSL SDK */
 
 /** for TCHAR */
 #define _INC_TCHAR

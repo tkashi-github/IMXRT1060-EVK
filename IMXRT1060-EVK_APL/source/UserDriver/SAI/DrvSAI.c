@@ -711,6 +711,7 @@ _Bool DrvSAITx(enSAI_t enSAI, const uint8_t pu8[], uint32_t u32ByteCnt)
 			}
 			else
 			{
+				mimic_printf("[%s (%d)] SAI_TransferSend NG\r\n", __func__, __LINE__);
 				return false;
 			}
 			{

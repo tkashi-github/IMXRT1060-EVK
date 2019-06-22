@@ -262,7 +262,9 @@ DefALLOCATE_ITCM static void S2_E2(enSoundTask_t enSoundTaskNo, enSoundTaskEvent
 
 		if (DrvSAITx(enSoundTaskNo, pst->pu8, pst->u32ByteCnt) == false)
 		{
-			mimic_printf("[%s (%d)] DrvSAITx Stop\r\n", __func__, __LINE__);
+			mimic_printf("[%s (%d)] DrvSAITx NG\r\n", __func__, __LINE__);
+
+			mimic_printf("[%s (%d)] Sound Task Sate -> Stop\r\n", __func__, __LINE__);
 			*pBool = false;
 
 			/* STOPへ */
@@ -391,13 +393,19 @@ DefALLOCATE_ITCM void SoundTask(void const *argument)
 {
 	enSoundTask_t enSoundTaskNo = (enSoundTask_t)argument;
 
+	mimic_printf("[%s (%d)] Start (%lu msec)\r\n", __func__, __LINE__, xTaskGetTickCount());
+
 	if ((enSoundTaskNo < enSoundTask1) || (enSoundTaskNo >= enNumOfSoundTask))
 	{
 		vTaskSuspend(NULL);
 	}
 
 
-	DrvSAIInit(enSoundTaskNo, kSAI_SampleRate44100Hz, kSAI_WordWidth16bits, false);
+	if(false == DrvSAIInit(enSoundTaskNo, kSAI_SampleRate44100Hz, kSAI_WordWidth16bits, false))
+	{
+		mimic_printf("[%s (%d)] DrvSAIInit NG (%lu msec)\r\n", __func__, __LINE__, xTaskGetTickCount());
+
+	}
 	s_u32Volume[enSoundTaskNo] = 50;
 	SoundTaskWriteCurrentVolume(enSoundTaskNo, 0);
 	mimic_printf("Volume = %lu\r\n", SoundTaskGetCurrentVolume(enSoundTask1));

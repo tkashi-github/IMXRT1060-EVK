@@ -785,6 +785,8 @@ DefALLOCATE_ITCM static void PlayCtrlActual(void)
 DefALLOCATE_ITCM void PlayCtrl(void const *argument)
 {
 
+	mimic_printf("[%s (%d)] Start (%lu msec)\r\n", __func__, __LINE__, xTaskGetTickCount());
+
 	for (;;)
 	{
 		PlayCtrlActual();

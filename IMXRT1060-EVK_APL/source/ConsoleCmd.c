@@ -57,6 +57,7 @@
 #include "TouchScreenTask/TouchScreenTask.h"
 #include "TempMoniTask/TempMoniTask.h"
 #include "PlayCtrl/PlayCtrl.h"
+#include "AudioFile/AudioFileList.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -105,6 +106,7 @@ stCmdTable_t g_stCmdTable[] = {
 	{"PLAY", CmdPlay, "Play Start"},
 	{"STOP", CmdStop, "Play/Rec Stop"},
 	{"REC", CmdRec, "Rec Start"},
+	{"LIST", CmdMakeAudioFileList, "AUdio File List"},
 	{NULL, NULL, NULL}, /* Terminator */
 };
 

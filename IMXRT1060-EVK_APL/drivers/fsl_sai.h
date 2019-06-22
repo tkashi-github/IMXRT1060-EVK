@@ -199,6 +199,8 @@ typedef struct _sai_config
     sai_master_slave_t masterSlave; /*!< Master or slave */
 } sai_config_t;
 
+#include "UserTypedef.h"
+
 #ifndef SAI_XFER_QUEUE_SIZE
 /*!@brief SAI transfer queue size, user can refine it according to use case. */
 #define SAI_XFER_QUEUE_SIZE (4)
