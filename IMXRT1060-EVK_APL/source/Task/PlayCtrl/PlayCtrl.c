@@ -38,6 +38,7 @@
 #include "SoundTask/SoundTask.h"
 #include "AudioFile/AudioFileList.h"
 #include "PlayCtrl/PlayCtrlAudio.h"
+#include "AudioFile/wav/wav.h"
 
 typedef enum
 {

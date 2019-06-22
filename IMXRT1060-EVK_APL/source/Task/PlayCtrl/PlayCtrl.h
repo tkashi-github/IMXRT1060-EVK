@@ -42,7 +42,7 @@ extern "C"
 
 /** User Typedefine */
 #include "UserTypedef.h"
-#include "AudioFile/wav/wav.h"
+
 
 	typedef enum
 	{

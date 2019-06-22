@@ -56,6 +56,7 @@
 
 #include "TouchScreenTask/TouchScreenTask.h"
 #include "TempMoniTask/TempMoniTask.h"
+#include "PlayCtrl/PlayCtrl.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -99,7 +100,11 @@ stCmdTable_t g_stCmdTable[] = {
 	{"SFROM", CmdSFROM, "SerialFlashTest"},
 	{"CTP", CmdCTPTest, "CTP Test"},
 	{"TEMP", CmdTemp, "Temperature Monitor"},
-//	{"BKL", CmdLcdBackLightTest, "BackLight Test"},
+	{"REPEAT", CmdRepeat, "Set Repeat Mode"},
+	{"MODE", CmdMode, "Set Plya Mode"},
+	{"PLAY", CmdPlay, "Play Start"},
+	{"STOP", CmdStop, "Play/Rec Stop"},
+	{"REC", CmdRec, "Rec Start"},
 	{NULL, NULL, NULL}, /* Terminator */
 };
 
