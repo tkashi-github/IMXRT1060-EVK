@@ -381,6 +381,9 @@ void BOARD_BootClockRUN(void)
     CLOCK_SetDiv(kCLOCK_Sai3Div, 1);
     /* Set Sai3 clock source. */
     CLOCK_SetMux(kCLOCK_Sai3Mux, 0);
+    CLOCK_EnableClock(kCLOCK_Sai1);
+    CLOCK_EnableClock(kCLOCK_Sai2);
+    CLOCK_EnableClock(kCLOCK_Sai3);
     /* Disable Lpi2c clock gate. */
     CLOCK_EnableClock(kCLOCK_Lpi2c1);
     CLOCK_EnableClock(kCLOCK_Lpi2c2);

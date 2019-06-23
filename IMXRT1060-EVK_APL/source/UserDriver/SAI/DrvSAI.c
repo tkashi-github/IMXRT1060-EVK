@@ -381,15 +381,17 @@ _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t
 	/* buffer size is 64 sample */
 	if (s_sai_word_width[enSAI] == kSAI_WordWidth24bits)
 	{
-		s_u32EDMATxBufSize[enSAI] = 64 * 4;
-		s_u32EDMARxBufSize[enSAI] = 64 * 4;
+		s_u32EDMATxBufSize[enSAI] = DEF_BUFFER_SAMPLE_SIZE * 4;
+		s_u32EDMARxBufSize[enSAI] = DEF_BUFFER_SAMPLE_SIZE * 4;
 	}
 	else
 	{
-		s_u32EDMATxBufSize[enSAI] = 64 * (enPcmBit / 8);
-		s_u32EDMARxBufSize[enSAI] = 64 * (enPcmBit / 8);
+		s_u32EDMATxBufSize[enSAI] = DEF_BUFFER_SAMPLE_SIZE * (enPcmBit / 8);
+		s_u32EDMARxBufSize[enSAI] = DEF_BUFFER_SAMPLE_SIZE * (enPcmBit / 8);
 	}
-
+	mimic_printf("[%s (%d)] s_u32EDMATxBufSize[%d] = %lu\r\n", __func__, __LINE__, enSAI, s_u32EDMATxBufSize[enSAI]);
+	mimic_printf("[%s (%d)] s_u32EDMARxBufSize[%d] = %lu\r\n", __func__, __LINE__, enSAI, s_u32EDMARxBufSize[enSAI]);
+	
 	EnableSaiMclkOutput(enSAI1, false);
 	CLOCK_DeinitAudioPll();
 	s_sai_sample_rate[enSAI] = enSampleRate;
@@ -636,6 +638,7 @@ _Bool DrvSAITx(enSAI_t enSAI, const uint8_t pu8[], uint32_t u32ByteCnt)
 		/* Transfer data already prepared, so while there is any empty slot, just transfer */
 		if (s_u32TxEmptyBlock[enSAI] > 0)
 		{
+			
 			uint32_t index = s_u32Index[enSAI] * s_u32EDMATxBufSize[enSAI];
 
 			stxfer.data = &s_TxAudioBuff[enSAI][index];
@@ -716,7 +719,7 @@ _Bool DrvSAITx(enSAI_t enSAI, const uint8_t pu8[], uint32_t u32ByteCnt)
 			}
 			else
 			{
-				mimic_printf("[%s (%d)] SAI_TransferSend NG\r\n", __func__, __LINE__);
+				mimic_printf("[%s (%d)] SAI_TransferSend NG (sts = %ld) (0x%08lX, %lu)\r\n", __func__, __LINE__, sts, stxfer.data, stxfer.dataSize);
 				return false;
 			}
 			{
@@ -731,7 +734,7 @@ _Bool DrvSAITx(enSAI_t enSAI, const uint8_t pu8[], uint32_t u32ByteCnt)
 		{
 			/** Event Wait */
 			uint32_t uxBits;
-			uxBits = osEventFlagsWait(g_efSAITx[enSAI], 3, osFlagsWaitAny, 5000);
+			uxBits = osEventFlagsWait(g_efSAITx[enSAI], 3, osFlagsWaitAny, 500);
 			if (uxBits != 1)
 			{
 				mimic_printf("[%s (%d)] uxBits = 0x%08lX\r\n", __func__, __LINE__, uxBits);
@@ -821,7 +824,7 @@ _Bool DrvSAIRx(enSAI_t enSAI, uint8_t pu8[], uint32_t *pu32RxCnt)
 		else
 		{
 			uint32_t uxBits;
-			uxBits = osEventFlagsWait(g_efSAIRx[enSAI], 3, osFlagsWaitAny, 10000);
+			uxBits = osEventFlagsWait(g_efSAIRx[enSAI], 3, osFlagsWaitAny, 500);
 			if (uxBits != 1)
 			{
 				if ((uxBits & 0x80000000u) != 0)

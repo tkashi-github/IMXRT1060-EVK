@@ -549,7 +549,7 @@ DefALLOCATE_ITCM _Bool PostMsgSoundTaskSendAudioData(enSoundTask_t enSoundTaskNo
 			if (osOK == osMessageQueuePut(g_mqSoundTask[enSoundTaskNo], &stTaskMsg, 0, 50))
 			{
 				/* Sync */
-				uxBits = osEventFlagsWait(g_efSoundTaskEventGroup[enSoundTaskNo], 1, osFlagsWaitAny, 10000);
+				uxBits = osEventFlagsWait(g_efSoundTaskEventGroup[enSoundTaskNo], 1, osFlagsWaitAny, 1000);
 				if (uxBits == 1u)
 				{
 					bret = true;

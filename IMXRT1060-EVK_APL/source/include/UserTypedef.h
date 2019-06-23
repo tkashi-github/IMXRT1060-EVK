@@ -180,7 +180,7 @@ typedef struct{
 
 
 #define DEF_BUFFER_SAMPLE_SIZE		(64u)	/** 64 Sample */
-#define DEF_BUFFER_QUEUE_SIZE		(1000)
+#define DEF_BUFFER_QUEUE_SIZE		(128)
 #define DEF_AUDIO_BUFFER_SIZE		(DEF_BUFFER_SAMPLE_SIZE * DEF_BUFFER_QUEUE_SIZE * sizeof(uint32_t))
 
 #define SAI_XFER_QUEUE_SIZE 		DEF_BUFFER_QUEUE_SIZE		/* for FSL SDK */
