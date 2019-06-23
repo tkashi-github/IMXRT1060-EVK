@@ -58,16 +58,22 @@
 static void txCallback(I2S_Type *base, sai_edma_handle_t *handle, status_t status, void *userData);
 static void rxCallback(I2S_Type *base, sai_edma_handle_t *handle, status_t status, void *userData);
 
-alignas(4) static uint8_t s_TxAudioBuff[enNumOfSAI][kAudioBufferMaxSize * kAudioBufferNum] __attribute__((section(".NonCacheable")));
-alignas(4) static uint8_t s_RxAudioBuff[enNumOfSAI][kAudioRxBufferMaxSize * kAudioRxBufferNum] __attribute__((section(".NonCacheable")));
+alignas(4) static uint8_t s_TxAudioBuff[enNumOfSAI][DEF_AUDIO_BUFFER_SIZE] __attribute__((section(".NonCacheable")));
+alignas(4) static uint8_t s_RxAudioBuff[enNumOfSAI][DEF_AUDIO_BUFFER_SIZE] __attribute__((section(".NonCacheable")));
 
 /**  */
-static volatile uint32_t s_u32EDMATxBufSize[enNumOfSAI] = {kAudioBufferMaxSize, kAudioBufferMaxSize};
+static volatile uint32_t s_u32EDMATxBufSize[enNumOfSAI] = {
+	DEF_BUFFER_SAMPLE_SIZE * sizeof(uint32_t), 
+	DEF_BUFFER_SAMPLE_SIZE * sizeof(uint32_t),
+};
 static volatile uint32_t s_u32BeginCount[enNumOfSAI] = {0};
 static volatile uint32_t s_u32SendCount[enNumOfSAI] = {0};
-static volatile uint32_t s_u32TxEmptyBlock[enNumOfSAI] = {kAudioBufferNum, kAudioBufferNum};
+static volatile uint32_t s_u32TxEmptyBlock[enNumOfSAI] = {DEF_BUFFER_QUEUE_SIZE, DEF_BUFFER_QUEUE_SIZE};
 
-static volatile uint32_t s_u32EDMARxBufSize[enNumOfSAI] = {kAudioRxBufferMaxSize, kAudioRxBufferMaxSize};
+static volatile uint32_t s_u32EDMARxBufSize[enNumOfSAI] = {
+	DEF_BUFFER_SAMPLE_SIZE * sizeof(uint32_t), 
+	DEF_BUFFER_SAMPLE_SIZE * sizeof(uint32_t),
+};
 static _Atomic uint32_t s_u32FullBlock[enNumOfSAI] = {0};
 static volatile _Bool s_bIsTxFinished[enNumOfSAI] = {false};
 static volatile _Bool s_bIsRxFinished[enNumOfSAI] = {false};
@@ -216,7 +222,7 @@ static void rxCallback(I2S_Type *base, sai_edma_handle_t *handle, status_t statu
 		return;
 	}
 
-	if (s_u32FullBlock[enSAI] >= kAudioRxBufferNum)
+	if (s_u32FullBlock[enSAI] >= DEF_BUFFER_QUEUE_SIZE)
 	{
 		/** オーバーランした */
 		DrvSAIImmidiateRxStop(enSAI);
@@ -371,18 +377,18 @@ _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t
 	}
 
 	s_sai_word_width[enSAI] = enPcmBit;
+
+	/* buffer size is 64 sample */
 	if (s_sai_word_width[enSAI] == kSAI_WordWidth24bits)
 	{
-		s_u32EDMATxBufSize[enSAI] = enSampleRate * 4 / DefAudioBufDiv;
-		s_u32EDMARxBufSize[enSAI] = enSampleRate * 4 / DefAudioBufDiv;
+		s_u32EDMATxBufSize[enSAI] = 64 * 4;
+		s_u32EDMARxBufSize[enSAI] = 64 * 4;
 	}
 	else
 	{
-		s_u32EDMATxBufSize[enSAI] = enSampleRate * (enPcmBit / 8) / DefAudioBufDiv;
-		s_u32EDMARxBufSize[enSAI] = enSampleRate * (enPcmBit / 8) / DefAudioBufDiv;
+		s_u32EDMATxBufSize[enSAI] = 64 * (enPcmBit / 8);
+		s_u32EDMARxBufSize[enSAI] = 64 * (enPcmBit / 8);
 	}
-	s_u32EDMATxBufSize[enSAI] -= (s_u32EDMATxBufSize[enSAI] % 32);
-	s_u32EDMARxBufSize[enSAI] -= (s_u32EDMARxBufSize[enSAI] % 32);
 
 	EnableSaiMclkOutput(enSAI1, false);
 	CLOCK_DeinitAudioPll();
@@ -419,8 +425,8 @@ _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t
 	}
 
 	SAI_Deinit(base[enSAI]);
-	memset(s_TxAudioBuff[enSAI], 0, kAudioBufferMaxSize * kAudioBufferNum);
-	memset(s_RxAudioBuff[enSAI], 0, kAudioBufferMaxSize * kAudioBufferNum);
+	memset(s_TxAudioBuff[enSAI], 0, sizeof(s_TxAudioBuff[enSAI]));
+	memset(s_RxAudioBuff[enSAI], 0, sizeof(s_RxAudioBuff[enSAI]));
 	/* Init SAI module */
 	/*
      * config.masterSlave = kSAI_Master;
@@ -550,7 +556,7 @@ void DrvSAITxReset(enSAI_t enSAI)
 	s_u32BeginCount[enSAI] = 0;
 	s_u32SendCount[enSAI] = 0;
 	s_u32Index[enSAI] = 0;
-	s_u32TxEmptyBlock[enSAI] = kAudioBufferNum;
+	s_u32TxEmptyBlock[enSAI] = DEF_BUFFER_QUEUE_SIZE;
 }
 void DrvSAIRxReset(enSAI_t enSAI)
 {
@@ -579,7 +585,7 @@ void DrvSAIRxEDMABufferRestart(enSAI_t enSAI)
 	//mimic_printf("[%s (%d)] s_phndSaiDmaRx[enSAI]->state = %d\r\n", __func__, __LINE__, s_phndSaiDmaRx[enSAI]->state);
 	s_u32ReadIndex[enSAI] = 0;
 	s_u32FullBlock[enSAI] = 0;
-	for (uint32_t i = 0; i < kAudioRxBufferNum; i++)
+	for (uint32_t i = 0; i < DEF_BUFFER_QUEUE_SIZE; i++)
 	{
 		sai_transfer_t stxfer = {0};
 		stxfer.dataSize = s_u32EDMARxBufSize[enSAI];
@@ -627,8 +633,7 @@ _Bool DrvSAITx(enSAI_t enSAI, const uint8_t pu8[], uint32_t u32ByteCnt)
 
 	while (u32RemainSize != 0)
 	{
-		/* Transfer data already prepared, so while there is any
-        empty slot, just transfer */
+		/* Transfer data already prepared, so while there is any empty slot, just transfer */
 		if (s_u32TxEmptyBlock[enSAI] > 0)
 		{
 			uint32_t index = s_u32Index[enSAI] * s_u32EDMATxBufSize[enSAI];
@@ -703,7 +708,7 @@ _Bool DrvSAITx(enSAI_t enSAI, const uint8_t pu8[], uint32_t u32ByteCnt)
 			if (sts == kStatus_Success)
 			{
 				s_u32Index[enSAI]++;
-				s_u32Index[enSAI] %= kAudioBufferNum;
+				s_u32Index[enSAI] %= DEF_BUFFER_QUEUE_SIZE;
 				s_u32BeginCount[enSAI]++;
 
 				/**  */
@@ -751,7 +756,7 @@ _Bool DrvSAITx(enSAI_t enSAI, const uint8_t pu8[], uint32_t u32ByteCnt)
 	return true;
 }
 
-/** 受信バッファサイズ固定(kAudioRxBufferMaxSize) */
+/** 受信バッファサイズ固定 */
 _Bool DrvSAIRx(enSAI_t enSAI, uint8_t pu8[], uint32_t *pu32RxCnt)
 {
 
@@ -810,7 +815,7 @@ _Bool DrvSAIRx(enSAI_t enSAI, uint8_t pu8[], uint32_t *pu32RxCnt)
 				}
 			}
 			s_u32ReadIndex[enSAI]++;
-			s_u32ReadIndex[enSAI] %= kAudioRxBufferNum;
+			s_u32ReadIndex[enSAI] %= DEF_BUFFER_QUEUE_SIZE;
 			break;
 		}
 		else

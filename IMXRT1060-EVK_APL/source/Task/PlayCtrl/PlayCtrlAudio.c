@@ -164,11 +164,18 @@ DefALLOCATE_ITCM uint8_t *OpenRecAudioFile(const TCHAR szFilePath[], const stCod
 	uint32_t sizeofpcm;
 
 	sizeofpcm = pst->enBitsWidth / 8;
-	*pu32PCMBufferSize = pst->enSample * pst->nChannels * sizeofpcm; 
-	*pu32PCMBufferSize /= DefAudioBufDiv;
-	*pu32PCMBufferSize *= DefAudioBufBase;
-
-	/** とりあえず(DefAudioBufBase / DefAudioBufDiv)sec確保 */
+{
+		if( (DEF_BUFFER_QUEUE_SIZE % pst->enBitsWidth) == 0)
+		{
+			*pu32PCMBufferSize = DEF_BUFFER_SAMPLE_SIZE * DEF_BUFFER_QUEUE_SIZE * sizeofpcm;
+		}
+		else
+		{
+			*pu32PCMBufferSize = DEF_BUFFER_SAMPLE_SIZE * pst->enBitsWidth * sizeofpcm;
+		}
+		mimic_printf("[%s (%d)] pst->enBitsWidth = %lu\r\n", __func__, __LINE__, pst->enBitsWidth);
+		mimic_printf("[%s (%d)] *pu32PCMBufferSize = %lu [bytes]\r\n", __func__, __LINE__, *pu32PCMBufferSize);
+	}
 
 	if (s_bRecFileOpen == false)
 	{
@@ -205,6 +212,9 @@ DefALLOCATE_ITCM uint8_t *OpenRecAudioFile(const TCHAR szFilePath[], const stCod
 			}
 			break;
 		default:
+			mimic_printf("[%s (%d)] FATAL CODE DESIGN ERROR!!\r\n", __func__, __LINE__);
+			vPortFree(pu8PCMBuffer);
+			pu8PCMBuffer = NULL;
 			break;
 		}
 		if (pu8PCMBuffer != NULL)

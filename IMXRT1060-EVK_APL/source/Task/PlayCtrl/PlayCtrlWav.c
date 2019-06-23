@@ -49,34 +49,57 @@ DefALLOCATE_ITCM uint8_t *OpenWavFile(const TCHAR szFilePath[], stCodecCondition
 	uint8_t *pu8PCMBuffer = NULL;
 	stFormatChunkData_t stFormat;
 
+	if((szFilePath == NULL) || (pst == NULL))
+	{
+		mimic_printf("[%s (%d)] argment NG\r\n", __func__, __LINE__);
+		goto _END;
+	}
 	s_u32RemainSize = 0;
 	if (WAVFileReadFormatChunk(szFilePath, &stFormat) == false)
 	{
 		mimic_printf("[%s (%d)] WAVFileReadFormatChunk NG\r\n", __func__, __LINE__);
-		return NULL;
+		goto _END;
 	}
+
+	if(stFormat.wBitsPerSample > 32)
+	{
+		mimic_printf("[%s (%d)] wBitsPerSample NG (%lu)\r\n", __func__, __LINE__, stFormat.wBitsPerSample);
+		goto _END;
+	}
+
 	sizeofpcm = stFormat.wBitsPerSample / 8;
-	*pu32PCMBufferSize = stFormat.nSamplesPerSec * stFormat.nChannels * sizeofpcm;
-	*pu32PCMBufferSize /= DefAudioBufDiv;
-	*pu32PCMBufferSize *= DefAudioBufBase;
-	/** とりあえず(DefAudioBufBase / DefAudioBufDiv)sec確保 */
+	{
+		uint32_t u32queueNum = DEF_BUFFER_QUEUE_SIZE;
+		if( (DEF_BUFFER_QUEUE_SIZE % stFormat.nChannels) == 0)
+		{
+			*pu32PCMBufferSize = DEF_BUFFER_SAMPLE_SIZE * DEF_BUFFER_QUEUE_SIZE * sizeofpcm;
+		}
+		else
+		{
+			*pu32PCMBufferSize = DEF_BUFFER_SAMPLE_SIZE * stFormat.nChannels * sizeofpcm;
+		}
+		mimic_printf("[%s (%d)] stFormat.nChannels = %lu\r\n", __func__, __LINE__, stFormat.nChannels);
+		mimic_printf("[%s (%d)] *pu32PCMBufferSize = %lu [bytes]\r\n", __func__, __LINE__, *pu32PCMBufferSize);
+	}
 
 	pu8PCMBuffer = (uint8_t *)pvPortMalloc(*pu32PCMBufferSize);
 	if (pu8PCMBuffer == NULL)
 	{
-		return NULL;
+		goto _END;
 	}
 
 	if (FR_OK != f_open(&s_filPlayWav, szFilePath, FA_READ))
 	{
 		vPortFree(pu8PCMBuffer);
-		return NULL;
+		pu8PCMBuffer = NULL;
+		goto _END;
 	}
 	if (FR_OK != f_lseek(&s_filPlayWav, sizeof(stRIFFChunkDescriptor_t)))
 	{
 		f_close(&s_filPlayWav);
 		vPortFree(pu8PCMBuffer);
-		return NULL;
+		pu8PCMBuffer = NULL;
+		goto _END;
 	}
 
 	pst->enSample = stFormat.nSamplesPerSec;
@@ -84,6 +107,7 @@ DefALLOCATE_ITCM uint8_t *OpenWavFile(const TCHAR szFilePath[], stCodecCondition
 	//mimic_printf("Sample   = %d : %d\r\n", SoundTaskGetCurrentSampleRate(enSAI1), pst->enSample);
 	//mimic_printf("BitWidth = %d : %d\r\n", SoundTaskGetCurrentWordWidth(enSAI1), pst->enBitsWidth);
 
+_END:
 	return pu8PCMBuffer;
 }
 

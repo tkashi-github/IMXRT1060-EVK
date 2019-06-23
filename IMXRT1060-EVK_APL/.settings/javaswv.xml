@@ -1,4 +1,2 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<JavaSwv>
-<config clockSpeed="10000"/>
-</JavaSwv>
+<JavaSwv>&#x0A;<config clockSpeed="600000000"/>&#x0A;<DwtPcSampleRate CycleTap="false" PostScaler="12"/>&#x0A;</JavaSwv>

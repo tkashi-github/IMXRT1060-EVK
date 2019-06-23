@@ -178,17 +178,12 @@ typedef struct{
 	uint16_t            nChannels;
 }stCodecCondition_t;
 
-#define kAudioMaxOfSampleRate       (96000u)
-#define kAudioMaxOfChannels         (2u)
-#define kAudioMaxOfPCMBytes         (4u)
-#define DefAudioBufDiv			    (10u)
-#define DefAudioBufBase			    (2u)
-#define kAudioBufferMaxSize 	    ((kAudioMaxOfSampleRate * kAudioMaxOfPCMBytes * kAudioMaxOfChannels) / DefAudioBufDiv)
-#define kAudioBufferNum 		    (DefAudioBufBase * DefAudioBufDiv)
-#define kAudioRxBufferMaxSize 	    ((kAudioMaxOfSampleRate * kAudioMaxOfPCMBytes * kAudioMaxOfChannels) / DefAudioBufDiv)
-#define kAudioRxBufferNum 		    (DefAudioBufBase * DefAudioBufDiv)
-#define kSAIQueSize				    (kAudioRxBufferNum * 2)
-#define SAI_XFER_QUEUE_SIZE 		kSAIQueSize		/* for FSL SDK */
+
+#define DEF_BUFFER_SAMPLE_SIZE		(64u)	/** 64 Sample */
+#define DEF_BUFFER_QUEUE_SIZE		(1000)
+#define DEF_AUDIO_BUFFER_SIZE		(DEF_BUFFER_SAMPLE_SIZE * DEF_BUFFER_QUEUE_SIZE * sizeof(uint32_t))
+
+#define SAI_XFER_QUEUE_SIZE 		DEF_BUFFER_QUEUE_SIZE		/* for FSL SDK */
 
 /** for TCHAR */
 #define _INC_TCHAR

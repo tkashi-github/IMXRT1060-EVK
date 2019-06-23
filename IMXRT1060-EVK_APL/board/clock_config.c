@@ -346,10 +346,17 @@ void BOARD_BootClockRUN(void)
     CLOCK_SetMux(kCLOCK_LpspiMux, 2);
     /* Disable TRACE clock gate. */
     CLOCK_DisableClock(kCLOCK_Trace);
+#if 0
     /* Set TRACE_PODF. */
     CLOCK_SetDiv(kCLOCK_TraceDiv, 2);
     /* Set Trace clock source. */
     CLOCK_SetMux(kCLOCK_TraceMux, 2);
+#else   /* for SWO */
+    /* Set TRACE_PODF. */
+    CLOCK_SetDiv(kCLOCK_TraceDiv, 0);
+    /* Set Trace clock source. */
+    CLOCK_SetMux(kCLOCK_TraceMux, 3);
+#endif
     /* Disable SAI1 clock gate. */
     CLOCK_DisableClock(kCLOCK_Sai1);
     /* Set SAI1_CLK_PRED. */

@@ -70,13 +70,18 @@ static void InitGpio(void){
 /*
  * @brief   Application entry point.
  */
-int main(void) {
+int main(void)
+{
 
   
   	/* Init board hardware. */
     BOARD_InitBootClocks();
 //	BOARD_I2C_ReleaseBus();
     BOARD_InitBootPins();
+#if 0 /* enable SWO */
+	*((uint32_t *)(0x400E0600)) = (1 << 11);  /* enable TPIU clock */
+	CLOCK_EnableClock(kCLOCK_Trace);
+#endif
 
 	InitGpio();
 	SysTick_Config(SystemCoreClock / 1000u);
