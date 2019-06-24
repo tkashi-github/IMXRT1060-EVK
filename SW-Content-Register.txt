@@ -1,5 +1,5 @@
 Release Name: MCUXpresso Software Development Kit (SDK)
-Release Version: 2.5.0
+Release Version: 2.6.0
 Package License: LA_OPT_NXP_Software_License.htm - Production Use, Section 2.3 applies
 
 KSDK_Peripheral_Driver     Description: Peripheral drivers are designed for  
@@ -12,7 +12,7 @@ KSDK_Peripheral_Driver     Description: Peripheral drivers are designed for
                            name: KSDK Peripheral Driver                      
                            Location: devices/<device>/drivers                
 
-usb                        version: 2.1.0                                    
+usb                        version: 2.2.0                                    
                            Location: middleware/usb                          
                            Description: Freescale USB stack. This is a       
                            version of the USB stack that has been integrated 
@@ -21,6 +21,20 @@ usb                        version: 2.1.0
                            Author: Freescale                                 
                            name: USB                                         
                            Format: source code                               
+
+FreeRTOS_heap_newlib       Author: Dave Nadler, Nadler & Associates          
+                           Consulting                                        
+                           Description: Newlib allocator for FreeRTOS        
+                           Format: source code                               
+                           License: Open Source - BSD-3-Clause               
+                           Location:                                         
+                           rtos/amazon-freertos/lib/FreeRTOS/portable/MemMang
+                           /                                                 
+                           name: Amazon FreeRTOS                             
+                           URL:                                              
+                           http://www.nadler.com/embedded/newlibAndFreeRTOS.h
+                           tml                                               
+                           version: 1.0.0                                    
 
 sdmmc                      name: SD MMC SDIO Card middleware                 
                            Location: middleware/sdmmc                        
@@ -31,18 +45,6 @@ sdmmc                      name: SD MMC SDIO Card middleware
                            version: 2.2.7                                    
                            Format: source code                               
 
-wolfssl                    Author: wolfSSL Inc.                              
-                           Description: wolfSSL is cryptography and SSL/TLS  
-                           library                                           
-                           Format: source code                               
-                           License: 3rd party evaluation. See                
-                           middleware/wolfssl/wolfSSL_cyaSSL_evaluation_licen
-                           se_agreement.pdf                                  
-                           Location: middleware/wolfssl                      
-                           name: wolfSSL                                     
-                           URL: https://www.wolfssl.com                      
-                           version: 3.9.8                                    
-
 fatfs                      Approved Open Source License: Yes                 
                            Author: Electronic Lives Mfg. by ChaN of Ageo     
                            city, Japan (hobbyist)                            
@@ -50,7 +52,7 @@ fatfs                      Approved Open Source License: Yes
                            module for small embedded systems.                
                            Format: source code                               
                            License: Open Source - FatFs License,             
-                           middleware/fatfs/doc/en/appnote.html              
+                           middleware/fatfs/LICENSE.txt                      
                            Location: middleware/fatfs                        
                            name: FatFs                                       
                            URL: http://elm-chan.org/fsw/ff/00index_e.html    
@@ -64,7 +66,7 @@ mbedtls                    Author: ARM
                            Location: middleware/mbedtls                      
                            name: MBED TLS stack                              
                            URL: https://tls.mbed.org/                        
-                           version: 2.12.0                                   
+                           version: 2.13.1                                   
 
 cmsisdsp                   name: CMSIS DSP Library                           
                            Format: source code                               
@@ -166,10 +168,14 @@ support                    Author: bradapp@enteract.com
                            Location:                                         
                            middleware/mcu-boot/tools/src/blfwk/options.h,    
                            middleware/mcu-boot/tools/src/blfwk/src/options.cp
-                           p                                                 
+                           p,                                                
+                           middleware/mcu-boot/tools/tools/elftosb/common/opt
+                           ions.h,                                           
+                           middleware/mcu-boot/tools/tools/elftosb/common/opt
+                           ions.cpp                                          
 
-Bootloader Source, Host    Description: C++ interface to the Vincent Rijmen's
-Source - blfwk.lib         Rijndael block cipher                             
+Host tools - blfwk.lib     Description: C++ interface to the Vincent Rijmen's
+                           Rijndael block cipher                             
                            Author: Szymon Stefanek (stefanek@tin.it)         
                            License: Public Domain                            
                            URL:                                              
@@ -179,17 +185,20 @@ Source - blfwk.lib         Rijndael block cipher
                            Location:                                         
                            middleware/mcu-boot/tools/src/blfwk/rijndael.h,   
                            middleware/mcu-boot/tools/src/blfwk/src/rijndael.c
-                           pp                                                
+                           pp,                                               
+                           middleware/mcu-boot/tools/tools/elftosb/common/rij
+                           ndael.h,                                          
+                           middleware/mcu-boot/tools/tools/elftosb/common/rij
+                           ndael.cpp                                         
 
-Utility Source - elf.py    Description: Python implementation of an ELF file 
-                           reader                                            
-                           Author: Chris Liechti (cliechti@gmx.net)          
-                           License: BSD License                              
-                           URL:                                              
-                           http://bazaar.launchpad.net/~zsquareplusc/python-m
-                           sp430-tools/trunk/view/head:/msp430/memory/elf.py 
+Host tools - SHA-1         Description: Implementation of the SHA-1 algorithm
+                           Author: Dominik Reichl                            
+                           <dominik.reichl@t-online.de>                      
+                           License: Public Domain                            
+                           URL: http://www.dominik-reichl.de/                
                            Format: source code                               
-                           Location: middleware/mcu-boot/bin/elf.py          
+                           Location: tools/tools/elftosb/common/SHA1.h,      
+                           tools/tools/elftosb/common/SHA1.cpp               
 
 ELFtoSB - MBED TLS stack   Description: Cryptographic and SSL/TLS Library    
                            Author: ARM                                       
@@ -226,7 +235,8 @@ motor_control - jQuery     Author: jQWidgets
                            License: Commercial -                             
                            http://www.jqwidgets.com/license/                 
                            Location:                                         
-                           middleware/motor_control/freemaster/fm_control    
+                           middleware/motor_control/freemaster/acim(bldc,pmsm
+                           _float,pmsm_float_enc,pmsm_frac)/fm_control       
                            Description: Advanced jQuery and HTML5 UI         
                            framework.                                        
 
@@ -236,9 +246,20 @@ motor_control - JavaScript Author: jQuery Foundation, Inc.
                            Format: source code                               
                            License: Open Source - MIT (jquery.org/license)   
                            Location:                                         
-                           middleware/motor_control/freemaster/fm_control/jqu
-                           ery-1.11.1.min.js                                 
+                           middleware/motor_control/freemaster/acim(bldc,pmsm
+                           _float,pmsm_float_enc,pmsm_frac)/fm_control/jquery
+                           -1.11.1.min.js                                    
                            Description: Cross-platform JavaScript library.   
+
+motor_control - FreeMASTER Author: NXP                                       
+                           version: 2.0.3.1                                  
+                           name: motor_control - FreeMASTER                  
+                           Format: source code & header files                
+                           License: Proprietary. See                         
+                           LA_OPT_NXP_Software_License.htm.                  
+                           Location: middleware/motor_control/freemaster     
+                           Description: NXP FreeMASTER. Real time non        
+                           intrusive debugger.                               
 
 motor_control - FreeMASTER Author: NXP                                       
 driver                     version: 2.0.3.1                                  
@@ -251,16 +272,6 @@ driver                     version: 2.0.3.1
                            Description: NXP FreeMASTER. Real time non        
                            intrusive debugger.                               
 
-jsmn                       version: NA                                       
-                           Location:                                         
-                           rtos/amazon-freertos/lib/third_party/jsmn         
-                           Description: JSMN (Jasmine) JSON parser.          
-                           License: MIT                                      
-                           Author: Serge A. Zaitsev                          
-                           name: JSMN                                        
-                           Format: source code                               
-                           URL: http://zserge.com/jsmn.html                  
-
 Amazon_FreeRTOS            Author: Real Time Engineers, Ltd.                 
                            Description: IoT operating system for             
                            microcontrollers                                  
@@ -270,7 +281,7 @@ Amazon_FreeRTOS            Author: Real Time Engineers, Ltd.
                            Location: rtos/amazon-freertos                    
                            name: Amazon FreeRTOS                             
                            URL: https://aws.amazon.com/freertos/             
-                           version: 1.4.0                                    
+                           version: 1.4.6                                    
 
 wifi_qca                   version: 2.0.0                                    
                            Location: middleware/wifi_qca                     
@@ -338,7 +349,8 @@ Unity                      Author: Unity Project by Mike Karlesky, Mark
                            License: MIT. See                                 
                            ,<rootfolder>/rtos/amazon-freertos/lib/third_party
                            /unity/docs/license.txt                           
-                           Location: rtos/amazon-freertos                    
+                           Location:                                         
+                           rtos/amazon-freertos/lib/third_party/unity        
                            name: Unity                                       
                            URL: http://www.throwtheswitch.org/unity          
                            version: 2.4.2                                    
@@ -350,7 +362,7 @@ lwip                       Author: Swedish Institute of Computer Science
                            Location: middleware/lwip                         
                            name: lwIP TCP/IP Stack                           
                            URL: http://savannah.nongnu.org/projects/lwip     
-                           version: 2.0.3                                    
+                           version: 2.1.2                                    
 
 emwin                      version: 5.48                                     
                            Location: middleware/emwin                        
@@ -383,6 +395,15 @@ Pedometer_Library          version: 1.0
                            name: Pedometer Library                           
                            Format: binary library                            
 
+freemaster                 Author: NXP                                       
+                           version: 3.0.0                                    
+                           name: FreeMASTER                                  
+                           Format: source code & header files                
+                           License: Proprietary. See                         
+                           LA_OPT_NXP_Software_License.                      
+                           Location: middleware/freemaster                   
+                           Description: FreeMASTER run-time debugging tool   
+
 libjpeg                    Location: middleware/libjpeg                      
                            version: 9b                                       
                            Description: JPEG image encoding, decoding, and   
@@ -404,3 +425,103 @@ LittleFS                   version: 1.3
                            name: LittleFS                                    
                            Format: source code                               
                            URL: https://github.com/geky/littlefs             
+
+wifi_wiced                 version: 1.0.0                                    
+                           Location: middleware/wiced                        
+                           Description: Cypress WICED framework              
+                           License: Cypress IOT Community License Agreement  
+                           Author: Cypress Semiconductor Corporation         
+                           name: wifi_wiced                                  
+                           Format: source code                               
+
+wifi_wiced - wl_tool       Location:                                         
+                           middleware/wiced/43xxx_Wi-Fi/libraries/test/wl_too
+                           l/wl4343WA1.exe                                   
+                           Description: Manufacturing test utility           
+                           License: Cypress IOT Community License Agreement  
+                           Author: Cypress Semiconductor Corporation         
+                           name: wl_tool                                     
+                           Format: binary                                    
+
+CMSIS-NN                   name: CMSIS-NN library                            
+                           version: 1.0.0 (CMSIS download 5.3.0)             
+                           License: Apache-2.0                               
+                           Format: source code                               
+                           Author: ARM                                       
+                           URL:                                              
+                           https://github.com/ARM-software/CMSIS_5/releases/t
+                           ag/5.3.0                                          
+                           Location: middleware/eiq/cmsis-nn                 
+                           Description: A neural network kernels library for 
+                           Cortex-M cores from ARM                           
+
+TensorFlow Lite            name: TensorFlow Lite                             
+                           version: 1.11.0                                   
+                           License: Apache-2.0                               
+                           Format: source code                               
+                           Author: See middleware/eiq/tensorflow-lite/AUTHORS
+                           URL: https://github.com/tensorflow/tensorflow     
+                           Location: middleware/eiq/tensorflow-lite,         
+                           middleware/eiq/tensorflow-lite/third_party/eigen3 
+                           Description: Software library for running machine 
+                           learning models on mobile and embedded devices    
+
+Eigen                      name: Eigen                                       
+                           version: NA (commit fd68453)                      
+                           License: MPL-2.0                                  
+                           Format: source code                               
+                           Author: http://eigen.tuxfamily.org                
+                           URL: https://bitbucket.org/eigen/eigen            
+                           Location:                                         
+                           middleware/eiq/tensorflow-lite/third_party/eigen  
+                           Description: A C++ template library for linear    
+                           algebra - matrices, vectors, numerical solvers,   
+                           and related algorithms                            
+
+FarmHash                   name: FarmHash                                    
+                           version: 1.1 (commit 816a4ae)                     
+                           License: MIT                                      
+                           Format: source code                               
+                           Author: Google, Inc.                              
+                           URL: https://github.com/google/farmhash           
+                           Location:                                         
+                           middleware/eiq/tensorflow-lite/third_party/farmhas
+                           h                                                 
+                           Description: Hash functions for strings and other 
+                           data                                              
+
+FFT2D                      name: FFT2D                                       
+                           version: NA                                       
+                           License: Public Domain                            
+                           Format: source code                               
+                           Author: Takuya Ooura                              
+                           URL:                                              
+                           http://www.kurims.kyoto-u.ac.jp/~ooura/fft.html   
+                           Location:                                         
+                           middleware/eiq/tensorflow-lite/third_party/fft2d  
+                           Description: FFT package in C                     
+
+FlatBuffers                name: FlatBuffers                                 
+                           version: 1.8.0                                    
+                           License: Apache-2.0                               
+                           Format: source code                               
+                           Author: https://google.github.io/flatbuffers      
+                           URL: https://github.com/google/flatbuffers        
+                           Location:                                         
+                           middleware/eiq/tensorflow-lite/third_party/flatbuf
+                           fers                                              
+                           Description: Cross platform serialization library 
+
+gemmlowp                   name: gemmlowp                                    
+                           version: NA (commit 38ebac7)                      
+                           License: Apache-2.0                               
+                           Format: source code                               
+                           Author: See                                       
+                           middleware/eiq/tensorflow-lite/third_party/gemmlow
+                           p/AUTHORS                                         
+                           URL: https://github.com/google/gemmlowp           
+                           Location:                                         
+                           middleware/eiq/tensorflow-lite/third_party/gemmlow
+                           p                                                 
+                           Description: A small self-contained low-precision 
+                           GEMM library                                      
