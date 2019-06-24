@@ -288,6 +288,56 @@ void BOARD_InitPins(void)
 		IOMUXC_GPIO_AD_B0_10_ARM_TRACE_SWO,
 		0x00F9u);
 #endif
+  IOMUXC_SetPinConfig(
+      IOMUXC_GPIO_AD_B1_09_SAI1_MCLK,         /* GPIO_AD_B1_09 PAD functional properties : */
+      0x10B0u);                               /* Slew Rate Field: Slow Slew Rate
+                                                 Drive Strength Field: R0/6
+                                                 Speed Field: medium(100MHz)
+                                                 Open Drain Enable Field: Open Drain Disabled
+                                                 Pull / Keep Enable Field: Pull/Keeper Enabled
+                                                 Pull / Keep Select Field: Keeper
+                                                 Pull Up / Down Config. Field: 100K Ohm Pull Down
+                                                 Hyst. Enable Field: Hysteresis Disabled */
+  IOMUXC_SetPinConfig(
+      IOMUXC_GPIO_AD_B1_12_SAI1_RX_DATA00,    /* GPIO_AD_B1_12 PAD functional properties : */
+      0x10B0u);                               /* Slew Rate Field: Slow Slew Rate
+                                                 Drive Strength Field: R0/6
+                                                 Speed Field: medium(100MHz)
+                                                 Open Drain Enable Field: Open Drain Disabled
+                                                 Pull / Keep Enable Field: Pull/Keeper Enabled
+                                                 Pull / Keep Select Field: Keeper
+                                                 Pull Up / Down Config. Field: 100K Ohm Pull Down
+                                                 Hyst. Enable Field: Hysteresis Disabled */
+  IOMUXC_SetPinConfig(
+      IOMUXC_GPIO_AD_B1_13_SAI1_TX_DATA00,    /* GPIO_AD_B1_13 PAD functional properties : */
+      0x10B0u);                               /* Slew Rate Field: Slow Slew Rate
+                                                 Drive Strength Field: R0/6
+                                                 Speed Field: medium(100MHz)
+                                                 Open Drain Enable Field: Open Drain Disabled
+                                                 Pull / Keep Enable Field: Pull/Keeper Enabled
+                                                 Pull / Keep Select Field: Keeper
+                                                 Pull Up / Down Config. Field: 100K Ohm Pull Down
+                                                 Hyst. Enable Field: Hysteresis Disabled */
+  IOMUXC_SetPinConfig(
+      IOMUXC_GPIO_AD_B1_14_SAI1_TX_BCLK,      /* GPIO_AD_B1_14 PAD functional properties : */
+      0x10B0u);                               /* Slew Rate Field: Slow Slew Rate
+                                                 Drive Strength Field: R0/6
+                                                 Speed Field: medium(100MHz)
+                                                 Open Drain Enable Field: Open Drain Disabled
+                                                 Pull / Keep Enable Field: Pull/Keeper Enabled
+                                                 Pull / Keep Select Field: Keeper
+                                                 Pull Up / Down Config. Field: 100K Ohm Pull Down
+                                                 Hyst. Enable Field: Hysteresis Disabled */
+  IOMUXC_SetPinConfig(
+      IOMUXC_GPIO_AD_B1_15_SAI1_TX_SYNC,      /* GPIO_AD_B1_15 PAD functional properties : */
+      0x10B0u);                               /* Slew Rate Field: Slow Slew Rate
+                                                 Drive Strength Field: R0/6
+                                                 Speed Field: medium(100MHz)
+                                                 Open Drain Enable Field: Open Drain Disabled
+                                                 Pull / Keep Enable Field: Pull/Keeper Enabled
+                                                 Pull / Keep Select Field: Keeper
+                                                 Pull Up / Down Config. Field: 100K Ohm Pull Down
+                                                 Hyst. Enable Field: Hysteresis Disabled */
 }
 
 /*

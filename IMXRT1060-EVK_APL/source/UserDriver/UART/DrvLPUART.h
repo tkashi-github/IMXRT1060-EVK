@@ -110,7 +110,7 @@ static inline void RTOS_GetChar(TCHAR *ch)
  */
 extern _Bool DrvLPUARTRecv(enLPUART_t enUARTNo, uint8_t pu8data[], const uint32_t ByteCnt, uint32_t u32Timeout);
 
-static inline _Bool DrvUARTIsRxBufferEmpty(enLPUART_t enUARTNo)
+static inline _Bool DrvLPUARTIsRxBufferEmpty(enLPUART_t enUARTNo)
 {
     _Bool bret = false;
     if ((enUARTNo >= enLPUART_MIN) || (enUARTNo <= enLPUART_MAX))
