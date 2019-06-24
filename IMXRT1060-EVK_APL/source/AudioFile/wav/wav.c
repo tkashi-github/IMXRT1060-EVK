@@ -43,7 +43,7 @@ static _Bool WaveFilaHeaderCheck(stRIFFChunkDescriptor_t *pstHeader)
 {
 	_Bool bret = false;
 
-	if ((memcmp(pstHeader->riffId, "RIFF", 4) == 0) && (memcmp(pstHeader->waveId, "WAVE", 4) == 0))
+	if ((mimic_memcmp((uintptr_t)pstHeader->riffId, (uintptr_t)"RIFF", 4) == 0) && (mimic_memcmp((uintptr_t)pstHeader->waveId, (uintptr_t)"WAVE", 4) == 0))
 	{
 		//mimic_printf("[%s (%d)] riffSize = %lu\r\n", __func__, __LINE__, pstHeader->riffSize);
 		bret = true;
@@ -96,7 +96,7 @@ static _Bool FormatChunkRead(FIL *pFile, uint32_t u32ChunkSize, stFormatChunkDat
 	{
 		if (u32ReadByte == u32ChunkSize)
 		{
-			memcpy(pstChunk, pu8buf, sizeof(stFormatChunkData_t));
+			mimic_memcpy((uintptr_t)pstChunk, (uintptr_t)pu8buf, sizeof(stFormatChunkData_t));
 			bret = true;
 		}
 	}
@@ -147,14 +147,14 @@ static uint32_t ActualWAVFileRead(const TCHAR szFilePath[], uint8_t pu8Buffer[],
 		while ((ChunkHeaderRead(&stFile, &stChunkHeader) != false) && bOK)
 		{
 			bOK = true;
-			if (memcmp(stChunkHeader.ckId, "fmt ", 4) == 0)
+			if (mimic_memcmp((uintptr_t)stChunkHeader.ckId, (uintptr_t)"fmt ", 4) == 0)
 			{
 				/** Read fmt Chunk */
 				mimic_printf("[%s (%d)] Read fmt Chunk\r\n", __func__, __LINE__);
 
 				bOK = FormatChunkRead(&stFile, stChunkHeader.ckSize, pstFormat);
 			}
-			else if (memcmp(stChunkHeader.ckId, "data", 4) == 0)
+			else if (mimic_memcmp((uintptr_t)stChunkHeader.ckId, (uintptr_t)"data", 4) == 0)
 			{
 				/** Read data Chunk */
 				mimic_printf("[%s (%d)] Read data Chunk(stChunkHeader.ckSize = %lu)\r\n", __func__, __LINE__, stChunkHeader.ckSize);
@@ -251,7 +251,7 @@ _Bool WAVFileReadFormatChunk(const TCHAR szFilePath[], stFormatChunkData_t *pstF
 
 		while ((ChunkHeaderRead(&stFile, &stChunkHeader) != false) && bret)
 		{
-			if (memcmp(stChunkHeader.ckId, "fmt ", 4) == 0)
+			if (mimic_memcmp((uintptr_t)stChunkHeader.ckId, (uintptr_t)"fmt ", 4) == 0)
 			{
 				/** Read fmt Chunk */
 				bret = FormatChunkRead(&stFile, stChunkHeader.ckSize, pstFormat);
@@ -324,7 +324,7 @@ uint32_t WAVFileReadPCMData(FIL *fp, uint8_t pu8[], uint32_t BufferSize, uint32_
 
 	while (ChunkHeaderRead(fp, &stChunkHeader) != false)
 	{
-		if (memcmp(stChunkHeader.ckId, "data", 4) == 0)
+		if (mimic_memcmp((uintptr_t)stChunkHeader.ckId, (uintptr_t)"data", 4) == 0)
 		{
 
 			if ((BufferSize - u32ReadByte) > stChunkHeader.ckSize)
@@ -385,15 +385,15 @@ _Bool WAVCreateHeader(FIL *pWav, uint32_t sampleRate, uint16_t numChannels, uint
 		return false;
 	}
 
-	memcpy(stRIFFcd.riffId, "RIFF", 4);
+	mimic_memcpy((uintptr_t)stRIFFcd.riffId, (uintptr_t)"RIFF", 4);
 	stRIFFcd.riffSize = 0x7FFFFFFF;
-	memcpy(stRIFFcd.waveId, "WAVE", 4);
+	mimic_memcpy((uintptr_t)stRIFFcd.waveId, (uintptr_t)"WAVE", 4);
 	if (FR_OK != f_write(pWav, (uint8_t *)&stRIFFcd, sizeof(stRIFFcd), (UINT *)&bw))
 	{
 		return false;
 	}
 
-	memcpy(stFmt.header.ckId, "fmt ", 4);
+	mimic_memcpy((uintptr_t)stFmt.header.ckId, (uintptr_t)"fmt ", 4);
 	stFmt.header.ckSize = 16;
 	stFmt.data.wFormatTag = 0x01u;
 	stFmt.data.nChannels = numChannels;
@@ -406,7 +406,7 @@ _Bool WAVCreateHeader(FIL *pWav, uint32_t sampleRate, uint16_t numChannels, uint
 		return false;
 	}
 
-	memcpy(stData.header.ckId, "data", 4);
+	mimic_memcpy((uintptr_t)stData.header.ckId, (uintptr_t)"data", 4);
 	stData.header.ckSize = 0x7fffffff - 36; /** 12 + 16 + 8 = 36*/
 	if (FR_OK != f_write(pWav, (uint8_t *)&stData, sizeof(stData), (UINT *)&bw))
 	{

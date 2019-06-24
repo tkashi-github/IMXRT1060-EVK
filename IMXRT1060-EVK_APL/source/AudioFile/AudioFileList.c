@@ -47,7 +47,7 @@ static _Bool IsAudioFile(const TCHAR szFileName[])
 
 	mimic_tcsupper(sztemp);
 	//mimic_printf("%s (%s)\r\n", szFileName, sztemp);
-	if (memcmp(sztemp, _T("WAV"), 3 * sizeof(TCHAR)) == 0)
+	if (mimic_memcmp((uintptr_t)sztemp, (uintptr_t)_T("WAV"), 3 * sizeof(TCHAR)) == 0)
 	{
 		return true;
 	}
@@ -80,7 +80,7 @@ static void rMakeAudioFileListALL(const TCHAR szDirPath[])
 				continue;
 			}
 
-			if (strcmp(stFInfo.fname, ".") && strcmp(stFInfo.fname, ".."))
+			if (mimic_strcmp(stFInfo.fname, ".", sizeof(stFInfo.fname)) && mimic_strcmp(stFInfo.fname, "..", sizeof(stFInfo.fname)))
 			{
 				if (stFInfo.fattrib & AM_DIR)
 				{
@@ -93,7 +93,7 @@ static void rMakeAudioFileListALL(const TCHAR szDirPath[])
 					if (IsAudioFile(stFInfo.fname) != false)
 					{
 						mimic_sprintf(szTmp, kFilePathLenMax, "%s/%s", szDirPath, stFInfo.fname);
-						strncpy(s_szAudioFileListAll[s_u32AudioFileNumAll], szTmp, kFilePathLenMax * sizeof(TCHAR));
+						mimic_strcpy(s_szAudioFileListAll[s_u32AudioFileNumAll], szTmp, kFilePathLenMax * sizeof(TCHAR));
 						s_u32AudioFileNumAll++;
 					}
 				}
@@ -133,10 +133,12 @@ static int tcharcmp(const void *a, const void *b)
 	}
 }
 
+#include <stdlib.h>
+
 uint32_t MakeAudioFileListALL(void)
 {
 	s_u32AudioFileNumAll = 0;
-	memset(s_szAudioFileListAll, 0, sizeof(s_szAudioFileListAll));
+	mimic_memset((uintptr_t)s_szAudioFileListAll, 0, sizeof(s_szAudioFileListAll));
 	rMakeAudioFileListALL("A:");
 
 	qsort(s_szAudioFileListAll, s_u32AudioFileNumAll, sizeof(TCHAR) * kFilePathLenMax, tcharcmp);
@@ -147,7 +149,7 @@ uint32_t MakeAudioFileListCurrentDir(void)
 	DIR stDir;
 
 	s_u32AudioFileNumDir = 0;
-	memset(s_szAudioFileListDir, 0, sizeof(s_szAudioFileListDir));
+	mimic_memset((uintptr_t)s_szAudioFileListDir, 0, sizeof(s_szAudioFileListDir));
 
 	if (FR_OK == f_opendir(&stDir, "."))
 	{
@@ -166,11 +168,11 @@ uint32_t MakeAudioFileListCurrentDir(void)
 			{
 				continue;
 			}
-			if (strcmp(stFInfo.fname, ".") && strcmp(stFInfo.fname, ".."))
+			if (mimic_strcmp(stFInfo.fname, ".", sizeof(stFInfo.fname)) && mimic_strcmp(stFInfo.fname, "..", sizeof(stFInfo.fname)))
 			{
 				if (IsAudioFile(stFInfo.fname) != false)
 				{
-					strncpy(s_szAudioFileListDir[s_u32AudioFileNumDir], stFInfo.fname, kFilePathLenMax * sizeof(TCHAR));
+					mimic_strcpy(s_szAudioFileListDir[s_u32AudioFileNumDir], stFInfo.fname, kFilePathLenMax * sizeof(TCHAR));
 					s_u32AudioFileNumDir++;
 				}
 			}
@@ -249,7 +251,7 @@ enAudioFileType_t GetAudioFileType(const TCHAR szFileName[])
 
 	mimic_tcsupper(sztemp);
 	//mimic_printf("%s (%s)\r\n", szFileName, sztemp);
-	if (memcmp(sztemp, _T("WAV"), 3 * sizeof(TCHAR)) == 0)
+	if (mimic_memcmp((uintptr_t)sztemp, (uintptr_t)_T("WAV"), 3 * sizeof(TCHAR)) == 0)
 	{
 		return enAudioFileWAV;
 	}

@@ -2,8 +2,8 @@
  * @file		mimiclib.h
  * @brief		mimiclib is insteadof stdio.h, stdlib.h and string.h
  * @author		Takashi Kashiwagi
- * @date		2019/6/17
- * @version     0.4.0
+ * @date		2019/6/24
+ * @version     0.4.3
  * @details 
  * --
  * License Type (MIT License)
@@ -32,6 +32,7 @@
  * - 2018/10/28: Takashi Kashiwagi: v0.2 for IMXRT1060-EVK
  * - 2019/05/19: Takashi Kashiwagi: v0.3.1
  * - 2019/06/17: Takashi Kashiwagi: v0.4.0
+ * - 2019/06/24: Takashi Kashiwagi: v0.4.3
  */
 #ifndef __cplusplus
 #if __STDC_VERSION__ < 201112L
@@ -54,23 +55,60 @@ extern "C"
 	#endif
 #endif
 
+/** NULL Pointer */
 #ifndef __cplusplus
 #ifndef NULL
 #define NULL (void*)0
 #endif
 #endif
 
+/** TCHAR */
 #ifndef TCHAR_TYPE
-typedef char TCHAR;
+#define TCHAR_TYPE
+/** 
+ * @brief UTF8 Mode
+ */
+typedef char TCHAR;		
 #endif
 
-/** \defgroup MIMICLIB
+/** \defgroup MIMICLIB mimic library
   @{
 */
 
+
+/**
+ * @brief getc (Blocking)
+ * @param [out] ch Received character
+ * @return void
+ */
+void MIMICLIB_GetChar(TCHAR *ch);
+
+/**
+ * @brief putc (Blocking)
+ * @param [in] ch character
+ * @return void
+ */
+void MIMICLIB_PutChar(TCHAR ch);
+
+/**
+ * @brief puts (with Semapore)
+ * @param [in] pszStr NULL Terminate String
+ * @return void
+ */
+void MIMICLIB_PutString(const TCHAR pszStr[]);
+
+/**
+ * @brief kbhits
+ * @return true There are some characters in Buffer
+ * @return false There are no characters in Buffer
+ */
+_Bool MIMICLIB_kbhit(void);
+
+
+
 /**
  * @brief strlen
- * @param [in] szStr NULL Terminate String
+ * @param [in] pszStr NULL Terminate String (!= NULL)
  * @return uint32_t Length
  */
 static inline uint32_t mimic_strlen(const char pszStr[]){
@@ -78,17 +116,16 @@ static inline uint32_t mimic_strlen(const char pszStr[]){
 	uint32_t u32Cnt = 0u;
 
 	/*-- begin --*/
-	if(pszStr != NULL){
+	if(pszStr != (const char *)NULL){
 		while(pszStr[u32Cnt] != '\0'){
 			u32Cnt++;
 		}
-
 	}
 	return u32Cnt;
 }
 /**
  * @brief tcslen
- * @param [in] szStr NULL Terminate String
+ * @param [in] pszStr NULL Terminate String (!= NULL)
  * @return uint32_t Length
  */
 static inline uint32_t mimic_tcslen(const TCHAR pszStr[]){
@@ -96,7 +133,7 @@ static inline uint32_t mimic_tcslen(const TCHAR pszStr[]){
 	uint32_t u32Cnt = 0u;
 
 	/*-- begin --*/
-	if(pszStr != NULL){
+	if(pszStr != (const char *)NULL){
 		while(pszStr[u32Cnt] != '\0'){
 			u32Cnt++;
 		}
@@ -105,70 +142,10 @@ static inline uint32_t mimic_tcslen(const TCHAR pszStr[]){
 	return u32Cnt;
 }
 
-#ifndef UNIT_TEST
-/** OS */
-#include "FreeRTOS.h"
-#include "event_groups.h"
-#include "timers.h"
-#include "semphr.h"
-#include "OSResource.h"
-
-/** Board */
-#include "UART/DrvLPUART.h"
-
-#ifndef kStdioPort
-#warning "Please set kStdioPort!!"
-#define kStdioPort enLPUART1
-#endif
-
-#define DEF_NEED_DMB
-
-/**
- * @brief getc (Blocking)
- * @param [out] ch Received character
- * @return void
- */
-static inline void RTOS_GetChar(TCHAR *ch)
-{
-	if (ch != NULL)
-	{
-		DrvLPUARTRecv(kStdioPort, (uint8_t *)ch, sizeof(TCHAR), portMAX_DELAY);
-	}
-}
-/**
- * @brief putc (NonBlocking)
- * @param [in] ch character
- * @return void
- */
-static inline void RTOS_PutChar(TCHAR ch)
-{
-	DrvLPUARTSend(kStdioPort, (const uint8_t *)&ch, sizeof(TCHAR));
-}
-/**
- * @brief puts (with Semapore)
- * @param [in] pszStr NULL Terminate String
- * @return void
- */
-static inline void RTOS_PutString(const TCHAR pszStr[])
-{
-	uint32_t ByteCnt = mimic_tcslen(pszStr)*sizeof(TCHAR);
-	DrvLPUARTSend(kStdioPort, (const uint8_t *)pszStr, ByteCnt);
-}
-
-/**
- * @brief kbhits
- * @return true There are some characters in Buffer
- * @return false There are no characters in Buffer
- */
-static inline _Bool RTOS_kbhit(void){
-	return (_Bool)!DrvLPUARTIsRxBufferEmpty(kStdioPort);
-}
-#endif
-
 
 /**
  * @brief gets
- * @param [out] szStr NULL Terminate String buffer
+ * @param [out] pszStr NULL Terminate String buffer (!= NULL)
  * @param [out] u32Size buffer elements size
  * @return elements count
  */
@@ -176,14 +153,18 @@ extern uint32_t mimic_gets(TCHAR pszStr[], uint32_t u32Size);
 
 /**
  * @brief printf
+ * @param [in] fmt format string
+ * @param [in] ... variable list
  */
 extern void mimic_printf(const char* fmt, ...);
 
 /**
  * @brief sprintf
+ * @param [out] pszStr NULL Terminate String buffer (!= NULL)
+ * @param [in] fmt format string
+ * @param [in] ... variable list
  */
-extern void mimic_sprintf(TCHAR szDst[], uint32_t u32MaxElementOfszDst, const char* fmt, ...);
-
+extern void mimic_sprintf(TCHAR pszStr[], uint32_t u32MaxElementOfszDst, const char* fmt, ...);
 
 /**
  * @brief kbhit
@@ -194,6 +175,10 @@ extern _Bool mimic_kbhit(void);
 
 /**
  * @brief tcsvprintf
+ * @param [in,out] szDst address of dest buffer
+ * @param [in] u32MaxElementOfszDst size of szDst
+ * @param [in] szFormat format string
+ * @param [in] arg variable list
  */
 extern void mimic_tcsvprintf(TCHAR szDst[], uint32_t u32MaxElementOfszDst, const TCHAR szFormat[], va_list arg);
 
@@ -286,9 +271,6 @@ static inline _Bool mimic_memcpy(uintptr_t p1, uintptr_t p2, uint32_t u32ByteCnt
 		}
 		bret = true;
 	}
-#ifdef DEF_NEED_DMB
-	__DMB();
-#endif
 	return bret;
 }
 
@@ -313,9 +295,6 @@ static inline _Bool mimic_memset(uintptr_t p1, uint8_t val, uint32_t u32ByteCnt)
 		}
 		bret = true;
 	}
-#ifdef DEF_NEED_DMB
-	__DMB();
-#endif
 	return bret;
 }
 
@@ -445,12 +424,12 @@ static inline char *mimic_strcpy(char szDst[], const char szSrc[], const uint32_
 
 /**
  * @brief tcsncpy
- * @param [inout] szDst (!=NULL)
- * @param [in] szSrc (!=NULL)
+ * @param [in,out] szDst (!= NULL)
+ * @param [in] szSrc (!= NULL)
  * @param [in] u32DstSize 
  * @return char* 
  */
-static inline TCHAR * mimic_tcscpy(TCHAR szDst[], const TCHAR szSrc[], uint32_t DstSize)
+static inline TCHAR * mimic_tcscpy(TCHAR szDst[], const TCHAR szSrc[], uint32_t u32DstSize)
 {
 	/*-- var --*/
 	uint32_t i = 0u;
@@ -458,7 +437,7 @@ static inline TCHAR * mimic_tcscpy(TCHAR szDst[], const TCHAR szSrc[], uint32_t 
 	/*-- begin --*/
 	if((szDst != (char*)NULL) && (szSrc != (const char*)NULL))
 	{
-		for(i=0;i<DstSize;i++)
+		for(i=0;i<u32DstSize;i++)
 		{
 			szDst[i] = (TCHAR)'\0';
 		}
@@ -467,7 +446,7 @@ static inline TCHAR * mimic_tcscpy(TCHAR szDst[], const TCHAR szSrc[], uint32_t 
 		{
 			szDst[i] = szSrc[i];
 			i++;
-			if(i >= DstSize)
+			if(i >= u32DstSize)
 			{
 				break;
 			}
@@ -477,6 +456,9 @@ static inline TCHAR * mimic_tcscpy(TCHAR szDst[], const TCHAR szSrc[], uint32_t 
 	return szDst;
 }
 
+/**
+ * @brief Return Code Of strcpy functions
+ */
 typedef enum{
 	enStr1ltStr2 = -1,
 	enStr1eqStr2 = 0,
@@ -553,7 +535,7 @@ static inline enRetrunCodeStrCmp_t mimic_tcsncmp(const TCHAR szStr1[], const TCH
  * @brief ltoa
  * @param [in] i32Val
  * @param [inout] szDst != NULL
- * @param [in] u32NumberOfElements (!= 0)
+ * @param [in] u32MaxElementOfszDst (!= 0)
  * @return TCHAR * (szDst)
  */
 static inline TCHAR *mimic_ltoa(const int32_t i32Val, TCHAR szDst[], uint32_t u32MaxElementOfszDst)
@@ -611,7 +593,7 @@ static inline TCHAR *mimic_ltoa(const int32_t i32Val, TCHAR szDst[], uint32_t u3
  * @brief ultoa
  * @param [in] u32Val
  * @param [inout] szDst != NULL
- * @param [in] u32NumberOfElements (!= 0)
+ * @param [in] u32MaxElementOfszDst (!= 0)
  * @param [in] u32Radix (!= 0)
  * @return TCHAR * (szDst)
  */
@@ -661,7 +643,7 @@ static inline TCHAR *mimic_ultoa(const uint32_t u32Val, TCHAR szDst[], const uin
  * @brief lltoa
  * @param [in] i64Val
  * @param [inout] szDst != NULL
- * @param [in] u32NumberOfElements (!= 0)
+ * @param [in] u32MaxElementOfszDst (!= 0)
  * @return TCHAR * (szDst)
  */
 static inline TCHAR *mimic_lltoa(const int64_t i64Val, TCHAR szDst[], const uint32_t u32MaxElementOfszDst)
@@ -718,7 +700,7 @@ static inline TCHAR *mimic_lltoa(const int64_t i64Val, TCHAR szDst[], const uint
  * @brief ulltoa
  * @param [in] u64Val
  * @param [inout] szDst != NULL
- * @param [in] u32NumberOfElements (!= 0)
+ * @param [in] u32MaxElementOfszDst (!= 0)
  * @param [in] u32Radix (!= 0)
  * @return TCHAR * (szDst)
  */

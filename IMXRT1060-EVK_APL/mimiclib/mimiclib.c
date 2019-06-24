@@ -2,8 +2,8 @@
  * @file		mimiclib.c
  * @brief		mimiclib is insteadof stdio.h, stdlib.h and string.h
  * @author		Takashi Kashiwagi
- * @date		2019/6/17
- * @version     0.4.0
+ * @date		2019/6/24
+ * @version     0.4.3
  * @details 
  * --
  * License Type (MIT License)
@@ -32,6 +32,7 @@
  * - 2018/10/28: Takashi Kashiwagi: v0.2 for IMXRT1060-EVK
  * - 2019/05/19: Takashi Kashiwagi: v0.3.1
  * - 2019/06/17: Takashi Kashiwagi: v0.4.0
+ * - 2019/06/24: Takashi Kashiwagi: v0.4.3
  */
 #include "mimiclib.h"
 
@@ -40,20 +41,27 @@
 #include <stdlib.h>
 #include <string.h>
 
-uint32_t mimic_gets(char pszStr[], uint32_t u32Size)
+void MIMICLIB_GetChar(TCHAR *ch)
 {
-	uint32_t ret = 0;
-	if (fgets(pszStr, u32Size, stdin) != NULL)
-	{
-		ret = strlen(pszStr);
-	}
-	return ret;
+	*ch = getc(stdin);
 }
-_Bool mimic_kbhit(void)
+
+void MIMICLIB_PutChar(TCHAR ch)
 {
-	return true; //kbhit();
+	putc(ch, stdout);
 }
-#else
+
+void MIMICLIB_PutString(const TCHAR pszStr[])
+{
+	fputs(pszStr, stdout);
+}
+
+_Bool MIMICLIB_kbhit(void)
+{
+	return true;
+}
+#endif
+
 uint32_t mimic_gets(char pszStr[], uint32_t u32Size)
 {
 	uint32_t u32Cnt = 0u;
@@ -67,7 +75,7 @@ uint32_t mimic_gets(char pszStr[], uint32_t u32Size)
 		while (bReturnCode == false)
 		{
 			char ch;
-			RTOS_GetChar(&ch);
+			MIMICLIB_GetChar(&ch);
 
 			switch (ch)
 			{
@@ -76,17 +84,17 @@ uint32_t mimic_gets(char pszStr[], uint32_t u32Size)
 				{
 					u32Cnt--;
 					pszStr[u32Cnt] = '\0';
-					RTOS_PutChar('\b');
-					RTOS_PutChar(' ');
-					RTOS_PutChar('\b');
+					MIMICLIB_PutChar('\b');
+					MIMICLIB_PutChar(' ');
+					MIMICLIB_PutChar('\b');
 				}
 				break;
 			case '\r': // TeraTermの改行コードは "CR"設定ではCRのみ送られてくる（CRLFにならない）
 				//u32Cnt--;
 				pszStr[u32Cnt] = '\0';
 				bReturnCode = true;
-				RTOS_PutChar((char)ch);
-				RTOS_PutChar('\n'); // 相手はWindowsと仮定してLRも送信する
+				MIMICLIB_PutChar((char)ch);
+				MIMICLIB_PutChar('\n'); // 相手はWindowsと仮定してLRも送信する
 				break;
 			default:
 				pszStr[u32Cnt] = ch;
@@ -97,7 +105,7 @@ uint32_t mimic_gets(char pszStr[], uint32_t u32Size)
 					pszStr[u32Cnt] = '\0';
 					break;
 				}
-				RTOS_PutChar((char)ch);
+				MIMICLIB_PutChar((char)ch);
 				break;
 			}
 		}
@@ -108,37 +116,32 @@ uint32_t mimic_gets(char pszStr[], uint32_t u32Size)
 
 _Bool mimic_kbhit(void)
 {
-	return RTOS_kbhit();
+	return MIMICLIB_kbhit();
 }
-
-
-#endif
 
 void mimic_printf(const char *fmt, ...)
 {
 	va_list arg;
-	char szBuffer[1024];
+	char szBuffer[512];
 
 	va_start(arg, fmt);
 	mimic_tcsvprintf(szBuffer, sizeof(szBuffer), fmt, arg);
 	va_end(arg);
 
-#ifdef UNIT_TEST
-	fputs(szBuffer, stdout);
-#else
-	RTOS_PutString(szBuffer);
-#endif
+	MIMICLIB_PutString(szBuffer);
 }
-
-void mimic_sprintf(TCHAR szDst[], uint32_t u32MaxElementOfszDst, const char* fmt, ...)
+void mimic_sprintf(TCHAR pszStr[], uint32_t u32MaxElementOfszDst, const char* fmt, ...)
 {
 	va_list arg;
 
 	va_start(arg, fmt);
-	mimic_tcsvprintf(szDst, u32MaxElementOfszDst, fmt, arg);
+	mimic_tcsvprintf(pszStr, sizeof(u32MaxElementOfszDst), fmt, arg);
 	va_end(arg);
 }
 
+/**
+ * @brief print format Flags
+ */
 typedef enum
 {
 	enPrintfFlagsMinus = 0x01U,
@@ -174,7 +177,7 @@ void mimic_tcsvprintf(
 	{
 		return;
 	}
-	memset(szDst, 0, sizeof(TCHAR) * u32MaxElementOfszDst);
+	mimic_memset((uintptr_t)szDst, 0, sizeof(TCHAR) * u32MaxElementOfszDst);
 
 	pszStr = (TCHAR *)szFormat;
 	while (*pszStr != (TCHAR)'\0')

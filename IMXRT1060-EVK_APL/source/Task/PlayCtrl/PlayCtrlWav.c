@@ -69,7 +69,6 @@ DefALLOCATE_ITCM uint8_t *OpenWavFile(const TCHAR szFilePath[], stCodecCondition
 
 	sizeofpcm = stFormat.wBitsPerSample / 8;
 	{
-		uint32_t u32queueNum = DEF_BUFFER_QUEUE_SIZE;
 		if( (DEF_BUFFER_QUEUE_SIZE % stFormat.nChannels) == 0)
 		{
 			*pu32PCMBufferSize = DEF_BUFFER_SAMPLE_SIZE * DEF_BUFFER_QUEUE_SIZE * sizeofpcm;
