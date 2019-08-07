@@ -59,7 +59,7 @@ extern void DumpAudioFileListCurrentDir(void);
 extern void CmdMakeAudioFileList(uint32_t argc, const char *argv[]);
 
 
-enAudioFileType_t GetAudioFileType(const TCHAR szFileName[]);
+enAudioFileType_t GetAudioFileType(const TCHAR szFileName[], uint32_t SizeofStr);
 
 #ifdef __cplusplus
 }

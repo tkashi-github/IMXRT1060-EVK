@@ -75,10 +75,10 @@ void ConsoleTask(void const *argument){
 		
 		/** Split Command and argments */
 		argc = 0u;
-		argv[argc] = mimic_strtok(szBuf, " ", &ctx);
+		argv[argc] = mimic_strtok(szBuf, sizeof(szBuf), " ", sizeof(" "), &ctx);
     	while (argv[argc] != NULL) {
 			argc++;
-			argv[argc] = mimic_strtok(NULL, " ", &ctx);
+			argv[argc] = mimic_strtok(NULL, sizeof(szBuf), " ", sizeof(" "), &ctx);
 			if(argc >= 15u){
 				break;
 			}

@@ -40,10 +40,10 @@ static TCHAR s_szAudioFileListDir[kAudioFileMax][kFilePathLenMax];
 static uint32_t s_u32AudioFileNumAll = 0;
 static uint32_t s_u32AudioFileNumDir = 0;
 
-static _Bool IsAudioFile(const TCHAR szFileName[])
+static _Bool IsAudioFile(const TCHAR szFileName[], uint32_t SizeofStr)
 {
 	TCHAR sztemp[5] = {0};
-	GetFileExt(sztemp, szFileName, 5);
+	GetFileExt(sztemp, szFileName, SizeofStr, 5);
 
 	mimic_tcsupper(sztemp);
 	//mimic_printf("%s (%s)\r\n", szFileName, sztemp);
@@ -90,7 +90,7 @@ static void rMakeAudioFileListALL(const TCHAR szDirPath[])
 				}
 				else
 				{
-					if (IsAudioFile(stFInfo.fname) != false)
+					if (IsAudioFile(stFInfo.fname, sizeof(stFInfo.fname)) != false)
 					{
 						mimic_sprintf(szTmp, kFilePathLenMax, "%s/%s", szDirPath, stFInfo.fname);
 						mimic_strcpy(s_szAudioFileListAll[s_u32AudioFileNumAll], szTmp, kFilePathLenMax * sizeof(TCHAR));
@@ -170,7 +170,7 @@ uint32_t MakeAudioFileListCurrentDir(void)
 			}
 			if (mimic_strcmp(stFInfo.fname, ".", sizeof(stFInfo.fname)) && mimic_strcmp(stFInfo.fname, "..", sizeof(stFInfo.fname)))
 			{
-				if (IsAudioFile(stFInfo.fname) != false)
+				if (IsAudioFile(stFInfo.fname, sizeof(stFInfo.fname)) != false)
 				{
 					mimic_strcpy(s_szAudioFileListDir[s_u32AudioFileNumDir], stFInfo.fname, kFilePathLenMax * sizeof(TCHAR));
 					s_u32AudioFileNumDir++;
@@ -244,10 +244,10 @@ void CmdMakeAudioFileList(uint32_t argc, const char *argv[])
 	DumpAudioFileListCurrentDir();
 }
 
-enAudioFileType_t GetAudioFileType(const TCHAR szFileName[])
+enAudioFileType_t GetAudioFileType(const TCHAR szFileName[], uint32_t SizeofStr)
 {
 	TCHAR sztemp[5] = {0};
-	GetFileExt(sztemp, szFileName, 5);
+	GetFileExt(sztemp, szFileName, SizeofStr, 5);
 
 	mimic_tcsupper(sztemp);
 	//mimic_printf("%s (%s)\r\n", szFileName, sztemp);

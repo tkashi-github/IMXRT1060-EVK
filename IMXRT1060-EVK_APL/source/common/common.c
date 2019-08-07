@@ -89,13 +89,13 @@ void reboot(void){
 	}
 }
 
-TCHAR *GetFileExt(TCHAR szExt[], const TCHAR szFilePath[], size_t SizeExt)
+TCHAR *GetFileExt(TCHAR szExt[], const TCHAR szFilePath[], uint32_t SizeofStr, size_t SizeExt)
 {
 	size_t slen;
 	size_t i;
 	TCHAR *pret = szExt;
 	szExt[0] = (TCHAR)'\0';
-	slen = mimic_tcslen(szFilePath);
+	slen = mimic_tcslen(szFilePath, SizeofStr);
 	if (slen > 0)
 	{
 		i = slen - 1;

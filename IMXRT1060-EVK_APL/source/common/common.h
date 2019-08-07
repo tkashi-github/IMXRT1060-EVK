@@ -44,7 +44,7 @@ extern "C"
 #include "UserTypedef.h"
 
 extern void MemDump(uintptr_t addr, size_t ByteCnt);
-extern TCHAR *GetFileExt(TCHAR szExt[], const TCHAR szFilePath[], size_t SizeExt);
+extern TCHAR *GetFileExt(TCHAR szExt[], const TCHAR szFilePath[], uint32_t SizeofStr, size_t SizeExt);
 extern void reboot(void);
 
 #ifdef __cplusplus

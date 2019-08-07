@@ -106,7 +106,6 @@ extern void CreateMsgQueue(void);
 extern void CreateBinarySemaphore(void);
 extern void CreateEventGroup(void);
 extern void CreateStreamBuffer(void);
-extern void CreateMsgQueue(void);
 
 #ifdef __cplusplus
 }

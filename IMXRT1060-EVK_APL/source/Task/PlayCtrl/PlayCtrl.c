@@ -67,7 +67,7 @@ DefALLOCATE_ITCM static _Bool GetNextTrackNo(uint32_t *pu32TrackNo);
 DefALLOCATE_ITCM static _Bool PostMsgPlayCtrlPlaying(void);
 DefALLOCATE_ITCM static _Bool PostMsgPlayCtrlRecording(void);
 
-DefALLOCATE_ITCM static uint8_t *OpenNextPlayFile(uint32_t u32NowTrackNo, TCHAR szCurrentFilePath[],
+DefALLOCATE_ITCM static uint8_t *OpenNextPlayFile(uint32_t u32NowTrackNo, TCHAR szCurrentFilePath[], uint32_t SizeofStr, 
 												  stCodecCondition_t *pst, uint32_t *pu32BufSize,
 												  _Bool bForceInit);
 
@@ -164,7 +164,7 @@ DefALLOCATE_ITCM static void S0_E1(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 
 	if (IsPlayAudioFileOpend() == false)
 	{
-		s_pu8PCMBufferPlayPCMBuffer = OpenNextPlayFile(s_u32NowTrackNo, s_szCurrentFilePath, &s_stPlayCondition, &s_u32PCMBufferSize, true);
+		s_pu8PCMBufferPlayPCMBuffer = OpenNextPlayFile(s_u32NowTrackNo, s_szCurrentFilePath, sizeof(s_szCurrentFilePath), &s_stPlayCondition, &s_u32PCMBufferSize, true);
 
 		if (s_pu8PCMBufferPlayPCMBuffer == NULL)
 		{
@@ -242,7 +242,7 @@ DefALLOCATE_ITCM static void S1_E2(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 	if (IsPlayAudioFileOpend() == false)
 	{
 		/** Open Audio File */
-		s_pu8PCMBufferPlayPCMBuffer = OpenNextPlayFile(s_u32NowTrackNo, s_szCurrentFilePath, &s_stPlayCondition, &s_u32PCMBufferSize, false);
+		s_pu8PCMBufferPlayPCMBuffer = OpenNextPlayFile(s_u32NowTrackNo, s_szCurrentFilePath, sizeof(s_szCurrentFilePath), &s_stPlayCondition, &s_u32PCMBufferSize, false);
 
 		/** Check PCM Buffer */
 		if (s_pu8PCMBufferPlayPCMBuffer == NULL)
@@ -470,7 +470,7 @@ DefALLOCATE_ITCM static void CloseRecProcess(void)
  * @param [in]  szCurrentFilePath FilePath
  * @return pu8PCMBuffer Pointer of PCM Buffer
  */
-DefALLOCATE_ITCM static uint8_t *OpenNextPlayFile(uint32_t u32NowTrackNo, TCHAR szCurrentFilePath[], stCodecCondition_t *pst, uint32_t *pu32BufSize, _Bool bForceInit)
+DefALLOCATE_ITCM static uint8_t *OpenNextPlayFile(uint32_t u32NowTrackNo, TCHAR szCurrentFilePath[], uint32_t SizeofStr, stCodecCondition_t *pst, uint32_t *pu32BufSize, _Bool bForceInit)
 {
 	uint8_t *pu8PCMBuffer = NULL;
 
@@ -482,7 +482,7 @@ DefALLOCATE_ITCM static uint8_t *OpenNextPlayFile(uint32_t u32NowTrackNo, TCHAR 
 	}
 
 	/** File Type? */
-	pst->enFileType = GetAudioFileType(szCurrentFilePath);
+	pst->enFileType = GetAudioFileType(szCurrentFilePath, SizeofStr);
 
 	/** Open AudioFile for Play */
 	pu8PCMBuffer = OpenPlayAudioFile(szCurrentFilePath, pst, pu32BufSize);

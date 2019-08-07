@@ -373,9 +373,9 @@ void MIMICLIB_PutChar(TCHAR ch)
  * @param [in] pszStr NULL Terminate String
  * @return void
  */
-void MIMICLIB_PutString(const TCHAR pszStr[])
+void MIMICLIB_PutString(const TCHAR pszStr[], uint32_t SizeofStr)
 {
-	uint32_t ByteCnt = mimic_tcslen(pszStr)*sizeof(TCHAR);
+	uint32_t ByteCnt = mimic_tcslen(pszStr, SizeofStr)*sizeof(TCHAR);
 	DrvLPUARTSend(kStdioPort, (const uint8_t *)pszStr, ByteCnt);
 }
 
