@@ -294,7 +294,7 @@ _Bool DrvLPUARTSend(enLPUART_t enUARTNo, const uint8_t pu8data[], const uint32_t
     _Bool bret = false;
     if ((enUARTNo >= enLPUART_MIN) && (enUARTNo <= enLPUART_MAX) && (pu8data != NULL) && (ByteCnt > 0))
 	{
-		if (osSemaphoreAcquire(g_bsIdLPUARTTxSemaphore[enUARTNo], portMAX_DELAY) == osOK)
+		if (osSemaphoreAcquire(g_semidLPUARTTxSemaphore[enUARTNo], portMAX_DELAY) == osOK)
 		{
 			if(pdFALSE != xPortIsInsideInterrupt()){
 				BaseType_t xHigherPriorityTaskWoken = pdFALSE;
@@ -322,7 +322,7 @@ _Bool DrvLPUARTSend(enLPUART_t enUARTNo, const uint8_t pu8data[], const uint32_t
 				
 			}
 			/** End */
-			osSemaphoreRelease(g_bsIdLPUARTTxSemaphore[enUARTNo]);
+			osSemaphoreRelease(g_semidLPUARTTxSemaphore[enUARTNo]);
 		}
 	}
 	return bret;
@@ -333,13 +333,13 @@ _Bool DrvLPUARTRecv(enLPUART_t enUARTNo, uint8_t pu8data[], const uint32_t ByteC
 	_Bool bret = false;
     if ((enUARTNo >= enLPUART_MIN) && (enUARTNo <= enLPUART_MAX))
 	{
-		if (osSemaphoreAcquire(g_bsIdLPUARTRxSemaphore[enUARTNo], portMAX_DELAY) == osOK)
+		if (osSemaphoreAcquire(g_semidLPUARTRxSemaphore[enUARTNo], portMAX_DELAY) == osOK)
 		{
 			if(xStreamBufferReceive(g_sbhLPUARTRx[enUARTNo], pu8data, ByteCnt, u32Timeout) >= ByteCnt)
 			{
 				bret = true;
 			}
-			osSemaphoreRelease(g_bsIdLPUARTRxSemaphore[enUARTNo]);
+			osSemaphoreRelease(g_semidLPUARTRxSemaphore[enUARTNo]);
 		}
 	}
 	return bret;

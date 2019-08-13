@@ -85,6 +85,18 @@ DefALLOCATE_BSS_DTCM alignas(4) static StaticEventGroup_t s_ef##EventName;
 #define OS_RESOURCE_MACRO_EVENT_TABLE(EventName) \
 {&g_eid##EventName, {#EventName, 0, &s_ef##EventName, sizeof(StaticEventGroup_t)}}
 
+/** 
+ * @brief OSResource Macro : Semaphore Declaration
+ */
+#define OS_RESOURCE_MACRO_SEM_DECLAR(SemaphoreName)	\
+extern osSemaphoreId_t g_semid##SemaphoreName
+
+#define OS_RESOURCE_MACRO_SEM_DEFINE(SemaphoreName)	\
+DefALLOCATE_BSS_DTCM alignas(4) osSemaphoreId_t g_semid##SemaphoreName;\
+DefALLOCATE_BSS_DTCM alignas(4) static StaticSemaphore_t s_sem##SemaphoreName
+
+#define OS_RESOURCE_MACRO_SEM_TABLE(SemaphoreName, Max,Init)	\
+{&g_semid##SemaphoreName, {#SemaphoreName, 0, &s_sem##SemaphoreName, sizeof(StaticSemaphore_t)}, (Max), (Init)}
 
 /* Interrupt Priority */
 #define kIRQ_PRIORITY_LPUART    (14u)
@@ -127,12 +139,13 @@ OS_RESOURCE_MACRO_EVENT_DECLAR(PlayCtrl);
 OS_RESOURCE_MACRO_EVENT_DECLAR(SoundTask[enNumOfSoundTask]);
 
 /** Binary Semaphore */
-extern osSemaphoreId_t g_bsIdLPUARTRxSemaphore[];
-extern osSemaphoreId_t g_bsIdLPUARTTxSemaphore[];
-extern osSemaphoreId_t g_bsIdStorageTaskMsg;
-extern osSemaphoreId_t g_bsIdComboSensor;
-extern osSemaphoreId_t g_bsIdCameraTask;
-extern osSemaphoreId_t g_bsIdMousePosition;
+OS_RESOURCE_MACRO_SEM_DECLAR(LPUARTRxSemaphore[1+enLPUART_MAX]);
+OS_RESOURCE_MACRO_SEM_DECLAR(LPUARTTxSemaphore[1+enLPUART_MAX]);
+OS_RESOURCE_MACRO_SEM_DECLAR(StorageTaskMsg);
+OS_RESOURCE_MACRO_SEM_DECLAR(ComboSensor);
+OS_RESOURCE_MACRO_SEM_DECLAR(CameraTask);
+OS_RESOURCE_MACRO_SEM_DECLAR(MousePosition);
+
 
 /** Queue */
 extern osMessageQueueId_t g_mqLcdTask;

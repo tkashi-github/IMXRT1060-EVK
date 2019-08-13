@@ -149,43 +149,35 @@ typedef struct{
 	uint32_t u32InitCount;
 }stBinarySemaphoreTable_t;
 
-DefALLOCATE_BSS_DTCM alignas(4) osSemaphoreId_t g_bsIdLPUARTRxSemaphore[1+enLPUART_MAX] = {NULL};
-DefALLOCATE_BSS_DTCM alignas(4) osSemaphoreId_t g_bsIdLPUARTTxSemaphore[1+enLPUART_MAX] = {NULL};
-DefALLOCATE_BSS_DTCM alignas(4) osSemaphoreId_t g_bsIdStorageTaskMsg;
-DefALLOCATE_BSS_DTCM alignas(4) osSemaphoreId_t g_bsIdComboSensor;
-DefALLOCATE_BSS_DTCM alignas(4) osSemaphoreId_t g_bsIdCameraTask;
-DefALLOCATE_BSS_DTCM alignas(4) osSemaphoreId_t g_bsIdMousePosition;
-
-DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xLPUARTRxSemaphoreBuffer[1+enLPUART_MAX];
-DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xLPUARTTxSemaphoreBuffer[1+enLPUART_MAX];
-DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xStorageTaskMsgBuffer;
-DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xComboSensor;
-DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xCameraTask;
-DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xMousePosition;
+OS_RESOURCE_MACRO_SEM_DEFINE(LPUARTRxSemaphore[1+enLPUART_MAX]);
+OS_RESOURCE_MACRO_SEM_DEFINE(LPUARTTxSemaphore[1+enLPUART_MAX]);
+OS_RESOURCE_MACRO_SEM_DEFINE(StorageTaskMsg);
+OS_RESOURCE_MACRO_SEM_DEFINE(ComboSensor);
+OS_RESOURCE_MACRO_SEM_DEFINE(CameraTask);
+OS_RESOURCE_MACRO_SEM_DEFINE(MousePosition);
 
 static stBinarySemaphoreTable_t s_stBinarySemaphoreTable[] = {
-	{&g_bsIdLPUARTRxSemaphore[enLPUART1], {"BS_LPUART1RX", 0, &s_xLPUARTRxSemaphoreBuffer[enLPUART1], sizeof(StaticSemaphore_t)}, 1, 1},
-	{&g_bsIdLPUARTRxSemaphore[enLPUART2], {"BS_LPUART2RX", 0, &s_xLPUARTRxSemaphoreBuffer[enLPUART2], sizeof(StaticSemaphore_t)}, 1, 1},
-	{&g_bsIdLPUARTRxSemaphore[enLPUART3], {"BS_LPUART3RX", 0, &s_xLPUARTRxSemaphoreBuffer[enLPUART3], sizeof(StaticSemaphore_t)}, 1, 1},
-	{&g_bsIdLPUARTRxSemaphore[enLPUART4], {"BS_LPUART4RX", 0, &s_xLPUARTRxSemaphoreBuffer[enLPUART4], sizeof(StaticSemaphore_t)}, 1, 1},
-	{&g_bsIdLPUARTRxSemaphore[enLPUART5], {"BS_LPUART5RX", 0, &s_xLPUARTRxSemaphoreBuffer[enLPUART5], sizeof(StaticSemaphore_t)}, 1, 1},
-	{&g_bsIdLPUARTRxSemaphore[enLPUART6], {"BS_LPUART6RX", 0, &s_xLPUARTRxSemaphoreBuffer[enLPUART6], sizeof(StaticSemaphore_t)}, 1, 1},
-	{&g_bsIdLPUARTRxSemaphore[enLPUART7], {"BS_LPUART7RX", 0, &s_xLPUARTRxSemaphoreBuffer[enLPUART7], sizeof(StaticSemaphore_t)}, 1, 1},
-	{&g_bsIdLPUARTRxSemaphore[enLPUART8], {"BS_LPUART8RX", 0, &s_xLPUARTRxSemaphoreBuffer[enLPUART8], sizeof(StaticSemaphore_t)}, 1, 1},
+	OS_RESOURCE_MACRO_SEM_TABLE(LPUARTTxSemaphore[enLPUART1], 1, 1),
+	OS_RESOURCE_MACRO_SEM_TABLE(LPUARTTxSemaphore[enLPUART2], 1, 1),
+	OS_RESOURCE_MACRO_SEM_TABLE(LPUARTTxSemaphore[enLPUART3], 1, 1),
+	OS_RESOURCE_MACRO_SEM_TABLE(LPUARTTxSemaphore[enLPUART4], 1, 1),
+	OS_RESOURCE_MACRO_SEM_TABLE(LPUARTTxSemaphore[enLPUART5], 1, 1),
+	OS_RESOURCE_MACRO_SEM_TABLE(LPUARTTxSemaphore[enLPUART6], 1, 1),
+	OS_RESOURCE_MACRO_SEM_TABLE(LPUARTTxSemaphore[enLPUART7], 1, 1),
+	OS_RESOURCE_MACRO_SEM_TABLE(LPUARTTxSemaphore[enLPUART8], 1, 1),
+	OS_RESOURCE_MACRO_SEM_TABLE(LPUARTRxSemaphore[enLPUART1], 1, 1),
+	OS_RESOURCE_MACRO_SEM_TABLE(LPUARTRxSemaphore[enLPUART2], 1, 1),
+	OS_RESOURCE_MACRO_SEM_TABLE(LPUARTRxSemaphore[enLPUART3], 1, 1),
+	OS_RESOURCE_MACRO_SEM_TABLE(LPUARTRxSemaphore[enLPUART4], 1, 1),
+	OS_RESOURCE_MACRO_SEM_TABLE(LPUARTRxSemaphore[enLPUART5], 1, 1),
+	OS_RESOURCE_MACRO_SEM_TABLE(LPUARTRxSemaphore[enLPUART6], 1, 1),
+	OS_RESOURCE_MACRO_SEM_TABLE(LPUARTRxSemaphore[enLPUART7], 1, 1),
+	OS_RESOURCE_MACRO_SEM_TABLE(LPUARTRxSemaphore[enLPUART8], 1, 1),
 
-	{&g_bsIdLPUARTTxSemaphore[enLPUART1], {"BS_LPUART1TX", 0, &s_xLPUARTTxSemaphoreBuffer[enLPUART1], sizeof(StaticSemaphore_t)}, 1, 1},
-	{&g_bsIdLPUARTTxSemaphore[enLPUART2], {"BS_LPUART2TX", 0, &s_xLPUARTTxSemaphoreBuffer[enLPUART2], sizeof(StaticSemaphore_t)}, 1, 1},
-	{&g_bsIdLPUARTTxSemaphore[enLPUART3], {"BS_LPUART3TX", 0, &s_xLPUARTTxSemaphoreBuffer[enLPUART3], sizeof(StaticSemaphore_t)}, 1, 1},
-	{&g_bsIdLPUARTTxSemaphore[enLPUART4], {"BS_LPUART4TX", 0, &s_xLPUARTTxSemaphoreBuffer[enLPUART4], sizeof(StaticSemaphore_t)}, 1, 1},
-	{&g_bsIdLPUARTTxSemaphore[enLPUART5], {"BS_LPUART5TX", 0, &s_xLPUARTTxSemaphoreBuffer[enLPUART5], sizeof(StaticSemaphore_t)}, 1, 1},
-	{&g_bsIdLPUARTTxSemaphore[enLPUART6], {"BS_LPUART6TX", 0, &s_xLPUARTTxSemaphoreBuffer[enLPUART6], sizeof(StaticSemaphore_t)}, 1, 1},
-	{&g_bsIdLPUARTTxSemaphore[enLPUART7], {"BS_LPUART7TX", 0, &s_xLPUARTTxSemaphoreBuffer[enLPUART7], sizeof(StaticSemaphore_t)}, 1, 1},
-	{&g_bsIdLPUARTTxSemaphore[enLPUART8], {"BS_LPUART8TX", 0, &s_xLPUARTTxSemaphoreBuffer[enLPUART8], sizeof(StaticSemaphore_t)}, 1, 1},
-
-	{&g_bsIdStorageTaskMsg, {"BS_STORAGETASKMSG", 0, &s_xStorageTaskMsgBuffer, sizeof(StaticSemaphore_t)}, 1, 1},
-	{&g_bsIdComboSensor, {"BS_COMBOSENSOR", 0, &s_xComboSensor, sizeof(StaticSemaphore_t)}, 1, 1},
-	{&g_bsIdCameraTask, {"BS_CAMERATASKMSG", 0, &s_xCameraTask, sizeof(StaticSemaphore_t)}, 1, 1},
-	{&g_bsIdMousePosition, {"BS_MOUSEPOSITION", 0, &s_xMousePosition, sizeof(StaticSemaphore_t)}, 1, 1},
+	OS_RESOURCE_MACRO_SEM_TABLE(StorageTaskMsg, 1, 1),
+	OS_RESOURCE_MACRO_SEM_TABLE(ComboSensor, 1, 1),
+	OS_RESOURCE_MACRO_SEM_TABLE(CameraTask, 1, 1),
+	OS_RESOURCE_MACRO_SEM_TABLE(MousePosition, 1, 1),
 
 	{NULL, {NULL, 0, NULL, 0}, 0, 0},
 };

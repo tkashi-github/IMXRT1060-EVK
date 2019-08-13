@@ -43,7 +43,7 @@ static void SensorTaskReadDataFromDevice(int16_t pi16Accel[], int16_t pi16Mag[])
 	uint16_t au16Mag[3];
 	
 	if(FXOS8700ReadData(au16Accel, au16Mag) == kStatus_Success){
-		if (osSemaphoreAcquire(g_bsIdComboSensor, 5) == osOK)
+		if (osSemaphoreAcquire(g_semidComboSensor, 5) == osOK)
 		{
 			
 			mimic_memcpy((uintptr_t)pi16Accel, (uintptr_t)au16Accel, sizeof(au16Accel));
@@ -51,7 +51,7 @@ static void SensorTaskReadDataFromDevice(int16_t pi16Accel[], int16_t pi16Mag[])
 			pi16Accel[0] /= 4;
 			pi16Accel[1] /= 4;
 			pi16Accel[2] /= 4;
-			osSemaphoreRelease(g_bsIdComboSensor);
+			osSemaphoreRelease(g_semidComboSensor);
 		}
 	}else{
 		mimic_printf("[%s (%d)] FXOS8700ReadData NG\r\n", __func__, __LINE__);
@@ -87,12 +87,12 @@ DefALLOCATE_ITCM void SensorTask(void const *argument)
 
 _Bool SensorTaskReadData(int16_t pi16Accel[], int16_t pi16Mag[]){
 	_Bool bret = false;
-	if (osSemaphoreAcquire(g_bsIdComboSensor, 5) == osOK)
+	if (osSemaphoreAcquire(g_semidComboSensor, 5) == osOK)
 	{
 		bret = true;
 		mimic_memcpy((uintptr_t)pi16Accel, (uintptr_t)s_ai16Accel, sizeof(s_ai16Accel));
 		mimic_memcpy((uintptr_t)pi16Mag, (uintptr_t)s_ai16Mag, sizeof(s_ai16Mag));
-		osSemaphoreRelease(g_bsIdComboSensor);
+		osSemaphoreRelease(g_semidComboSensor);
 	}
 
 	return bret;

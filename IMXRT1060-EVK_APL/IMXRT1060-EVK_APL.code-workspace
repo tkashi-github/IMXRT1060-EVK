@@ -63,7 +63,8 @@
 			"pin_mux.h": "c",
 			"tempmonitask.h": "c",
 			"drvlpuart.h": "c",
-			"audiofilelist.h": "c"
+			"audiofilelist.h": "c",
+			"xiosbase": "cpp"
 		},
 		"C_Cpp.default.defines": [
 			"__GNUC__",

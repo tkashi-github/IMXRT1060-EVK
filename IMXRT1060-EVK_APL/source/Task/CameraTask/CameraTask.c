@@ -329,7 +329,7 @@ DefALLOCATE_ITCM void PostMsgCameraTaskBtnPushed(void)
 		tTimeout = 0;
 	}
 
-	if (osSemaphoreAcquire(g_bsIdCameraTask, tTimeout) == osOK)
+	if (osSemaphoreAcquire(g_semidCameraTask, tTimeout) == osOK)
 	{
 		stTaskMsgBlock_t stTaskMsg;
 		memset(&stTaskMsg, 0, sizeof(stTaskMsgBlock_t));
@@ -345,7 +345,7 @@ DefALLOCATE_ITCM void PostMsgCameraTaskBtnPushed(void)
 		{
 			xStreamBufferSend(g_sbhCameraTask, &stTaskMsg, sizeof(stTaskMsg), 10);
 		}
-		osSemaphoreRelease(g_bsIdCameraTask);
+		osSemaphoreRelease(g_semidCameraTask);
 	}
 }
 
