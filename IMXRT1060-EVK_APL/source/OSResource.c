@@ -59,122 +59,30 @@ typedef struct{
 
 
 /** Task Handle */
-DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_InitialTaskHandle;
-DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_ConsoleTaskHandle;
-DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_StorageTaskHandle;
-DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_LanTaskHandle;
-//DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_SensorTaskHandle;
-//DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_CameraTaskHandle;
-DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_LcdTaskHandle;
-DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_TouchScreenTaskHandle;
-DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_TempMoniTaskHandle;
-DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_hndSoundTask;
-DefALLOCATE_BSS_DTCM alignas(32) osThreadId_t g_hndPlayCtrl;
-
-/** Task Control Block (STATIC ALLOCATION)*/
-DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_InitialTaskTCB;
-DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_ConsoleTaskTCB;
-DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_StorageTaskTCB;
-DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_LanTaskTCB;
-//DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_SensorTaskTCB;
-//DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_CameraTaskTCB;
-DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_LcdTaskTCB;
-DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_TouchScreenTaskTCB;
-DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_TempMoniTaskTCB;
-DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_SoundTaskTCB;
-DefALLOCATE_BSS_DTCM alignas(32) static StaticTask_t s_PlayCtrlTCB;
-
-/** Task Stack (STATIC ALLOCATION)*/
-DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_InitialTaskStack[8192/sizeof(uint32_t)];
-DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_ConsoleTaskStack[8192/sizeof(uint32_t)];
-DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_StorageTaskStack[8192/sizeof(uint32_t)];
-DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_LanTaskStack[8192/sizeof(uint32_t)];
-//DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_SensorTaskStack[8192/sizeof(uint32_t)];
-//DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_CameraTaskStack[8192/sizeof(uint32_t)];
-DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_LcdTaskStack[8192/sizeof(uint32_t)];
-DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_TouchScreenTaskStack[8192/sizeof(uint32_t)];
-DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_TempMoniTaskStack[8192/sizeof(uint32_t)];
-DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_SoundTaskSTACK[8192/sizeof(uint32_t)];
-DefALLOCATE_BSS_DTCM alignas(32) static uint32_t s_PlayCtrlSTACK[16384/sizeof(uint32_t)];
+OS_RESOURCE_MACRO_TASK_DEFINE(InitialTask, 8192);
+OS_RESOURCE_MACRO_TASK_DEFINE(ConsoleTask, 8192);
+OS_RESOURCE_MACRO_TASK_DEFINE(StorageTask, 8192);
+OS_RESOURCE_MACRO_TASK_DEFINE(LanTask, 8192);
+OS_RESOURCE_MACRO_TASK_DEFINE(LcdTask, 8192);
+OS_RESOURCE_MACRO_TASK_DEFINE(TouchScreenTask, 8192);
+OS_RESOURCE_MACRO_TASK_DEFINE(TempMoniTask, 8192);
+OS_RESOURCE_MACRO_TASK_DEFINE(SoundTask, 8192);
+OS_RESOURCE_MACRO_TASK_DEFINE(PlayCtrl, 16384);
 
 /** Task Table */
 static const stOSdefTable_t s_stTaskTable[] = {
-	{
-		&g_InitialTaskHandle,
-		(osThreadFunc_t)InitialTask,
-		NULL,
-		{"InitialTask", osThreadDetached, &s_InitialTaskTCB, sizeof(s_InitialTaskTCB), s_InitialTaskStack, sizeof(s_InitialTaskStack), osPriorityLow, 0, 0},
-	},
-	{
-		&g_ConsoleTaskHandle,
-		(osThreadFunc_t)ConsoleTask,
-		NULL,
-		{"ConsoleTask", osThreadDetached, &s_ConsoleTaskTCB, sizeof(s_ConsoleTaskTCB), s_ConsoleTaskStack, sizeof(s_ConsoleTaskStack), osPriorityBelowNormal, 0, 0},
-	},
-	{	/** StorageTask1 */
-		&g_StorageTaskHandle,
-		(osThreadFunc_t)StorageTask,
-		(void*)enUSDHC1,
-		{"StorageTask1", osThreadDetached, &s_StorageTaskTCB, sizeof(s_StorageTaskTCB), s_StorageTaskStack, sizeof(s_StorageTaskStack), osPriorityNormal, 0, 0},
-	},
-	{	/** LanTask */
-		&g_LanTaskHandle,
-		(osThreadFunc_t)LanTask,
-		NULL,
-		{"LanTask", osThreadDetached, &s_LanTaskTCB, sizeof(s_LanTaskTCB), s_LanTaskStack, sizeof(s_LanTaskStack), osPriorityBelowNormal, 0, 0},
-	},
-	{	/** LcdTask */
-		&g_LcdTaskHandle,
-		(osThreadFunc_t)LcdTask,
-		NULL,
-		{"LcdTask", osThreadDetached, &s_LcdTaskTCB, sizeof(s_LcdTaskTCB), s_LcdTaskStack, sizeof(s_LcdTaskStack), osPriorityAboveNormal, 0, 0},
-	},
-	{	/** LcdTask */
-		&g_TouchScreenTaskHandle,
-		(osThreadFunc_t)TouchScreenTask,
-		NULL,
-		{"TouchScreenTask", osThreadDetached, &s_TouchScreenTaskTCB, sizeof(s_TouchScreenTaskTCB), s_TouchScreenTaskStack, sizeof(s_TouchScreenTaskStack), osPriorityBelowNormal, 0, 0},
-	},
-	{	/** TempMoniTask */
-		&g_TempMoniTaskHandle,
-		(osThreadFunc_t)TempMoniTask,
-		NULL,
-		{"TempMoniTask", osThreadDetached, &s_TempMoniTaskTCB, sizeof(s_TempMoniTaskTCB), s_TempMoniTaskStack, sizeof(s_TempMoniTaskStack), osPriorityBelowNormal, 0, 0},
-	},
-#if 0	/** IMXRT1060-EVK doesn't have FXOS8700 */
-	{	/** SensorTask */
-		&g_SensorTaskHandle,
-		(osThreadFunc_t)SensorTask,
-		NULL,
-		{"SensorTask", osThreadDetached, &s_SensorTaskTCB, sizeof(s_SensorTaskTCB), s_SensorTaskStack, sizeof(s_SensorTaskStack), osPriorityBelowNormal, 0, 0},
-	},
+	OS_RESOURCE_MACRO_TASK_TABLE(InitialTask, NULL, osPriorityLow),
+	OS_RESOURCE_MACRO_TASK_TABLE(ConsoleTask, NULL, osPriorityBelowNormal),
+	OS_RESOURCE_MACRO_TASK_TABLE(StorageTask, enUSDHC1, osPriorityNormal),
+	OS_RESOURCE_MACRO_TASK_TABLE(LanTask, NULL, osPriorityBelowNormal),
+	OS_RESOURCE_MACRO_TASK_TABLE(LcdTask, NULL, osPriorityAboveNormal),
+	OS_RESOURCE_MACRO_TASK_TABLE(TouchScreenTask, NULL, osPriorityBelowNormal),
+	OS_RESOURCE_MACRO_TASK_TABLE(TempMoniTask, NULL, osPriorityBelowNormal),
+	OS_RESOURCE_MACRO_TASK_TABLE(SoundTask, NULL, osPriorityHigh),
+	OS_RESOURCE_MACRO_TASK_TABLE(PlayCtrl, NULL, osPriorityAboveNormal),
 
-	{	/** CameraTask */
-		&g_CameraTaskHandle,
-		(osThreadFunc_t)CameraTask,
-		NULL,
-		{"CameraTask", osThreadDetached, &s_CameraTaskTCB, sizeof(s_CameraTaskTCB), s_CameraTaskStack, sizeof(s_CameraTaskStack), osPriorityBelowNormal, 0, 0},
-	},
-#endif
-	{	/** SoundTask1 */
-		&g_hndSoundTask,
-		(osThreadFunc_t)SoundTask,
-		(void*)0,
-		{"SoundTask1", osThreadDetached, &s_SoundTaskTCB, sizeof(s_SoundTaskTCB), s_SoundTaskSTACK, sizeof(s_SoundTaskSTACK), osPriorityHigh, 0, 0},
-	},
-	{	/** PlayCtrl */
-		&g_hndPlayCtrl,
-		(osThreadFunc_t)PlayCtrl,
-		NULL,
-		{"PlayCtrl", osThreadDetached, &s_PlayCtrlTCB, sizeof(s_PlayCtrlTCB), s_PlayCtrlSTACK, sizeof(s_PlayCtrlSTACK), osPriorityAboveNormal, 0, 0},
-	},
 	// Terminate
-	{	
-		NULL,
-		NULL,
-		NULL,
-		{0},
-	},
+	{NULL,NULL,NULL,{0}},
 };
 
 

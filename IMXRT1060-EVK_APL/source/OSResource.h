@@ -44,6 +44,27 @@ extern "C"
 /** User Typedefine */
 #include "UserTypedef.h"
 
+
+/** 
+ * @brief OSResource Macro : Task Declaration
+ */
+#define OS_RESOURCE_MACRO_TASK_DECLAR(TaskName)	\
+extern osThreadId_t g_tid##TaskName
+
+/** 
+ * @brief OSResource Macro : Task Definition
+ */
+#define OS_RESOURCE_MACRO_TASK_DEFINE(TaskName, StackSize)	\
+DefALLOCATE_BSS_DTCM alignas(4) osThreadId_t g_tid##TaskName;	\
+DefALLOCATE_BSS_DTCM alignas(4) static StaticTask_t s_tcb##TaskName;	\
+DefALLOCATE_BSS_DTCM alignas(4) static uint32_t s_stk##TaskName[(StackSize)/sizeof(uint32_t)]
+
+/** 
+ * @brief OSResource Macro : Task Table
+ */
+#define OS_RESOURCE_MACRO_TASK_TABLE(TaskName,  Argment, Priority)	\
+	{&g_tid##TaskName, (osThreadFunc_t)TaskName,(Argment), {#TaskName, osThreadDetached, &s_tcb##TaskName, sizeof(s_tcb##TaskName), s_stk##TaskName, sizeof(s_stk##TaskName), (Priority), 0, 0}}
+
 /** Interrupt Priority */
 #define kIRQ_PRIORITY_LPUART    (14u)
 #define kIRQ_PRIORITY_LPI2C     (13u)
@@ -62,12 +83,18 @@ extern "C"
 #define TCPIP_THREAD_STACKSIZE	        8192
 #define TCPIP_THREAD_PRIO	            osPriorityBelowNormal
 
+
+
 /** Task Handle */
-extern osThreadId_t g_InitialTaskHandle;
-extern osThreadId_t g_ConsoleTaskHandle;
-extern osThreadId_t g_LEDTaskHandle;
-extern osThreadId_t g_LanTaskHandle;
-//extern osThreadId_t g_CameraTaskHandle;
+OS_RESOURCE_MACRO_TASK_DECLAR(InitialTask);
+OS_RESOURCE_MACRO_TASK_DECLAR(ConsoleTask);
+OS_RESOURCE_MACRO_TASK_DECLAR(StorageTask);
+OS_RESOURCE_MACRO_TASK_DECLAR(LanTask);
+OS_RESOURCE_MACRO_TASK_DECLAR(LcdTask);
+OS_RESOURCE_MACRO_TASK_DECLAR(TouchScreenTask);
+OS_RESOURCE_MACRO_TASK_DECLAR(TempMoniTask);
+OS_RESOURCE_MACRO_TASK_DECLAR(SoundTask);
+OS_RESOURCE_MACRO_TASK_DECLAR(PlayCtrl);
 
 /** Event Group */
 extern osEventFlagsId_t g_efLPUART[];
