@@ -35,7 +35,7 @@
 #include "version.h"
 #include "ConsoleCmd.h"
 
-#include "mimiclib/mimiclib.h"
+#include "mimiclib/source/mimiclib.h"
 #include "UART/DrvLPUART.h"
 #include <string.h>
 

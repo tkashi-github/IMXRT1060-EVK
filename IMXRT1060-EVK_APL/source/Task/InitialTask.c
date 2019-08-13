@@ -42,7 +42,7 @@
 #include "OSResource.h"
 #include "common/update.h"
 #include "common/common.h"
-#include "mimiclib/mimiclib.h"
+#include "mimiclib/source/mimiclib.h"
 #include "Task/LanTask/LanTask.h"
 
 #include "SPIFlash/SPIFlash.h"

@@ -32,7 +32,7 @@
  */
 #include "FXOS8700/DrvFXOS8700.h"
 #include "board.h"
-#include "mimiclib/mimiclib.h"
+#include "mimiclib/source/mimiclib.h"
 
 #define DEF_COMBO_SENSOR_DEVICE_ADDR	FXOS8700_DEVICE_ADDR_SA_11
 

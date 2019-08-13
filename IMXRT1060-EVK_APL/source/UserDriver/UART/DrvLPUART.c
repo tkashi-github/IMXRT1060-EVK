@@ -345,7 +345,7 @@ _Bool DrvLPUARTRecv(enLPUART_t enUARTNo, uint8_t pu8data[], const uint32_t ByteC
 	return bret;
 }
 
-#include "mimiclib/mimiclib.h"
+#include "mimiclib/source/mimiclib.h"
 
 /**
  * @brief getc (Blocking)

@@ -31,7 +31,7 @@
  */
 #include "TouchScreenTask/TouchScreenTask.h"
 #include "board.h"
-#include "mimiclib/mimiclib.h"
+#include "mimiclib/source/mimiclib.h"
 #include "ff.h"
 #include "common/common.h"
 #include "fsl_gpio.h"

@@ -10,7 +10,7 @@
 #include "fsl_camera.h"
 #include "fsl_camera_device.h"
 #include "fsl_mt9m114.h"
-#include "mimiclib/mimiclib.h"
+#include "mimiclib/source/mimiclib.h"
 
 /*******************************************************************************
  * Definitions

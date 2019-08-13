@@ -30,7 +30,7 @@
  * - 2019/06/13: Takashi Kashiwagi: v0.1 for IMXRT1060-EVK
  */
 #include "AudioFile/AudioFileList.h"
-#include "mimiclib/mimiclib.h"
+#include "mimiclib/source/mimiclib.h"
 #include "ff.h"
 #include "common/common.h"
 

@@ -29,7 +29,7 @@
  * - 2019/06/13: Takashi Kashiwagi: v0.1 for IMXRT1060-EVK
  */
 #include "AudioFile/wav/wav.h"
-#include "mimiclib/mimiclib.h"
+#include "mimiclib/source/mimiclib.h"
 
 static _Bool WaveFilaHeaderRead(FIL *pFile, stWaveFileHeader_t *pstWaveHeader);
 static _Bool WaveFilaHeaderCheck(stRIFFChunkDescriptor_t *pstHeader);
