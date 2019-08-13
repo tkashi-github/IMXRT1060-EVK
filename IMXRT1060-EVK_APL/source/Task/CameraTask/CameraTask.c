@@ -253,7 +253,7 @@ static void CameraTaskActual(void)
 			* The LCDIF has active buffer and inactive buffer, so get two buffers here.
 			*/
 			/* Wait to get the full frame buffer to show. */
-			uint32_t u32Bits = osEventFlagsWait(g_efCameraSensor, 1, osFlagsWaitAny, 100);
+			uint32_t u32Bits = osEventFlagsWait(g_eidCameraSensor, 1, osFlagsWaitAny, 100);
 			if (u32Bits == 1)
 			{
 				mimic_printf("[%s (%d)] osEventFlagsWait OK\r\n", __func__, __LINE__);
@@ -280,7 +280,7 @@ static void CameraTaskActual(void)
 
 static void CallBackCameraDriverReceived(camera_receiver_handle_t *handle, status_t status, void *userData)
 {
-	osEventFlagsSet(g_efCameraSensor, 1);
+	osEventFlagsSet(g_eidCameraSensor, 1);
 }
 
 void CameraTask(void const *argument)

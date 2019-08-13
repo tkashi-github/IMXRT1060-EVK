@@ -65,7 +65,28 @@ DefALLOCATE_BSS_DTCM alignas(4) static uint32_t s_stk##TaskName[(StackSize)/size
 #define OS_RESOURCE_MACRO_TASK_TABLE(TaskName,  Argment, Priority)	\
 	{&g_tid##TaskName, (osThreadFunc_t)TaskName,(Argment), {#TaskName, osThreadDetached, &s_tcb##TaskName, sizeof(s_tcb##TaskName), s_stk##TaskName, sizeof(s_stk##TaskName), (Priority), 0, 0}}
 
-/** Interrupt Priority */
+
+/** 
+ * @brief OSResource Macro : EvenFlag Declaration
+ */
+#define OS_RESOURCE_MACRO_EVENT_DECLAR(EventName)	\
+extern osEventFlagsId_t g_eid##EventName
+
+/** 
+ * @brief OSResource Macro : EvenFlag Definition
+ */
+#define OS_RESOURCE_MACRO_EVENT_DEFINE(EventName)	\
+DefALLOCATE_BSS_DTCM alignas(4) osEventFlagsId_t g_eid##EventName;\
+DefALLOCATE_BSS_DTCM alignas(4) static StaticEventGroup_t s_ef##EventName;
+
+/** 
+ * @brief OSResource Macro : EvenFlag Table
+ */
+#define OS_RESOURCE_MACRO_EVENT_TABLE(EventName) \
+{&g_eid##EventName, {#EventName, 0, &s_ef##EventName, sizeof(StaticEventGroup_t)}}
+
+
+/* Interrupt Priority */
 #define kIRQ_PRIORITY_LPUART    (14u)
 #define kIRQ_PRIORITY_LPI2C     (13u)
 #define kIRQ_PRIORITY_GPIO      (12u)
@@ -78,14 +99,14 @@ DefALLOCATE_BSS_DTCM alignas(4) static uint32_t s_stk##TaskName[(StackSize)/size
 #define ENET_PRIORITY       kIRQ_PRIORITY_ENET
 #define ENET_1588_PRIORITY  kIRQ_PRIORITY_ENET
 
-/** for Protcol Stack */
+/* for Protcol Stack */
 #define TCPIP_MBOX_SIZE                 32
 #define TCPIP_THREAD_STACKSIZE	        8192
 #define TCPIP_THREAD_PRIO	            osPriorityBelowNormal
 
 
 
-/** Task Handle */
+/* Task Handle */
 OS_RESOURCE_MACRO_TASK_DECLAR(InitialTask);
 OS_RESOURCE_MACRO_TASK_DECLAR(ConsoleTask);
 OS_RESOURCE_MACRO_TASK_DECLAR(StorageTask);
@@ -96,14 +117,14 @@ OS_RESOURCE_MACRO_TASK_DECLAR(TempMoniTask);
 OS_RESOURCE_MACRO_TASK_DECLAR(SoundTask);
 OS_RESOURCE_MACRO_TASK_DECLAR(PlayCtrl);
 
-/** Event Group */
-extern osEventFlagsId_t g_efLPUART[];
-extern osEventFlagsId_t g_efFSReady;
-extern osEventFlagsId_t g_efCameraSensor;
-extern osEventFlagsId_t g_efSAITx[enNumOfSAI];
-extern osEventFlagsId_t g_efSAIRx[enNumOfSAI];
-extern osEventFlagsId_t g_efPlayCtrlEventGroup;
-extern osEventFlagsId_t g_efSoundTaskEventGroup[enNumOfSoundTask];
+/* Event Group */
+OS_RESOURCE_MACRO_EVENT_DECLAR(LPUART[1+enLPUART_MAX]);
+OS_RESOURCE_MACRO_EVENT_DECLAR(FSReady);
+OS_RESOURCE_MACRO_EVENT_DECLAR(CameraSensor);
+OS_RESOURCE_MACRO_EVENT_DECLAR(SAITx[enNumOfSAI]);
+OS_RESOURCE_MACRO_EVENT_DECLAR(SAIRx[enNumOfSAI]);
+OS_RESOURCE_MACRO_EVENT_DECLAR(PlayCtrl);
+OS_RESOURCE_MACRO_EVENT_DECLAR(SoundTask[enNumOfSoundTask]);
 
 /** Binary Semaphore */
 extern osSemaphoreId_t g_bsIdLPUARTRxSemaphore[];

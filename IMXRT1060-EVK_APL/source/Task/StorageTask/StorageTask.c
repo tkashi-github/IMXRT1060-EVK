@@ -199,7 +199,7 @@ DefALLOCATE_ITCM static void StorageMount(enSD_t enSlotNo)
 	if (sts == FR_OK)
 	{
 		mimic_printf("f_mount OK (Slot = %d)\r\n", enSlotNo + 1);
-		osEventFlagsSet(g_efFSReady, 1);
+		osEventFlagsSet(g_eidFSReady, 1);
 	}
 	else
 	{

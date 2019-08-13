@@ -102,45 +102,33 @@ typedef struct{
 }stEventFlagTable_t;
 
 /** osEventFlagsId_t */
-DefALLOCATE_BSS_DTCM alignas(4) osEventFlagsId_t g_efLPUART[1+enLPUART_MAX];
-DefALLOCATE_BSS_DTCM alignas(4) osEventFlagsId_t g_efFSReady;
-DefALLOCATE_BSS_DTCM alignas(4) osEventFlagsId_t g_efCameraSensor;
-DefALLOCATE_BSS_DTCM alignas(32) osEventFlagsId_t g_efSAITx[enNumOfSAI];
-DefALLOCATE_BSS_DTCM alignas(32) osEventFlagsId_t g_efSAIRx[enNumOfSAI];
-DefALLOCATE_BSS_DTCM alignas(32) osEventFlagsId_t g_efPlayCtrlEventGroup;
-DefALLOCATE_BSS_DTCM alignas(32) osEventFlagsId_t g_efSoundTaskEventGroup[enNumOfSoundTask];
-
-/** StaticEventGroup_t */
-DefALLOCATE_BSS_DTCM alignas(4) static StaticEventGroup_t s_xLPUARTEventGroupBuffer[1+enLPUART_MAX];
-DefALLOCATE_BSS_DTCM alignas(4) static StaticEventGroup_t s_xFSReadyEventGroupBuffer;
-DefALLOCATE_BSS_DTCM alignas(4) static StaticEventGroup_t s_xCameraSensorEventGroupBuffer;
-DefALLOCATE_BSS_DTCM alignas(32) static StaticEventGroup_t s_segSAITxEventGroupBuffer[enNumOfSAI];
-DefALLOCATE_BSS_DTCM alignas(32) static StaticEventGroup_t s_segSAIRxEventGroupBuffer[enNumOfSAI];
-DefALLOCATE_BSS_DTCM alignas(32) static StaticEventGroup_t s_segPlayCtrlEventGroupBuffer;
-DefALLOCATE_BSS_DTCM alignas(32) static StaticEventGroup_t s_segSoundTaskEventGroupBuffer[enNumOfSoundTask];
+OS_RESOURCE_MACRO_EVENT_DEFINE(LPUART[1+enLPUART_MAX]);
+OS_RESOURCE_MACRO_EVENT_DEFINE(FSReady);
+OS_RESOURCE_MACRO_EVENT_DEFINE(CameraSensor);
+OS_RESOURCE_MACRO_EVENT_DEFINE(SAITx[enNumOfSAI]);
+OS_RESOURCE_MACRO_EVENT_DEFINE(SAIRx[enNumOfSAI]);
+OS_RESOURCE_MACRO_EVENT_DEFINE(PlayCtrl);
+OS_RESOURCE_MACRO_EVENT_DEFINE(SoundTask[enNumOfSoundTask]);
 
 static stEventFlagTable_t s_stEventFlagTable[] = {
-	{&g_efLPUART[enLPUART1], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART1], sizeof(StaticEventGroup_t)}},
-	{&g_efLPUART[enLPUART2], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART2], sizeof(StaticEventGroup_t)}},
-	{&g_efLPUART[enLPUART3], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART3], sizeof(StaticEventGroup_t)}},
-	{&g_efLPUART[enLPUART4], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART4], sizeof(StaticEventGroup_t)}},
-	{&g_efLPUART[enLPUART5], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART5], sizeof(StaticEventGroup_t)}},
-	{&g_efLPUART[enLPUART6], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART6], sizeof(StaticEventGroup_t)}},
-	{&g_efLPUART[enLPUART7], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART7], sizeof(StaticEventGroup_t)}},
-	{&g_efLPUART[enLPUART8], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART8], sizeof(StaticEventGroup_t)}},
+	OS_RESOURCE_MACRO_EVENT_TABLE(LPUART[enLPUART1]),
+	OS_RESOURCE_MACRO_EVENT_TABLE(LPUART[enLPUART2]),
+	OS_RESOURCE_MACRO_EVENT_TABLE(LPUART[enLPUART3]),
+	OS_RESOURCE_MACRO_EVENT_TABLE(LPUART[enLPUART4]),
+	OS_RESOURCE_MACRO_EVENT_TABLE(LPUART[enLPUART5]),
+	OS_RESOURCE_MACRO_EVENT_TABLE(LPUART[enLPUART6]),
+	OS_RESOURCE_MACRO_EVENT_TABLE(LPUART[enLPUART7]),
+	OS_RESOURCE_MACRO_EVENT_TABLE(LPUART[enLPUART8]),
+	OS_RESOURCE_MACRO_EVENT_TABLE(FSReady),
+	OS_RESOURCE_MACRO_EVENT_TABLE(CameraSensor),
+	OS_RESOURCE_MACRO_EVENT_TABLE(SAITx[enSAI1]),
+	OS_RESOURCE_MACRO_EVENT_TABLE(SAITx[enSAI2]),
+	OS_RESOURCE_MACRO_EVENT_TABLE(SAIRx[enSAI1]),
+	OS_RESOURCE_MACRO_EVENT_TABLE(SAIRx[enSAI2]),
+	OS_RESOURCE_MACRO_EVENT_TABLE(PlayCtrl),
+	OS_RESOURCE_MACRO_EVENT_TABLE(SoundTask[enSoundTask1]),
+	OS_RESOURCE_MACRO_EVENT_TABLE(SoundTask[enSoundTask2]),
 
-	{&g_efSAITx[enSAI1], {"EF_SAITx1", 0, &s_segSAITxEventGroupBuffer[enSAI1], sizeof(StaticEventGroup_t)}},
-	{&g_efSAITx[enSAI2], {"EF_SAITx2", 0, &s_segSAITxEventGroupBuffer[enSAI2], sizeof(StaticEventGroup_t)}},
-
-	{&g_efSAIRx[enSAI1], {"EF_SAIRx1", 0, &s_segSAIRxEventGroupBuffer[enSAI1], sizeof(StaticEventGroup_t)}},
-	{&g_efSAIRx[enSAI2], {"EF_SAIRx2", 0, &s_segSAIRxEventGroupBuffer[enSAI2], sizeof(StaticEventGroup_t)}},
-
-	{&g_efPlayCtrlEventGroup, {"EF_PLAYCTRL", 0, &s_segPlayCtrlEventGroupBuffer, sizeof(StaticEventGroup_t)}},
-
-	{&g_efSoundTaskEventGroup[enSAI1], {"EF_SoundTask1", 0, &s_segSoundTaskEventGroupBuffer[enSoundTask1], sizeof(StaticEventGroup_t)}},
-	{&g_efSoundTaskEventGroup[enSAI2], {"EF_SoundTask2", 0, &s_segSoundTaskEventGroupBuffer[enSoundTask2], sizeof(StaticEventGroup_t)}},
-	{&g_efFSReady, {"EF_FSREADY", 0, &s_xFSReadyEventGroupBuffer, sizeof(StaticEventGroup_t)}},
-	{&g_efCameraSensor, {"EF_CAMERA_SENSOR", 0, &s_xCameraSensorEventGroupBuffer, sizeof(StaticEventGroup_t)}},
 	{NULL, {NULL, 0, NULL, 0}},
 };
 

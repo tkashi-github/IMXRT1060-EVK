@@ -62,7 +62,7 @@ void InitialTask(void const *argument)
 	SPIFlashInit();
 	PostMsgLanTaskRestart();
 	mimic_printf("[%s (%d)] All Task Started! (%lu msec)\r\n", __func__, __LINE__, xTaskGetTickCount());
-	osEventFlagsWait(g_efFSReady, 1, osFlagsWaitAny, portMAX_DELAY);   // Wait a maximum 
+	osEventFlagsWait(g_eidFSReady, 1, osFlagsWaitAny, portMAX_DELAY);   // Wait a maximum 
 	if(CheckBinFile("IMXRT1060-EVK_APL_crc16.bin") != false){
 		f_unlink("IMXRT1060-EVK_APL_crc16_end.bin");
 		f_rename("IMXRT1060-EVK_APL_crc16.bin", "IMXRT1060-EVK_APL_crc16_end.bin");

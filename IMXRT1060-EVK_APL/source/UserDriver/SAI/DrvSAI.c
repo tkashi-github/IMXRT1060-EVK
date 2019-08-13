@@ -201,7 +201,7 @@ static void txCallback(I2S_Type *base, sai_edma_handle_t *handle, status_t statu
 	else
 	{
 		s_u32TxEmptyBlock[enSAI]++;
-		osEventFlagsSet(g_efSAITx[enSAI], 1);
+		osEventFlagsSet(g_eidSAITx[enSAI], 1);
 	}
 }
 
@@ -231,7 +231,7 @@ static void rxCallback(I2S_Type *base, sai_edma_handle_t *handle, status_t statu
 	else
 	{
 		s_u32FullBlock[enSAI]++;
-		osEventFlagsSet(g_efSAIRx[enSAI], 1);
+		osEventFlagsSet(g_eidSAIRx[enSAI], 1);
 	}
 }
 
@@ -553,7 +553,7 @@ void DrvSAITxReset(enSAI_t enSAI)
 
 	/* Reset SAI Tx internal logic */
 	//
-	osEventFlagsClear(g_efSAITx[enSAI], 0x03);
+	osEventFlagsClear(g_eidSAITx[enSAI], 0x03);
 
 	s_u32BeginCount[enSAI] = 0;
 	s_u32SendCount[enSAI] = 0;
@@ -569,7 +569,7 @@ void DrvSAIRxReset(enSAI_t enSAI)
 
 	/* Reset SAI Rx internal logic */
 	//
-	osEventFlagsClear(g_efSAIRx[enSAI], 0x03);
+	osEventFlagsClear(g_eidSAIRx[enSAI], 0x03);
 
 	s_u32FullBlock[enSAI] = 0;
 	s_u32ReadIndex[enSAI] = 0;
@@ -734,7 +734,7 @@ _Bool DrvSAITx(enSAI_t enSAI, const uint8_t pu8[], uint32_t u32ByteCnt)
 		{
 			/** Event Wait */
 			uint32_t uxBits;
-			uxBits = osEventFlagsWait(g_efSAITx[enSAI], 3, osFlagsWaitAny, 500);
+			uxBits = osEventFlagsWait(g_eidSAITx[enSAI], 3, osFlagsWaitAny, 500);
 			if (uxBits != 1)
 			{
 				mimic_printf("[%s (%d)] uxBits = 0x%08lX\r\n", __func__, __LINE__, uxBits);
@@ -824,7 +824,7 @@ _Bool DrvSAIRx(enSAI_t enSAI, uint8_t pu8[], uint32_t *pu32RxCnt)
 		else
 		{
 			uint32_t uxBits;
-			uxBits = osEventFlagsWait(g_efSAIRx[enSAI], 3, osFlagsWaitAny, 500);
+			uxBits = osEventFlagsWait(g_eidSAIRx[enSAI], 3, osFlagsWaitAny, 500);
 			if (uxBits != 1)
 			{
 				if ((uxBits & 0x80000000u) != 0)
@@ -897,7 +897,7 @@ _Bool DrvSAIImmidiateTxStop(enSAI_t enSAI)
 	s_bIsTxFinished[enSAI] = true;
 
 	SAI_TransferTerminateSendEDMA(base[enSAI], s_phndSaiDmaTx[enSAI]);
-	osEventFlagsSet(g_efSAITx[enSAI], 0x02);
+	osEventFlagsSet(g_eidSAITx[enSAI], 0x02);
 	return true;
 }
 _Bool DrvSAIImmidiateRxStop(enSAI_t enSAI)
@@ -911,7 +911,7 @@ _Bool DrvSAIImmidiateRxStop(enSAI_t enSAI)
 	s_bIsRxFinished[enSAI] = true;
 
 	SAI_TransferTerminateReceiveEDMA(base[enSAI], s_phndSaiDmaRx[enSAI]);
-	osEventFlagsSet(g_efSAIRx[enSAI], 0x02);
+	osEventFlagsSet(g_eidSAIRx[enSAI], 0x02);
 
 	return true;
 }

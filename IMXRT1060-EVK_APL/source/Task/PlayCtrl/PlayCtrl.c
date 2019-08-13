@@ -649,11 +649,11 @@ DefALLOCATE_ITCM _Bool PostSyncMsgPlayCtrlStop(void)
 	PlayCtrlSoundDeviceStop();
 
 	stTaskMsg.enMsgId = enPlayStop;
-	stTaskMsg.SyncEGHandle = g_efPlayCtrlEventGroup;
+	stTaskMsg.SyncEGHandle = g_eidPlayCtrl;
 	stTaskMsg.wakeupbits = 1;
 	if (osOK == osMessageQueuePut(g_mqPlayCtrlTask, &stTaskMsg, 0, 50))
 	{
-		uint32_t uxBits = osEventFlagsWait(g_efPlayCtrlEventGroup, 1, osFlagsWaitAny, 500);
+		uint32_t uxBits = osEventFlagsWait(g_eidPlayCtrl, 1, osFlagsWaitAny, 500);
 		if (uxBits == 1u)
 		{
 			bret = true;
