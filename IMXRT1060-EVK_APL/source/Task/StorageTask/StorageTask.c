@@ -61,33 +61,13 @@ static const sdmmchost_detect_card_t s_sdCardDetect[enNumOfSD] = {
 DefALLOCATE_ITCM static void StorageInserted(bool isInserted, void *userData)
 {
 	enSD_t enSlotNo = (enSD_t)userData;
-
 	if ((enSlotNo >= enUSDHC1) && (enSlotNo <= enUSDHC2))
 	{
-		TickType_t tTimeout = portMAX_DELAY;
-		if (pdFALSE != xPortIsInsideInterrupt())
-		{
-			tTimeout = 0;
-		}
+		stTaskMsgBlock_t stTaskMsg;
+		memset(&stTaskMsg, 0, sizeof(stTaskMsgBlock_t));
+		stTaskMsg.enMsgId = enSDInsterted;
 
-		if (osSemaphoreAcquire(g_semidStorageTask, tTimeout) == osOK)
-		{
-			stTaskMsgBlock_t stTaskMsg;
-			memset(&stTaskMsg, 0, sizeof(stTaskMsgBlock_t));
-			stTaskMsg.enMsgId = enSDInsterted;
-
-			if (pdFALSE != xPortIsInsideInterrupt())
-			{
-				BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-				xStreamBufferSendFromISR(g_sbhStorageTask[enSlotNo], &stTaskMsg, sizeof(stTaskMsg), &xHigherPriorityTaskWoken);
-				portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-			}
-			else
-			{
-				xStreamBufferSend(g_sbhStorageTask[enSlotNo], &stTaskMsg, sizeof(stTaskMsg), 10);
-			}
-			osSemaphoreRelease(g_semidStorageTask);
-		}
+		osMessageQueuePut(g_mqidStorageTask[enSlotNo], &stTaskMsg, 0, 10);
 	}
 }
 /** Dummy */
@@ -97,30 +77,11 @@ DefALLOCATE_ITCM static void StorageRemoved(bool isInserted, void *userData)
 	enSD_t enSlotNo = (enSD_t)userData;
 	if ((enSlotNo >= enUSDHC1) && (enSlotNo <= enUSDHC2))
 	{
-		TickType_t tTimeout = portMAX_DELAY;
-		if (pdFALSE != xPortIsInsideInterrupt())
-		{
-			tTimeout = 0;
-		}
+		stTaskMsgBlock_t stTaskMsg;
+		memset(&stTaskMsg, 0, sizeof(stTaskMsgBlock_t));
+		stTaskMsg.enMsgId = enSDRemoved;
 
-		if (osSemaphoreAcquire(g_semidStorageTask, tTimeout) == osOK)
-		{
-			stTaskMsgBlock_t stTaskMsg;
-			memset(&stTaskMsg, 0, sizeof(stTaskMsgBlock_t));
-			stTaskMsg.enMsgId = enSDInsterted;
-
-			if (pdFALSE != xPortIsInsideInterrupt())
-			{
-				BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-				xStreamBufferSendFromISR(g_sbhStorageTask[enSlotNo], &stTaskMsg, sizeof(stTaskMsg), &xHigherPriorityTaskWoken);
-				portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-			}
-			else
-			{
-				xStreamBufferSend(g_sbhStorageTask[enSlotNo], &stTaskMsg, sizeof(stTaskMsg), 10);
-			}
-			osSemaphoreRelease(g_semidStorageTask);
-		}
+		osMessageQueuePut(g_mqidStorageTask[enSlotNo], &stTaskMsg, 0, 10);
 	}
 }
 
@@ -232,8 +193,10 @@ DefALLOCATE_ITCM static void StorageUnmount(enSD_t enSlotNo)
 DefALLOCATE_ITCM static void StorageTaskActual(enSD_t enSlotNo)
 {
 	_Bool bSDIn = false;
+	uint8_t msg_prio;
 	stTaskMsgBlock_t stTaskMsg = {0};
-	if (sizeof(stTaskMsg) == xStreamBufferReceive(g_sbhStorageTask[enSlotNo], &stTaskMsg, sizeof(stTaskMsg), portMAX_DELAY))
+
+	if (osOK == osMessageQueueGet(g_mqidStorageTask[enSlotNo], &stTaskMsg, &msg_prio, portMAX_DELAY))
 	{
 		switch (stTaskMsg.enMsgId)
 		{
@@ -432,24 +395,15 @@ DefALLOCATE_ITCM DRESULT StorageIoctl(uint8_t physicalDrive, uint8_t command, vo
  * @return true OK
  * @return false NG
  */
-DefALLOCATE_ITCM _Bool PostMsgStorageTaskInsertFromISR(_Bool bInsert)
+DefALLOCATE_ITCM _Bool PostMsgStorageTaskInsertFromISR(enSD_t enSlotNo, _Bool bInsert)
 {
 	/** var */
-	_Bool bret = true;
-	TickType_t tTimeout = portMAX_DELAY;
+	_Bool bret = false;
 	alignas(8) stTaskMsgBlock_t stTaskMsg = {0};
 
 	/** begin */
-	memset(&stTaskMsg, 0, sizeof(stTaskMsg));
-
-	if (pdFALSE != xPortIsInsideInterrupt())
+	if ((enSlotNo >= enUSDHC1) && (enSlotNo <= enUSDHC2))
 	{
-		tTimeout = 0;
-	}
-
-	if (osSemaphoreAcquire(g_semidStorageTask, tTimeout) == osOK)
-	{
-		stTaskMsgBlock_t stTaskMsg;
 		memset(&stTaskMsg, 0, sizeof(stTaskMsgBlock_t));
 		if (bInsert != false)
 		{
@@ -460,23 +414,10 @@ DefALLOCATE_ITCM _Bool PostMsgStorageTaskInsertFromISR(_Bool bInsert)
 			stTaskMsg.enMsgId = enSDRemoved;
 		}
 
-		if (pdFALSE != xPortIsInsideInterrupt())
+		if(osOK == osMessageQueuePut(g_mqidStorageTask[enSlotNo], &stTaskMsg, 0, 10))
 		{
-			BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-			if (sizeof(stTaskMsg) != xStreamBufferSendFromISR(g_sbhStorageTask[enUSDHC1], &stTaskMsg, sizeof(stTaskMsg), &xHigherPriorityTaskWoken))
-			{
-				bret = false;
-			}
-			portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+				bret = true;
 		}
-		else
-		{
-			if (sizeof(stTaskMsg) != xStreamBufferSend(g_sbhStorageTask[enUSDHC1], &stTaskMsg, sizeof(stTaskMsg), 10))
-			{
-				bret = false;
-			}
-		}
-		osSemaphoreRelease(g_semidStorageTask);
 	}
 
 	return bret;

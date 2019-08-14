@@ -151,7 +151,6 @@ typedef struct{
 
 OS_RESOURCE_MACRO_SEM_DEFINE(LPUARTRxSemaphore[1+enLPUART_MAX]);
 OS_RESOURCE_MACRO_SEM_DEFINE(LPUARTTxSemaphore[1+enLPUART_MAX]);
-OS_RESOURCE_MACRO_SEM_DEFINE(StorageTask);
 OS_RESOURCE_MACRO_SEM_DEFINE(CameraTask);
 OS_RESOURCE_MACRO_SEM_DEFINE(ComboSensor);
 
@@ -173,7 +172,6 @@ static stBinarySemaphoreTable_t s_stBinarySemaphoreTable[] = {
 	OS_RESOURCE_MACRO_SEM_TABLE(LPUARTRxSemaphore[enLPUART7], 1, 1),
 	OS_RESOURCE_MACRO_SEM_TABLE(LPUARTRxSemaphore[enLPUART8], 1, 1),
 
-	OS_RESOURCE_MACRO_SEM_TABLE(StorageTask, 1, 1),
 	OS_RESOURCE_MACRO_SEM_TABLE(CameraTask, 1, 1),
 	OS_RESOURCE_MACRO_SEM_TABLE(ComboSensor, 1, 1),
 	{NULL, {NULL, 0, NULL, 0}, 0, 0},
@@ -203,6 +201,7 @@ OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(LcdTask, sizeof(stTaskMsgBlock_t), 32);
 OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(TouchScreenTask, sizeof(stTaskMsgBlock_t), 32);
 OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(PlayCtrl, sizeof(stTaskMsgBlock_t), 32);
 OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(SoundTask[enNumOfSoundTask], sizeof(stTaskMsgBlock_t), 32);
+OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(StorageTask[enNumOfSD], sizeof(stTaskMsgBlock_t), 32);
 
 static stMsgQueueTable_t s_stMsgQueueTable[] = {
 	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(LcdTask, sizeof(stTaskMsgBlock_t), 32),
@@ -210,6 +209,8 @@ static stMsgQueueTable_t s_stMsgQueueTable[] = {
 	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(PlayCtrl, sizeof(stTaskMsgBlock_t), 32),
 	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(SoundTask[enSoundTask1], sizeof(stTaskMsgBlock_t), 32),
 	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(SoundTask[enSoundTask2], sizeof(stTaskMsgBlock_t), 32),
+	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(StorageTask[enUSDHC1], sizeof(stTaskMsgBlock_t), 32),
+	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(StorageTask[enUSDHC2], sizeof(stTaskMsgBlock_t), 32),
 	{NULL, 0, 0, {0}},
 };
 
@@ -238,10 +239,6 @@ DefALLOCATE_BSS_DTCM alignas(32) StreamBufferHandle_t g_sbhLPUARTRx[1+enLPUART_M
 DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_u8StorageLPUARTRx[1+enLPUART_MAX][1024+1];	/** +1 はマニュアルの指示 */
 DefALLOCATE_BSS_DTCM alignas(32) static StaticStreamBuffer_t s_ssbLPUARTRx[1+enLPUART_MAX];
 
-DefALLOCATE_BSS_DTCM alignas(32) StreamBufferHandle_t g_sbhStorageTask[enNumOfSD] = {NULL, NULL};
-DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_StorageTaskStorage[enNumOfSD][sizeof(stTaskMsgBlock_t) * 32 + 1];	/** +1 はマニュアルの指示 */
-DefALLOCATE_BSS_DTCM alignas(32) static StaticStreamBuffer_t s_ssbStorageTaskStreamBuffer[enNumOfSD];
-
 DefALLOCATE_BSS_DTCM alignas(32) StreamBufferHandle_t g_sbhLanTask = NULL;
 DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_LanTaskStorage[sizeof(stTaskMsgBlock_t) * 32 + 1];	/** +1 はマニュアルの指示 */
 DefALLOCATE_BSS_DTCM alignas(32) static StaticStreamBuffer_t s_ssbSLanTaskStreamBuffer;
@@ -255,16 +252,6 @@ DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_u8TouchScreenTaskStorage[sizeo
 DefALLOCATE_BSS_DTCM alignas(32) static StaticStreamBuffer_t s_ssbTouchScreenTaskStreamBuffer;
 
 static stStreamBuffer_t s_stStreamBufferTable[] = {
-	{
-		&g_sbhStorageTask[enUSDHC1], 
-		sizeof(stTaskMsgBlock_t)*32+1, sizeof(stTaskMsgBlock_t), 
-		s_StorageTaskStorage[enUSDHC1], &s_ssbStorageTaskStreamBuffer[enUSDHC1]
-	},		/** 個数はちゃんと見積もること */
-	{
-		&g_sbhStorageTask[enUSDHC2], 
-		sizeof(stTaskMsgBlock_t)*32+1, sizeof(stTaskMsgBlock_t), 
-		s_StorageTaskStorage[enUSDHC2], &s_ssbStorageTaskStreamBuffer[enUSDHC2]
-	},		/** 個数はちゃんと見積もること */
 
 	{&g_sbhLPUARTTx[enLPUART1], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTTx[enLPUART1], &s_ssbLPUARTTx[enLPUART1]},
 	{&g_sbhLPUARTTx[enLPUART2], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTTx[enLPUART2], &s_ssbLPUARTTx[enLPUART2]},

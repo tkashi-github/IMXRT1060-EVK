@@ -124,6 +124,13 @@ DefALLOCATE_BSS_DTCM alignas(4) static StaticQueue_t s_mq##MsgQueueName
 #define OS_RESOURCE_MACRO_MSGQUEUE_TABLE(MsgQueueName, SizeOfMessage, NumOfMessages)	\
 {&g_mqid##MsgQueueName, (SizeOfMessage), (NumOfMessages), {#MsgQueueName, 0, &s_mq##MsgQueueName, sizeof(StaticQueue_t), s_mqbuf##MsgQueueName, sizeof(s_mqbuf##MsgQueueName)}}
 
+
+/** 
+ * @brief OSResource Macro : Message Queue Declaration
+ */
+#define OS_RESOURCE_MACRO_STREAM_DECLAR(StreamName)	\
+extern StreamBufferHandle_t g_sbh##StreamName;
+
 /* Interrupt Priority */
 #define kIRQ_PRIORITY_LPUART    (14u)
 #define kIRQ_PRIORITY_LPI2C     (13u)
@@ -167,7 +174,6 @@ OS_RESOURCE_MACRO_EVENT_DECLAR(SoundTask[enNumOfSoundTask]);
 /* Binary Semaphore */
 OS_RESOURCE_MACRO_SEM_DECLAR(LPUARTRxSemaphore[1+enLPUART_MAX]);
 OS_RESOURCE_MACRO_SEM_DECLAR(LPUARTTxSemaphore[1+enLPUART_MAX]);
-OS_RESOURCE_MACRO_SEM_DECLAR(StorageTask);
 OS_RESOURCE_MACRO_SEM_DECLAR(CameraTask);
 OS_RESOURCE_MACRO_SEM_DECLAR(ComboSensor);
 
@@ -177,12 +183,11 @@ OS_RESOURCE_MACRO_MSGQUEUE_DECLAR(LcdTask);
 OS_RESOURCE_MACRO_MSGQUEUE_DECLAR(TouchScreenTask);
 OS_RESOURCE_MACRO_MSGQUEUE_DECLAR(PlayCtrl);
 OS_RESOURCE_MACRO_MSGQUEUE_DECLAR(SoundTask[enNumOfSoundTask]);
+OS_RESOURCE_MACRO_MSGQUEUE_DECLAR(StorageTask[enNumOfSD]);
 
 /* Stream Buffer */
 extern StreamBufferHandle_t g_sbhLPUARTTx[1+enLPUART_MAX];
 extern StreamBufferHandle_t g_sbhLPUARTRx[1+enLPUART_MAX];
-extern StreamBufferHandle_t g_sbhStorageTask[enNumOfSD];
-extern StreamBufferHandle_t g_sbhUpdateTask;
 extern StreamBufferHandle_t g_sbhLanTask;
 extern StreamBufferHandle_t g_sbhCameraTask;
 

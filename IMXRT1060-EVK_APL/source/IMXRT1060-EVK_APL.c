@@ -148,9 +148,9 @@ DefALLOCATE_ITCM static void GPIOMonitor(void){
 				u32CDPinCnt++;
 			}else if(u32CDPinCnt == DefSDCardDetectTime){
 				if(u32LastCDPin == 0){
-					PostMsgStorageTaskInsertFromISR(true);
+					PostMsgStorageTaskInsertFromISR(enUSDHC1, true);
 				}else{
-					PostMsgStorageTaskInsertFromISR(false);
+					PostMsgStorageTaskInsertFromISR(enUSDHC1, false);
 				}
 				u32CDPinCnt++;
 			}else{

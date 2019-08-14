@@ -45,7 +45,7 @@ extern "C"
 #include "diskio.h"
 
 	extern void StorageTask(void const *argument);
-	extern _Bool PostMsgStorageTaskInsertFromISR(_Bool bInsert);
+	extern _Bool PostMsgStorageTaskInsertFromISR(enSD_t enSlotNo, _Bool bInsert);
 	/*!
  * @brief Initializes Storage.
  *
