@@ -56,7 +56,7 @@ DefALLOCATE_ITCM static inline void TouchScreenTaskActual(void)
 	
 	static uint32_t s_u32LastY = 0;
 
-	if (osOK == osMessageQueueGet(g_mqTouchScreenTask, &stTaskMsg, &msg_prio, portMAX_DELAY))
+	if (osOK == osMessageQueueGet(g_mqidTouchScreenTask, &stTaskMsg, &msg_prio, portMAX_DELAY))
 	{
 		uint32_t u32PosX;
 		uint32_t u32PosY;
@@ -164,7 +164,7 @@ DefALLOCATE_ITCM _Bool PostMsgTouchScreenTouchEvent(void)
 	alignas(8) stTaskMsgBlock_t stTaskMsg = {0};
 
 	stTaskMsg.enMsgId = enTouchEvent;
-	if (osOK == osMessageQueuePut(g_mqTouchScreenTask, &stTaskMsg, 0, 50))
+	if (osOK == osMessageQueuePut(g_mqidTouchScreenTask, &stTaskMsg, 0, 50))
 	{
 		return true;
 	}

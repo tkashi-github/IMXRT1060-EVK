@@ -346,7 +346,7 @@ DefALLOCATE_ITCM static void SoundTaskActual(enSoundTask_t enSoundTaskNo)
 	stTaskMsgBlock_t stTaskMsg = {0};
 	uint8_t msg_prio; /* Message priority is ignored */
 
-	if (osOK == osMessageQueueGet(g_mqSoundTask[enSoundTaskNo], &stTaskMsg, &msg_prio, portMAX_DELAY))
+	if (osOK == osMessageQueueGet(g_mqidSoundTask[enSoundTaskNo], &stTaskMsg, &msg_prio, portMAX_DELAY))
 	{
 		switch (stTaskMsg.enMsgId)
 		{
@@ -452,7 +452,7 @@ DefALLOCATE_ITCM _Bool PostSyncMsgSoundTaskDeviceInit(enSoundTask_t enSoundTaskN
 			pstSoundFormat->enWidth = enWidth;
 			pstSoundFormat->bRec = bRec;
 
-			if (osOK == osMessageQueuePut(g_mqSoundTask[enSoundTaskNo], &stTaskMsg, 0, 50))
+			if (osOK == osMessageQueuePut(g_mqidSoundTask[enSoundTaskNo], &stTaskMsg, 0, 50))
 			{
 				/* Sync */
 				uint32_t uxBits = osEventFlagsWait(g_eidSoundTask[enSoundTaskNo], 1, osFlagsWaitAny, 500);
@@ -497,7 +497,7 @@ DefALLOCATE_ITCM _Bool PostMsgSoundTaskDeviceStart(enSoundTask_t enSoundTaskNo)
 		alignas(8) stTaskMsgBlock_t stTaskMsg = {0};
 		stTaskMsg.enMsgId = enSoundTaskStart;
 
-		if (osOK == osMessageQueuePut(g_mqSoundTask[enSoundTaskNo], &stTaskMsg, 0, 50))
+		if (osOK == osMessageQueuePut(g_mqidSoundTask[enSoundTaskNo], &stTaskMsg, 0, 50))
 		{
 			bret = true;
 		}
@@ -546,7 +546,7 @@ DefALLOCATE_ITCM _Bool PostMsgSoundTaskSendAudioData(enSoundTask_t enSoundTaskNo
 			pstBuf->pu8 = pu8;
 			pstBuf->u32ByteCnt = u32ByteCnt;
 
-			if (osOK == osMessageQueuePut(g_mqSoundTask[enSoundTaskNo], &stTaskMsg, 0, 50))
+			if (osOK == osMessageQueuePut(g_mqidSoundTask[enSoundTaskNo], &stTaskMsg, 0, 50))
 			{
 				/* Sync */
 				uxBits = osEventFlagsWait(g_eidSoundTask[enSoundTaskNo], 1, osFlagsWaitAny, 1000);
@@ -606,7 +606,7 @@ DefALLOCATE_ITCM _Bool PostMsgSoundTaskRcvAudioData(enSoundTask_t enSoundTaskNo,
 			pstBuf->u32ByteCnt = 0;
 			pstBuf->u32RcvCnt = 0;
 
-			if (osOK == osMessageQueuePut(g_mqSoundTask[enSoundTaskNo], &stTaskMsg, 0, 50))
+			if (osOK == osMessageQueuePut(g_mqidSoundTask[enSoundTaskNo], &stTaskMsg, 0, 50))
 			
 			{
 				/* Sync */
@@ -623,7 +623,7 @@ DefALLOCATE_ITCM _Bool PostMsgSoundTaskRcvAudioData(enSoundTask_t enSoundTaskNo,
 			}
 			else
 			{
-				mimic_printf("[%s (%d)] g_mqSoundTask NG\r\n", __func__, __LINE__);
+				mimic_printf("[%s (%d)] g_mqidSoundTask NG\r\n", __func__, __LINE__);
 			}
 		}
 	}
@@ -655,7 +655,7 @@ DefALLOCATE_ITCM _Bool PostMsgSoundTaskStop(enSoundTask_t enSoundTaskNo, const c
 		stTaskMsg.enMsgId = enSoundTaskStop;
 		stTaskMsg.param[0] = (uint32_t)pszStr;
 		stTaskMsg.param[1] = u32Line;
-		if (osOK == osMessageQueuePut(g_mqSoundTask[enSoundTaskNo], &stTaskMsg, 0, 50))
+		if (osOK == osMessageQueuePut(g_mqidSoundTask[enSoundTaskNo], &stTaskMsg, 0, 50))
 		{
 			bret = true;
 		}
@@ -689,7 +689,7 @@ DefALLOCATE_ITCM static _Bool PostSyncMsgSoundTaskStop(enSoundTask_t enSoundTask
 			stTaskMsg.wakeupbits = 1;
 		}
 
-		if (osOK == osMessageQueuePut(g_mqSoundTask[enSoundTaskNo], &stTaskMsg, 0, 50))
+		if (osOK == osMessageQueuePut(g_mqidSoundTask[enSoundTaskNo], &stTaskMsg, 0, 50))
 		{
 			if (pdFALSE == xPortIsInsideInterrupt())
 			{

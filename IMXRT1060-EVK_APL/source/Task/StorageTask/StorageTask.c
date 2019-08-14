@@ -70,7 +70,7 @@ DefALLOCATE_ITCM static void StorageInserted(bool isInserted, void *userData)
 			tTimeout = 0;
 		}
 
-		if (osSemaphoreAcquire(g_semidStorageTaskMsg, tTimeout) == osOK)
+		if (osSemaphoreAcquire(g_semidStorageTask, tTimeout) == osOK)
 		{
 			stTaskMsgBlock_t stTaskMsg;
 			memset(&stTaskMsg, 0, sizeof(stTaskMsgBlock_t));
@@ -86,7 +86,7 @@ DefALLOCATE_ITCM static void StorageInserted(bool isInserted, void *userData)
 			{
 				xStreamBufferSend(g_sbhStorageTask[enSlotNo], &stTaskMsg, sizeof(stTaskMsg), 10);
 			}
-			osSemaphoreRelease(g_semidStorageTaskMsg);
+			osSemaphoreRelease(g_semidStorageTask);
 		}
 	}
 }
@@ -103,7 +103,7 @@ DefALLOCATE_ITCM static void StorageRemoved(bool isInserted, void *userData)
 			tTimeout = 0;
 		}
 
-		if (osSemaphoreAcquire(g_semidStorageTaskMsg, tTimeout) == osOK)
+		if (osSemaphoreAcquire(g_semidStorageTask, tTimeout) == osOK)
 		{
 			stTaskMsgBlock_t stTaskMsg;
 			memset(&stTaskMsg, 0, sizeof(stTaskMsgBlock_t));
@@ -119,7 +119,7 @@ DefALLOCATE_ITCM static void StorageRemoved(bool isInserted, void *userData)
 			{
 				xStreamBufferSend(g_sbhStorageTask[enSlotNo], &stTaskMsg, sizeof(stTaskMsg), 10);
 			}
-			osSemaphoreRelease(g_semidStorageTaskMsg);
+			osSemaphoreRelease(g_semidStorageTask);
 		}
 	}
 }
@@ -447,7 +447,7 @@ DefALLOCATE_ITCM _Bool PostMsgStorageTaskInsertFromISR(_Bool bInsert)
 		tTimeout = 0;
 	}
 
-	if (osSemaphoreAcquire(g_semidStorageTaskMsg, tTimeout) == osOK)
+	if (osSemaphoreAcquire(g_semidStorageTask, tTimeout) == osOK)
 	{
 		stTaskMsgBlock_t stTaskMsg;
 		memset(&stTaskMsg, 0, sizeof(stTaskMsgBlock_t));
@@ -476,7 +476,7 @@ DefALLOCATE_ITCM _Bool PostMsgStorageTaskInsertFromISR(_Bool bInsert)
 				bret = false;
 			}
 		}
-		osSemaphoreRelease(g_semidStorageTaskMsg);
+		osSemaphoreRelease(g_semidStorageTask);
 	}
 
 	return bret;

@@ -91,12 +91,38 @@ DefALLOCATE_BSS_DTCM alignas(4) static StaticEventGroup_t s_ef##EventName;
 #define OS_RESOURCE_MACRO_SEM_DECLAR(SemaphoreName)	\
 extern osSemaphoreId_t g_semid##SemaphoreName
 
+/** 
+ * @brief OSResource Macro : Semaphore Definition
+ */
 #define OS_RESOURCE_MACRO_SEM_DEFINE(SemaphoreName)	\
 DefALLOCATE_BSS_DTCM alignas(4) osSemaphoreId_t g_semid##SemaphoreName;\
 DefALLOCATE_BSS_DTCM alignas(4) static StaticSemaphore_t s_sem##SemaphoreName
 
+/** 
+ * @brief OSResource Macro : Semaphore Table
+ */
 #define OS_RESOURCE_MACRO_SEM_TABLE(SemaphoreName, Max,Init)	\
 {&g_semid##SemaphoreName, {#SemaphoreName, 0, &s_sem##SemaphoreName, sizeof(StaticSemaphore_t)}, (Max), (Init)}
+
+/** 
+ * @brief OSResource Macro : Message Queue Declaration
+ */
+#define OS_RESOURCE_MACRO_MSGQUEUE_DECLAR(MsgQueueName)	\
+extern osMessageQueueId_t g_mqid##MsgQueueName;
+
+/** 
+ * @brief OSResource Macro : Message Queue Definition
+ */
+#define OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(MsgQueueName, SizeOfMessage, NumOfMessages)	\
+DefALLOCATE_BSS_DTCM alignas(4) osMessageQueueId_t g_mqid##MsgQueueName;\
+DefALLOCATE_BSS_DTCM alignas(4) static uint8_t s_mqbuf##MsgQueueName[(SizeOfMessage) * (NumOfMessages)];\
+DefALLOCATE_BSS_DTCM alignas(4) static StaticQueue_t s_mq##MsgQueueName
+
+/** 
+ * @brief OSResource Macro : Semaphore Table
+ */
+#define OS_RESOURCE_MACRO_MSGQUEUE_TABLE(MsgQueueName, SizeOfMessage, NumOfMessages)	\
+{&g_mqid##MsgQueueName, (SizeOfMessage), (NumOfMessages), {#MsgQueueName, 0, &s_mq##MsgQueueName, sizeof(StaticQueue_t), s_mqbuf##MsgQueueName, sizeof(s_mqbuf##MsgQueueName)}}
 
 /* Interrupt Priority */
 #define kIRQ_PRIORITY_LPUART    (14u)
@@ -138,22 +164,21 @@ OS_RESOURCE_MACRO_EVENT_DECLAR(SAIRx[enNumOfSAI]);
 OS_RESOURCE_MACRO_EVENT_DECLAR(PlayCtrl);
 OS_RESOURCE_MACRO_EVENT_DECLAR(SoundTask[enNumOfSoundTask]);
 
-/** Binary Semaphore */
+/* Binary Semaphore */
 OS_RESOURCE_MACRO_SEM_DECLAR(LPUARTRxSemaphore[1+enLPUART_MAX]);
 OS_RESOURCE_MACRO_SEM_DECLAR(LPUARTTxSemaphore[1+enLPUART_MAX]);
-OS_RESOURCE_MACRO_SEM_DECLAR(StorageTaskMsg);
-OS_RESOURCE_MACRO_SEM_DECLAR(ComboSensor);
+OS_RESOURCE_MACRO_SEM_DECLAR(StorageTask);
 OS_RESOURCE_MACRO_SEM_DECLAR(CameraTask);
-OS_RESOURCE_MACRO_SEM_DECLAR(MousePosition);
+OS_RESOURCE_MACRO_SEM_DECLAR(ComboSensor);
 
 
-/** Queue */
-extern osMessageQueueId_t g_mqLcdTask;
-extern osMessageQueueId_t g_mqTouchScreenTask;
-extern osMessageQueueId_t g_mqPlayCtrlTask;
-extern osMessageQueueId_t g_mqSoundTask[enNumOfSoundTask];
+/* Message Queue */
+OS_RESOURCE_MACRO_MSGQUEUE_DECLAR(LcdTask);
+OS_RESOURCE_MACRO_MSGQUEUE_DECLAR(TouchScreenTask);
+OS_RESOURCE_MACRO_MSGQUEUE_DECLAR(PlayCtrl);
+OS_RESOURCE_MACRO_MSGQUEUE_DECLAR(SoundTask[enNumOfSoundTask]);
 
-/** Stream Buffer */
+/* Stream Buffer */
 extern StreamBufferHandle_t g_sbhLPUARTTx[1+enLPUART_MAX];
 extern StreamBufferHandle_t g_sbhLPUARTRx[1+enLPUART_MAX];
 extern StreamBufferHandle_t g_sbhStorageTask[enNumOfSD];

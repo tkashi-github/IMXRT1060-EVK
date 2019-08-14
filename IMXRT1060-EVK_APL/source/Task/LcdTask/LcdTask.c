@@ -266,7 +266,7 @@ DefALLOCATE_ITCM void LcdTask(void const *argument)
 	for (;;)
 	{
 		uint8_t msg_prio; /* Message priority is ignored */
-		if (osOK == osMessageQueueGet(g_mqLcdTask, &stTaskMsg, &msg_prio, 4))
+		if (osOK == osMessageQueueGet(g_mqidLcdTask, &stTaskMsg, &msg_prio, 4))
 		{
 			switch (stTaskMsg.enMsgId)
 			{
@@ -299,7 +299,7 @@ _Bool PostMsgLcdTaskMouseMove(uint32_t u32X, uint32_t u32Y, touch_event_t enTouc
 	stTaskMsg.param[0] = u32X;
 	stTaskMsg.param[1] = u32Y;
 	stTaskMsg.param[2] = (uint32_t)enTouchEvent;
-	if (osOK == osMessageQueuePut(g_mqLcdTask, &stTaskMsg, 0, 10))
+	if (osOK == osMessageQueuePut(g_mqidLcdTask, &stTaskMsg, 0, 10))
 	{
 		bret = true;
 	}

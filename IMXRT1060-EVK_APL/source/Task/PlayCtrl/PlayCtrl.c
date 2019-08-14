@@ -582,7 +582,7 @@ DefALLOCATE_ITCM static _Bool PostMsgPlayCtrlPlaying(void)
 	_Bool bret = false;
 	stTaskMsg.enMsgId = enPlaying;
 
-	if (osOK == osMessageQueuePut(g_mqPlayCtrlTask, &stTaskMsg, 0, DefPostMsgTimeout_PrivateEvent))
+	if (osOK == osMessageQueuePut(g_mqidPlayCtrl, &stTaskMsg, 0, DefPostMsgTimeout_PrivateEvent))
 	{
 		bret = true;
 	}
@@ -601,7 +601,7 @@ DefALLOCATE_ITCM static _Bool PostMsgPlayCtrlRecording(void)
 
 	stTaskMsg.enMsgId = enRecording;
 
-	if (osOK == osMessageQueuePut(g_mqPlayCtrlTask, &stTaskMsg, 0, DefPostMsgTimeout_PrivateEvent))
+	if (osOK == osMessageQueuePut(g_mqidPlayCtrl, &stTaskMsg, 0, DefPostMsgTimeout_PrivateEvent))
 	{
 		bret = true;
 	}
@@ -630,7 +630,7 @@ DefALLOCATE_ITCM _Bool PostMsgPlayCtrlStart(uint32_t u32TrackNo)
 	stTaskMsg.enMsgId = enPlayStart;
 	stTaskMsg.param[0] = u32TrackNo;
 
-	if (osOK == osMessageQueuePut(g_mqPlayCtrlTask, &stTaskMsg, 0, 50))
+	if (osOK == osMessageQueuePut(g_mqidPlayCtrl, &stTaskMsg, 0, 50))
 	{
 		bret = true;
 	}
@@ -651,7 +651,7 @@ DefALLOCATE_ITCM _Bool PostSyncMsgPlayCtrlStop(void)
 	stTaskMsg.enMsgId = enPlayStop;
 	stTaskMsg.SyncEGHandle = g_eidPlayCtrl;
 	stTaskMsg.wakeupbits = 1;
-	if (osOK == osMessageQueuePut(g_mqPlayCtrlTask, &stTaskMsg, 0, 50))
+	if (osOK == osMessageQueuePut(g_mqidPlayCtrl, &stTaskMsg, 0, 50))
 	{
 		uint32_t uxBits = osEventFlagsWait(g_eidPlayCtrl, 1, osFlagsWaitAny, 500);
 		if (uxBits == 1u)
@@ -685,7 +685,7 @@ DefALLOCATE_ITCM _Bool PostMsgPlayCtrlRec(void)
 
 	stTaskMsg.enMsgId = enRec;
 
-	if (osOK == osMessageQueuePut(g_mqPlayCtrlTask, &stTaskMsg, 0, 50))
+	if (osOK == osMessageQueuePut(g_mqidPlayCtrl, &stTaskMsg, 0, 50))
 	{
 		bret = true;
 	}
@@ -733,7 +733,7 @@ DefALLOCATE_ITCM static void PlayCtrlActual(void)
 	stTaskMsgBlock_t stTaskMsg = {0};
 	uint8_t msg_prio; /* Message priority is ignored */
 
-	if (osOK == osMessageQueueGet(g_mqPlayCtrlTask, &stTaskMsg, &msg_prio, portMAX_DELAY))
+	if (osOK == osMessageQueueGet(g_mqidPlayCtrl, &stTaskMsg, &msg_prio, portMAX_DELAY))
 	{
 		enPlayCtrlEvent_t enEvent = enPlayCtrlEventMAX;
 		switch (stTaskMsg.enMsgId)

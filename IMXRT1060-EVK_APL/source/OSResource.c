@@ -151,10 +151,9 @@ typedef struct{
 
 OS_RESOURCE_MACRO_SEM_DEFINE(LPUARTRxSemaphore[1+enLPUART_MAX]);
 OS_RESOURCE_MACRO_SEM_DEFINE(LPUARTTxSemaphore[1+enLPUART_MAX]);
-OS_RESOURCE_MACRO_SEM_DEFINE(StorageTaskMsg);
-OS_RESOURCE_MACRO_SEM_DEFINE(ComboSensor);
+OS_RESOURCE_MACRO_SEM_DEFINE(StorageTask);
 OS_RESOURCE_MACRO_SEM_DEFINE(CameraTask);
-OS_RESOURCE_MACRO_SEM_DEFINE(MousePosition);
+OS_RESOURCE_MACRO_SEM_DEFINE(ComboSensor);
 
 static stBinarySemaphoreTable_t s_stBinarySemaphoreTable[] = {
 	OS_RESOURCE_MACRO_SEM_TABLE(LPUARTTxSemaphore[enLPUART1], 1, 1),
@@ -174,11 +173,9 @@ static stBinarySemaphoreTable_t s_stBinarySemaphoreTable[] = {
 	OS_RESOURCE_MACRO_SEM_TABLE(LPUARTRxSemaphore[enLPUART7], 1, 1),
 	OS_RESOURCE_MACRO_SEM_TABLE(LPUARTRxSemaphore[enLPUART8], 1, 1),
 
-	OS_RESOURCE_MACRO_SEM_TABLE(StorageTaskMsg, 1, 1),
-	OS_RESOURCE_MACRO_SEM_TABLE(ComboSensor, 1, 1),
+	OS_RESOURCE_MACRO_SEM_TABLE(StorageTask, 1, 1),
 	OS_RESOURCE_MACRO_SEM_TABLE(CameraTask, 1, 1),
-	OS_RESOURCE_MACRO_SEM_TABLE(MousePosition, 1, 1),
-
+	OS_RESOURCE_MACRO_SEM_TABLE(ComboSensor, 1, 1),
 	{NULL, {NULL, 0, NULL, 0}, 0, 0},
 };
 
@@ -197,33 +194,22 @@ void CreateBinarySemaphore(void){	/** CMSIS RTOS2にすること */
 
 typedef struct{
 	osMessageQueueId_t *pID;
-	uint32_t	u32BlockNum;
 	uint32_t	u32SizeofBlock;
+	uint32_t	u32BlockNum;
 	osMessageQueueAttr_t stAttr;
-}stQueueTable_t;
+}stMsgQueueTable_t;
 
-DefALLOCATE_BSS_DTCM alignas(32) osMessageQueueId_t g_mqLcdTask;
-DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_u8LcdTskMsgQueue[sizeof(stTaskMsgBlock_t) * 32];
-DefALLOCATE_BSS_DTCM alignas(32) static StaticQueue_t g_sqLcdTask;
+OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(LcdTask, sizeof(stTaskMsgBlock_t), 32);
+OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(TouchScreenTask, sizeof(stTaskMsgBlock_t), 32);
+OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(PlayCtrl, sizeof(stTaskMsgBlock_t), 32);
+OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(SoundTask[enNumOfSoundTask], sizeof(stTaskMsgBlock_t), 32);
 
-DefALLOCATE_BSS_DTCM alignas(32) osMessageQueueId_t g_mqTouchScreenTask;
-DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_u8TouchScreenTaskMsgQueue[sizeof(stTaskMsgBlock_t) * 32];
-DefALLOCATE_BSS_DTCM alignas(32) static StaticQueue_t g_sqTouchScreenTask;
-
-DefALLOCATE_BSS_DTCM alignas(32) osMessageQueueId_t g_mqPlayCtrlTask;
-DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_u8PlayCtrlTaskMsgQueue[sizeof(stTaskMsgBlock_t) * 32];
-DefALLOCATE_BSS_DTCM alignas(32) static StaticQueue_t g_sqPlayCtrlTask;
-
-DefALLOCATE_BSS_DTCM alignas(32) osMessageQueueId_t g_mqSoundTask[enNumOfSoundTask];
-DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_u8SoundTaskMsgQueue[enNumOfSoundTask][sizeof(stTaskMsgBlock_t) * 32];
-DefALLOCATE_BSS_DTCM alignas(32) static StaticQueue_t g_sqSoundTask[enNumOfSoundTask];
-
-static stQueueTable_t s_stQueueTable[] = {
-	{&g_mqLcdTask, 32, sizeof(stTaskMsgBlock_t), {"MQLcdTask", 0, &g_sqLcdTask, sizeof(StaticQueue_t), s_u8LcdTskMsgQueue, sizeof(s_u8LcdTskMsgQueue)}},
-	{&g_mqTouchScreenTask, 32, sizeof(stTaskMsgBlock_t), {"MQTouchScreenTask", 0, &g_sqTouchScreenTask, sizeof(StaticQueue_t), s_u8TouchScreenTaskMsgQueue, sizeof(s_u8TouchScreenTaskMsgQueue)}},
-	{&g_mqPlayCtrlTask, 32, sizeof(stTaskMsgBlock_t), {"MQPlayCtrlTask", 0, &g_sqPlayCtrlTask, sizeof(StaticQueue_t), s_u8PlayCtrlTaskMsgQueue, sizeof(s_u8PlayCtrlTaskMsgQueue)}},
-	{&g_mqSoundTask[enSoundTask1], 32, sizeof(stTaskMsgBlock_t), {"MQSoundTask1", 0, &g_sqSoundTask[enSoundTask1], sizeof(StaticQueue_t), s_u8SoundTaskMsgQueue[enSoundTask1], sizeof(stTaskMsgBlock_t) * 32}},
-	{&g_mqSoundTask[enSoundTask2], 32, sizeof(stTaskMsgBlock_t), {"MQSoundTask1", 0, &g_sqSoundTask[enSoundTask2], sizeof(StaticQueue_t), s_u8SoundTaskMsgQueue[enSoundTask2], sizeof(stTaskMsgBlock_t) * 32}},
+static stMsgQueueTable_t s_stMsgQueueTable[] = {
+	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(LcdTask, sizeof(stTaskMsgBlock_t), 32),
+	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(TouchScreenTask, sizeof(stTaskMsgBlock_t), 32),
+	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(PlayCtrl, sizeof(stTaskMsgBlock_t), 32),
+	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(SoundTask[enSoundTask1], sizeof(stTaskMsgBlock_t), 32),
+	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(SoundTask[enSoundTask2], sizeof(stTaskMsgBlock_t), 32),
 	{NULL, 0, 0, {0}},
 };
 
@@ -231,8 +217,8 @@ static stQueueTable_t s_stQueueTable[] = {
 void CreateMsgQueue(void){
 	uint32_t i=0;
 
-	while(s_stQueueTable[i].pID != NULL){
-		*s_stQueueTable[i].pID = osMessageQueueNew(s_stQueueTable[i].u32BlockNum, s_stQueueTable[i].u32SizeofBlock, &s_stQueueTable[i].stAttr);
+	while(s_stMsgQueueTable[i].pID != NULL){
+		*s_stMsgQueueTable[i].pID = osMessageQueueNew(s_stMsgQueueTable[i].u32BlockNum, s_stMsgQueueTable[i].u32SizeofBlock, &s_stMsgQueueTable[i].stAttr);
 		i++;
 	}
 }
