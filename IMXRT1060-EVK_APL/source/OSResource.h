@@ -119,17 +119,31 @@ DefALLOCATE_BSS_DTCM alignas(4) static uint8_t s_mqbuf##MsgQueueName[(SizeOfMess
 DefALLOCATE_BSS_DTCM alignas(4) static StaticQueue_t s_mq##MsgQueueName
 
 /** 
- * @brief OSResource Macro : Semaphore Table
+ * @brief OSResource Macro : Message Queue Table
  */
 #define OS_RESOURCE_MACRO_MSGQUEUE_TABLE(MsgQueueName, SizeOfMessage, NumOfMessages)	\
 {&g_mqid##MsgQueueName, (SizeOfMessage), (NumOfMessages), {#MsgQueueName, 0, &s_mq##MsgQueueName, sizeof(StaticQueue_t), s_mqbuf##MsgQueueName, sizeof(s_mqbuf##MsgQueueName)}}
 
 
 /** 
- * @brief OSResource Macro : Message Queue Declaration
+ * @brief OSResource Macro : Stream Buffer Declaration
  */
 #define OS_RESOURCE_MACRO_STREAM_DECLAR(StreamName)	\
 extern StreamBufferHandle_t g_sbh##StreamName;
+
+/** 
+ * @brief OSResource Macro : Stream Buffer Definition
+ */
+#define OS_RESOURCE_MACRO_STREAM_DEFINE(StreamName, SizeOfStreamBuffer)	\
+DefALLOCATE_BSS_DTCM alignas(4) StreamBufferHandle_t g_sbh##StreamName;\
+DefALLOCATE_BSS_DTCM alignas(4) static uint8_t s_u8Storage##StreamName[(SizeOfStreamBuffer)+1];\
+DefALLOCATE_BSS_DTCM alignas(4) static StaticStreamBuffer_t s_ssb##StreamName
+
+/** 
+ * @brief OSResource Macro : Stream Buffer Table
+ */
+#define OS_RESOURCE_MACRO_STREAM_TABLE(StreamName, SizeOfStreamBuffer, TriggerCount)	\
+{&g_sbh##StreamName, (SizeOfStreamBuffer)+1, TriggerCount, s_u8Storage##StreamName, &s_ssb##StreamName}
 
 /* Interrupt Priority */
 #define kIRQ_PRIORITY_LPUART    (14u)
@@ -184,12 +198,13 @@ OS_RESOURCE_MACRO_MSGQUEUE_DECLAR(TouchScreenTask);
 OS_RESOURCE_MACRO_MSGQUEUE_DECLAR(PlayCtrl);
 OS_RESOURCE_MACRO_MSGQUEUE_DECLAR(SoundTask[enNumOfSoundTask]);
 OS_RESOURCE_MACRO_MSGQUEUE_DECLAR(StorageTask[enNumOfSD]);
+OS_RESOURCE_MACRO_MSGQUEUE_DECLAR(LanTask);
+OS_RESOURCE_MACRO_MSGQUEUE_DECLAR(CameraTask);
 
 /* Stream Buffer */
-extern StreamBufferHandle_t g_sbhLPUARTTx[1+enLPUART_MAX];
-extern StreamBufferHandle_t g_sbhLPUARTRx[1+enLPUART_MAX];
-extern StreamBufferHandle_t g_sbhLanTask;
-extern StreamBufferHandle_t g_sbhCameraTask;
+OS_RESOURCE_MACRO_STREAM_DECLAR(LPUARTTx[1+enLPUART_MAX]);
+OS_RESOURCE_MACRO_STREAM_DECLAR(LPUARTRx[1+enLPUART_MAX]);
+
 
 
 extern void CreateTask(void);

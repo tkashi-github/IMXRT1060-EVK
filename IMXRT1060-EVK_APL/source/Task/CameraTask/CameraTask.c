@@ -236,9 +236,10 @@ __attribute__((section(".NonCacheable"))) alignas(64) static uint16_t s_frameBuf
 
 static void CameraTaskActual(void)
 {
+	uint8_t msg_prio;
 
 	stTaskMsgBlock_t stTaskMsg = {0};
-	if (sizeof(stTaskMsg) == xStreamBufferReceive(g_sbhCameraTask, &stTaskMsg, sizeof(stTaskMsg), portMAX_DELAY))
+	if (osOK == osMessageQueueGet(g_mqidCameraTask, &stTaskMsg, &msg_prio, 100))
 	{
 		switch (stTaskMsg.enMsgId)
 		{
@@ -323,30 +324,11 @@ void CameraTask(void const *argument)
 DefALLOCATE_ITCM void PostMsgCameraTaskBtnPushed(void)
 {
 
-	TickType_t tTimeout = portMAX_DELAY;
-	if (pdFALSE != xPortIsInsideInterrupt())
-	{
-		tTimeout = 0;
-	}
+	stTaskMsgBlock_t stTaskMsg;
+	memset(&stTaskMsg, 0, sizeof(stTaskMsgBlock_t));
+	stTaskMsg.enMsgId = enCameraBtn;
 
-	if (osSemaphoreAcquire(g_semidCameraTask, tTimeout) == osOK)
-	{
-		stTaskMsgBlock_t stTaskMsg;
-		memset(&stTaskMsg, 0, sizeof(stTaskMsgBlock_t));
-		stTaskMsg.enMsgId = enCameraBtn;
-
-		if (pdFALSE != xPortIsInsideInterrupt())
-		{
-			BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-			xStreamBufferSendFromISR(g_sbhCameraTask, &stTaskMsg, sizeof(stTaskMsg), &xHigherPriorityTaskWoken);
-			portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-		}
-		else
-		{
-			xStreamBufferSend(g_sbhCameraTask, &stTaskMsg, sizeof(stTaskMsg), 10);
-		}
-		osSemaphoreRelease(g_semidCameraTask);
-	}
+	osMessageQueuePut(g_mqidCameraTask, &stTaskMsg, 0, 50);
 }
 
 void CmdCamera(uint32_t argc, const char *argv[])

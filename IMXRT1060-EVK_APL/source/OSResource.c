@@ -202,6 +202,8 @@ OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(TouchScreenTask, sizeof(stTaskMsgBlock_t), 32)
 OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(PlayCtrl, sizeof(stTaskMsgBlock_t), 32);
 OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(SoundTask[enNumOfSoundTask], sizeof(stTaskMsgBlock_t), 32);
 OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(StorageTask[enNumOfSD], sizeof(stTaskMsgBlock_t), 32);
+OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(LanTask, sizeof(stTaskMsgBlock_t), 32);
+OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(CameraTask, sizeof(stTaskMsgBlock_t), 32);
 
 static stMsgQueueTable_t s_stMsgQueueTable[] = {
 	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(LcdTask, sizeof(stTaskMsgBlock_t), 32),
@@ -211,6 +213,8 @@ static stMsgQueueTable_t s_stMsgQueueTable[] = {
 	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(SoundTask[enSoundTask2], sizeof(stTaskMsgBlock_t), 32),
 	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(StorageTask[enUSDHC1], sizeof(stTaskMsgBlock_t), 32),
 	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(StorageTask[enUSDHC2], sizeof(stTaskMsgBlock_t), 32),
+	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(LanTask, sizeof(stTaskMsgBlock_t), 32),
+	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(CameraTask, sizeof(stTaskMsgBlock_t), 32),
 	{NULL, 0, 0, {0}},
 };
 
@@ -232,48 +236,29 @@ typedef struct{
 	StaticStreamBuffer_t *pxStreamBufferStruct;
 }stStreamBuffer_t;
 
-DefALLOCATE_BSS_DTCM alignas(32) StreamBufferHandle_t g_sbhLPUARTTx[1+enLPUART_MAX] = {NULL};
-DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_u8StorageLPUARTTx[1+enLPUART_MAX][1024+1];	/** +1 はマニュアルの指示 */
-DefALLOCATE_BSS_DTCM alignas(32) static StaticStreamBuffer_t s_ssbLPUARTTx[1+enLPUART_MAX];
-DefALLOCATE_BSS_DTCM alignas(32) StreamBufferHandle_t g_sbhLPUARTRx[1+enLPUART_MAX] = {NULL};
-DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_u8StorageLPUARTRx[1+enLPUART_MAX][1024+1];	/** +1 はマニュアルの指示 */
-DefALLOCATE_BSS_DTCM alignas(32) static StaticStreamBuffer_t s_ssbLPUARTRx[1+enLPUART_MAX];
+OS_RESOURCE_MACRO_STREAM_DEFINE(LPUARTTx[1+enLPUART_MAX], 1024);
+OS_RESOURCE_MACRO_STREAM_DEFINE(LPUARTRx[1+enLPUART_MAX], 1024);
 
-DefALLOCATE_BSS_DTCM alignas(32) StreamBufferHandle_t g_sbhLanTask = NULL;
-DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_LanTaskStorage[sizeof(stTaskMsgBlock_t) * 32 + 1];	/** +1 はマニュアルの指示 */
-DefALLOCATE_BSS_DTCM alignas(32) static StaticStreamBuffer_t s_ssbSLanTaskStreamBuffer;
 
-DefALLOCATE_BSS_DTCM alignas(32) StreamBufferHandle_t g_sbhCameraTask;
-DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_CameraTaskStorage[sizeof(stTaskMsgBlock_t) * 32 + 1];	/** +1 はマニュアルの指示 */
-DefALLOCATE_BSS_DTCM alignas(32) static StaticStreamBuffer_t s_ssbSCameraTaskStreamBuffer;
 
-DefALLOCATE_BSS_DTCM alignas(32) StreamBufferHandle_t g_sbhTouchScreenTask;
-DefALLOCATE_BSS_DTCM alignas(32) static uint8_t s_u8TouchScreenTaskStorage[sizeof(stTaskMsgBlock_t) * 32 + 1];	/** +1 はマニュアルの指示 */
-DefALLOCATE_BSS_DTCM alignas(32) static StaticStreamBuffer_t s_ssbTouchScreenTaskStreamBuffer;
 
 static stStreamBuffer_t s_stStreamBufferTable[] = {
-
-	{&g_sbhLPUARTTx[enLPUART1], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTTx[enLPUART1], &s_ssbLPUARTTx[enLPUART1]},
-	{&g_sbhLPUARTTx[enLPUART2], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTTx[enLPUART2], &s_ssbLPUARTTx[enLPUART2]},
-	{&g_sbhLPUARTTx[enLPUART3], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTTx[enLPUART3], &s_ssbLPUARTTx[enLPUART3]},
-	{&g_sbhLPUARTTx[enLPUART4], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTTx[enLPUART4], &s_ssbLPUARTTx[enLPUART4]},
-	{&g_sbhLPUARTTx[enLPUART5], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTTx[enLPUART5], &s_ssbLPUARTTx[enLPUART5]},
-	{&g_sbhLPUARTTx[enLPUART6], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTTx[enLPUART6], &s_ssbLPUARTTx[enLPUART6]},
-	{&g_sbhLPUARTTx[enLPUART7], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTTx[enLPUART7], &s_ssbLPUARTTx[enLPUART7]},
-	{&g_sbhLPUARTTx[enLPUART8], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTTx[enLPUART8], &s_ssbLPUARTTx[enLPUART8]},
-
-	{&g_sbhLPUARTRx[enLPUART1], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTRx[enLPUART1], &s_ssbLPUARTRx[enLPUART1]},
-	{&g_sbhLPUARTRx[enLPUART2], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTRx[enLPUART2], &s_ssbLPUARTRx[enLPUART2]},
-	{&g_sbhLPUARTRx[enLPUART3], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTRx[enLPUART3], &s_ssbLPUARTRx[enLPUART3]},
-	{&g_sbhLPUARTRx[enLPUART4], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTRx[enLPUART4], &s_ssbLPUARTRx[enLPUART4]},
-	{&g_sbhLPUARTRx[enLPUART5], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTRx[enLPUART5], &s_ssbLPUARTRx[enLPUART5]},
-	{&g_sbhLPUARTRx[enLPUART6], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTRx[enLPUART6], &s_ssbLPUARTRx[enLPUART6]},
-	{&g_sbhLPUARTRx[enLPUART7], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTRx[enLPUART7], &s_ssbLPUARTRx[enLPUART7]},
-	{&g_sbhLPUARTRx[enLPUART8], 1024+1, sizeof(TCHAR), s_u8StorageLPUARTRx[enLPUART8], &s_ssbLPUARTRx[enLPUART8]},
-
-	{&g_sbhLanTask, sizeof(s_LanTaskStorage), sizeof(stTaskMsgBlock_t), s_LanTaskStorage, &s_ssbSLanTaskStreamBuffer},
-	{&g_sbhCameraTask, sizeof(s_CameraTaskStorage), sizeof(stTaskMsgBlock_t), s_CameraTaskStorage, &s_ssbSCameraTaskStreamBuffer},
-	{&g_sbhTouchScreenTask, sizeof(s_u8TouchScreenTaskStorage), sizeof(stTaskMsgBlock_t), s_u8TouchScreenTaskStorage, &s_ssbTouchScreenTaskStreamBuffer},
+	OS_RESOURCE_MACRO_STREAM_TABLE(LPUARTTx[enLPUART1], 1024, sizeof(TCHAR)),
+	OS_RESOURCE_MACRO_STREAM_TABLE(LPUARTTx[enLPUART2], 1024, sizeof(TCHAR)),
+	OS_RESOURCE_MACRO_STREAM_TABLE(LPUARTTx[enLPUART3], 1024, sizeof(TCHAR)),
+	OS_RESOURCE_MACRO_STREAM_TABLE(LPUARTTx[enLPUART4], 1024, sizeof(TCHAR)),
+	OS_RESOURCE_MACRO_STREAM_TABLE(LPUARTTx[enLPUART5], 1024, sizeof(TCHAR)),
+	OS_RESOURCE_MACRO_STREAM_TABLE(LPUARTTx[enLPUART6], 1024, sizeof(TCHAR)),
+	OS_RESOURCE_MACRO_STREAM_TABLE(LPUARTTx[enLPUART7], 1024, sizeof(TCHAR)),
+	OS_RESOURCE_MACRO_STREAM_TABLE(LPUARTTx[enLPUART8], 1024, sizeof(TCHAR)),
+	OS_RESOURCE_MACRO_STREAM_TABLE(LPUARTRx[enLPUART1], 1024, sizeof(TCHAR)),
+	OS_RESOURCE_MACRO_STREAM_TABLE(LPUARTRx[enLPUART2], 1024, sizeof(TCHAR)),
+	OS_RESOURCE_MACRO_STREAM_TABLE(LPUARTRx[enLPUART3], 1024, sizeof(TCHAR)),
+	OS_RESOURCE_MACRO_STREAM_TABLE(LPUARTRx[enLPUART4], 1024, sizeof(TCHAR)),
+	OS_RESOURCE_MACRO_STREAM_TABLE(LPUARTRx[enLPUART5], 1024, sizeof(TCHAR)),
+	OS_RESOURCE_MACRO_STREAM_TABLE(LPUARTRx[enLPUART6], 1024, sizeof(TCHAR)),
+	OS_RESOURCE_MACRO_STREAM_TABLE(LPUARTRx[enLPUART7], 1024, sizeof(TCHAR)),
+	OS_RESOURCE_MACRO_STREAM_TABLE(LPUARTRx[enLPUART8], 1024, sizeof(TCHAR)),
 
 	{NULL, 0, 0, NULL, NULL},
 };

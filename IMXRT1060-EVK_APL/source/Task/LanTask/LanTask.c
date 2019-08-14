@@ -166,12 +166,15 @@ DefALLOCATE_ITCM static void LinkUpDownProc(void){
 /**
  * @brief Lan Task Main Loop
  */
-DefALLOCATE_ITCM static void LanTaskActual(void){
+DefALLOCATE_ITCM static void LanTaskActual(void)
+{
+	uint8_t msg_prio;
 	static _Bool s_bLastLinkStatus = false;
 	static _Bool s_bInited = false;
 
 	stTaskMsgBlock_t stTaskMsg = {0};
-	if(sizeof(stTaskMsg) <= xStreamBufferReceive(g_sbhLanTask, &stTaskMsg, sizeof(stTaskMsg), 100)){
+	if (osOK == osMessageQueueGet(g_mqidLanTask, &stTaskMsg, &msg_prio, 100))
+	{
 		switch(stTaskMsg.enMsgId){
 		case enLanLinkChange:
 			if(s_bInited != false){
@@ -192,17 +195,16 @@ DefALLOCATE_ITCM static void LanTaskActual(void){
 			break;
 		}
 		
-		/** Sync */
+		/* Sync */
 		if(stTaskMsg.SyncEGHandle != NULL){
 			osEventFlagsSet(stTaskMsg.SyncEGHandle, stTaskMsg.wakeupbits);
 		}
 
-		/** Free */
+		/* Free */
 		if(stTaskMsg.ptrDataForDst != (uintptr_t)NULL){
 			vPortFree((void*)stTaskMsg.ptrDataForDst);
 		}
 	}else{
-#if 1
 		if(s_bInited != false){
 			_Bool bCurrentLinkStatus = IsLinkUP();
 			if(s_bLastLinkStatus != bCurrentLinkStatus){
@@ -210,7 +212,6 @@ DefALLOCATE_ITCM static void LanTaskActual(void){
 				s_bLastLinkStatus = bCurrentLinkStatus;
 			}
 		}
-#endif
 	}
 }
 
@@ -245,17 +246,19 @@ DefALLOCATE_ITCM void LanTask(void const *argument){
  * @return false Post NG
  */
 DefALLOCATE_ITCM _Bool PostMsgLanTaskRestart(void){
-		/** var */
+	/*-- var --*/
+	_Bool bret = false;
 	alignas(8) stTaskMsgBlock_t stTaskMsg = {0};
 
+	/*-- begin --*/
 	stTaskMsg.enMsgId = enLanRestart;
 
-	if(sizeof(stTaskMsg) != xStreamBufferSend(g_sbhLanTask, &stTaskMsg, sizeof(stTaskMsg), 50)){
-		mimic_printf("[%s (%d)] xStreamBufferSend NG\r\n", __func__, __LINE__);
-		return false;
+	if(osOK == osMessageQueuePut(g_mqidLanTask, &stTaskMsg, 0, 50))
+	{
+		bret = true;
 	}
 	
-	return true;
+	return bret;
 }
 
 /**
@@ -264,27 +267,18 @@ DefALLOCATE_ITCM _Bool PostMsgLanTaskRestart(void){
  * @return false Post NG
  */
 DefALLOCATE_ITCM _Bool PostMsgLanTaskLinkChange(void){
-	/** var */
+	/*-- var --*/
+	_Bool bret = false;
 	alignas(8) stTaskMsgBlock_t stTaskMsg = {0};
 
-	/** begin */
+	/*-- begin --*/
 	stTaskMsg.enMsgId = enLanLinkChange;
 
-	if(pdFALSE == xPortIsInsideInterrupt()){
-		if(sizeof(stTaskMsg) != xStreamBufferSend(g_sbhLanTask, &stTaskMsg, sizeof(stTaskMsg), 50)){
-			mimic_printf("[%s (%d)] xStreamBufferSend NG\r\n", __func__, __LINE__);
-			return false;
-		}
-	}else{
-		BaseType_t xHigherPriorityTaskWoken;
-
-		if(sizeof(stTaskMsg) != xStreamBufferSendFromISR(g_sbhLanTask, &stTaskMsg, sizeof(stTaskMsg), &xHigherPriorityTaskWoken)){
-			return false;
-		}
-		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+	if(osOK == osMessageQueuePut(g_mqidLanTask, &stTaskMsg, 0, 50))
+	{
+		bret = true;
 	}
-
 	
-	return true;
+	return bret;
 }
 
