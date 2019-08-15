@@ -64,7 +64,12 @@
 			"tempmonitask.h": "c",
 			"drvlpuart.h": "c",
 			"audiofilelist.h": "c",
-			"xiosbase": "cpp"
+			"xiosbase": "cpp",
+			"playctrl.h": "c",
+			"extledctrltask.h": "c",
+			"lantask.h": "c",
+			"sensortask.h": "c",
+			"lcdtask.h": "c"
 		},
 		"C_Cpp.default.defines": [
 			"__GNUC__",

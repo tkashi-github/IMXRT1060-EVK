@@ -41,13 +41,14 @@
 #include "Task/ConsoleTask/ConsoleTask.h"
 #include "Task/StorageTask/StorageTask.h"
 #include "Task/LanTask/LanTask.h"
-#include "SensorTask/SensorTask.h"
-#include "CameraTask/CameraTask.h"
-#include "LcdTask/LcdTask.h"
-#include "TouchScreenTask/TouchScreenTask.h"
-#include "TempMoniTask/TempMoniTask.h"
+#include "Task/SensorTask/SensorTask.h"
+#include "Task/CameraTask/CameraTask.h"
+#include "Task/LcdTask/LcdTask.h"
+#include "Task/TouchScreenTask/TouchScreenTask.h"
+#include "Task/TempMoniTask/TempMoniTask.h"
 #include "Task/SoundTask/SoundTask.h"
 #include "Task/PlayCtrl/PlayCtrl.h"
+#include "Task/ExtLedCtrlTask/ExtLedCtrlTask.h"
 
 /** typedef Task Table */
 typedef struct{
@@ -68,6 +69,7 @@ OS_RESOURCE_MACRO_TASK_DEFINE(TouchScreenTask, 8192);
 OS_RESOURCE_MACRO_TASK_DEFINE(TempMoniTask, 8192);
 OS_RESOURCE_MACRO_TASK_DEFINE(SoundTask, 8192);
 OS_RESOURCE_MACRO_TASK_DEFINE(PlayCtrl, 16384);
+OS_RESOURCE_MACRO_TASK_DEFINE(ExtLedCtrlTask, 4096);
 
 /** Task Table */
 static const stOSdefTable_t s_stTaskTable[] = {
@@ -80,6 +82,7 @@ static const stOSdefTable_t s_stTaskTable[] = {
 	OS_RESOURCE_MACRO_TASK_TABLE(TempMoniTask, NULL, osPriorityBelowNormal),
 	OS_RESOURCE_MACRO_TASK_TABLE(SoundTask, NULL, osPriorityHigh),
 	OS_RESOURCE_MACRO_TASK_TABLE(PlayCtrl, NULL, osPriorityAboveNormal),
+	OS_RESOURCE_MACRO_TASK_TABLE(ExtLedCtrlTask, NULL, osPriorityBelowNormal),
 
 	// Terminate
 	{NULL,NULL,NULL,{0}},
@@ -204,6 +207,7 @@ OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(SoundTask[enNumOfSoundTask], sizeof(stTaskMsgB
 OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(StorageTask[enNumOfSD], sizeof(stTaskMsgBlock_t), 32);
 OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(LanTask, sizeof(stTaskMsgBlock_t), 32);
 OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(CameraTask, sizeof(stTaskMsgBlock_t), 32);
+OS_RESOURCE_MACRO_MSGQUEUE_DECLAR(ExtLedCtrlTask, sizeof(stTaskMsgBlock_t), 32);
 
 static stMsgQueueTable_t s_stMsgQueueTable[] = {
 	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(LcdTask, sizeof(stTaskMsgBlock_t), 32),
@@ -215,6 +219,7 @@ static stMsgQueueTable_t s_stMsgQueueTable[] = {
 	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(StorageTask[enUSDHC2], sizeof(stTaskMsgBlock_t), 32),
 	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(LanTask, sizeof(stTaskMsgBlock_t), 32),
 	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(CameraTask, sizeof(stTaskMsgBlock_t), 32),
+	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(ExtLedCtrlTask, sizeof(stTaskMsgBlock_t), 32),
 	{NULL, 0, 0, {0}},
 };
 

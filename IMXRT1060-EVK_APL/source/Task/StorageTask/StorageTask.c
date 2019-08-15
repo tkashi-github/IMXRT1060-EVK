@@ -223,7 +223,7 @@ DefALLOCATE_ITCM static void StorageTaskActual(enSD_t enSlotNo)
 			break;
 		}
 
-		/** Sync */
+		/* Sync */
 		if (stTaskMsg.SyncEGHandle != NULL)
 		{
 			osEventFlagsSet(stTaskMsg.SyncEGHandle, stTaskMsg.wakeupbits);

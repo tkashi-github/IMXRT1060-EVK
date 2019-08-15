@@ -42,13 +42,33 @@
  */
 DefALLOCATE_ITCM void ExtLedCtrlTask(void const *argument)
 {
-	// TODO
+	uint8_t msg_prio;
+	stTaskMsgBlock_t stTaskMsg = {0};
+
+	if (osOK == osMessageQueueGet(g_mqidExtLedCtrlTask[enSlotNo], &stTaskMsg, &msg_prio, portMAX_DELAY))
+	{
+		switch (stTaskMsg.enMsgId)
+		{
+		case enExtLedUpdate:
+			// TODO
+			break;
+		default:
+			mimic_printf("[%s (%d)] Unkown Msg (Slot = %d)!\r\n", __func__, __LINE__, enSlotNo + 1);
+			break;
+		}
+
+		/** Sync */
+		if (stTaskMsg.SyncEGHandle != NULL)
+		{
+			osEventFlagsSet(stTaskMsg.SyncEGHandle, stTaskMsg.wakeupbits);
+		}
+	}
 
 	vTaskSuspend(NULL);
 }
 
 
-DefALLOCATE_ITCM _Bool PostMsgExtLedCtrlTaskLedVal(enExtLedNo_t enExtLedNo, uint8_t val);
+DefALLOCATE_ITCM _Bool PostMsgExtLedCtrlTaskLedVal(enPCA9685PortNo_t enExtLedNo, uint8_t val);
 {
 	_Bool bret = false;
 

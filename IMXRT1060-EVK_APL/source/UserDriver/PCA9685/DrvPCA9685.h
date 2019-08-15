@@ -1,5 +1,5 @@
 /**
- * @file	ExtLedCtrlTask.h
+ * @file	DrvPCA9685.h
  * @brief	
  * @author Takashi Kashiwagi
  * @date 2019/08/14
@@ -44,14 +44,29 @@ extern "C"
 /** User Typedefine */
 #include "UserTypedef.h"
 
-#include "UserDriver/PCA9685/DrvPCA9685.h"
+typedef enum{
+	enPCA9685Port0 = 0,
+	enPCA9685Port1,
+	enPCA9685Port2,
+	enPCA9685Port3,
+	enPCA9685Port4,
+	enPCA9685Port5,
+	enPCA9685Port6,
+	enPCA9685Port7,
+	enPCA9685Port8,
+	enPCA9685Port9,
+	enPCA9685Port10,
+	enPCA9685Port11,
+	enPCA9685Port12,
+	enPCA9685Port13,
+	enPCA9685Port14,
+	enPCA9685Port15,
 
-extern void ExtLedCtrlTask(void const *argument);
-extern _Bool PostMsgExtLedCtrlTaskLedVal(enPCA9685PortNo_t enExtLedNo, uint8_t val);
+}enPCA9685PortNo_t;
 
+extern void DrvPCA9685Init(void);
+extern _Bool DrvPCA9685SetPWMVal(enPCA9685PortNo_t enPortNo, uint16_t PwmVal);
 
 #ifdef __cplusplus
 }
 #endif
-
-
