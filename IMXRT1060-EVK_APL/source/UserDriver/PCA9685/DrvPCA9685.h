@@ -64,8 +64,8 @@ typedef enum{
 
 }enPCA9685PortNo_t;
 
-extern void DrvPCA9685Init(void);
-extern _Bool DrvPCA9685SetPWMVal(enPCA9685PortNo_t enPortNo, uint16_t PwmVal);
+extern _Bool DrvPCA9685Init(LPI2C_Type *base);
+extern _Bool DrvPCA9685SetPWMVal(LPI2C_Type *base, enPCA9685PortNo_t enPortNo, uint16_t PwmVal);
 
 #ifdef __cplusplus
 }

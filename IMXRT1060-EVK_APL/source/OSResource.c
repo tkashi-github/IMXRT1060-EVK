@@ -207,7 +207,7 @@ OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(SoundTask[enNumOfSoundTask], sizeof(stTaskMsgB
 OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(StorageTask[enNumOfSD], sizeof(stTaskMsgBlock_t), 32);
 OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(LanTask, sizeof(stTaskMsgBlock_t), 32);
 OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(CameraTask, sizeof(stTaskMsgBlock_t), 32);
-OS_RESOURCE_MACRO_MSGQUEUE_DECLAR(ExtLedCtrlTask, sizeof(stTaskMsgBlock_t), 32);
+OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(ExtLedCtrlTask, sizeof(stTaskMsgBlock_t), 32);
 
 static stMsgQueueTable_t s_stMsgQueueTable[] = {
 	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(LcdTask, sizeof(stTaskMsgBlock_t), 32),

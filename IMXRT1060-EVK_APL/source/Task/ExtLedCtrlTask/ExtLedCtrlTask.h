@@ -47,7 +47,7 @@ extern "C"
 #include "UserDriver/PCA9685/DrvPCA9685.h"
 
 extern void ExtLedCtrlTask(void const *argument);
-extern _Bool PostMsgExtLedCtrlTaskLedVal(enPCA9685PortNo_t enExtLedNo, uint8_t val);
+extern _Bool PostMsgExtLedCtrlTaskLedVal(enPCA9685PortNo_t enExtLedNo, uint16_t val);
 
 
 #ifdef __cplusplus

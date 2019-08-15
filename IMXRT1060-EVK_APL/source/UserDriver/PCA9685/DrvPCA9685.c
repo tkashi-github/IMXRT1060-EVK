@@ -58,12 +58,10 @@ DefALLOCATE_ITCM _Bool DrvPCA9685Init(LPI2C_Type *base)
 {
 	_Bool bret = false;
 
-	lpi2c_master_transfer_t xfer;
-
 	/* Register Auto-Increment enabled. */
 	uint8_t val[4] = {0x10, 0x00, 0x00, 0x00};
 
-	if(LPI2C1 != base) && (LPI2C2 != base) && (LPI2C3 != base) && (LPI2C4 != base))
+	if((LPI2C1 != base) && (LPI2C2 != base) && (LPI2C3 != base) && (LPI2C4 != base))
 	{
 		mimic_printf("[%s (%d)] EXIT!\r\n", __func__, __LINE__);
 		goto _END;
@@ -94,7 +92,7 @@ DefALLOCATE_ITCM _Bool DrvPCA9685Init(LPI2C_Type *base)
 	val[0] = 0x00u;
 	val[1] = 0x00u;
 	val[2] = 0xFFu;
-	val[3] = 0xFFu;
+	val[3] = 0x03u;
 	if(kStatus_Success != BOARD_LPI2C_Send(base, PCA9685_I2C_ADDRESS, REG_ALL_LED_ON_L, 1, val, 4))
 	{
 		mimic_printf("[%s (%d)] EXIT!\r\n", __func__, __LINE__);
@@ -109,14 +107,28 @@ _END:
 
 DefALLOCATE_ITCM _Bool DrvPCA9685SetPWMVal(LPI2C_Type *base, enPCA9685PortNo_t enPortNo, uint16_t PwmVal)
 {
-	if((LPI2C1 != base) && (LPI2C2 != base) && (LPI2C3 != base) && (LPI2C4 != base)) ||
+	_Bool bret = false;
+	
+	if(((LPI2C1 != base) && (LPI2C2 != base) && (LPI2C3 != base) && (LPI2C4 != base)) ||
 		(enPortNo < enPCA9685Port0) ||
-		(enPortNo < enPCA9685Port15) ||
+		(enPortNo > enPCA9685Port15) ||
 		(PwmVal > 4095))
 	{
 		mimic_printf("[%s (%d)] EXIT!\r\n", __func__, __LINE__);
 		goto _END;
 	}
+
+	uint8_t val[4] = {0x00, 0x00, 0x00, 0x00};
+	uint16_t u16temp = 4095 - PwmVal;
+
+	memcpy(val, &PwmVal, sizeof(uint16_t));
+	memcpy(val, &u16temp, sizeof(uint16_t));
+	if(kStatus_Success != BOARD_LPI2C_Send(base, PCA9685_I2C_ADDRESS, REG_LED0_ON_L + ((uint32_t)enPortNo*4u), 1, val, 4))
+	{
+		mimic_printf("[%s (%d)] BOARD_LPI2C_Send NG!\r\n", __func__, __LINE__);
+		goto _END;
+	}
+	bret = true;
 _END:
 	return bret;
 }

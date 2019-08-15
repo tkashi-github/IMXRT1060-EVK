@@ -45,15 +45,20 @@ DefALLOCATE_ITCM void ExtLedCtrlTask(void const *argument)
 	uint8_t msg_prio;
 	stTaskMsgBlock_t stTaskMsg = {0};
 
-	if (osOK == osMessageQueueGet(g_mqidExtLedCtrlTask[enSlotNo], &stTaskMsg, &msg_prio, portMAX_DELAY))
+	if(false == DrvPCA9685Init(LPI2C1))
+	{
+		mimic_printf("[%s (%d)] DrvPCA9685Init NG!\r\n", __func__, __LINE__);
+	}
+
+	if (osOK == osMessageQueueGet(g_mqidExtLedCtrlTask, &stTaskMsg, &msg_prio, portMAX_DELAY))
 	{
 		switch (stTaskMsg.enMsgId)
 		{
 		case enExtLedUpdate:
-			// TODO
+			DrvPCA9685SetPWMVal(LPI2C1, (enPCA9685PortNo_t)stTaskMsg.param[0], stTaskMsg.param[1]);
 			break;
 		default:
-			mimic_printf("[%s (%d)] Unkown Msg (Slot = %d)!\r\n", __func__, __LINE__, enSlotNo + 1);
+			mimic_printf("[%s (%d)] Unkown Msg!\r\n", __func__, __LINE__);
 			break;
 		}
 
@@ -68,18 +73,18 @@ DefALLOCATE_ITCM void ExtLedCtrlTask(void const *argument)
 }
 
 
-DefALLOCATE_ITCM _Bool PostMsgExtLedCtrlTaskLedVal(enPCA9685PortNo_t enExtLedNo, uint8_t val);
+DefALLOCATE_ITCM _Bool PostMsgExtLedCtrlTaskLedVal(enPCA9685PortNo_t enExtLedNo, uint16_t val)
 {
 	_Bool bret = false;
 
-	if((enExtLedNo >= enExtLed0) && (enExtLedNo <= enExtLed15))
+	if((enExtLedNo >= enPCA9685Port0) && (enExtLedNo <= enPCA9685Port15))
 	{
 		stTaskMsgBlock_t stTaskMsg = {0};
 		stTaskMsg.enMsgId = enExtLedUpdate;
 		stTaskMsg.param[0] = enExtLedNo;
 		stTaskMsg.param[1] = val;
 
-		if(osOK == osMessageQueuePut(g_mqidExtLedCtrlTask, &stTaskMsg, 0, 50)
+		if(osOK == osMessageQueuePut(g_mqidExtLedCtrlTask, &stTaskMsg, 0, 50))
 		{
 			bret = true;
 		}
