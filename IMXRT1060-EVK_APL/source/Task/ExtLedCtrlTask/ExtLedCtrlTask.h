@@ -48,7 +48,7 @@ extern "C"
 
 extern void ExtLedCtrlTask(void const *argument);
 extern _Bool PostMsgExtLedCtrlTaskLedVal(enPCA9685PortNo_t enExtLedNo, uint16_t val);
-
+extern void CmdExtLed(uint32_t argc, const char *argv[]);
 
 #ifdef __cplusplus
 }

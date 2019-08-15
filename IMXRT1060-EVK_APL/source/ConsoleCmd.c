@@ -59,6 +59,8 @@
 #include "PlayCtrl/PlayCtrl.h"
 #include "AudioFile/AudioFileList.h"
 
+#include "ExtLedCtrlTask/ExtLedCtrlTask.h"
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -107,6 +109,7 @@ stCmdTable_t g_stCmdTable[] = {
 	{"STOP", CmdStop, "Play/Rec Stop"},
 	{"REC", CmdRec, "Rec Start"},
 	{"LIST", CmdMakeAudioFileList, "AUdio File List"},
+	{"EXTLED", CmdExtLed, "Ext Led Test"},
 	{NULL, NULL, NULL}, /* Terminator */
 };
 

@@ -61,11 +61,14 @@ typedef enum{
 	enPCA9685Port13,
 	enPCA9685Port14,
 	enPCA9685Port15,
+	enPCA9685PortBegin = enPCA9685Port0,
+	enPCA9685PortEnd = enPCA9685Port15,
 
 }enPCA9685PortNo_t;
 
 extern _Bool DrvPCA9685Init(LPI2C_Type *base);
 extern _Bool DrvPCA9685SetPWMVal(LPI2C_Type *base, enPCA9685PortNo_t enPortNo, uint16_t PwmVal);
+extern _Bool DrvPCA9685GetPWMVal(LPI2C_Type *base, enPCA9685PortNo_t enPortNo, uint16_t *pPwmVal);
 
 #ifdef __cplusplus
 }

@@ -58,8 +58,8 @@ DefALLOCATE_ITCM _Bool DrvPCA9685Init(LPI2C_Type *base)
 {
 	_Bool bret = false;
 
-	/* Register Auto-Increment enabled. */
-	uint8_t val[4] = {0x10, 0x00, 0x00, 0x00};
+	/* Register Auto-Increment enabled. Low power mode. Oscillator off */
+	uint8_t val[4] = {0x30, 0x00, 0x00, 0x00};
 
 	if((LPI2C1 != base) && (LPI2C2 != base) && (LPI2C3 != base) && (LPI2C4 != base))
 	{
@@ -72,33 +72,65 @@ DefALLOCATE_ITCM _Bool DrvPCA9685Init(LPI2C_Type *base)
 		mimic_printf("[%s (%d)] EXIT!\r\n", __func__, __LINE__);
 		goto _END;
 	}
+	if(kStatus_Success != BOARD_LPI2C_Receive(base, PCA9685_I2C_ADDRESS, REG_MODE1, 1, val, 1))
+	{
+		mimic_printf("[%s (%d)] EXIT!\r\n", __func__, __LINE__);
+		goto _END;
+	}
+	mimic_printf("[%s (%d)] 0x%02X\r\n", __func__, __LINE__, val[0]);
 
 	/* Set MODE2 reset Val */
-	val[0] = 0x00;
+	val[0] = 0x10;
 	if(kStatus_Success != BOARD_LPI2C_Send(base, PCA9685_I2C_ADDRESS, REG_MODE2, 1, val, 1))
 	{
 		mimic_printf("[%s (%d)] EXIT!\r\n", __func__, __LINE__);
 		goto _END;
 	}
+	if(kStatus_Success != BOARD_LPI2C_Receive(base, PCA9685_I2C_ADDRESS, REG_MODE2, 1, val, 1))
+	{
+		mimic_printf("[%s (%d)] EXIT!\r\n", __func__, __LINE__);
+		goto _END;
+	}
+	mimic_printf("[%s (%d)] 0x%02X\r\n", __func__, __LINE__, val[0]);
 
 	/* 1526 Hz */
-	val[0] = 0x03u;
+	val[0] = 0xFFu;
 	if(kStatus_Success != BOARD_LPI2C_Send(base, PCA9685_I2C_ADDRESS, REG_PRE_SCALE, 1, val, 1))
 	{
 		mimic_printf("[%s (%d)] EXIT!\r\n", __func__, __LINE__);
 		goto _END;
 	}
+	if(kStatus_Success != BOARD_LPI2C_Receive(base, PCA9685_I2C_ADDRESS, REG_PRE_SCALE, 1, val, 1))
+	{
+		mimic_printf("[%s (%d)] EXIT!\r\n", __func__, __LINE__);
+		goto _END;
+	}
+	mimic_printf("[%s (%d)] 0x%02X\r\n", __func__, __LINE__, val[0]);
 
-	val[0] = 0x00u;
-	val[1] = 0x00u;
-	val[2] = 0xFFu;
-	val[3] = 0x03u;
+	/* Normal mode */
+	val[0] = 0x20u;
+	if(kStatus_Success != BOARD_LPI2C_Send(base, PCA9685_I2C_ADDRESS, REG_MODE1, 1, val, 1))
+	{
+		mimic_printf("[%s (%d)] EXIT!\r\n", __func__, __LINE__);
+		goto _END;
+	}
+
+	val[0] = 0xFFu;
+	val[1] = 0x0Fu;
+	val[2] = 0x00u;
+	val[3] = 0x00u;
 	if(kStatus_Success != BOARD_LPI2C_Send(base, PCA9685_I2C_ADDRESS, REG_ALL_LED_ON_L, 1, val, 4))
 	{
 		mimic_printf("[%s (%d)] EXIT!\r\n", __func__, __LINE__);
 		goto _END;
 	}
 	
+	if(kStatus_Success != BOARD_LPI2C_Receive(base, PCA9685_I2C_ADDRESS, REG_MODE1, 1, val, 2))
+	{
+		mimic_printf("[%s (%d)] EXIT!\r\n", __func__, __LINE__);
+		goto _END;
+	}
+	mimic_printf("[%s (%d)] 0x%02X,0x%02X\r\n", __func__, __LINE__, val[0], val[1]);
 	mimic_printf("[%s (%d)] INIT OK\r\n", __func__, __LINE__);
 	bret = true;
 _END:
@@ -108,7 +140,7 @@ _END:
 DefALLOCATE_ITCM _Bool DrvPCA9685SetPWMVal(LPI2C_Type *base, enPCA9685PortNo_t enPortNo, uint16_t PwmVal)
 {
 	_Bool bret = false;
-	
+
 	if(((LPI2C1 != base) && (LPI2C2 != base) && (LPI2C3 != base) && (LPI2C4 != base)) ||
 		(enPortNo < enPCA9685Port0) ||
 		(enPortNo > enPCA9685Port15) ||
@@ -122,12 +154,38 @@ DefALLOCATE_ITCM _Bool DrvPCA9685SetPWMVal(LPI2C_Type *base, enPCA9685PortNo_t e
 	uint16_t u16temp = 4095 - PwmVal;
 
 	memcpy(val, &PwmVal, sizeof(uint16_t));
-	memcpy(val, &u16temp, sizeof(uint16_t));
+	memcpy(&val[2], &u16temp, sizeof(uint16_t));
 	if(kStatus_Success != BOARD_LPI2C_Send(base, PCA9685_I2C_ADDRESS, REG_LED0_ON_L + ((uint32_t)enPortNo*4u), 1, val, 4))
 	{
 		mimic_printf("[%s (%d)] BOARD_LPI2C_Send NG!\r\n", __func__, __LINE__);
 		goto _END;
 	}
+	bret = true;
+_END:
+	return bret;
+}
+
+DefALLOCATE_ITCM _Bool DrvPCA9685GetPWMVal(LPI2C_Type *base, enPCA9685PortNo_t enPortNo, uint16_t *pPwmVal)
+{
+	_Bool bret = false;
+
+	if(((LPI2C1 != base) && (LPI2C2 != base) && (LPI2C3 != base) && (LPI2C4 != base)) ||
+		(enPortNo < enPCA9685Port0) ||
+		(enPortNo > enPCA9685Port15) ||
+		(pPwmVal == NULL))
+	{
+		mimic_printf("[%s (%d)] EXIT!\r\n", __func__, __LINE__);
+		goto _END;
+	}
+
+	uint8_t val[4] = {0x00, 0x00, 0x00, 0x00};
+	if(kStatus_Success != BOARD_LPI2C_Receive(base, PCA9685_I2C_ADDRESS, REG_LED0_ON_L + ((uint32_t)enPortNo*4u), 1, val, 4))
+	{
+		mimic_printf("[%s (%d)] BOARD_LPI2C_Send NG!\r\n", __func__, __LINE__);
+		goto _END;
+	}
+
+	memcpy(pPwmVal, val, sizeof(uint16_t));
 	bret = true;
 _END:
 	return bret;
