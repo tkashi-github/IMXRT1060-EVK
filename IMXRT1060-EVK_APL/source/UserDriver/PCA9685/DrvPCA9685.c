@@ -67,11 +67,14 @@ DefALLOCATE_ITCM _Bool DrvPCA9685Init(LPI2C_Type *base)
 		goto _END;
 	}
 
+	osDelay(5);
 	if(kStatus_Success != BOARD_LPI2C_Send(base, PCA9685_I2C_ADDRESS, REG_MODE1, 1, val, 1))
 	{
 		mimic_printf("[%s (%d)] EXIT!\r\n", __func__, __LINE__);
 		goto _END;
 	}
+
+	osDelay(5);
 	if(kStatus_Success != BOARD_LPI2C_Receive(base, PCA9685_I2C_ADDRESS, REG_MODE1, 1, val, 1))
 	{
 		mimic_printf("[%s (%d)] EXIT!\r\n", __func__, __LINE__);
@@ -79,6 +82,22 @@ DefALLOCATE_ITCM _Bool DrvPCA9685Init(LPI2C_Type *base)
 	}
 	mimic_printf("[%s (%d)] 0x%02X\r\n", __func__, __LINE__, val[0]);
 
+	osDelay(5);
+	/* 1526 Hz */
+	val[0] = 0x03u;
+	if(kStatus_Success != BOARD_LPI2C_Send(base, PCA9685_I2C_ADDRESS, REG_PRE_SCALE, 1, val, 1))
+	{
+		mimic_printf("[%s (%d)] EXIT!\r\n", __func__, __LINE__);
+		goto _END;
+	}
+	if(kStatus_Success != BOARD_LPI2C_Receive(base, PCA9685_I2C_ADDRESS, REG_PRE_SCALE, 1, val, 1))
+	{
+		mimic_printf("[%s (%d)] EXIT!\r\n", __func__, __LINE__);
+		goto _END;
+	}
+	mimic_printf("[%s (%d)] 0x%02X\r\n", __func__, __LINE__, val[0]);
+
+	osDelay(5);
 	/* Set MODE2 reset Val */
 	val[0] = 0x10;
 	if(kStatus_Success != BOARD_LPI2C_Send(base, PCA9685_I2C_ADDRESS, REG_MODE2, 1, val, 1))
@@ -93,28 +112,17 @@ DefALLOCATE_ITCM _Bool DrvPCA9685Init(LPI2C_Type *base)
 	}
 	mimic_printf("[%s (%d)] 0x%02X\r\n", __func__, __LINE__, val[0]);
 
-	/* 1526 Hz */
-	val[0] = 0xFFu;
-	if(kStatus_Success != BOARD_LPI2C_Send(base, PCA9685_I2C_ADDRESS, REG_PRE_SCALE, 1, val, 1))
-	{
-		mimic_printf("[%s (%d)] EXIT!\r\n", __func__, __LINE__);
-		goto _END;
-	}
-	if(kStatus_Success != BOARD_LPI2C_Receive(base, PCA9685_I2C_ADDRESS, REG_PRE_SCALE, 1, val, 1))
-	{
-		mimic_printf("[%s (%d)] EXIT!\r\n", __func__, __LINE__);
-		goto _END;
-	}
-	mimic_printf("[%s (%d)] 0x%02X\r\n", __func__, __LINE__, val[0]);
 
+	osDelay(5);
 	/* Normal mode */
-	val[0] = 0x20u;
+	val[0] = 0xA0u;
 	if(kStatus_Success != BOARD_LPI2C_Send(base, PCA9685_I2C_ADDRESS, REG_MODE1, 1, val, 1))
 	{
 		mimic_printf("[%s (%d)] EXIT!\r\n", __func__, __LINE__);
 		goto _END;
 	}
 
+	osDelay(5);
 	val[0] = 0xFFu;
 	val[1] = 0x0Fu;
 	val[2] = 0x00u;
