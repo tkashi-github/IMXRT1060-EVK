@@ -50,25 +50,27 @@ DefALLOCATE_ITCM void ExtLedCtrlTask(void const *argument)
 		mimic_printf("[%s (%d)] DrvPCA9685Init NG!\r\n", __func__, __LINE__);
 	}
 
-	if (osOK == osMessageQueueGet(g_mqidExtLedCtrlTask, &stTaskMsg, &msg_prio, portMAX_DELAY))
+	for(;;)
 	{
-		switch (stTaskMsg.enMsgId)
+		if (osOK == osMessageQueueGet(g_mqidExtLedCtrlTask, &stTaskMsg, &msg_prio, portMAX_DELAY))
 		{
-		case enExtLedUpdate:
-			DrvPCA9685SetPWMVal(LPI2C1, (enPCA9685PortNo_t)stTaskMsg.param[0], stTaskMsg.param[1]);
-			break;
-		default:
-			mimic_printf("[%s (%d)] Unkown Msg!\r\n", __func__, __LINE__);
-			break;
-		}
+			switch (stTaskMsg.enMsgId)
+			{
+			case enExtLedUpdate:
+				DrvPCA9685SetPWMVal(LPI2C1, (enPCA9685PortNo_t)stTaskMsg.param[0], stTaskMsg.param[1]);
+				break;
+			default:
+				mimic_printf("[%s (%d)] Unkown Msg!\r\n", __func__, __LINE__);
+				break;
+			}
 
-		/** Sync */
-		if (stTaskMsg.SyncEGHandle != NULL)
-		{
-			osEventFlagsSet(stTaskMsg.SyncEGHandle, stTaskMsg.wakeupbits);
+			/** Sync */
+			if (stTaskMsg.SyncEGHandle != NULL)
+			{
+				osEventFlagsSet(stTaskMsg.SyncEGHandle, stTaskMsg.wakeupbits);
+			}
 		}
 	}
-
 	vTaskSuspend(NULL);
 }
 
@@ -98,18 +100,39 @@ void CmdExtLed(uint32_t argc, const char *argv[])
 {
 	uint32_t val=4095;
 
-	if(argc > 1)
+	if(argc == 1)
+	{
+		for(uint32_t k=0;k<3;k++)
+		{
+			for(uint32_t j=0;j<100;j++)
+			{
+				val = j;
+				for(uint32_t i=enPCA9685PortBegin;i<=enPCA9685PortEnd;i++)
+				{
+					PostMsgExtLedCtrlTaskLedVal((enPCA9685PortNo_t)i, val);
+				}
+				osDelay(10);
+			}
+			for(uint32_t j=100;j>0;j--)
+			{
+				val = j;
+				for(uint32_t i=enPCA9685PortBegin;i<=enPCA9685PortEnd;i++)
+				{
+					PostMsgExtLedCtrlTaskLedVal((enPCA9685PortNo_t)i, val);
+				}
+				osDelay(10);
+			}
+		}
+	}
+	else if(argc > 1)
 	{
 		val = mimic_strtoul(argv[1], 32, 10);
 		mimic_printf("[%s (%d)] %s, %d\r\n", __func__, __LINE__, argv[1], val);
+		for(uint32_t i=enPCA9685PortBegin;i<=enPCA9685PortEnd;i++)
+		{
+			PostMsgExtLedCtrlTaskLedVal((enPCA9685PortNo_t)i, val);
+		}
 	}
 
-	for(uint32_t i=enPCA9685PortBegin;i<=enPCA9685PortEnd;i++)
-	{
-		uint16_t temp = 0;
-		DrvPCA9685SetPWMVal(LPI2C1, (enPCA9685PortNo_t)i, val);
-		DrvPCA9685GetPWMVal(LPI2C1, (enPCA9685PortNo_t)i, &temp);
-
-		mimic_printf("[%s (%d)] Port%02d : 0x%04X,0x%04X\r\n", __func__, __LINE__, i, val , temp);
-	}
+	
 }

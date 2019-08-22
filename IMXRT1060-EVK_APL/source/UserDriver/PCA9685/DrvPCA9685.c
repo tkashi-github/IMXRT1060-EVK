@@ -123,8 +123,8 @@ DefALLOCATE_ITCM _Bool DrvPCA9685Init(LPI2C_Type *base)
 	}
 
 	osDelay(5);
-	val[0] = 0xFFu;
-	val[1] = 0x0Fu;
+	val[0] = 0x00u;
+	val[1] = 0x00u;
 	val[2] = 0x00u;
 	val[3] = 0x00u;
 	if(kStatus_Success != BOARD_LPI2C_Send(base, PCA9685_I2C_ADDRESS, REG_ALL_LED_ON_L, 1, val, 4))
@@ -152,17 +152,20 @@ DefALLOCATE_ITCM _Bool DrvPCA9685SetPWMVal(LPI2C_Type *base, enPCA9685PortNo_t e
 	if(((LPI2C1 != base) && (LPI2C2 != base) && (LPI2C3 != base) && (LPI2C4 != base)) ||
 		(enPortNo < enPCA9685Port0) ||
 		(enPortNo > enPCA9685Port15) ||
-		(PwmVal > 4095))
+		(PwmVal > 100))
 	{
 		mimic_printf("[%s (%d)] EXIT!\r\n", __func__, __LINE__);
 		goto _END;
 	}
 
 	uint8_t val[4] = {0x00, 0x00, 0x00, 0x00};
-	uint16_t u16temp = 4095 - PwmVal;
-
-	memcpy(val, &PwmVal, sizeof(uint16_t));
-	memcpy(&val[2], &u16temp, sizeof(uint16_t));
+	if(PwmVal > 0)
+	{
+		uint16_t u16tempON = 1;
+		uint16_t u16tempOff = 4095 * PwmVal / 100;
+		memcpy(val, &u16tempON, sizeof(uint16_t));
+		memcpy(&val[2], &u16tempOff, sizeof(uint16_t));
+	}
 	if(kStatus_Success != BOARD_LPI2C_Send(base, PCA9685_I2C_ADDRESS, REG_LED0_ON_L + ((uint32_t)enPortNo*4u), 1, val, 4))
 	{
 		mimic_printf("[%s (%d)] BOARD_LPI2C_Send NG!\r\n", __func__, __LINE__);

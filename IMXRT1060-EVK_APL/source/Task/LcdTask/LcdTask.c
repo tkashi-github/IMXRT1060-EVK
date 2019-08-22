@@ -177,28 +177,37 @@ void LV_Init(void)
 	lv_indev_drv_register(&indev_drv);		/*Finally register the driver*/
 }
 
+static lv_obj_t *slider1;
+#include "Task/ExtLedCtrlTask/ExtLedCtrlTask.h"
 static lv_res_t slider_action(lv_obj_t *slider)
 {
-	//mimic_printf("New slider value: %d\r\n", lv_slider_get_value(slider));
-
+	uint16_t temp = lv_slider_get_value(slider1);
+	for(uint32_t i=enPCA9685PortBegin;i<=enPCA9685PortEnd;i++)
+	{
+		PostMsgExtLedCtrlTaskLedVal((enPCA9685PortNo_t)i, temp);
+	}
 	return LV_RES_OK;
 }
+
+
 void SampleSlider(void)
 {
 	/*Called when a new value id set on the slider*/
 
 	/*Create a default slider*/
-	lv_obj_t *slider1 = lv_slider_create(lv_scr_act(), NULL);
-	lv_obj_set_size(slider1, 160, 30);
+	slider1 = lv_slider_create(lv_scr_act(), NULL);
+	lv_obj_set_size(slider1, 400, 30);
 	lv_obj_align(slider1, NULL, LV_ALIGN_IN_TOP_RIGHT, -30, 30);
 	lv_slider_set_action(slider1, slider_action);
 	lv_bar_set_value(slider1, 70);
+	lv_bar_set_range(slider1,0,100);
 
-	/*Create a label right to the slider*/
-	lv_obj_t *slider1_label = lv_label_create(lv_scr_act(), NULL);
-	lv_label_set_text(slider1_label, "Default");
-	lv_obj_align(slider1_label, slider1, LV_ALIGN_OUT_LEFT_MID, -20, 0);
-
+	{
+		for(uint32_t i=enPCA9685PortBegin;i<=enPCA9685PortEnd;i++)
+		{
+			PostMsgExtLedCtrlTaskLedVal((enPCA9685PortNo_t)i, 70);
+		}
+	}
 	/*Create a bar, an indicator and a knob style*/
 	static lv_style_t style_bg;
 	static lv_style_t style_indic;
