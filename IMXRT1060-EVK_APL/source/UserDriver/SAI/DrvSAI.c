@@ -540,6 +540,7 @@ _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t
 	DrvSAITxReset(enSAI);
 	DrvSAIRxReset(enSAI);
 
+	mimic_printf("[%s (%d)] EXIT OK\r\n", __func__, __LINE__);
 	return true;
 }
 
@@ -643,6 +644,7 @@ _Bool DrvSAITx(enSAI_t enSAI, const uint8_t pu8[], uint32_t u32ByteCnt)
 
 			stxfer.data = &s_TxAudioBuff[enSAI][index];
 
+
 			/** 24bit PCMは細工が必要 */
 			if (s_sai_word_width[enSAI] == kSAI_WordWidth24bits)
 			{
@@ -681,7 +683,7 @@ _Bool DrvSAITx(enSAI_t enSAI, const uint8_t pu8[], uint32_t u32ByteCnt)
 				u32ByteCnt += (32 - (u32ByteCnt % 32));
 				stxfer.dataSize = u32ByteCnt;
 			}
-
+			
 			/** 24bit PCMは細工が必要 */
 			if (s_sai_word_width[enSAI] == kSAI_WordWidth16bits)
 			{
@@ -706,6 +708,7 @@ _Bool DrvSAITx(enSAI_t enSAI, const uint8_t pu8[], uint32_t u32ByteCnt)
 			}
 			__DMB();
 			s_bIsTxFinished[enSAI] = false;
+
 			status_t sts = SAI_TransferSendEDMA(base[enSAI], s_phndSaiDmaTx[enSAI], &stxfer);
 			/* Shall make sure the sai buffer queue is not full */
 			if (sts == kStatus_Success)
@@ -750,10 +753,15 @@ _Bool DrvSAITx(enSAI_t enSAI, const uint8_t pu8[], uint32_t u32ByteCnt)
 				mimic_printf("[%s (%d)] EDMA_GetErrorStatusFlags   = 0x%08lX\r\n", __func__, __LINE__, EDMA_GetChannelStatusFlags(DMA0, kDmaTxChannel[enSAI]));
 				mimic_printf("[%s (%d)] EDMA_GetChannelStatusFlags = 0x%08lX\r\n", __func__, __LINE__, EDMA_GetErrorStatusFlags(DMA0));
 				mimic_printf("[%s (%d)] TCD[%lu] CSR = 0x%08lX\r\n", __func__, __LINE__, kDmaTxChannel[enSAI], s_phndSaiDmaTx[enSAI]->dmaHandle->base->TCD[kDmaTxChannel[enSAI]].CSR);
-				mimic_printf("[%s (%d)] EEI = 0x%08lX\r\n", __func__, __LINE__, s_phndSaiDmaTx[enSAI]->dmaHandle->base->EEI);
+				mimic_printf("[%s (%d)] TCD[%lu] SADDR = 0x%08lX\r\n", __func__, __LINE__, kDmaTxChannel[enSAI], s_phndSaiDmaTx[enSAI]->dmaHandle->base->TCD[kDmaTxChannel[enSAI]].SADDR);
+				mimic_printf("[%s (%d)] TCD[%lu] DADDR = 0x%08lX\r\n", __func__, __LINE__, kDmaTxChannel[enSAI], s_phndSaiDmaTx[enSAI]->dmaHandle->base->TCD[kDmaTxChannel[enSAI]].DADDR);
+				mimic_printf("[%s (%d)] EARS = 0x%08lX\r\n", __func__, __LINE__, s_phndSaiDmaTx[enSAI]->dmaHandle->base->EARS);
 				mimic_printf("[%s (%d)] INT = 0x%08lX\r\n", __func__, __LINE__, s_phndSaiDmaTx[enSAI]->dmaHandle->base->INT);
 				mimic_printf("[%s (%d)] CR  = 0x%08lX\r\n", __func__, __LINE__, s_phndSaiDmaTx[enSAI]->dmaHandle->base->CR);
 				mimic_printf("[%s (%d)] ES = 0x%08lX\r\n", __func__, __LINE__, s_phndSaiDmaTx[enSAI]->dmaHandle->base->ES);
+				mimic_printf("[%s (%d)] EEI = 0x%08lX\r\n", __func__, __LINE__, s_phndSaiDmaTx[enSAI]->dmaHandle->base->EEI);
+				mimic_printf("[%s (%d)] CEEI = 0x%08lX\r\n", __func__, __LINE__, s_phndSaiDmaTx[enSAI]->dmaHandle->base->CEEI);
+				mimic_printf("[%s (%d)] CERQ = 0x%08lX\r\n", __func__, __LINE__, s_phndSaiDmaTx[enSAI]->dmaHandle->base->CERQ);
 				mimic_printf("[%s (%d)] ERQ = 0x%08lX\r\n", __func__, __LINE__, s_phndSaiDmaTx[enSAI]->dmaHandle->base->ERQ);
 				mimic_printf("[%s (%d)] ERR = 0x%08lX\r\n", __func__, __LINE__, s_phndSaiDmaTx[enSAI]->dmaHandle->base->ERR);
 				mimic_printf("[%s (%d)] HRS = 0x%08lX\r\n", __func__, __LINE__, s_phndSaiDmaTx[enSAI]->dmaHandle->base->HRS);

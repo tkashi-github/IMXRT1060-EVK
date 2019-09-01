@@ -151,7 +151,7 @@ DefALLOCATE_ITCM static void XXXXX(enSoundTask_t enSoundTaskNo, enSoundTaskEvent
 	}
 	else
 	{
-		mimic_printf("[%s (%d)] Nop!(S%d_E%d)\r\n", __func__, __LINE__, s_enSoundTaskState[enSoundTaskNo], enEvent);
+		//mimic_printf("[%s (%d)] Nop!(S%d_E%d)\r\n", __func__, __LINE__, s_enSoundTaskState[enSoundTaskNo], enEvent);
 	}
 }
 

@@ -238,7 +238,9 @@ DefALLOCATE_ITCM static void S1_E0(enPlayCtrlEvent_t enEvent, uint32_t param[], 
  */
 DefALLOCATE_ITCM static void S1_E2(enPlayCtrlEvent_t enEvent, uint32_t param[], uintptr_t inptr, uintptr_t outptr)
 {
+	_Bool *pBool = (_Bool*)outptr;
 
+	*pBool = true;
 	if (IsPlayAudioFileOpend() == false)
 	{
 		/** Open Audio File */
@@ -269,6 +271,7 @@ DefALLOCATE_ITCM static void S1_E2(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 				mimic_printf("*** Play Stop <%s (%d)>\r\n", __func__, __LINE__);
 				/** 再生停止処理 */
 				StopPlayRecProcess();
+				*pBool = false;
 			}
 			else
 			{
@@ -435,7 +438,7 @@ DefALLOCATE_ITCM static void PlayCtrlDoMatrix(enPlayCtrlEvent_t enEvent, uint32_
  */
 DefALLOCATE_ITCM static void XXXXX(enPlayCtrlEvent_t enEvent, uint32_t param[], uintptr_t inptr, uintptr_t outptr)
 {
-	mimic_printf("[%s (%d)] Nop!(S%d_E%d)\r\n", __func__, __LINE__, s_enPlayCtrlState, enEvent);
+	mimic_printf("[%s:%s (%d)] Nop!(S%d_E%d)\r\n", __FILE__, __func__, __LINE__, s_enPlayCtrlState, enEvent);
 }
 
 /** 
@@ -580,11 +583,21 @@ DefALLOCATE_ITCM static _Bool PostMsgPlayCtrlPlaying(void)
 	/*-- var --*/
 	alignas(8) stTaskMsgBlock_t stTaskMsg = {0};
 	_Bool bret = false;
+	stTaskMsg.SyncEGHandle = g_eidPlayCtrl;
+	stTaskMsg.wakeupbits = 1;
 	stTaskMsg.enMsgId = enPlaying;
-
+	stTaskMsg.ptrDataForSrc = &bret;
 	if (osOK == osMessageQueuePut(g_mqidPlayCtrl, &stTaskMsg, 0, DefPostMsgTimeout_PrivateEvent))
 	{
-		bret = true;
+		uint32_t uxBits = osEventFlagsWait(g_eidPlayCtrl, 1, osFlagsWaitAny, 1000);
+		if (uxBits == 1u)
+		{
+			bret = true;
+		}
+		else
+		{
+			mimic_printf("[%s (%d)] osEventFlagsWait NG\r\n", __func__, __LINE__);
+		}
 	}
 	else
 	{

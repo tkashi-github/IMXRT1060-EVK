@@ -396,6 +396,8 @@ void SAI_TransferRxSetConfigEDMA(I2S_Type *base, sai_edma_handle_t *handle, sai_
  * retval kStatus_InvalidArgument The input argument is invalid.
  * retval kStatus_TxBusy SAI is busy sending data.
  */
+#include "mimiclib/source/mimiclib.h"
+
 status_t SAI_TransferSendEDMA(I2S_Type *base, sai_edma_handle_t *handle, sai_transfer_t *xfer)
 {
     assert(handle && xfer);
@@ -417,6 +419,7 @@ status_t SAI_TransferSendEDMA(I2S_Type *base, sai_edma_handle_t *handle, sai_tra
     /* Change the state of handle */
     handle->state = kSAI_Busy;
 
+    mimic_printf("[%s (%d)] xfer->data = 0x%08lX, xfer->dataSize = %lu\r\n", __func__, __LINE__, xfer->data, xfer->dataSize);
     /* Update the queue state */
     handle->transferSize[handle->queueUser]      = xfer->dataSize;
     handle->saiQueue[handle->queueUser].data     = xfer->data;
@@ -430,7 +433,11 @@ status_t SAI_TransferSendEDMA(I2S_Type *base, sai_edma_handle_t *handle, sai_tra
     /* Store the initially configured eDMA minor byte transfer count into the SAI handle */
     handle->nbytes = handle->count * handle->bytesPerFrame;
 
-    EDMA_SubmitTransfer(handle->dmaHandle, &config);
+    if( kStatus_Success != EDMA_SubmitTransfer(handle->dmaHandle, &config))
+    {
+        mimic_printf("[%s (%d)] EXIT\r\n", __func__, __LINE__);
+        return kStatus_SAI_TxError;
+    }
 
     /* Start DMA transfer */
     EDMA_StartTransfer(handle->dmaHandle);
