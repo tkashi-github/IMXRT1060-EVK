@@ -33,6 +33,7 @@
 #include "StorageTask/StorageTask.h"
 #include "board.h"
 #include "mimiclib.h"
+#include "OSResource.h"
 #include "common/common.h"
 #include "fsl_sd.h"
 #include "ff.h"
@@ -62,41 +63,12 @@ static const sdmmchost_detect_card_t s_sdCardDetect[enNumOfSD] = {
 /** Dummy */
 DefALLOCATE_ITCM static void StorageInserted(bool isInserted, void *userData)
 {
-	enSD_t enSlotNo = (enSD_t)userData;
-
-	if ((enSlotNo >= enUSDHC1) && (enSlotNo <= enUSDHC2))
-	{
-		stTaskMsgBlock_t stTaskMsg;
-		uint32_t basepri;
-		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-
-		memset(&stTaskMsg, 0, sizeof(stTaskMsgBlock_t));
-		stTaskMsg.enMsgId = enSDInsterted;
-
-		basepri = taskENTER_CRITICAL_FROM_ISR();
-		xStreamBufferSendFromISR(g_sbhStorageTask[enSlotNo], &stTaskMsg, sizeof(stTaskMsg), &xHigherPriorityTaskWoken);
-		taskEXIT_CRITICAL_FROM_ISR(basepri);
-		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-	}
+	/* NOP */
 }
 /** Dummy */
 DefALLOCATE_ITCM static void StorageRemoved(bool isInserted, void *userData)
 {
-
-	enSD_t enSlotNo = (enSD_t)userData;
-	if ((enSlotNo >= enUSDHC1) && (enSlotNo <= enUSDHC2))
-	{
-		stTaskMsgBlock_t stTaskMsg;
-		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-		uint32_t basepri;
-
-		memset(&stTaskMsg, 0, sizeof(stTaskMsgBlock_t));
-		stTaskMsg.enMsgId = enSDRemoved;
-		basepri = taskENTER_CRITICAL_FROM_ISR();
-		xStreamBufferSendFromISR(g_sbhStorageTask[enSlotNo], &stTaskMsg, sizeof(stTaskMsg), &xHigherPriorityTaskWoken);
-		taskEXIT_CRITICAL_FROM_ISR(basepri);
-		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-	}
+	/* NOP */
 }
 
 /**
