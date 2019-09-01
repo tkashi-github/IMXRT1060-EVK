@@ -47,7 +47,7 @@ static _Bool IsAudioFile(const TCHAR szFileName[], uint32_t SizeofStr)
 
 	mimic_tcsupper(sztemp);
 	//mimic_printf("%s (%s)\r\n", szFileName, sztemp);
-	if (mimic_memcmp((uintptr_t)sztemp, (uintptr_t)_T("WAV"), 3 * sizeof(TCHAR)) == 0)
+	if (mimic_memcmp((uintptr_t)sztemp, (uintptr_t)_T("WAV"), 3 * sizeof(TCHAR)) != false)
 	{
 		return true;
 	}
@@ -251,7 +251,7 @@ enAudioFileType_t GetAudioFileType(const TCHAR szFileName[], uint32_t SizeofStr)
 
 	mimic_tcsupper(sztemp);
 	//mimic_printf("%s (%s)\r\n", szFileName, sztemp);
-	if (mimic_memcmp((uintptr_t)sztemp, (uintptr_t)_T("WAV"), 3 * sizeof(TCHAR)) == 0)
+	if (mimic_memcmp((uintptr_t)sztemp, (uintptr_t)_T("WAV"), 3 * sizeof(TCHAR)) != false)
 	{
 		return enAudioFileWAV;
 	}

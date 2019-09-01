@@ -43,7 +43,7 @@ static _Bool WaveFilaHeaderCheck(stRIFFChunkDescriptor_t *pstHeader)
 {
 	_Bool bret = false;
 
-	if ((mimic_memcmp((uintptr_t)pstHeader->riffId, (uintptr_t)"RIFF", 4) == 0) && (mimic_memcmp((uintptr_t)pstHeader->waveId, (uintptr_t)"WAVE", 4) == 0))
+	if ((mimic_memcmp((uintptr_t)pstHeader->riffId, (uintptr_t)"RIFF", 4) != false) && (mimic_memcmp((uintptr_t)pstHeader->waveId, (uintptr_t)"WAVE", 4) != false))
 	{
 		//mimic_printf("[%s (%d)] riffSize = %lu\r\n", __func__, __LINE__, pstHeader->riffSize);
 		bret = true;
@@ -147,14 +147,14 @@ static uint32_t ActualWAVFileRead(const TCHAR szFilePath[], uint8_t pu8Buffer[],
 		while ((ChunkHeaderRead(&stFile, &stChunkHeader) != false) && bOK)
 		{
 			bOK = true;
-			if (mimic_memcmp((uintptr_t)stChunkHeader.ckId, (uintptr_t)"fmt ", 4) == 0)
+			if (mimic_memcmp((uintptr_t)stChunkHeader.ckId, (uintptr_t)"fmt ", 4) != false)
 			{
 				/** Read fmt Chunk */
 				mimic_printf("[%s (%d)] Read fmt Chunk\r\n", __func__, __LINE__);
 
 				bOK = FormatChunkRead(&stFile, stChunkHeader.ckSize, pstFormat);
 			}
-			else if (mimic_memcmp((uintptr_t)stChunkHeader.ckId, (uintptr_t)"data", 4) == 0)
+			else if (mimic_memcmp((uintptr_t)stChunkHeader.ckId, (uintptr_t)"data", 4) != false)
 			{
 				/** Read data Chunk */
 				mimic_printf("[%s (%d)] Read data Chunk(stChunkHeader.ckSize = %lu)\r\n", __func__, __LINE__, stChunkHeader.ckSize);
@@ -251,7 +251,7 @@ _Bool WAVFileReadFormatChunk(const TCHAR szFilePath[], stFormatChunkData_t *pstF
 
 		while ((ChunkHeaderRead(&stFile, &stChunkHeader) != false) && bret)
 		{
-			if (mimic_memcmp((uintptr_t)stChunkHeader.ckId, (uintptr_t)"fmt ", 4) == 0)
+			if (mimic_memcmp((uintptr_t)stChunkHeader.ckId, (uintptr_t)"fmt ", 4) != false)
 			{
 				/** Read fmt Chunk */
 				bret = FormatChunkRead(&stFile, stChunkHeader.ckSize, pstFormat);
@@ -324,7 +324,7 @@ uint32_t WAVFileReadPCMData(FIL *fp, uint8_t pu8[], uint32_t BufferSize, uint32_
 
 	while (ChunkHeaderRead(fp, &stChunkHeader) != false)
 	{
-		if (mimic_memcmp((uintptr_t)stChunkHeader.ckId, (uintptr_t)"data", 4) == 0)
+		if (mimic_memcmp((uintptr_t)stChunkHeader.ckId, (uintptr_t)"data", 4) != false)
 		{
 
 			if ((BufferSize - u32ReadByte) > stChunkHeader.ckSize)
