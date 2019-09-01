@@ -344,3 +344,46 @@ _Bool DrvLPUARTRecv(enLPUART_t enUARTNo, uint8_t pu8data[], const uint32_t ByteC
 	}
 	return bret;
 }
+
+#include "mimiclib.h"
+
+/**
+ * @brief getc (Blocking)
+ * @param [out] ch Received character
+ * @return void
+ */
+void MIMICLIB_GetChar(TCHAR *ch)
+{
+	if (ch != NULL)
+	{
+		DrvLPUARTRecv(kStdioPort, (uint8_t *)ch, sizeof(TCHAR), portMAX_DELAY);
+	}
+}
+/**
+ * @brief putc (Blocking)
+ * @param [in] ch character
+ * @return void
+ */
+void MIMICLIB_PutChar(TCHAR ch)
+{
+	DrvLPUARTSend(kStdioPort, (const uint8_t *)&ch, sizeof(TCHAR));
+}
+/**
+ * @brief puts (with Semapore)
+ * @param [in] pszStr NULL Terminate String
+ * @return void
+ */
+void MIMICLIB_PutString(const TCHAR pszStr[], uint32_t SizeofStr)
+{
+	uint32_t ByteCnt = mimic_tcslen(pszStr, SizeofStr)*sizeof(TCHAR);
+	DrvLPUARTSend(kStdioPort, (const uint8_t *)pszStr, ByteCnt);
+}
+
+/**
+ * @brief kbhits
+ * @return true There are some characters in Buffer
+ * @return false There are no characters in Buffer
+ */
+_Bool MIMICLIB_kbhit(void){
+	return (_Bool)!DrvLPUARTIsRxBufferEmpty(kStdioPort);
+}

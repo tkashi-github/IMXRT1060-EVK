@@ -32,7 +32,7 @@
  */
 #include "common/update.h"
 #include "board.h"
-#include "mimiclib/mimiclib.h"
+#include "mimiclib.h"
 #include "ff.h"
 
 #define kROM_BIN_TOP	(0x60400000)

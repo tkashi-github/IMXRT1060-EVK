@@ -33,7 +33,7 @@
 #include "common/FileCmd.h"
 
 #include "ff.h"
-#include "mimiclib/mimiclib.h"
+#include "mimiclib.h"
 
 void FileCmd_ls(uint32_t argc, const char *argv[]){
 	DIR stDir;

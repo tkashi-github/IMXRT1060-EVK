@@ -40,7 +40,7 @@
 #include "task.h"
 
 #include "FileCmd.h"
-#include "mimiclib/mimiclib.h"
+#include "mimiclib.h"
 
 #include "task.h"
 

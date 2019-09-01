@@ -38,7 +38,7 @@
 #include "version.h"
 #include "ConsoleCmd.h"
 
-#include "mimiclib/mimiclib.h"
+#include "mimiclib.h"
 #include "UART/DrvLPUART.h"
 
 #define DEF_PROMPT "IMXRT1060-EVK BOOT > "
@@ -77,10 +77,10 @@ void ConsoleTask(void const *argument){
 		
 		/** Split Command and argments */
 		argc = 0u;
-		argv[argc] = mimic_strtok(szBuf, " ", &ctx);
+		argv[argc] = mimic_strtok(szBuf, 2048, " ", sizeof(" "), &ctx);
     	while (argv[argc] != NULL) {
 			argc++;
-			argv[argc] = mimic_strtok(NULL, " ", &ctx);
+			argv[argc] = mimic_strtok(NULL, 2048, " ", sizeof(" "), &ctx);
 			if(argc >= 15u){
 				break;
 			}
