@@ -419,7 +419,7 @@ status_t SAI_TransferSendEDMA(I2S_Type *base, sai_edma_handle_t *handle, sai_tra
     /* Change the state of handle */
     handle->state = kSAI_Busy;
 
-    mimic_printf("[%s (%d)] xfer->data = 0x%08lX, xfer->dataSize = %lu\r\n", __func__, __LINE__, xfer->data, xfer->dataSize);
+    //mimic_printf("[%s (%d)] xfer->data = 0x%08lX, xfer->dataSize = %lu\r\n", __func__, __LINE__, xfer->data, xfer->dataSize);
     /* Update the queue state */
     handle->transferSize[handle->queueUser]      = xfer->dataSize;
     handle->saiQueue[handle->queueUser].data     = xfer->data;
@@ -433,10 +433,13 @@ status_t SAI_TransferSendEDMA(I2S_Type *base, sai_edma_handle_t *handle, sai_tra
     /* Store the initially configured eDMA minor byte transfer count into the SAI handle */
     handle->nbytes = handle->count * handle->bytesPerFrame;
 
-    if( kStatus_Success != EDMA_SubmitTransfer(handle->dmaHandle, &config))
     {
-        mimic_printf("[%s (%d)] EXIT\r\n", __func__, __LINE__);
-        return kStatus_SAI_TxError;
+        status_t sts = EDMA_SubmitTransfer(handle->dmaHandle, &config);
+        if( kStatus_Success != sts)
+        {
+            mimic_printf("[%s (%d)] EXIT (%d)\r\n", __func__, __LINE__, sts);
+            return kStatus_SAI_TxError;
+        }
     }
 
     /* Start DMA transfer */

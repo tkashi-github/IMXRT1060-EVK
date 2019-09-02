@@ -178,6 +178,11 @@ DefALLOCATE_ITCM static void S0_E1(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 	{
 		s_enPlayCtrlState = enPlayCtrlStatePlay;
 	}
+	else
+	{
+		mimic_printf("[%s (%d)] PostMsgPlayCtrlPlaying NG\r\n", __func__, __LINE__);
+	}
+	
 }
 
 /**
@@ -276,7 +281,10 @@ DefALLOCATE_ITCM static void S1_E2(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 			else
 			{
 				/** OKなのでPlayingイベント発行 */
-				PostMsgPlayCtrlPlaying();
+				if(false == PostMsgPlayCtrlPlaying())
+				{
+					mimic_printf("[%s (%d)] PostMsgPlayCtrlPlaying NG\r\n", __func__, __LINE__);
+				}
 			}
 		}
 		else
@@ -583,21 +591,12 @@ DefALLOCATE_ITCM static _Bool PostMsgPlayCtrlPlaying(void)
 	/*-- var --*/
 	alignas(8) stTaskMsgBlock_t stTaskMsg = {0};
 	_Bool bret = false;
-	stTaskMsg.SyncEGHandle = g_eidPlayCtrl;
-	stTaskMsg.wakeupbits = 1;
+
 	stTaskMsg.enMsgId = enPlaying;
 	stTaskMsg.ptrDataForSrc = &bret;
 	if (osOK == osMessageQueuePut(g_mqidPlayCtrl, &stTaskMsg, 0, DefPostMsgTimeout_PrivateEvent))
 	{
-		uint32_t uxBits = osEventFlagsWait(g_eidPlayCtrl, 1, osFlagsWaitAny, 1000);
-		if (uxBits == 1u)
-		{
-			bret = true;
-		}
-		else
-		{
-			mimic_printf("[%s (%d)] osEventFlagsWait NG\r\n", __func__, __LINE__);
-		}
+		bret = true;
 	}
 	else
 	{

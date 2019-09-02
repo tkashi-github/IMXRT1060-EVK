@@ -178,17 +178,25 @@ void LV_Init(void)
 }
 
 static lv_obj_t *slider1;
+
+static lv_obj_t *vol_slider;
+
 #include "Task/ExtLedCtrlTask/ExtLedCtrlTask.h"
 static lv_res_t slider_action(lv_obj_t *slider)
 {
-	uint16_t temp = lv_slider_get_value(slider1);
+	uint16_t temp = lv_slider_get_value(slider);
 	for(uint32_t i=enPCA9685PortBegin;i<=enPCA9685PortEnd;i++)
 	{
 		PostMsgExtLedCtrlTaskLedVal((enPCA9685PortNo_t)i, temp);
 	}
 	return LV_RES_OK;
 }
-
+static lv_res_t vol_slider_action(lv_obj_t *slider)
+{
+	uint16_t temp = lv_slider_get_value(slider);
+	SoundTaskWriteCurrentVolume(enSoundTask1, temp);
+	return LV_RES_OK;
+}
 
 void SampleSlider(void)
 {
@@ -208,6 +216,47 @@ void SampleSlider(void)
 			PostMsgExtLedCtrlTaskLedVal((enPCA9685PortNo_t)i, 70);
 		}
 	}
+	/*Create a bar, an indicator and a knob style*/
+	static lv_style_t style_bg;
+	static lv_style_t style_indic;
+	static lv_style_t style_knob;
+
+	lv_style_copy(&style_bg, &lv_style_pretty);
+	style_bg.body.main_color = LV_COLOR_BLACK;
+	style_bg.body.grad_color = LV_COLOR_GRAY;
+	style_bg.body.radius = LV_RADIUS_CIRCLE;
+	style_bg.body.border.color = LV_COLOR_WHITE;
+
+	lv_style_copy(&style_indic, &lv_style_pretty);
+	style_indic.body.grad_color = LV_COLOR_GREEN;
+	style_indic.body.main_color = LV_COLOR_LIME;
+	style_indic.body.radius = LV_RADIUS_CIRCLE;
+	style_indic.body.shadow.width = 10;
+	style_indic.body.shadow.color = LV_COLOR_LIME;
+	style_indic.body.padding.hor = 3;
+	style_indic.body.padding.ver = 3;
+
+	lv_style_copy(&style_knob, &lv_style_pretty);
+	style_knob.body.radius = LV_RADIUS_CIRCLE;
+	style_knob.body.opa = LV_OPA_70;
+	style_knob.body.padding.ver = 10;
+}
+
+
+void VolumeSlider(void)
+{
+	/*Called when a new value id set on the slider*/
+
+	/*Create a default slider*/
+	vol_slider = lv_slider_create(lv_scr_act(), NULL);
+	lv_obj_set_size(vol_slider, 400, 30);
+	lv_obj_align(vol_slider, NULL, LV_ALIGN_IN_TOP_RIGHT, -30, 90);
+	lv_slider_set_action(vol_slider, vol_slider_action);
+	lv_bar_set_value(vol_slider, 70);
+	lv_bar_set_range(vol_slider,0,100);
+
+	SoundTaskWriteCurrentVolume(enSoundTask1, 70);
+
 	/*Create a bar, an indicator and a knob style*/
 	static lv_style_t style_bg;
 	static lv_style_t style_indic;
@@ -271,7 +320,7 @@ DefALLOCATE_ITCM void LcdTask(void const *argument)
 #endif
 
 	SampleSlider();
-
+	VolumeSlider();
 	for (;;)
 	{
 		uint8_t msg_prio; /* Message priority is ignored */

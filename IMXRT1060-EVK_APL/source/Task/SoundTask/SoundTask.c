@@ -407,7 +407,7 @@ DefALLOCATE_ITCM void SoundTask(void const *argument)
 
 	}
 	s_u32Volume[enSoundTaskNo] = 50;
-	SoundTaskWriteCurrentVolume(enSoundTaskNo, 0);
+	SoundTaskWriteCurrentVolume(enSoundTaskNo, s_u32Volume[enSoundTaskNo]);
 	mimic_printf("Volume = %lu\r\n", SoundTaskGetCurrentVolume(enSoundTask1));
 	for (;;)
 	{

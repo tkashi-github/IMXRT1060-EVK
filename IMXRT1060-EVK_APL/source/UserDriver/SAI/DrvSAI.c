@@ -633,7 +633,7 @@ _Bool DrvSAITx(enSAI_t enSAI, const uint8_t pu8[], uint32_t u32ByteCnt)
 	uint32_t u32TxCnt = 0;
 	uint32_t u32RemainSize = u32ByteCnt;
 	I2S_Type *base[enNumOfSAI] = {SAI1, SAI2};
-
+				
 	while (u32RemainSize != 0)
 	{
 		/* Transfer data already prepared, so while there is any empty slot, just transfer */
@@ -722,7 +722,7 @@ _Bool DrvSAITx(enSAI_t enSAI, const uint8_t pu8[], uint32_t u32ByteCnt)
 			}
 			else
 			{
-				mimic_printf("[%s (%d)] SAI_TransferSend NG (sts = %ld) (0x%08lX, %lu)\r\n", __func__, __LINE__, sts, stxfer.data, stxfer.dataSize);
+				mimic_printf("[%s (%d)] SAI_TransferSend NG (sts = %ld) (0x%08lX, %lu, %lu)\r\n", __func__, __LINE__, sts, stxfer.data, stxfer.dataSize, u32RemainSize);
 				return false;
 			}
 			{
@@ -749,7 +749,7 @@ _Bool DrvSAITx(enSAI_t enSAI, const uint8_t pu8[], uint32_t u32ByteCnt)
 				{
 					/** EDMAが停止 */
 				}
-				
+				#if 0
 				mimic_printf("[%s (%d)] EDMA_GetErrorStatusFlags   = 0x%08lX\r\n", __func__, __LINE__, EDMA_GetChannelStatusFlags(DMA0, kDmaTxChannel[enSAI]));
 				mimic_printf("[%s (%d)] EDMA_GetChannelStatusFlags = 0x%08lX\r\n", __func__, __LINE__, EDMA_GetErrorStatusFlags(DMA0));
 				mimic_printf("[%s (%d)] TCD[%lu] CSR = 0x%08lX\r\n", __func__, __LINE__, kDmaTxChannel[enSAI], s_phndSaiDmaTx[enSAI]->dmaHandle->base->TCD[kDmaTxChannel[enSAI]].CSR);
@@ -767,6 +767,7 @@ _Bool DrvSAITx(enSAI_t enSAI, const uint8_t pu8[], uint32_t u32ByteCnt)
 				mimic_printf("[%s (%d)] HRS = 0x%08lX\r\n", __func__, __LINE__, s_phndSaiDmaTx[enSAI]->dmaHandle->base->HRS);
 				mimic_printf("[%s (%d)] SADDR = 0x%08lX\r\n", __func__, __LINE__, s_phndSaiDmaTx[enSAI]->dmaHandle->base->TCD[kDmaTxChannel[enSAI]].SADDR);
 				mimic_printf("[%s (%d)] DADDR = 0x%08lX\r\n", __func__, __LINE__, s_phndSaiDmaTx[enSAI]->dmaHandle->base->TCD[kDmaTxChannel[enSAI]].DADDR);
+				#endif
 				return false;
 			}
 			else
