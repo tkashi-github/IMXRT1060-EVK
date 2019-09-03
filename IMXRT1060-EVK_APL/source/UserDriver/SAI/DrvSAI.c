@@ -296,8 +296,8 @@ void DrvSAIClockInit(void)
 	CLOCK_InitAudioPll(&audioPllConfig722534400Hz);
 
 	/*Clock setting for LPI2C*/
-	CLOCK_SetMux(kCLOCK_Lpi2cMux, kLPI2CClockSourceSelect);
-	CLOCK_SetDiv(kCLOCK_Lpi2cDiv, kLPI2CClockSourceDivider);
+	//CLOCK_SetMux(kCLOCK_Lpi2cMux, kLPI2CClockSourceSelect);
+	//CLOCK_SetDiv(kCLOCK_Lpi2cDiv, kLPI2CClockSourceDivider);
 
 	/*Clock setting for SAI*/
 	CLOCK_SetMux(kCLOCK_Sai1Mux, kSAIClockSourceSelect);
@@ -309,7 +309,9 @@ void DrvSAIClockInit(void)
 	CLOCK_SetMux(kCLOCK_Sai3Mux, kSAIClockSourceSelect);
 	CLOCK_SetDiv(kCLOCK_Sai3PreDiv, kSAIClockSourcePreDivider);
 	CLOCK_SetDiv(kCLOCK_Sai3Div, kSAIClockSourceDivider);
-
+	CLOCK_EnableClock(kCLOCK_Sai1);
+	CLOCK_EnableClock(kCLOCK_Sai2);
+	CLOCK_EnableClock(kCLOCK_Sai3);
 	/*Enable MCLK clock*/
 	EnableSaiMclkOutput(enSAI1, true);
 }
@@ -347,7 +349,18 @@ _Bool DrvSAIDMAInit(enSAI_t enSAI)
 	return true;
 }
 
-#include "arm_math.h"
+static wm8960_config_t wm8960Config = {
+    .i2cConfig = {.codecI2CInstance = BOARD_CODEC_I2C_INSTANCE, .codecI2CSourceClock = BOARD_CODEC_I2C_CLOCK_FREQ},
+    .route     = kWM8960_RoutePlaybackandRecord,
+    .rightInputSource = kWM8960_InputDifferentialMicInput2,
+	.leftInputSource = kWM8960_InputLineINPUT3,
+    .playSource       = kWM8960_PlaySourceDAC,
+    .slaveAddress     = WM8960_I2C_ADDR,
+    .bus              = kWM8960_BusI2S,
+    .format = {.mclk_HZ = 11289600U, .sampleRate = kWM8960_AudioSampleRate44100Hz, .bitWidth = kWM8960_AudioBitWidth16bit},
+    .master_slave = false,
+};
+static codec_config_t boardCodecConfig = {.codecDevType = kCODEC_WM8960, .codecDevConfig = &wm8960Config};
 
 _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t enPcmBit, _Bool bRec)
 {
@@ -389,8 +402,8 @@ _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t
 		s_u32EDMATxBufSize[enSAI] = DEF_BUFFER_SAMPLE_SIZE * (enPcmBit / 8);
 		s_u32EDMARxBufSize[enSAI] = DEF_BUFFER_SAMPLE_SIZE * (enPcmBit / 8);
 	}
-	mimic_printf("[%s (%d)] s_u32EDMATxBufSize[%d] = %lu\r\n", __func__, __LINE__, enSAI, s_u32EDMATxBufSize[enSAI]);
-	mimic_printf("[%s (%d)] s_u32EDMARxBufSize[%d] = %lu\r\n", __func__, __LINE__, enSAI, s_u32EDMARxBufSize[enSAI]);
+	//mimic_printf("[%s (%d)] s_u32EDMATxBufSize[%d] = %lu\r\n", __func__, __LINE__, enSAI, s_u32EDMATxBufSize[enSAI]);
+	//mimic_printf("[%s (%d)] s_u32EDMARxBufSize[%d] = %lu\r\n", __func__, __LINE__, enSAI, s_u32EDMARxBufSize[enSAI]);
 	
 	EnableSaiMclkOutput(enSAI1, false);
 	CLOCK_DeinitAudioPll();
@@ -418,6 +431,10 @@ _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t
 	CLOCK_SetDiv(SaiDiv[enSAI], SaiDivVal);
 	EnableSaiMclkOutput(enSAI1, true);
 
+	u32BclkSrcHz = kSAIClockFreq;
+	mimic_printf("[%s (%d)] Audio PLL = %lu Hz\r\n", __func__, __LINE__, CLOCK_GetFreq(kCLOCK_AudioPllClk));
+	mimic_printf("[%s (%d)] SAI CLOCK ROOT = %lu Hz\r\n", __func__, __LINE__, kSAIClockFreq);
+	mimic_printf("[%s (%d)] enSampleRate = %ld Hz, enPcmBit = %ld bits\r\n", __func__, __LINE__, enSampleRate, enPcmBit);
 	{
 		//		static _Bool s_bInited = false;
 		//		if(s_bInited == false){
@@ -425,7 +442,7 @@ _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t
 		DrvSAIDMAInit(enSAI);
 		//		}
 	}
-
+	
 	SAI_Deinit(base[enSAI]);
 	memset(s_TxAudioBuff[enSAI], 0, sizeof(s_TxAudioBuff[enSAI]));
 	memset(s_RxAudioBuff[enSAI], 0, sizeof(s_RxAudioBuff[enSAI]));
@@ -444,63 +461,6 @@ _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t
 	SAI_RxGetDefaultConfig(&config);
 	SAI_RxInit(base[enSAI], &config);
 
-	/* Configure the audio format */
-	format.bitWidth = enPcmBit;
-	format.channel = 0U;
-	format.sampleRate_Hz = enSampleRate;
-#if (defined FSL_FEATURE_SAI_HAS_MCLKDIV_REGISTER && FSL_FEATURE_SAI_HAS_MCLKDIV_REGISTER) || \
-	(defined FSL_FEATURE_PCC_HAS_SAI_DIVIDER && FSL_FEATURE_PCC_HAS_SAI_DIVIDER)
-	format.masterClockHz = kOverSampleRate * format.sampleRate_Hz;
-#else
-	u32BclkSrcHz = (CLOCK_GetFreq(kCLOCK_AudioPllClk) / (SaiDivVal + 1U));
-#endif
-	//mimic_printf("[%s (%d)] format.masterClockHz = %lu\r\n", __func__, __LINE__, format.masterClockHz);
-
-	format.protocol = config.protocol;
-	format.stereo = kSAI_Stereo;
-
-#if defined(FSL_FEATURE_SAI_FIFO_COUNT) && (FSL_FEATURE_SAI_FIFO_COUNT > 1)
-	format.watermark = FSL_FEATURE_SAI_FIFO_COUNT / 2U;
-#endif
-
-	/* Reset codec */
-	sts = CODEC_Init(&s_HndCodec[enSAI], &boardCodecConfig);
-	if (kStatus_Success != sts)
-	{
-		mimic_printf("[%s (%d)] CODEC_Init NG : %d\r\n", __func__, __LINE__, sts);
-		return false;
-	}
-	sts = CODEC_Deinit(&s_HndCodec[enSAI]);
-	if (kStatus_Success != sts)
-	{
-		mimic_printf("[%s (%d)] CODEC_Init NG : %d\r\n", __func__, __LINE__, sts);
-		return false;
-	}
-
-	/* Use default setting to init codec */
-	sts = CODEC_Init(&s_HndCodec[enSAI], &boardCodecConfig);
-	if (kStatus_Success != sts)
-	{
-		mimic_printf("[%s (%d)] CODEC_Init NG : %d\r\n", __func__, __LINE__, sts);
-		return false;
-	}
-	sts = CODEC_SetFormat(&s_HndCodec[enSAI], u32BclkSrcHz, format.sampleRate_Hz, format.bitWidth);
-	if (kStatus_Success != sts)
-	{
-		mimic_printf("[%s (%d)] CODEC_SetFormat NG : %d\r\n", __func__, __LINE__, sts);
-		return false;
-	}
-
-	if (bRec)
-	{
-		/** 作動マイクの場合 */
-		WM8960_SetLeftInput(&s_HndCodec[enSAI], kWM8960_InputDifferentialMicInput3);
-		WM8960_SetRightInput(&s_HndCodec[enSAI], kWM8960_InputDifferentialMicInput2);
-
-		/**ライン入力 */
-		//WM8960_SetLeftInput(&s_HndCodec[enSAI], kWM8960_InputLineINPUT3);
-		//WM8960_SetRightInput(&s_HndCodec[enSAI], kWM8960_InputLineINPUT3);
-	}
 	memset(s_phndSaiDmaTx[enSAI], 0, sizeof(sai_edma_handle_t));
 	memset(s_phndSaiDmaRx[enSAI], 0, sizeof(sai_edma_handle_t));
 
@@ -540,7 +500,17 @@ _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t
 	DrvSAITxReset(enSAI);
 	DrvSAIRxReset(enSAI);
 
-	mimic_printf("[%s (%d)] EXIT OK\r\n", __func__, __LINE__);
+	/* Configure the audio format */
+	boardCodecConfig.format.mclk_HZ = kSAIClockFreq;
+	boardCodecConfig.format.sampleRate = enSampleRate;
+	boardCodecConfig.format.bitWidth = enPcmBit;
+	if(kStatus_Success != CODEC_Init(&s_HndCodec[enSAI], &boardCodecConfig))
+	{
+		mimic_printf("[%s (%d)] WM8960_SetLeftInput NG : %d\r\n", __func__, __LINE__, sts);
+		return false;
+	}
+
+	//mimic_printf("[%s (%d)] EXIT OK\r\n", __func__, __LINE__);
 	return true;
 }
 

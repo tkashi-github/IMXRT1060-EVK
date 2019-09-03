@@ -6,7 +6,8 @@
 	],
 	"settings": {
 		"files.associations": {
-			"xstring": "c"
+			"xstring": "c",
+			"board.h": "c"
 		}
 	}
 }
