@@ -9,7 +9,7 @@
 #ifndef _FSL_WM8960_H_
 #define _FSL_WM8960_H_
 
-#include "fsl_codec_i2c.h"
+#include "components/codec/i2c/fsl_codec_i2c.h"
 #include "fsl_common.h"
 
 /*!

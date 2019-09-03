@@ -6,8 +6,8 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include "fsl_wm8960.h"
-#include "fsl_codec_adapter.h"
+#include "components/codec/wm8960/fsl_wm8960.h"
+#include "components/codec/port/fsl_codec_adapter.h"
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -77,7 +77,7 @@
 status_t HAL_CODEC_Init(codec_handle_t *handle, void *config)
 {
     assert((config != NULL) && (handle != NULL));
-    assert(CODEC_HANDLE_SIZE >= (sizeof(codec_handle_t) + sizeof(wm8960_handle_t)) + HAL_I2C_MASTER_HANDLE_SIZE);
+    assert(CODEC_HANDLE_SIZE >= (sizeof(codec_handle_t) + sizeof(wm8960_handle_t)));
 
     codec_config_t *codecConfig = (codec_config_t *)config;
 

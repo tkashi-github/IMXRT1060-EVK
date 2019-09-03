@@ -593,7 +593,7 @@ DefALLOCATE_ITCM static _Bool PostMsgPlayCtrlPlaying(void)
 	_Bool bret = false;
 
 	stTaskMsg.enMsgId = enPlaying;
-	stTaskMsg.ptrDataForSrc = &bret;
+	stTaskMsg.ptrDataForSrc = (uintptr_t)&bret;
 	if (osOK == osMessageQueuePut(g_mqidPlayCtrl, &stTaskMsg, 0, DefPostMsgTimeout_PrivateEvent))
 	{
 		bret = true;

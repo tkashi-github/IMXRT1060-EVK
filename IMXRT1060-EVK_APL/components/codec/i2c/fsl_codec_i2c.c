@@ -7,7 +7,8 @@
  */
 
 #include "fsl_codec_i2c.h"
-#include "board.h"
+#include "board/board.h"
+#include "fsl_common.h"
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -30,14 +31,7 @@
  */
 status_t CODEC_I2C_Init(void *handle, uint32_t i2cInstance, uint32_t i2cBaudrate, uint32_t i2cSourceClockHz)
 {
-    hal_i2c_master_config_t masterConfig;
-
-    masterConfig.enableMaster = true;
-    masterConfig.baudRate_Bps = i2cBaudrate;
-    masterConfig.srcClock_Hz  = i2cSourceClockHz;
-    masterConfig.instance     = i2cInstance;
-
-    return HAL_I2cMasterInit((hal_i2c_master_handle_t *)handle, &masterConfig);
+    return kStatus_Success;
 }
 
 /*!
@@ -48,7 +42,7 @@ status_t CODEC_I2C_Init(void *handle, uint32_t i2cInstance, uint32_t i2cBaudrate
  */
 status_t CODEC_I2C_Deinit(void *handle)
 {
-    return HAL_I2cMasterDeinit((hal_i2c_master_handle_t *)handle);
+    return kStatus_Success;
 }
 
 /*!
@@ -69,17 +63,7 @@ status_t CODEC_I2C_Send(void *handle,
                         uint8_t *txBuff,
                         uint8_t txBuffSize)
 {
-    hal_i2c_master_transfer_t masterXfer;
-
-    masterXfer.slaveAddress   = deviceAddress;
-    masterXfer.direction      = kHAL_I2cWrite;
-    masterXfer.subaddress     = (uint32_t)subAddress;
-    masterXfer.subaddressSize = subaddressSize;
-    masterXfer.data           = txBuff;
-    masterXfer.dataSize       = txBuffSize;
-    masterXfer.flags          = kHAL_I2cTransferDefaultFlag;
-
-    return HAL_I2cMasterTransferBlocking((hal_i2c_master_handle_t *)handle, &masterXfer);
+    return BOARD_LPI2C_Send(LPI2C1, deviceAddress, subAddress, subaddressSize, txBuff, txBuffSize);
 }
 
 /*!
@@ -100,15 +84,5 @@ status_t CODEC_I2C_Receive(void *handle,
                            uint8_t *rxBuff,
                            uint8_t rxBuffSize)
 {
-    hal_i2c_master_transfer_t masterXfer;
-
-    masterXfer.slaveAddress   = deviceAddress;
-    masterXfer.direction      = kHAL_I2cRead;
-    masterXfer.subaddress     = (uint32_t)subAddress;
-    masterXfer.subaddressSize = subaddressSize;
-    masterXfer.data           = rxBuff;
-    masterXfer.dataSize       = rxBuffSize;
-    masterXfer.flags          = kHAL_I2cTransferDefaultFlag;
-
-    return HAL_I2cMasterTransferBlocking((hal_i2c_master_handle_t *)handle, &masterXfer);
+    return BOARD_LPI2C_Receive(LPI2C1, deviceAddress, subAddress, subaddressSize, rxBuff, rxBuffSize);
 }

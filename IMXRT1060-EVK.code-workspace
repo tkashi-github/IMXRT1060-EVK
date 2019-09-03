@@ -7,7 +7,8 @@
 	"settings": {
 		"files.associations": {
 			"xstring": "c",
-			"board.h": "c"
+			"board.h": "c",
+			"fsl_common.h": "c"
 		}
 	}
 }

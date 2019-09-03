@@ -6,8 +6,8 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include "fsl_codec_common.h"
-#include "fsl_codec_adapter.h"
+#include "components/codec/fsl_codec_common.h"
+#include "components/codec/port/fsl_codec_adapter.h"
 /*******************************************************************************
  * Definitions
  ******************************************************************************/

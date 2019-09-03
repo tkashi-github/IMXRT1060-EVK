@@ -191,6 +191,7 @@ static lv_res_t slider_action(lv_obj_t *slider)
 	}
 	return LV_RES_OK;
 }
+#include "Task/SoundTask/SoundTask.h"
 static lv_res_t vol_slider_action(lv_obj_t *slider)
 {
 	uint16_t temp = lv_slider_get_value(slider);

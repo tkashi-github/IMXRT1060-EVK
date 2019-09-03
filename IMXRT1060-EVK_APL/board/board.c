@@ -19,13 +19,7 @@
 /*******************************************************************************
  * Variables
  ******************************************************************************/
-#if defined BOARD_USE_CODEC
-codec_config_t boardCodecConfig = {.I2C_SendFunc = BOARD_Codec_I2C_Send,
-                                   .I2C_ReceiveFunc = BOARD_Codec_I2C_Receive,
-                                   .op.Init = WM8960_Init,
-                                   .op.Deinit = WM8960_Deinit,
-                                   .op.SetFormat = WM8960_ConfigDataFormat};
-#endif
+
 /*******************************************************************************
  * Code
  ******************************************************************************/

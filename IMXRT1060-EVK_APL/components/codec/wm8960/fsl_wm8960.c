@@ -32,6 +32,7 @@ static const uint16_t wm8960_reg[WM8960_CACHEREGNUM] = {
 
 static uint16_t reg_cache[WM8960_CACHEREGNUM];
 
+#include "mimiclib/source/mimiclib.h"
 /*******************************************************************************
  * Code
  ******************************************************************************/
@@ -39,13 +40,14 @@ status_t WM8960_Init(wm8960_handle_t *handle, const wm8960_config_t *wm8960Confi
 {
     const wm8960_config_t *config = wm8960Config;
     handle->config                = config;
-
+    
     /* i2c bus initialization */
     if (CODEC_I2C_Init(&(handle->i2cHandle), config->i2cConfig.codecI2CInstance, WM8960_I2C_BAUDRATE,
-                       config->i2cConfig.codecI2CSourceClock) != kStatus_HAL_I2cSuccess)
+                       config->i2cConfig.codecI2CSourceClock) != kStatus_Success)
     {
         return kStatus_Fail;
     }
+    mimic_printf("[%s (%d)] TP\r\n", __func__, __LINE__);
     /* load wm8960 register map */
     memcpy(reg_cache, wm8960_reg, sizeof(wm8960_reg));
 
@@ -109,6 +111,7 @@ status_t WM8960_Init(wm8960_handle_t *handle, const wm8960_config_t *wm8960Confi
     WM8960_WriteReg(handle, WM8960_DACCTL1, 0x0000);
     WM8960_WriteReg(handle, WM8960_LINVOL, 0x117);
     WM8960_WriteReg(handle, WM8960_RINVOL, 0x117);
+    mimic_printf("[%s (%d)] TP\r\n", __func__, __LINE__);
 
     return WM8960_ConfigDataFormat(handle, config->format.mclk_HZ, config->format.sampleRate, config->format.bitWidth);
 }
@@ -535,6 +538,7 @@ status_t WM8960_ConfigDataFormat(wm8960_handle_t *handle, uint32_t sysclk, uint3
     status_t retval  = kStatus_Success;
     uint32_t divider = 0;
     uint16_t val     = 0;
+    mimic_printf("[%s (%d)] TP\r\n", __func__, __LINE__);
 
     /* Compute sample rate divider, dac and adc are the same sample rate */
     divider = sysclk / sample_rate;
@@ -612,6 +616,7 @@ status_t WM8960_ConfigDataFormat(wm8960_handle_t *handle, uint32_t sysclk, uint3
         default:
             return kStatus_InvalidArgument;
     }
+    mimic_printf("[%s (%d)] TP\r\n", __func__, __LINE__);
 
     return retval;
 }

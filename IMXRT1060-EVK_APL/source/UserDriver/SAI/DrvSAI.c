@@ -287,8 +287,7 @@ void SAI3_RX_IRQHandler(void)
 	}
 }
 
-static codec_handle_t s_HndCodec[enNumOfSAI] = {0};
-extern codec_config_t boardCodecConfig;
+
 
 void DrvSAIClockInit(void)
 {
@@ -349,8 +348,12 @@ _Bool DrvSAIDMAInit(enSAI_t enSAI)
 	return true;
 }
 
+#include "components/codec/fsl_codec_common.h"
+#include "components/codec/port/fsl_codec_adapter.h"
+static codec_handle_t s_HndCodec[enNumOfSAI] = {0};
+
 static wm8960_config_t wm8960Config = {
-    .i2cConfig = {.codecI2CInstance = BOARD_CODEC_I2C_INSTANCE, .codecI2CSourceClock = BOARD_CODEC_I2C_CLOCK_FREQ},
+    .i2cConfig = {.codecI2CInstance = 1, .codecI2CSourceClock = 100000},
     .route     = kWM8960_RoutePlaybackandRecord,
     .rightInputSource = kWM8960_InputDifferentialMicInput2,
 	.leftInputSource = kWM8960_InputLineINPUT3,
@@ -374,7 +377,6 @@ _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t
 
 	sai_transfer_format_t format = {0};
 	uint32_t u32BclkSrcHz = 0;
-	status_t sts;
 
 	if ((enSAI < enSAI1) || (enSAI >= enNumOfSAI))
 	{
@@ -501,16 +503,18 @@ _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t
 	DrvSAIRxReset(enSAI);
 
 	/* Configure the audio format */
-	boardCodecConfig.format.mclk_HZ = kSAIClockFreq;
-	boardCodecConfig.format.sampleRate = enSampleRate;
-	boardCodecConfig.format.bitWidth = enPcmBit;
+	wm8960Config.i2cConfig.codecI2CSourceClock = BOARD_CODEC_I2C_CLOCK_FREQ;
+	wm8960Config.format.mclk_HZ = kSAIClockFreq;
+	wm8960Config.format.sampleRate = enSampleRate;
+	wm8960Config.format.bitWidth = enPcmBit;
+	
 	if(kStatus_Success != CODEC_Init(&s_HndCodec[enSAI], &boardCodecConfig))
 	{
-		mimic_printf("[%s (%d)] WM8960_SetLeftInput NG : %d\r\n", __func__, __LINE__, sts);
+		mimic_printf("[%s (%d)] CODEC_Init NG \r\n", __func__, __LINE__);
 		return false;
 	}
-
-	//mimic_printf("[%s (%d)] EXIT OK\r\n", __func__, __LINE__);
+	
+	mimic_printf("[%s (%d)] EXIT OK\r\n", __func__, __LINE__);
 	return true;
 }
 
@@ -914,7 +918,7 @@ uint32_t DrvSAIReadVolume(enSAI_t enSAI)
 	{
 		return 0;
 	}
-	return WM8960_GetVolume(&s_HndCodec[enSAI], kWM8960_ModuleHP);
+	return WM8960_GetVolume((wm8960_handle_t *)(&s_HndCodec[enSAI].codecDevHandle), kWM8960_ModuleHP);
 }
 _Bool DrvSAIWriteVolume(enSAI_t enSAI, uint16_t u16Vol)
 {
@@ -922,14 +926,8 @@ _Bool DrvSAIWriteVolume(enSAI_t enSAI, uint16_t u16Vol)
 	{
 		return false;
 	}
-	if (WM8960_SetVolume(&s_HndCodec[enSAI], kWM8960_ModuleHP, u16Vol) == kStatus_Success)
+	if (CODEC_SetVolume(&s_HndCodec[enSAI], kWM8960_HeadphoneLeft | kWM8960_HeadphoneRight, u16Vol) == kStatus_Success)
 	{
-		if (u16Vol != WM8960_GetVolume(&s_HndCodec[enSAI], kWM8960_ModuleHP))
-		{
-			mimic_printf("[%s (%d)] Verify NG (u16Vol = %lu) \r\n", __func__, __LINE__, u16Vol);
-			return false;
-		}
-
 		return true;
 	}
 	else
