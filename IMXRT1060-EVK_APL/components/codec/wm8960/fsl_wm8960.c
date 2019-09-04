@@ -41,12 +41,6 @@ status_t WM8960_Init(wm8960_handle_t *handle, const wm8960_config_t *wm8960Confi
     const wm8960_config_t *config = wm8960Config;
     handle->config                = config;
     
-    /* i2c bus initialization */
-    if (CODEC_I2C_Init(&(handle->i2cHandle), config->i2cConfig.codecI2CInstance, WM8960_I2C_BAUDRATE,
-                       config->i2cConfig.codecI2CSourceClock) != kStatus_Success)
-    {
-        return kStatus_Fail;
-    }
     mimic_printf("[%s (%d)] TP\r\n", __func__, __LINE__);
     /* load wm8960 register map */
     memcpy(reg_cache, wm8960_reg, sizeof(wm8960_reg));
@@ -652,7 +646,8 @@ status_t WM8960_WriteReg(wm8960_handle_t *handle, uint8_t reg, uint16_t val)
 
     reg_cache[reg] = buff;
 
-    return CODEC_I2C_Send(&(handle->i2cHandle), handle->config->slaveAddress, cmd, 1U, (uint8_t *)&buff, 2U);
+    mimic_printf("[%s (%d)] slaveAddress = 0x%02X\r\n", __func__, __LINE__, handle->config->slaveAddress);
+    return BOARD_LPI2C_Send(LPI2C1, handle->config->slaveAddress, cmd, 1U, (uint8_t *)&buff, 2U);
 }
 
 status_t WM8960_ReadReg(uint8_t reg, uint16_t *val)

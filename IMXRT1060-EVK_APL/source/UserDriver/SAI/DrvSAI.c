@@ -353,7 +353,6 @@ _Bool DrvSAIDMAInit(enSAI_t enSAI)
 static codec_handle_t s_HndCodec[enNumOfSAI] = {0};
 
 static wm8960_config_t wm8960Config = {
-    .i2cConfig = {.codecI2CInstance = 1, .codecI2CSourceClock = 100000},
     .route     = kWM8960_RoutePlaybackandRecord,
     .rightInputSource = kWM8960_InputDifferentialMicInput2,
 	.leftInputSource = kWM8960_InputLineINPUT3,
@@ -503,7 +502,6 @@ _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t
 	DrvSAIRxReset(enSAI);
 
 	/* Configure the audio format */
-	wm8960Config.i2cConfig.codecI2CSourceClock = BOARD_CODEC_I2C_CLOCK_FREQ;
 	wm8960Config.format.mclk_HZ = kSAIClockFreq;
 	wm8960Config.format.sampleRate = enSampleRate;
 	wm8960Config.format.bitWidth = enPcmBit;

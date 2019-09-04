@@ -9,7 +9,7 @@
 #ifndef _FSL_WM8960_H_
 #define _FSL_WM8960_H_
 
-#include "components/codec/i2c/fsl_codec_i2c.h"
+#include "board.h"
 #include "fsl_common.h"
 
 /*!
@@ -312,7 +312,6 @@ typedef struct wm8960_config
     wm8960_input_t rightInputSource; /*!< Right input source for wm8960 */
     wm8960_play_source_t playSource; /*!< play source */
     uint8_t slaveAddress;            /*!< wm8960 device address */
-    codec_i2c_config_t i2cConfig;    /*!< i2c configuration */
 } wm8960_config_t;
 
 /*! @brief wm8960 codec handler
