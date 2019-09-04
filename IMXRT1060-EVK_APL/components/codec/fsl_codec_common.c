@@ -7,7 +7,7 @@
  */
 
 #include "fsl_codec_common.h"
-
+#include "mimiclib/source/mimiclib.h"
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -31,7 +31,7 @@ status_t CODEC_I2C_WriteReg(uint8_t i2cAddr,
         data[i] = (uint8_t)value;
         value >>= 8;
     }
-
+    //mimic_printf("[%s (%d)] (0x%02X) 0x%02X := 0x%02x%02x%02x%02x\r\n", __func__, __LINE__,i2cAddr, reg, data[3], data[2], data[1], data[0]);
     return i2cSendFunc(i2cAddr, reg, addrType, data, regWidth);
 }
 
@@ -67,6 +67,7 @@ status_t CODEC_I2C_ReadReg(uint8_t i2cAddr,
             ((uint8_t *)value)[i++] = data[width];
         }
     }
+    //mimic_printf("[%s (%d)] (0x%02X) 0x%02X == 0x%08lX\r\n", __func__, __LINE__,i2cAddr, reg,*(uint32_t *)value);
 
     return status;
 }

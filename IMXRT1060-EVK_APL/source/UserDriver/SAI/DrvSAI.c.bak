@@ -524,7 +524,6 @@ _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t
 		return false;
 	}
 
-	WM8960_SetDataRoute(&s_HndCodec[enSAI], kWM8960_RoutePlaybackandRecord);
 	WM8960_SetLeftInput(&s_HndCodec[enSAI], kWM8960_InputDifferentialMicInput3);
 	WM8960_SetRightInput(&s_HndCodec[enSAI], kWM8960_InputDifferentialMicInput2);
 
@@ -932,7 +931,7 @@ uint32_t DrvSAIReadVolume(enSAI_t enSAI)
 	{
 		return 0;
 	}
-	return WM8960_GetVolume(&s_HndCodec[enSAI], kWM8960_ModuleHP);
+	return WM8960_GetVolume((wm8960_handle_t *)(&s_HndCodec[enSAI].codecDevHandle), kWM8960_ModuleHP);
 }
 _Bool DrvSAIWriteVolume(enSAI_t enSAI, uint16_t u16Vol)
 {
@@ -940,14 +939,8 @@ _Bool DrvSAIWriteVolume(enSAI_t enSAI, uint16_t u16Vol)
 	{
 		return false;
 	}
-	if (WM8960_SetVolume(&s_HndCodec[enSAI], kWM8960_ModuleHP, u16Vol) == kStatus_Success)
+	if (CODEC_SetVolume(&s_HndCodec[enSAI], kWM8960_HeadphoneLeft | kWM8960_HeadphoneRight, u16Vol) == kStatus_Success)
 	{
-		if (u16Vol != WM8960_GetVolume(&s_HndCodec[enSAI], kWM8960_ModuleHP))
-		{
-			mimic_printf("[%s (%d)] Verify NG (u16Vol = %lu) \r\n", __func__, __LINE__, u16Vol);
-			return false;
-		}
-
 		return true;
 	}
 	else

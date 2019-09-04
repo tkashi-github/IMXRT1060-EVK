@@ -7,7 +7,7 @@
  */
 #include "fsl_wm8960.h"
 #include "fsl_common.h"
-
+#include "mimiclib/source/mimiclib.h"
 /*******************************************************************************
  * Definitations
  ******************************************************************************/
@@ -729,6 +729,7 @@ status_t WM8960_ModifyReg(codec_handle_t *handle, uint8_t reg, uint16_t mask, ui
     uint8_t retval = 0;
     uint16_t reg_val = 0;
     retval = WM8960_ReadReg(reg, &reg_val);
+    mimic_printf("[%s (%d)] 0x%02X === 0x%04X\r\n", __func__, __LINE__, reg, reg_val);
     if (retval != kStatus_Success)
     {
         return kStatus_Fail;
