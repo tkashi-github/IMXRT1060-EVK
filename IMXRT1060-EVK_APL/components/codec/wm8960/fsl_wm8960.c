@@ -35,6 +35,19 @@ static uint16_t reg_cache[WM8960_CACHEREGNUM];
 /*******************************************************************************
  * Code
  ******************************************************************************/
+#include "UserTypedef.h"
+#include "OSResource.h"
+void WM8960_RegDump(codec_handle_t *handle)
+{
+    for(uint32_t i=0;i<WM8960_CACHEREGNUM;i++)
+    {
+        uint8_t buff[4];
+        CODEC_I2C_ReadReg(handle->slaveAddress, kCODEC_RegAddr8Bit, i << 1, kCODEC_RegWidth8Bit, buff, handle->I2C_ReceiveFunc);
+
+        mimic_printf("[%s (%d)] 0x%08lX === 0x%02X\r\n", __func__, __LINE__, i, buff[0]);
+        osDelay(10);
+    }
+}
 
 status_t WM8960_Init(codec_handle_t *handle, void *wm8960_configure)
 {
@@ -47,6 +60,7 @@ status_t WM8960_Init(codec_handle_t *handle, void *wm8960_configure)
 
     /* Reset the codec */
     WM8960_WriteReg(handle, WM8960_RESET, 0x00);
+    osDelay(100);
     /* Set VMID */
     WM8960_WriteReg(handle, WM8960_POWER1, 0xC0);
     /* ADC and DAC uses same clock */
@@ -700,7 +714,7 @@ status_t WM8960_WriteReg(codec_handle_t *handle, uint8_t reg, uint16_t val)
     cmd = (reg << 1) | ((val >> 8U) & 0x0001U);
     /* Data */
     buff = val & 0xFF;
-
+    //mimic_printf("[%s (%d)] 0x%02X === 0x%02X\r\n", __func__, __LINE__, cmd, buff);
     retval = CODEC_I2C_WriteReg(handle->slaveAddress, kCODEC_RegAddr8Bit, cmd, kCODEC_RegWidth8Bit, buff,
                                 handle->I2C_SendFunc);
 
@@ -729,7 +743,7 @@ status_t WM8960_ModifyReg(codec_handle_t *handle, uint8_t reg, uint16_t mask, ui
     uint8_t retval = 0;
     uint16_t reg_val = 0;
     retval = WM8960_ReadReg(reg, &reg_val);
-    mimic_printf("[%s (%d)] 0x%02X === 0x%04X\r\n", __func__, __LINE__, reg, reg_val);
+    //mimic_printf("[%s (%d)] 0x%02X === 0x%04X\r\n", __func__, __LINE__, reg, reg_val);
     if (retval != kStatus_Success)
     {
         return kStatus_Fail;
@@ -743,3 +757,5 @@ status_t WM8960_ModifyReg(codec_handle_t *handle, uint8_t reg, uint16_t mask, ui
     }
     return kStatus_Success;
 }
+
+

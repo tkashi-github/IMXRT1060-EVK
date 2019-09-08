@@ -420,6 +420,7 @@ status_t WM8960_ReadReg(uint8_t reg, uint16_t *val);
  */
 status_t WM8960_ModifyReg(codec_handle_t *handle, uint8_t reg, uint16_t mask, uint16_t val);
 
+extern void WM8960_RegDump(codec_handle_t *handle);
 #if defined(__cplusplus)
 }
 #endif

@@ -352,6 +352,7 @@ static codec_handle_t s_HndCodec[enNumOfSAI] = {0};
 
 static codec_config_t boardCodecConfig = {.I2C_SendFunc = BOARD_Codec_I2C_Send,
                                    .I2C_ReceiveFunc = BOARD_Codec_I2C_Receive,
+								   .codecConfig = NULL,
                                    .op.Init = WM8960_Init,
                                    .op.Deinit = WM8960_Deinit,
                                    .op.SetFormat = WM8960_ConfigDataFormat};
@@ -523,11 +524,13 @@ _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t
 		mimic_printf("[%s (%d)] CODEC_SetFormat NG\r\n", __func__, __LINE__);
 		return false;
 	}
-
+	WM8960_SetProtocol(&s_HndCodec[enSAI], kWM8960_BusI2S);
+    WM8960_SetMasterSlave(&s_HndCodec[enSAI], false);
 	WM8960_SetDataRoute(&s_HndCodec[enSAI], kWM8960_RoutePlaybackandRecord);
 	WM8960_SetLeftInput(&s_HndCodec[enSAI], kWM8960_InputDifferentialMicInput3);
 	WM8960_SetRightInput(&s_HndCodec[enSAI], kWM8960_InputDifferentialMicInput2);
-
+	WM8960_SetModule(&s_HndCodec[enSAI], kWM8960_ModuleHP, true);
+	//WM8960_RegDump(&s_HndCodec[enSAI]);
 	mimic_printf("[%s (%d)] EXIT OK\r\n", __func__, __LINE__);
 	return true;
 }
