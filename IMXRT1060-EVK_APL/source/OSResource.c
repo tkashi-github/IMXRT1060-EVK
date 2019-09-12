@@ -156,6 +156,8 @@ OS_RESOURCE_MACRO_SEM_DEFINE(LPUARTRxSemaphore[1+enLPUART_MAX]);
 OS_RESOURCE_MACRO_SEM_DEFINE(LPUARTTxSemaphore[1+enLPUART_MAX]);
 OS_RESOURCE_MACRO_SEM_DEFINE(CameraTask);
 OS_RESOURCE_MACRO_SEM_DEFINE(ComboSensor);
+OS_RESOURCE_MACRO_SEM_DEFINE(WM8960);
+
 
 static stBinarySemaphoreTable_t s_stBinarySemaphoreTable[] = {
 	OS_RESOURCE_MACRO_SEM_TABLE(LPUARTTxSemaphore[enLPUART1], 1, 1),
@@ -177,6 +179,7 @@ static stBinarySemaphoreTable_t s_stBinarySemaphoreTable[] = {
 
 	OS_RESOURCE_MACRO_SEM_TABLE(CameraTask, 1, 1),
 	OS_RESOURCE_MACRO_SEM_TABLE(ComboSensor, 1, 1),
+	OS_RESOURCE_MACRO_SEM_TABLE(WM8960, 1, 1),
 	{NULL, {NULL, 0, NULL, 0}, 0, 0},
 };
 

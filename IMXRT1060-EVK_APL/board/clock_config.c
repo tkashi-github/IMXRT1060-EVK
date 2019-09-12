@@ -357,8 +357,11 @@ void BOARD_BootClockRUN(void)
     /* Set Trace clock source. */
     CLOCK_SetMux(kCLOCK_TraceMux, 3);
 #endif
+    CLOCK_EnableClock(kCLOCK_Sai1);
+    CLOCK_EnableClock(kCLOCK_Sai2);
+    CLOCK_EnableClock(kCLOCK_Sai3);
     /* Disable SAI1 clock gate. */
-    CLOCK_DisableClock(kCLOCK_Sai1);
+    //CLOCK_DisableClock(kCLOCK_Sai1);
     /* Set SAI1_CLK_PRED. */
     CLOCK_SetDiv(kCLOCK_Sai1PreDiv, 3);
     /* Set SAI1_CLK_PODF. */
@@ -366,7 +369,7 @@ void BOARD_BootClockRUN(void)
     /* Set Sai1 clock source. */
     CLOCK_SetMux(kCLOCK_Sai1Mux, 0);
     /* Disable SAI2 clock gate. */
-    CLOCK_DisableClock(kCLOCK_Sai2);
+    //CLOCK_DisableClock(kCLOCK_Sai2);
     /* Set SAI2_CLK_PRED. */
     CLOCK_SetDiv(kCLOCK_Sai2PreDiv, 3);
     /* Set SAI2_CLK_PODF. */
@@ -374,7 +377,7 @@ void BOARD_BootClockRUN(void)
     /* Set Sai2 clock source. */
     CLOCK_SetMux(kCLOCK_Sai2Mux, 0);
     /* Disable SAI3 clock gate. */
-    CLOCK_DisableClock(kCLOCK_Sai3);
+    //CLOCK_DisableClock(kCLOCK_Sai3);
     /* Set SAI3_CLK_PRED. */
     CLOCK_SetDiv(kCLOCK_Sai3PreDiv, 3);
     /* Set SAI3_CLK_PODF. */

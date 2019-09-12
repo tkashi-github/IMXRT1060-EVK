@@ -60,7 +60,6 @@ status_t WM8960_Init(codec_handle_t *handle, void *wm8960_configure)
 
     /* Reset the codec */
     WM8960_WriteReg(handle, WM8960_RESET, 0x00);
-    osDelay(100);
     /* Set VMID */
     WM8960_WriteReg(handle, WM8960_POWER1, 0xC0);
     /* ADC and DAC uses same clock */
@@ -615,7 +614,6 @@ status_t WM8960_ConfigDataFormat(codec_handle_t *handle, uint32_t sysclk, uint32
     {
         return kStatus_InvalidArgument;
     }
-
     retval = WM8960_WriteReg(handle, WM8960_CLOCK1, val);
 
     /* Compute bclk divider */
@@ -653,6 +651,7 @@ status_t WM8960_ConfigDataFormat(codec_handle_t *handle, uint32_t sysclk, uint32
             retval = kStatus_InvalidArgument;
             break;
     }
+    mimic_printf("[%s (%d)] val=0x%08lX\r\n",__func__, __LINE__, val);
 
     retval = WM8960_WriteReg(handle, WM8960_CLOCK2, val);
     /*
@@ -711,31 +710,48 @@ status_t WM8960_WriteReg(codec_handle_t *handle, uint8_t reg, uint16_t val)
     uint8_t retval = 0;
 
     /* The register address */
-    cmd = (reg << 1) | ((val >> 8U) & 0x0001U);
-    /* Data */
-    buff = val & 0xFF;
-    //mimic_printf("[%s (%d)] 0x%02X === 0x%02X\r\n", __func__, __LINE__, cmd, buff);
-    retval = CODEC_I2C_WriteReg(handle->slaveAddress, kCODEC_RegAddr8Bit, cmd, kCODEC_RegWidth8Bit, buff,
-                                handle->I2C_SendFunc);
+    if (osSemaphoreAcquire(g_semidWM8960, 10) == osOK)
+	{
+        cmd = (reg << 1) | ((val >> 8U) & 0x0001U);
+        /* Data */
+        buff = val & 0xFF;
+        
+        retval = CODEC_I2C_WriteReg(handle->slaveAddress, kCODEC_RegAddr8Bit, cmd, kCODEC_RegWidth8Bit, buff,
+                                    handle->I2C_SendFunc);
 
-    if (retval == kStatus_Success)
-    {
-        reg_cache[reg] = val;
+        if (retval == kStatus_Success)
+        {
+            reg_cache[reg] = val;
+        }
+        osSemaphoreRelease(g_semidWM8960);
+        return kStatus_Success;
     }
-
-    return retval;
+    else
+    {
+        return kStatus_Fail;
+    }
 }
 
 status_t WM8960_ReadReg(uint8_t reg, uint16_t *val)
 {
-    if (reg >= WM8960_CACHEREGNUM)
-    {
-        return kStatus_InvalidArgument;
+    if (osSemaphoreAcquire(g_semidWM8960, 10) == osOK)
+	{
+        if (reg >= WM8960_CACHEREGNUM)
+        {
+            osSemaphoreRelease(g_semidWM8960);
+            return kStatus_InvalidArgument;
+        }
+
+        *val = reg_cache[reg];
+        osSemaphoreRelease(g_semidWM8960);
+        return kStatus_Success;
     }
-
-    *val = reg_cache[reg];
-
-    return kStatus_Success;
+    else
+    {
+        return kStatus_Fail;
+    }
+    
+    
 }
 
 status_t WM8960_ModifyReg(codec_handle_t *handle, uint8_t reg, uint16_t mask, uint16_t val)

@@ -67,6 +67,8 @@ static void InitGpio(void){
 	GPIO_PinInit(BOARD_USER_BUTTON_GPIO, BOARD_USER_BUTTON_GPIO_PIN, &userCaedDetect);
 
 }
+
+#include "UserDriver/SAI/DrvSAI.h"
 /*
  * @brief   Application entry point.
  */
@@ -82,7 +84,7 @@ int main(void)
 	*((uint32_t *)(0x400E0600)) = (1 << 11);  /* enable TPIU clock */
 	CLOCK_EnableClock(kCLOCK_Trace);
 #endif
-
+	DrvSAIClockInit();
 	InitGpio();
 	SysTick_Config(SystemCoreClock / 1000u);
 	InstallIRQHandler(SysTick_IRQn, (uint32_t)CMSIS_OS2_SysTick_Handler);

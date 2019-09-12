@@ -191,7 +191,7 @@ void CSI_IRQHandler(void)
 
 void BOARD_InitCameraResource(void)
 {
-	BOARD_Camera_I2C_Init();
+	//BOARD_Camera_I2C_Init();
 
 	/* CSI MCLK select 24M. */
 	/*

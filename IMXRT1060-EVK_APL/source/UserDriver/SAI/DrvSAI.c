@@ -297,9 +297,9 @@ void DrvSAIClockInit(void)
 	/*Clock setting for LPI2C*/
 	//CLOCK_SetMux(kCLOCK_Lpi2cMux, kLPI2CClockSourceSelect);
 	//CLOCK_SetDiv(kCLOCK_Lpi2cDiv, kLPI2CClockSourceDivider);
-	CLOCK_EnableClock(kCLOCK_Sai1);
-	CLOCK_EnableClock(kCLOCK_Sai2);
-	CLOCK_EnableClock(kCLOCK_Sai3);
+	//CLOCK_EnableClock(kCLOCK_Sai1);
+	//CLOCK_EnableClock(kCLOCK_Sai2);
+	//CLOCK_EnableClock(kCLOCK_Sai3);
 	/*Clock setting for SAI*/
 	CLOCK_SetMux(kCLOCK_Sai1Mux, kSAIClockSourceSelect);
 	CLOCK_SetDiv(kCLOCK_Sai1PreDiv, kSAIClockSourcePreDivider);
@@ -524,12 +524,14 @@ _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t
 		mimic_printf("[%s (%d)] CODEC_SetFormat NG\r\n", __func__, __LINE__);
 		return false;
 	}
+	#if 0
 	WM8960_SetProtocol(&s_HndCodec[enSAI], kWM8960_BusI2S);
     WM8960_SetMasterSlave(&s_HndCodec[enSAI], false);
 	WM8960_SetDataRoute(&s_HndCodec[enSAI], kWM8960_RoutePlaybackandRecord);
 	WM8960_SetLeftInput(&s_HndCodec[enSAI], kWM8960_InputDifferentialMicInput3);
 	WM8960_SetRightInput(&s_HndCodec[enSAI], kWM8960_InputDifferentialMicInput2);
 	WM8960_SetModule(&s_HndCodec[enSAI], kWM8960_ModuleHP, true);
+	#endif
 	//WM8960_RegDump(&s_HndCodec[enSAI]);
 	mimic_printf("[%s (%d)] EXIT OK\r\n", __func__, __LINE__);
 	return true;
