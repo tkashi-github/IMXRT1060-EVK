@@ -105,7 +105,8 @@
 			"xmemory0": "cpp",
 			"xstddef": "cpp",
 			"xstring": "cpp",
-			"xtr1common": "cpp"
+			"xtr1common": "cpp",
+			"arm_math.h": "c"
 		},
 		"C_Cpp.default.defines": [
 			"__GNUC__",

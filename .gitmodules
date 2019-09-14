@@ -1,7 +1,3 @@
-[submodule "IMXRT1060-EVK_APL/mimiclib"]
-	path = IMXRT1060-EVK_APL/mimiclib
-	url = https://github.com/tkashi-github/mimiclib
-
-[submodule "IMXRT1060-EVK_BOOT/mimiclib"]
-	path = IMXRT1060-EVK_BOOT/mimiclib
+[submodule "mimiclib"]
+	path = mimiclib
 	url = https://github.com/tkashi-github/mimiclib

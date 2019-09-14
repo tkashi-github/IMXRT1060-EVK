@@ -63,6 +63,7 @@ typedef enum{
 	enPCA9685Port15,
 	enPCA9685PortBegin = enPCA9685Port0,
 	enPCA9685PortEnd = enPCA9685Port15,
+	enPCA9685PortNum = enPCA9685PortEnd + 1,
 
 }enPCA9685PortNo_t;
 

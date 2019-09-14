@@ -34,6 +34,7 @@
 #include "OSResource.h"
 #include "mimiclib/source/mimiclib.h"
 
+#include "arm_math.h"
 
 /**
  * @brief Task Entry
@@ -44,6 +45,14 @@ DefALLOCATE_ITCM void ExtLedCtrlTask(void const *argument)
 {
 	uint8_t msg_prio;
 	stTaskMsgBlock_t stTaskMsg = {0};
+	uint32_t ExtLedVal[enPCA9685PortNum];
+	_Bool bUp[enPCA9685PortNum];
+
+	for(uint32_t i=enPCA9685PortBegin;i<=enPCA9685PortEnd;i++)
+	{
+		ExtLedVal[i] = 100 * ((double)i/enPCA9685PortNum);
+		bUp[i] = true;
+	}
 
 	if(false == DrvPCA9685Init(LPI2C1))
 	{
@@ -52,7 +61,7 @@ DefALLOCATE_ITCM void ExtLedCtrlTask(void const *argument)
 
 	for(;;)
 	{
-		if (osOK == osMessageQueueGet(g_mqidExtLedCtrlTask, &stTaskMsg, &msg_prio, portMAX_DELAY))
+		if (osOK == osMessageQueueGet(g_mqidExtLedCtrlTask, &stTaskMsg, &msg_prio, 10))
 		{
 			switch (stTaskMsg.enMsgId)
 			{
@@ -68,6 +77,35 @@ DefALLOCATE_ITCM void ExtLedCtrlTask(void const *argument)
 			if (stTaskMsg.SyncEGHandle != NULL)
 			{
 				osEventFlagsSet(stTaskMsg.SyncEGHandle, stTaskMsg.wakeupbits);
+			}
+		}
+		else
+		{
+			for(uint32_t i=enPCA9685PortBegin;i<=enPCA9685PortEnd;i++)
+			{
+				DrvPCA9685SetPWMVal(LPI2C1, (enPCA9685PortNo_t)i, 100*arm_sin_f32(PI*ExtLedVal[i]/100.0));
+				if(bUp[i] != false)
+				{
+					if(ExtLedVal[i] < 100)
+					{
+						ExtLedVal[i]++;
+					}
+					else
+					{
+						bUp[i] = false;
+					}
+				}
+				else
+				{
+					if(ExtLedVal[i] > 0)
+					{
+						ExtLedVal[i]--;
+					}
+					else
+					{
+						bUp[i] = true;
+					}
+				}
 			}
 		}
 	}
