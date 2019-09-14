@@ -396,7 +396,7 @@ void SAI_TransferRxSetConfigEDMA(I2S_Type *base, sai_edma_handle_t *handle, sai_
  * retval kStatus_InvalidArgument The input argument is invalid.
  * retval kStatus_TxBusy SAI is busy sending data.
  */
-#include "mimiclib/source/mimiclib.h"
+#include "mimiclib.h"
 
 status_t SAI_TransferSendEDMA(I2S_Type *base, sai_edma_handle_t *handle, sai_transfer_t *xfer)
 {

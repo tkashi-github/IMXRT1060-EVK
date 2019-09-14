@@ -32,7 +32,7 @@
 #include "PlayCtrl/PlayCtrl.h"
 #include "PlayCtrl/PlayCtrlWav.h"
 #include "board.h"
-#include "mimiclib/source/mimiclib.h"
+#include "mimiclib.h"
 #include "ff.h"
 #include "common/common.h"
 #include "SoundTask/SoundTask.h"

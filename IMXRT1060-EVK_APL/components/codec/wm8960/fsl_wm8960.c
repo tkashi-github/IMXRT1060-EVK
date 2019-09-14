@@ -7,7 +7,7 @@
  */
 #include "fsl_wm8960.h"
 #include "fsl_common.h"
-#include "mimiclib/source/mimiclib.h"
+#include "mimiclib.h"
 /*******************************************************************************
  * Definitations
  ******************************************************************************/

@@ -41,7 +41,7 @@
 #include "LcdTask/LcdTask.h"
 
 #include "board.h"
-#include "mimiclib/source/mimiclib.h"
+#include "mimiclib.h"
 
 #include "pin_mux.h"
 #include "board.h"

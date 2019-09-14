@@ -30,7 +30,7 @@
  */
 #include "PlayCtrl/PlayCtrlAudio.h"
 #include "SoundTask/SoundTask.h"
-#include "mimiclib/source/mimiclib.h"
+#include "mimiclib.h"
 
 static volatile _Bool s_bPlayFileOpen = false;
 static volatile _Bool s_bRecFileOpen = false;

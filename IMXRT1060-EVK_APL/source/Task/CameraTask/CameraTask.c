@@ -44,7 +44,7 @@
 #include "fsl_mt9m114.h"
 #include "fsl_iomuxc.h"
 #include "OSResource.h"
-#include "mimiclib/source/mimiclib.h"
+#include "mimiclib.h"
 
 /*--*/
 /*

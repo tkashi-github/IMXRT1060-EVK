@@ -387,3 +387,12 @@ void MIMICLIB_PutString(const TCHAR pszStr[], uint32_t SizeofStr)
 _Bool MIMICLIB_kbhit(void){
 	return (_Bool)!DrvLPUARTIsRxBufferEmpty(kStdioPort);
 }
+uintptr_t MIMICLIB_MALLOC(uint32_t u32Size)
+{
+	return (uintptr_t)pvPortMalloc(u32Size);
+}
+
+void MIMICLIB_FREE(uintptr_t ptr)
+{
+	vPortFree((void*)ptr);
+}

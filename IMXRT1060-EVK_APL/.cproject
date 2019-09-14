@@ -106,9 +106,6 @@
 									<listOptionValue builtIn="false" value="../mbedTLS/include/mbedtls"/>
 									<listOptionValue builtIn="false" value="../mbedTLS/port/ksdk"/>
 									<listOptionValue builtIn="false" value="../sdmmc/inc"/>
-									<listOptionValue builtIn="false" value="../emwin"/>
-									<listOptionValue builtIn="false" value="../emwin/emWin_Config"/>
-									<listOptionValue builtIn="false" value="../emwin/emWin_header"/>
 									<listOptionValue builtIn="false" value="../fatfs"/>
 									<listOptionValue builtIn="false" value="../fatfs/fatfs_include"/>
 									<listOptionValue builtIn="false" value="../lwip/port/arch"/>
@@ -121,19 +118,6 @@
 									<listOptionValue builtIn="false" value="../lwip/src/include/posix/sys"/>
 									<listOptionValue builtIn="false" value="../lwip/src/include/posix"/>
 									<listOptionValue builtIn="false" value="../lwip/port"/>
-									<listOptionValue builtIn="false" value="../wifi_qca/common_src/hcd"/>
-									<listOptionValue builtIn="false" value="../wifi_qca/common_src/include"/>
-									<listOptionValue builtIn="false" value="../wifi_qca/common_src/stack_common"/>
-									<listOptionValue builtIn="false" value="../wifi_qca/common_src/wmi"/>
-									<listOptionValue builtIn="false" value="../wifi_qca/custom_src/include"/>
-									<listOptionValue builtIn="false" value="../wifi_qca/custom_src/stack_custom"/>
-									<listOptionValue builtIn="false" value="../wifi_qca/include/AR6002/hw2.0/hw"/>
-									<listOptionValue builtIn="false" value="../wifi_qca/include/AR6002/hw4.0/hw"/>
-									<listOptionValue builtIn="false" value="../wifi_qca/include/AR6002"/>
-									<listOptionValue builtIn="false" value="../wifi_qca/include"/>
-									<listOptionValue builtIn="false" value="../wifi_qca/port"/>
-									<listOptionValue builtIn="false" value="../wifi_qca/port/env/freertos"/>
-									<listOptionValue builtIn="false" value="../wifi_qca/port/drivers/lpspi_edma_freertos"/>
 									<listOptionValue builtIn="false" value="../startup"/>
 									<listOptionValue builtIn="false" value="../mbedTLS/include"/>
 									<listOptionValue builtIn="false" value="../lwip/template_application"/>
@@ -151,6 +135,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/components/codec}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/components/codec/wm8960}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lvgl}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mimiclib/source}&quot;"/>
 								</option>
 								<option id="gnu.c.compiler.option.include.files.288582074" name="Include files (-include)" superClass="gnu.c.compiler.option.include.files" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.1484261154" name="Optimization Level" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level" useByScannerDiscovery="false" value="gnu.c.optimization.level.more" valueType="enumerated"/>
@@ -311,6 +296,7 @@
 								<option id="gnu.c.link.option.noshared.743912551" name="No shared libraries (-static)" superClass="gnu.c.link.option.noshared" useByScannerDiscovery="false"/>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.link.option.libs.1223993762" name="Libraries (-l)" superClass="gnu.c.link.option.libs" useByScannerDiscovery="false" valueType="libs">
 									<listOptionValue builtIn="false" value="CMSIS_DSP"/>
+									<listOptionValue builtIn="false" value="mimiclib"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.link.option.paths.1677342002" name="Library search path (-L)" superClass="gnu.c.link.option.paths" useByScannerDiscovery="false" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/}&quot;"/>

@@ -32,7 +32,7 @@
  */
 #include "ExtLedCtrlTask/ExtLedCtrlTask.h"
 #include "OSResource.h"
-#include "mimiclib/source/mimiclib.h"
+#include "mimiclib.h"
 
 #include "arm_math.h"
 

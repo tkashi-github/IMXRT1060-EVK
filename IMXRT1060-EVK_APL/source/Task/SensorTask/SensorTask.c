@@ -33,7 +33,7 @@
 #include "SensorTask/SensorTask.h"
 #include "OSResource.h"
 #include "FXOS8700/DrvFXOS8700.h"
-#include "mimiclib/source/mimiclib.h"
+#include "mimiclib.h"
 
 static int16_t s_ai16Accel[3];
 static int16_t s_ai16Mag[3];

@@ -34,7 +34,7 @@
 #include "board.h"
 #include "fsl_lpi2c.h"
 #include "fsl_lpi2c_freertos.h"
-#include "mimiclib/source/mimiclib.h"
+#include "mimiclib.h"
 
 /*! @brief PCA9685 I2C address. */
 #define PCA9685_I2C_ADDRESS (0x40)

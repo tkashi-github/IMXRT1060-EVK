@@ -31,7 +31,7 @@
  */
 #include "Task/LanTask/LanTask.h"
 #include "board.h"
-#include "mimiclib/source/mimiclib.h"
+#include "mimiclib.h"
 #include "pin_mux.h"
 #include "clock_config.h"
 #include "fsl_gpio.h"

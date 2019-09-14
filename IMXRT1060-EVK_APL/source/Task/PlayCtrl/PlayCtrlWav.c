@@ -29,7 +29,7 @@
  * - 2019/06/13: Takashi Kashiwagi: v0.1 for IMXRT1060-EVK
  */
 #include "PlayCtrl/PlayCtrlWav.h"
-#include "mimiclib/source/mimiclib.h"
+#include "mimiclib.h"
 
 static uint32_t s_u32RemainSize = 0;
 static FIL s_filPlayWav;

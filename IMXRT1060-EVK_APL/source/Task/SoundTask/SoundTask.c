@@ -31,7 +31,7 @@
  */
 #include "SoundTask/SoundTask.h"
 #include "board.h"
-#include "mimiclib/source/mimiclib.h"
+#include "mimiclib.h"
 #include "ff.h"
 #include "common/common.h"
 #include "AudioFile/wav/wav.h"

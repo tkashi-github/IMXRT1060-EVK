@@ -32,7 +32,7 @@
  */
 #include "common/common.h"
 #include "board.h"
-#include "mimiclib/source/mimiclib.h"
+#include "mimiclib.h"
 #include "ff.h"
 #include "pin_mux.h"
 #include "fsl_gpio.h"

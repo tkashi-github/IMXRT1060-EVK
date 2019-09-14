@@ -32,7 +32,7 @@
  */
 #include "common/update.h"
 #include "board.h"
-#include "mimiclib/source/mimiclib.h"
+#include "mimiclib.h"
 #include "ff.h"
 
 #include "SPIFlash/SPIFlash.h"

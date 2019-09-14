@@ -41,7 +41,7 @@
 #include "pin_mux.h"
 #include "board.h"
 #include "clock_config.h"
-#include "mimiclib/source/mimiclib.h"
+#include "mimiclib.h"
 #include "SoundTask/SoundTask.h"
 
 #define kOverSampleRate (384U)

@@ -31,7 +31,7 @@
  */
 #include "StorageTask/StorageTask.h"
 #include "board.h"
-#include "mimiclib/source/mimiclib.h"
+#include "mimiclib.h"
 #include "common/common.h"
 #include "fsl_sd.h"
 #include "ff.h"

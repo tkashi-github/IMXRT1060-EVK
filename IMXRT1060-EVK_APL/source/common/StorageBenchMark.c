@@ -32,7 +32,7 @@
  */
 #include "common/StorageBenchMark.h"
 #include "board.h"
-#include "mimiclib/source/mimiclib.h"
+#include "mimiclib.h"
 #include "ff.h"
 
 #include <stdio.h>

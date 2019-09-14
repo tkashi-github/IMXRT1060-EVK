@@ -14,7 +14,7 @@
 #include "fsl_wm8960.h"
 #endif
 #include "fsl_iomuxc.h"
-#include "mimiclib/source/mimiclib.h"
+#include "mimiclib.h"
 
 /*******************************************************************************
  * Variables

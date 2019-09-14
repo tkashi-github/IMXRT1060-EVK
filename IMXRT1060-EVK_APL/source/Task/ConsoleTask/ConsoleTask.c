@@ -35,7 +35,7 @@
 #include "version.h"
 #include "ConsoleCmd.h"
 
-#include "mimiclib/source/mimiclib.h"
+#include "mimiclib.h"
 #include "UART/DrvLPUART.h"
 #include <string.h>
 
@@ -69,16 +69,16 @@ void ConsoleTask(void const *argument){
 		uint32_t argc;
 		char *argv[16];
 		char *ctx = NULL;
-
+		uint32_t BufSize = 2048;
 		/** Waiting Return Code */
 		mimic_gets(szBuf, 512);
 		
 		/** Split Command and argments */
 		argc = 0u;
-		argv[argc] = mimic_strtok(szBuf, 2048, " ", sizeof(" "), &ctx);
+		argv[argc] = mimic_strtok(szBuf, &BufSize, " ", sizeof(" "), &ctx);
     	while (argv[argc] != NULL) {
 			argc++;
-			argv[argc] = mimic_strtok(NULL, 2048, " ", sizeof(" "), &ctx);
+			argv[argc] = mimic_strtok(NULL, &BufSize, " ", sizeof(" "), &ctx);
 			if(argc >= 15u){
 				break;
 			}
