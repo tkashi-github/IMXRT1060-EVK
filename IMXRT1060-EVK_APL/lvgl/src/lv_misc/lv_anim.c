@@ -39,8 +39,8 @@ static bool anim_ready_handler(lv_anim_t * a);
 /**********************
  *  STATIC VARIABLES
  **********************/
-static uint32_t last_task_run;
-static bool anim_list_changed;
+LV_VAL_MISC_ANIME_ATTR static uint32_t last_task_run;
+LV_VAL_MISC_ANIME_ATTR static bool anim_list_changed;
 
 /**********************
  *      MACROS
@@ -53,7 +53,7 @@ static bool anim_list_changed;
 /**
  * Init. the animation module
  */
-void lv_anim_core_init(void)
+LV_FUNC_MISC_ANIME_ATTR void lv_anim_core_init(void)
 {
     lv_ll_init(&LV_GC_ROOT(_lv_anim_ll), sizeof(lv_anim_t));
     last_task_run = lv_tick_get();
@@ -69,7 +69,7 @@ void lv_anim_core_init(void)
  * lv_anim_craete(&a);
  * @param a pointer to an `lv_anim_t` variable to initialize
  */
-void lv_anim_init(lv_anim_t * a)
+LV_FUNC_MISC_ANIME_ATTR void lv_anim_init(lv_anim_t * a)
 {
     memset(a, 0, sizeof(lv_anim_t));
     a->time    = 500;
@@ -81,7 +81,7 @@ void lv_anim_init(lv_anim_t * a)
  * Create an animation
  * @param a an initialized 'anim_t' variable. Not required after call.
  */
-void lv_anim_create(lv_anim_t * a)
+LV_FUNC_MISC_ANIME_ATTR void lv_anim_create(lv_anim_t * a)
 {
     LV_LOG_TRACE("animation create started")
     /* Do not let two animations for the  same 'var' with the same 'fp'*/
@@ -113,7 +113,7 @@ void lv_anim_create(lv_anim_t * a)
  *           or NULL to delete all the animations of 'var'
  * @return true: at least 1 animation is deleted, false: no animation is deleted
  */
-bool lv_anim_del(void * var, lv_anim_exec_xcb_t exec_cb)
+LV_FUNC_MISC_ANIME_ATTR bool lv_anim_del(void * var, lv_anim_exec_xcb_t exec_cb)
 {
     lv_anim_t * a;
     lv_anim_t * a_next;
@@ -141,7 +141,7 @@ bool lv_anim_del(void * var, lv_anim_exec_xcb_t exec_cb)
  * Get the number of currently running animations
  * @return the number of running animations
  */
-uint16_t lv_anim_count_running(void)
+LV_FUNC_MISC_ANIME_ATTR uint16_t lv_anim_count_running(void)
 {
     uint16_t cnt = 0;
     lv_anim_t * a;
@@ -157,7 +157,7 @@ uint16_t lv_anim_count_running(void)
  * @param end end value of the animation
  * @return the required time [ms] for the animation with the given parameters
  */
-uint16_t lv_anim_speed_to_time(uint16_t speed, lv_anim_value_t start, lv_anim_value_t end)
+LV_FUNC_MISC_ANIME_ATTR uint16_t lv_anim_speed_to_time(uint16_t speed, lv_anim_value_t start, lv_anim_value_t end)
 {
     int32_t d     = LV_MATH_ABS((int32_t)start - end);
     uint32_t time = (int32_t)((int32_t)(d * 1000) / speed);
@@ -176,7 +176,7 @@ uint16_t lv_anim_speed_to_time(uint16_t speed, lv_anim_value_t start, lv_anim_va
  * @param a pointer to an animation
  * @return the current value to set
  */
-lv_anim_value_t lv_anim_path_linear(const lv_anim_t * a)
+LV_FUNC_MISC_ANIME_ATTR lv_anim_value_t lv_anim_path_linear(const lv_anim_t * a)
 {
     /*Calculate the current step*/
     uint32_t step;
@@ -201,7 +201,7 @@ lv_anim_value_t lv_anim_path_linear(const lv_anim_t * a)
  * @param a pointer to an animation
  * @return the current value to set
  */
-lv_anim_value_t lv_anim_path_ease_in(const lv_anim_t * a)
+LV_FUNC_MISC_ANIME_ATTR lv_anim_value_t lv_anim_path_ease_in(const lv_anim_t * a)
 {
     /*Calculate the current step*/
     uint32_t t;
@@ -225,7 +225,7 @@ lv_anim_value_t lv_anim_path_ease_in(const lv_anim_t * a)
  * @param a pointer to an animation
  * @return the current value to set
  */
-lv_anim_value_t lv_anim_path_ease_out(const lv_anim_t * a)
+LV_FUNC_MISC_ANIME_ATTR lv_anim_value_t lv_anim_path_ease_out(const lv_anim_t * a)
 {
     /*Calculate the current step*/
 
@@ -250,7 +250,7 @@ lv_anim_value_t lv_anim_path_ease_out(const lv_anim_t * a)
  * @param a pointer to an animation
  * @return the current value to set
  */
-lv_anim_value_t lv_anim_path_ease_in_out(const lv_anim_t * a)
+LV_FUNC_MISC_ANIME_ATTR lv_anim_value_t lv_anim_path_ease_in_out(const lv_anim_t * a)
 {
     /*Calculate the current step*/
 
@@ -275,7 +275,7 @@ lv_anim_value_t lv_anim_path_ease_in_out(const lv_anim_t * a)
  * @param a pointer to an animation
  * @return the current value to set
  */
-lv_anim_value_t lv_anim_path_overshoot(const lv_anim_t * a)
+LV_FUNC_MISC_ANIME_ATTR lv_anim_value_t lv_anim_path_overshoot(const lv_anim_t * a)
 {
     /*Calculate the current step*/
 
@@ -300,7 +300,7 @@ lv_anim_value_t lv_anim_path_overshoot(const lv_anim_t * a)
  * @param a pointer to an animation
  * @return the current value to set
  */
-lv_anim_value_t lv_anim_path_bounce(const lv_anim_t * a)
+LV_FUNC_MISC_ANIME_ATTR lv_anim_value_t lv_anim_path_bounce(const lv_anim_t * a)
 {
     /*Calculate the current step*/
     uint32_t t;
@@ -358,7 +358,7 @@ lv_anim_value_t lv_anim_path_bounce(const lv_anim_t * a)
  * @param a pointer to an animation
  * @return the current value to set
  */
-lv_anim_value_t lv_anim_path_step(const lv_anim_t * a)
+LV_FUNC_MISC_ANIME_ATTR lv_anim_value_t lv_anim_path_step(const lv_anim_t * a)
 {
     if(a->act_time >= a->time)
         return a->end;
@@ -374,7 +374,7 @@ lv_anim_value_t lv_anim_path_step(const lv_anim_t * a)
  * Periodically handle the animations.
  * @param param unused
  */
-static void anim_task(lv_task_t * param)
+LV_FUNC_MISC_ANIME_ATTR static void anim_task(lv_task_t * param)
 {
     (void)param;
 
@@ -431,7 +431,7 @@ static void anim_task(lv_task_t * param)
  * @param a pointer to an animation descriptor
  * @return true: animation delete occurred nnd the `LV_GC_ROOT(_lv_anim_ll)` has changed
  * */
-static bool anim_ready_handler(lv_anim_t * a)
+LV_FUNC_MISC_ANIME_ATTR static bool anim_ready_handler(lv_anim_t * a)
 {
 
     /*Delete the animation if

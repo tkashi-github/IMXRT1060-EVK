@@ -35,10 +35,10 @@ static bool lv_task_exec(lv_task_t * task);
 /**********************
  *  STATIC VARIABLES
  **********************/
-static bool lv_task_run  = false;
-static uint8_t idle_last = 0;
-static bool task_deleted;
-static bool task_created;
+LV_VAL_MISC_TASK_ATTR static bool lv_task_run  = false;
+LV_VAL_MISC_TASK_ATTR static uint8_t idle_last = 0;
+LV_VAL_MISC_TASK_ATTR static bool task_deleted;
+LV_VAL_MISC_TASK_ATTR static bool task_created;
 
 /**********************
  *      MACROS
@@ -51,7 +51,7 @@ static bool task_created;
 /**
  * Init the lv_task module
  */
-void lv_task_core_init(void)
+LV_FUNC_MISC_TASK_ATTR void lv_task_core_init(void)
 {
     lv_ll_init(&LV_GC_ROOT(_lv_task_ll), sizeof(lv_task_t));
 
@@ -162,7 +162,7 @@ LV_ATTRIBUTE_TASK_HANDLER void lv_task_handler(void)
  * `lv_task_set_cb` and `lv_task_set_period`
  * @return pointer to the craeted task
  */
-lv_task_t * lv_task_create_basic(void)
+LV_FUNC_MISC_TASK_ATTR lv_task_t * lv_task_create_basic(void)
 {
     lv_task_t * new_task = NULL;
     lv_task_t * tmp;
@@ -220,7 +220,7 @@ lv_task_t * lv_task_create_basic(void)
  * @param user_data custom parameter
  * @return pointer to the new task
  */
-lv_task_t * lv_task_create(lv_task_cb_t task_cb, uint32_t period, lv_task_prio_t prio, void * user_data)
+LV_FUNC_MISC_TASK_ATTR lv_task_t * lv_task_create(lv_task_cb_t task_cb, uint32_t period, lv_task_prio_t prio, void * user_data)
 {
     lv_task_t * new_task = lv_task_create_basic();
     lv_mem_assert(new_task);
@@ -239,7 +239,7 @@ lv_task_t * lv_task_create(lv_task_cb_t task_cb, uint32_t period, lv_task_prio_t
  * @param task pointer to a task
  * @param task_cb teh function to call periodically
  */
-void lv_task_set_cb(lv_task_t * task, lv_task_cb_t task_cb)
+LV_FUNC_MISC_TASK_ATTR void lv_task_set_cb(lv_task_t * task, lv_task_cb_t task_cb)
 {
     task->task_cb = task_cb;
 }
@@ -248,7 +248,7 @@ void lv_task_set_cb(lv_task_t * task, lv_task_cb_t task_cb)
  * Delete a lv_task
  * @param task pointer to task created by task
  */
-void lv_task_del(lv_task_t * task)
+LV_FUNC_MISC_TASK_ATTR void lv_task_del(lv_task_t * task)
 {
     lv_ll_rem(&LV_GC_ROOT(_lv_task_ll), task);
 
@@ -262,7 +262,7 @@ void lv_task_del(lv_task_t * task)
  * @param task pointer to a lv_task
  * @param prio the new priority
  */
-void lv_task_set_prio(lv_task_t * task, lv_task_prio_t prio)
+LV_FUNC_MISC_TASK_ATTR void lv_task_set_prio(lv_task_t * task, lv_task_prio_t prio)
 {
     if(task->prio == prio) return;
 
@@ -289,7 +289,7 @@ void lv_task_set_prio(lv_task_t * task, lv_task_prio_t prio)
  * @param task pointer to a lv_task
  * @param period the new period
  */
-void lv_task_set_period(lv_task_t * task, uint32_t period)
+LV_FUNC_MISC_TASK_ATTR void lv_task_set_period(lv_task_t * task, uint32_t period)
 {
     task->period = period;
 }
@@ -298,7 +298,7 @@ void lv_task_set_period(lv_task_t * task, uint32_t period)
  * Make a lv_task ready. It will not wait its period.
  * @param task pointer to a lv_task.
  */
-void lv_task_ready(lv_task_t * task)
+LV_FUNC_MISC_TASK_ATTR void lv_task_ready(lv_task_t * task)
 {
     task->last_run = lv_tick_get() - task->period - 1;
 }
@@ -307,7 +307,7 @@ void lv_task_ready(lv_task_t * task)
  * Delete the lv_task after one call
  * @param task pointer to a lv_task.
  */
-void lv_task_once(lv_task_t * task)
+LV_FUNC_MISC_TASK_ATTR void lv_task_once(lv_task_t * task)
 {
     task->once = 1;
 }
@@ -317,7 +317,7 @@ void lv_task_once(lv_task_t * task)
  * It will be called the previously set period milliseconds later.
  * @param task pointer to a lv_task.
  */
-void lv_task_reset(lv_task_t * task)
+LV_FUNC_MISC_TASK_ATTR void lv_task_reset(lv_task_t * task)
 {
     task->last_run = lv_tick_get();
 }
@@ -326,7 +326,7 @@ void lv_task_reset(lv_task_t * task)
  * Enable or disable the whole lv_task handling
  * @param en: true: lv_task handling is running, false: lv_task handling is suspended
  */
-void lv_task_enable(bool en)
+LV_FUNC_MISC_TASK_ATTR void lv_task_enable(bool en)
 {
     lv_task_run = en;
 }
@@ -335,7 +335,7 @@ void lv_task_enable(bool en)
  * Get idle percentage
  * @return the lv_task idle in percentage
  */
-uint8_t lv_task_get_idle(void)
+LV_FUNC_MISC_TASK_ATTR uint8_t lv_task_get_idle(void)
 {
     return idle_last;
 }
@@ -349,7 +349,7 @@ uint8_t lv_task_get_idle(void)
  * @param task pointer to lv_task
  * @return true: execute, false: not executed
  */
-static bool lv_task_exec(lv_task_t * task)
+LV_FUNC_MISC_TASK_ATTR static bool lv_task_exec(lv_task_t * task)
 {
     bool exec = false;
 

@@ -36,7 +36,7 @@
 /**********************
  *  STATIC VARIABLES
  **********************/
-static lv_disp_t * disp_def;
+LV_VAL_HAL_DISP_ATTR static lv_disp_t * disp_def;
 
 /**********************
  *      MACROS
@@ -52,7 +52,7 @@ static lv_disp_t * disp_def;
  * After it you can set the fields.
  * @param driver pointer to driver variable to initialize
  */
-void lv_disp_drv_init(lv_disp_drv_t * driver)
+LV_FUNC_HAL_DISP_ATTR void lv_disp_drv_init(lv_disp_drv_t * driver)
 {
     memset(driver, 0, sizeof(lv_disp_drv_t));
 
@@ -98,7 +98,7 @@ void lv_disp_drv_init(lv_disp_drv_t * driver)
  * sent. Set to `NULL` if unused.
  * @param size_in_px_cnt size of the `buf1` and `buf2` in pixel count.
  */
-void lv_disp_buf_init(lv_disp_buf_t * disp_buf, void * buf1, void * buf2, uint32_t size_in_px_cnt)
+LV_FUNC_HAL_DISP_ATTR void lv_disp_buf_init(lv_disp_buf_t * disp_buf, void * buf1, void * buf2, uint32_t size_in_px_cnt)
 {
     memset(disp_buf, 0, sizeof(lv_disp_buf_t));
 
@@ -114,7 +114,7 @@ void lv_disp_buf_init(lv_disp_buf_t * disp_buf, void * buf1, void * buf2, uint32
  * @param driver pointer to an initialized 'lv_disp_drv_t' variable (can be local variable)
  * @return pointer to the new display or NULL on error
  */
-lv_disp_t * lv_disp_drv_register(lv_disp_drv_t * driver)
+LV_FUNC_HAL_DISP_ATTR lv_disp_t * lv_disp_drv_register(lv_disp_drv_t * driver)
 {
     lv_disp_t * disp = lv_ll_ins_head(&LV_GC_ROOT(_lv_disp_ll));
     if(!disp) {
@@ -160,7 +160,7 @@ lv_disp_t * lv_disp_drv_register(lv_disp_drv_t * driver)
  * @param disp pointer to a display. (return value of `lv_disp_drv_register`)
  * @param new_drv pointer to the new driver
  */
-void lv_disp_drv_update(lv_disp_t * disp, lv_disp_drv_t * new_drv)
+LV_FUNC_HAL_DISP_ATTR void lv_disp_drv_update(lv_disp_t * disp, lv_disp_drv_t * new_drv)
 {
     memcpy(&disp->driver, new_drv, sizeof(lv_disp_drv_t));
 
@@ -175,7 +175,7 @@ void lv_disp_drv_update(lv_disp_t * disp, lv_disp_drv_t * new_drv)
  * Remove a display
  * @param disp pointer to display
  */
-void lv_disp_remove(lv_disp_t * disp)
+LV_FUNC_HAL_DISP_ATTR void lv_disp_remove(lv_disp_t * disp)
 {
     bool was_default = false;
     if(disp == lv_disp_get_default()) was_default = true;
@@ -200,7 +200,7 @@ void lv_disp_remove(lv_disp_t * disp)
  * Set a default screen. The new screens will be created on it by default.
  * @param disp pointer to a display
  */
-void lv_disp_set_default(lv_disp_t * disp)
+LV_FUNC_HAL_DISP_ATTR void lv_disp_set_default(lv_disp_t * disp)
 {
     disp_def = disp;
 }
@@ -209,7 +209,7 @@ void lv_disp_set_default(lv_disp_t * disp)
  * Get the default display
  * @return pointer to the default display
  */
-lv_disp_t * lv_disp_get_default(void)
+LV_FUNC_HAL_DISP_ATTR lv_disp_t * lv_disp_get_default(void)
 {
     return disp_def;
 }
@@ -219,7 +219,7 @@ lv_disp_t * lv_disp_get_default(void)
  * @param disp pointer to a display (NULL to use the default display)
  * @return the horizontal resolution of the display
  */
-lv_coord_t lv_disp_get_hor_res(lv_disp_t * disp)
+LV_FUNC_HAL_DISP_ATTR lv_coord_t lv_disp_get_hor_res(lv_disp_t * disp)
 {
     if(disp == NULL) disp = lv_disp_get_default();
 
@@ -234,7 +234,7 @@ lv_coord_t lv_disp_get_hor_res(lv_disp_t * disp)
  * @param disp pointer to a display (NULL to use the default display)
  * @return the vertical resolution of the display
  */
-lv_coord_t lv_disp_get_ver_res(lv_disp_t * disp)
+LV_FUNC_HAL_DISP_ATTR lv_coord_t lv_disp_get_ver_res(lv_disp_t * disp)
 {
     if(disp == NULL) disp = lv_disp_get_default();
 
@@ -249,7 +249,7 @@ lv_coord_t lv_disp_get_ver_res(lv_disp_t * disp)
  * @param disp pointer to a display (NULL to use the default display)
  * @return true: anti-aliasing is enabled; false: disabled
  */
-bool lv_disp_get_antialiasing(lv_disp_t * disp)
+LV_FUNC_HAL_DISP_ATTR bool lv_disp_get_antialiasing(lv_disp_t * disp)
 {
 #if LV_ANTIALIAS == 0
     return false;
@@ -282,7 +282,7 @@ LV_ATTRIBUTE_FLUSH_READY void lv_disp_flush_ready(lv_disp_drv_t * disp_drv)
  * @param disp pointer to the current display. NULL to initialize.
  * @return the next display or NULL if no more. Give the first display when the parameter is NULL
  */
-lv_disp_t * lv_disp_get_next(lv_disp_t * disp)
+LV_FUNC_HAL_DISP_ATTR lv_disp_t * lv_disp_get_next(lv_disp_t * disp)
 {
     if(disp == NULL)
         return lv_ll_get_head(&LV_GC_ROOT(_lv_disp_ll));
@@ -295,7 +295,7 @@ lv_disp_t * lv_disp_get_next(lv_disp_t * disp)
  * @param disp pointer to a display
  * @return pointer to the internal buffers
  */
-lv_disp_buf_t * lv_disp_get_buf(lv_disp_t * disp)
+LV_FUNC_HAL_DISP_ATTR lv_disp_buf_t * lv_disp_get_buf(lv_disp_t * disp)
 {
     return disp->driver.buffer;
 }
@@ -304,7 +304,7 @@ lv_disp_buf_t * lv_disp_get_buf(lv_disp_t * disp)
  * Get the number of areas in the buffer
  * @return number of invalid areas
  */
-uint16_t lv_disp_get_inv_buf_size(lv_disp_t * disp)
+LV_FUNC_HAL_DISP_ATTR uint16_t lv_disp_get_inv_buf_size(lv_disp_t * disp)
 {
     return disp->inv_p;
 }
@@ -313,7 +313,7 @@ uint16_t lv_disp_get_inv_buf_size(lv_disp_t * disp)
  * Pop (delete) the last 'num' invalidated areas from the buffer
  * @param num number of areas to delete
  */
-void lv_disp_pop_from_inv_buf(lv_disp_t * disp, uint16_t num)
+LV_FUNC_HAL_DISP_ATTR void lv_disp_pop_from_inv_buf(lv_disp_t * disp, uint16_t num)
 {
 
     if(disp->inv_p < num)
@@ -327,7 +327,7 @@ void lv_disp_pop_from_inv_buf(lv_disp_t * disp, uint16_t num)
  * @param disp pointer to to display to check
  * @return true: double buffered; false: not double buffered
  */
-bool lv_disp_is_double_buf(lv_disp_t * disp)
+LV_FUNC_HAL_DISP_ATTR bool lv_disp_is_double_buf(lv_disp_t * disp)
 {
     if(disp->driver.buffer->buf1 && disp->driver.buffer->buf2)
         return true;
@@ -341,7 +341,7 @@ bool lv_disp_is_double_buf(lv_disp_t * disp)
  * @param disp pointer to to display to check
  * @return true: double buffered; false: not double buffered
  */
-bool lv_disp_is_true_double_buf(lv_disp_t * disp)
+LV_FUNC_HAL_DISP_ATTR bool lv_disp_is_true_double_buf(lv_disp_t * disp)
 {
     uint32_t scr_size = disp->driver.hor_res * disp->driver.ver_res;
 

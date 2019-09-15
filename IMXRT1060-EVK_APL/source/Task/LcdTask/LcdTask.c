@@ -86,9 +86,9 @@ DefALLOCATE_ITCM static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_
     lv_disp_flush_ready(disp_drv);
 }
 
-static uint32_t s_u32PosX = 0;
-static uint32_t s_u32PosY = 0;
-static touch_event_t s_enLastTouchEvent = kTouch_Up;
+DefALLOCATE_DATA_DTCM static uint32_t s_u32PosX = 0;
+DefALLOCATE_DATA_DTCM static uint32_t s_u32PosY = 0;
+DefALLOCATE_DATA_DTCM static touch_event_t s_enLastTouchEvent = kTouch_Up;
 
 /* Will be called by the library to read the touchpad */
 DefALLOCATE_ITCM static bool touchpad_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
@@ -153,9 +153,8 @@ void LV_Init(void)
 	lv_indev_drv_register(&indev_drv);		/*Finally register the driver*/
 }
 
-static lv_obj_t *slider1;
-
-static lv_obj_t *vol_slider;
+DefALLOCATE_DATA_DTCM static lv_obj_t *slider1;
+DefALLOCATE_DATA_DTCM static lv_obj_t *vol_slider;
 
 #include "Task/ExtLedCtrlTask/ExtLedCtrlTask.h"
 DefALLOCATE_ITCM static void slider_action(lv_obj_t * slider, lv_event_t event)

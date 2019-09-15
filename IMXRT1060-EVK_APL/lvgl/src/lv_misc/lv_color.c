@@ -43,7 +43,7 @@
  * @param v value [0..100]
  * @return the given RGB color in RGB (with LV_COLOR_DEPTH depth)
  */
-lv_color_t lv_color_hsv_to_rgb(uint16_t h, uint8_t s, uint8_t v)
+LV_FUNC_MISC_COLOR_ATTR lv_color_t lv_color_hsv_to_rgb(uint16_t h, uint8_t s, uint8_t v)
 {
     h = (uint32_t)((uint32_t)h * 255) / 360;
     s = (uint16_t)((uint16_t)s * 255) / 100;
@@ -111,7 +111,7 @@ lv_color_t lv_color_hsv_to_rgb(uint16_t h, uint8_t s, uint8_t v)
  * @param b blue
  * @return the given RGB color n HSV
  */
-lv_color_hsv_t lv_color_rgb_to_hsv(uint8_t r, uint8_t g, uint8_t b)
+LV_FUNC_MISC_COLOR_ATTR lv_color_hsv_t lv_color_rgb_to_hsv(uint8_t r, uint8_t g, uint8_t b)
 {
     lv_color_hsv_t hsv;
     uint8_t rgbMin, rgbMax;

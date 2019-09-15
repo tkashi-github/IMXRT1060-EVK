@@ -14,6 +14,7 @@
 /* clang-format off */
 
 #include <stdint.h>
+#define LV_ATTRIBUTE_FLUSH_READY __attribute__((section(".ramfunc.$SRAM_ITC")))
 
 #define LV_FUNC_ATTR  __attribute__((section(".ramfunc.$SRAM_ITC")))
 #define LV_FUNC_CORE_DISP_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
@@ -34,12 +35,29 @@
 #define LV_FUNC_DRAW_IMAGE_CACHE_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
 #define LV_FUNC_DRAW_IMAGE_DECORDER_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
 
+#define LV_FUNC_HAL_DISP_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_HAL_INDEV_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_HAL_TICK_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+
+#define LV_FUNC_MISC_ANIME_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_MISC_AREA_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_MISC_ASYNC_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_MISC_CIRC_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_MISC_COLOR_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
 #define LV_FUNC_MISC_LL_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_MISC_MATH_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
 #define LV_FUNC_MISC_MEM_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_MISC_TASK_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
 
 
 #define LV_VAL_DRAW_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_LL_MEM_ATTR __attribute__((section(".bss.$SRAM_DTC"))) 
+#define LV_VAL_LL_MEM_ATTR __attribute__((section(".bss.$SRAM_DTC")))
+#define LV_VAL_HAL_DISP_ATTR __attribute__((section(".bss.$SRAM_DTC")))
+#define LV_VAL_HAL_TICK_ATTR __attribute__((section(".bss.$SRAM_DTC")))
+#define LV_VAL_MISC_ANIME_ATTR __attribute__((section(".bss.$SRAM_DTC")))
+#define LV_VAL_MISC_MATH_ATTR __attribute__((section(".data.$SRAM_DTC")))
+#define LV_VAL_MISC_TASK_ATTR __attribute__((section(".bss.$SRAM_DTC")))
+
 /*====================
    Graphical settings
  *====================*/
@@ -204,10 +222,10 @@ typedef void * lv_img_decoder_user_data_t;
  *  Compiler settings
  *====================*/
 /* Define a custom attribute to `lv_tick_inc` function */
-#define LV_ATTRIBUTE_TICK_INC
+#define LV_ATTRIBUTE_TICK_INC __attribute__((section(".ramfunc.$SRAM_ITC")))
 
 /* Define a custom attribute to `lv_task_handler` function */
-#define LV_ATTRIBUTE_TASK_HANDLER
+#define LV_ATTRIBUTE_TASK_HANDLER __attribute__((section(".ramfunc.$SRAM_ITC")))
 
 /* With size optimization (-Os) the compiler might not align data to
  * 4 or 8 byte boundary. This alignment will be explicitly applied where needed.

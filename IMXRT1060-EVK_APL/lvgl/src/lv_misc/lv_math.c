@@ -6,6 +6,7 @@
 /*********************
  *      INCLUDES
  *********************/
+#include "lv_conf.h"
 #include "lv_math.h"
 #include <stdbool.h>
 #include <stdlib.h>
@@ -25,7 +26,7 @@
 /**********************
  *  STATIC VARIABLES
  **********************/
-static int16_t sin0_90_table[] = {
+LV_VAL_MISC_MATH_ATTR static int16_t sin0_90_table[] = {
     0,     572,   1144,  1715,  2286,  2856,  3425,  3993,  4560,  5126,  5690,  6252,  6813,  7371,  7927,  8481,
     9032,  9580,  10126, 10668, 11207, 11743, 12275, 12803, 13328, 13848, 14364, 14876, 15383, 15886, 16383, 16876,
     17364, 17846, 18323, 18794, 19260, 19720, 20173, 20621, 21062, 21497, 21925, 22347, 22762, 23170, 23571, 23964,
@@ -46,7 +47,7 @@ static int16_t sin0_90_table[] = {
  * @param angle
  * @return sinus of 'angle'. sin(-90) = -32767, sin(90) = 32767
  */
-int16_t lv_trigo_sin(int16_t angle)
+LV_FUNC_MISC_MATH_ATTR int16_t lv_trigo_sin(int16_t angle)
 {
     int16_t ret = 0;
     angle       = angle % 360;
@@ -78,7 +79,7 @@ int16_t lv_trigo_sin(int16_t angle)
  * @param u3 end values in range of [0..LV_BEZIER_VAL_MAX]
  * @return the value calculated from the given parameters in range of [0..LV_BEZIER_VAL_MAX]
  */
-int32_t lv_bezier3(uint32_t t, int32_t u0, int32_t u1, int32_t u2, int32_t u3)
+LV_FUNC_MISC_MATH_ATTR int32_t lv_bezier3(uint32_t t, int32_t u0, int32_t u1, int32_t u2, int32_t u3)
 {
     uint32_t t_rem  = 1024 - t;
     uint32_t t_rem2 = (t_rem * t_rem) >> 10;
