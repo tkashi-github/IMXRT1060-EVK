@@ -31,6 +31,7 @@
 			"${workspaceFolder}/fatfs/fatfs_include",
 			"${workspaceFolder}/amazon-freertos/include",
 			"${workspaceFolder}/xip",
+			"${workspaceFolder}/../mimiclib/source",
 		],
 		"files.associations": {
 			"mimiclib.h": "c",

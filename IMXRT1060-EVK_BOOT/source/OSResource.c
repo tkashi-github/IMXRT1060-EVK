@@ -147,7 +147,7 @@ DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xLPUARTTxSemaphoreBu
 DefALLOCATE_BSS_DTCM alignas(32) static StaticSemaphore_t s_xStorageTaskMsgBuffer;
 
 
-static stBinarySemaphoreTable_t s_stBinarySemaphoreTable[] = {
+const static stBinarySemaphoreTable_t s_stBinarySemaphoreTable[] = {
 	{&g_bsIdLPUARTRxSemaphore[enLPUART1], {"BS_LPUART1RX", 0, &s_xLPUARTRxSemaphoreBuffer[enLPUART1], sizeof(StaticSemaphore_t)}, 1, 1},
 	{&g_bsIdLPUARTRxSemaphore[enLPUART2], {"BS_LPUART2RX", 0, &s_xLPUARTRxSemaphoreBuffer[enLPUART2], sizeof(StaticSemaphore_t)}, 1, 1},
 	{&g_bsIdLPUARTRxSemaphore[enLPUART3], {"BS_LPUART3RX", 0, &s_xLPUARTRxSemaphoreBuffer[enLPUART3], sizeof(StaticSemaphore_t)}, 1, 1},
