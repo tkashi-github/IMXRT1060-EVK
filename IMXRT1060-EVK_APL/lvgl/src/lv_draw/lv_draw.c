@@ -35,7 +35,7 @@
 /**********************
  *  STATIC VARIABLES
  **********************/
-static uint32_t draw_buf_size = 0;
+LV_VAL_DRAW_ATTR static uint32_t draw_buf_size = 0;
 
 /**********************
  *      MACROS
@@ -50,7 +50,7 @@ static uint32_t draw_buf_size = 0;
  * Be careful to not use the buffer while other processes are using it.
  * @param size the required size
  */
-void * lv_draw_get_buf(uint32_t size)
+LV_FUNC_DRAW_ATTR void * lv_draw_get_buf(uint32_t size)
 {
     if(size <= draw_buf_size) return LV_GC_ROOT(_lv_draw_buf);
 
@@ -72,7 +72,7 @@ void * lv_draw_get_buf(uint32_t size)
 /**
  * Free the draw buffer
  */
-void lv_draw_free_buf(void)
+LV_FUNC_DRAW_ATTR void lv_draw_free_buf(void)
 {
     if(LV_GC_ROOT(_lv_draw_buf)) {
         lv_mem_free(LV_GC_ROOT(_lv_draw_buf));
@@ -90,7 +90,7 @@ void lv_draw_free_buf(void)
  * @param base_opa the base opacity
  * @return the opacity of the given pixel
  */
-lv_opa_t lv_draw_aa_get_opa(lv_coord_t seg, lv_coord_t px_id, lv_opa_t base_opa)
+LV_FUNC_DRAW_ATTR lv_opa_t lv_draw_aa_get_opa(lv_coord_t seg, lv_coord_t px_id, lv_opa_t base_opa)
 {
     /* How to calculate the opacity of pixels on the edges which makes the anti-aliasing?
      * For example we have a line like this (y = -0.5 * x):
@@ -140,7 +140,7 @@ lv_opa_t lv_draw_aa_get_opa(lv_coord_t seg, lv_coord_t px_id, lv_opa_t base_opa)
  * @param color color of pixels
  * @param opa maximum opacity
  */
-void lv_draw_aa_ver_seg(lv_coord_t x, lv_coord_t y, lv_coord_t length, const lv_area_t * mask, lv_color_t color,
+LV_FUNC_DRAW_ATTR void lv_draw_aa_ver_seg(lv_coord_t x, lv_coord_t y, lv_coord_t length, const lv_area_t * mask, lv_color_t color,
                         lv_opa_t opa)
 {
     bool aa_inv = false;
@@ -166,7 +166,7 @@ void lv_draw_aa_ver_seg(lv_coord_t x, lv_coord_t y, lv_coord_t length, const lv_
  * @param color color of pixels
  * @param opa maximum opacity
  */
-void lv_draw_aa_hor_seg(lv_coord_t x, lv_coord_t y, lv_coord_t length, const lv_area_t * mask, lv_color_t color,
+LV_FUNC_DRAW_ATTR void lv_draw_aa_hor_seg(lv_coord_t x, lv_coord_t y, lv_coord_t length, const lv_area_t * mask, lv_color_t color,
                         lv_opa_t opa)
 {
     bool aa_inv = false;

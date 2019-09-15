@@ -65,10 +65,10 @@ static void ent_trunc(lv_mem_ent_t * e, uint32_t size);
  *  STATIC VARIABLES
  **********************/
 #if LV_MEM_CUSTOM == 0
-static uint8_t * work_mem;
+LV_VAL_LL_MEM_ATTR static uint8_t * work_mem;
 #endif
 
-static uint32_t zero_mem; /*Give the address of this variable if 0 byte should be allocated*/
+LV_VAL_LL_MEM_ATTR static uint32_t zero_mem; /*Give the address of this variable if 0 byte should be allocated*/
 
 /**********************
  *      MACROS
@@ -81,7 +81,7 @@ static uint32_t zero_mem; /*Give the address of this variable if 0 byte should b
 /**
  * Initiaiize the dyn_mem module (work memory and other variables)
  */
-void lv_mem_init(void)
+LV_FUNC_MISC_MEM_ATTR  void lv_mem_init(void)
 {
 #if LV_MEM_CUSTOM == 0
 
@@ -105,7 +105,7 @@ void lv_mem_init(void)
  * @param size size of the memory to allocate in bytes
  * @return pointer to the allocated memory
  */
-void * lv_mem_alloc(uint32_t size)
+LV_FUNC_MISC_MEM_ATTR  void * lv_mem_alloc(uint32_t size)
 {
     if(size == 0) {
         return &zero_mem;
@@ -171,7 +171,7 @@ void * lv_mem_alloc(uint32_t size)
  * Free an allocated data
  * @param data pointer to an allocated memory
  */
-void lv_mem_free(const void * data)
+LV_FUNC_MISC_MEM_ATTR  void lv_mem_free(const void * data)
 {
     if(data == &zero_mem) return;
     if(data == NULL) return;
@@ -220,7 +220,7 @@ void lv_mem_free(const void * data)
 
 #if LV_ENABLE_GC == 0
 
-void * lv_mem_realloc(void * data_p, uint32_t new_size)
+LV_FUNC_MISC_MEM_ATTR  void * lv_mem_realloc(void * data_p, uint32_t new_size)
 {
     /*data_p could be previously freed pointer (in this case it is invalid)*/
     if(data_p != NULL) {
@@ -260,7 +260,7 @@ void * lv_mem_realloc(void * data_p, uint32_t new_size)
 
 #else /* LV_ENABLE_GC */
 
-void * lv_mem_realloc(void * data_p, uint32_t new_size)
+LV_FUNC_MISC_MEM_ATTR  void * lv_mem_realloc(void * data_p, uint32_t new_size)
 {
     void * new_p = LV_MEM_CUSTOM_REALLOC(data_p, new_size);
     if(new_p == NULL) LV_LOG_WARN("Couldn't allocate memory");
@@ -272,7 +272,7 @@ void * lv_mem_realloc(void * data_p, uint32_t new_size)
 /**
  * Join the adjacent free memory blocks
  */
-void lv_mem_defrag(void)
+LV_FUNC_MISC_MEM_ATTR  void lv_mem_defrag(void)
 {
 #if LV_MEM_CUSTOM == 0
     lv_mem_ent_t * e_free;
@@ -316,7 +316,7 @@ void lv_mem_defrag(void)
  * @param mon_p pointer to a dm_mon_p variable,
  *              the result of the analysis will be stored here
  */
-void lv_mem_monitor(lv_mem_monitor_t * mon_p)
+LV_FUNC_MISC_MEM_ATTR  void lv_mem_monitor(lv_mem_monitor_t * mon_p)
 {
     /*Init the data*/
     memset(mon_p, 0, sizeof(lv_mem_monitor_t));
@@ -354,7 +354,7 @@ void lv_mem_monitor(lv_mem_monitor_t * mon_p)
 
 #if LV_ENABLE_GC == 0
 
-uint32_t lv_mem_get_size(const void * data)
+LV_FUNC_MISC_MEM_ATTR  uint32_t lv_mem_get_size(const void * data)
 {
     if(data == NULL) return 0;
     if(data == &zero_mem) return 0;
@@ -383,7 +383,7 @@ uint32_t lv_mem_get_size(const void * data)
  * @param act_e pointer to an entry
  * @return pointer to an entry after 'act_e'
  */
-static lv_mem_ent_t * ent_get_next(lv_mem_ent_t * act_e)
+LV_FUNC_MISC_MEM_ATTR  static lv_mem_ent_t * ent_get_next(lv_mem_ent_t * act_e)
 {
     lv_mem_ent_t * next_e = NULL;
 
@@ -405,7 +405,7 @@ static lv_mem_ent_t * ent_get_next(lv_mem_ent_t * act_e)
  * @param size size of the new memory in bytes
  * @return pointer to the allocated memory or NULL if not enough memory in the entry
  */
-static void * ent_alloc(lv_mem_ent_t * e, uint32_t size)
+LV_FUNC_MISC_MEM_ATTR  static void * ent_alloc(lv_mem_ent_t * e, uint32_t size)
 {
     void * alloc = NULL;
 
@@ -428,7 +428,7 @@ static void * ent_alloc(lv_mem_ent_t * e, uint32_t size)
  * @param e Pointer to an entry
  * @param size new size in bytes
  */
-static void ent_trunc(lv_mem_ent_t * e, uint32_t size)
+LV_FUNC_MISC_MEM_ATTR  static void ent_trunc(lv_mem_ent_t * e, uint32_t size)
 {
 #ifdef LV_MEM_ENV64
     /*Round the size up to 8*/

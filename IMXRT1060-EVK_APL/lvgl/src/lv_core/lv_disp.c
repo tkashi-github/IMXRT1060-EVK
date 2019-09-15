@@ -39,7 +39,7 @@
  * screen)
  * @return pointer to the active screen object (loaded by 'lv_scr_load()')
  */
-lv_obj_t * lv_disp_get_scr_act(lv_disp_t * disp)
+LV_FUNC_CORE_DISP_ATTR lv_obj_t * lv_disp_get_scr_act(lv_disp_t * disp)
 {
     if(!disp) disp = lv_disp_get_default();
     if(!disp) {
@@ -54,7 +54,7 @@ lv_obj_t * lv_disp_get_scr_act(lv_disp_t * disp)
  * Make a screen active
  * @param scr pointer to a screen
  */
-void lv_disp_load_scr(lv_obj_t * scr)
+LV_FUNC_CORE_DISP_ATTR void lv_disp_load_scr(lv_obj_t * scr)
 {
     lv_disp_t * d = lv_obj_get_disp(scr);
 
@@ -68,7 +68,7 @@ void lv_disp_load_scr(lv_obj_t * scr)
  * @param disp pointer to display which top layer should be get. (NULL to use the default screen)
  * @return pointer to the top layer object  (transparent screen sized lv_obj)
  */
-lv_obj_t * lv_disp_get_layer_top(lv_disp_t * disp)
+LV_FUNC_CORE_DISP_ATTR lv_obj_t * lv_disp_get_layer_top(lv_disp_t * disp)
 {
     if(!disp) disp = lv_disp_get_default();
     if(!disp) {
@@ -85,7 +85,7 @@ lv_obj_t * lv_disp_get_layer_top(lv_disp_t * disp)
  * @param disp pointer to display which sys. layer  should be get. (NULL to use the default screen)
  * @return pointer to the sys layer object  (transparent screen sized lv_obj)
  */
-lv_obj_t * lv_disp_get_layer_sys(lv_disp_t * disp)
+LV_FUNC_CORE_DISP_ATTR lv_obj_t * lv_disp_get_layer_sys(lv_disp_t * disp)
 {
     if(!disp) disp = lv_disp_get_default();
     if(!disp) {
@@ -101,7 +101,7 @@ lv_obj_t * lv_disp_get_layer_sys(lv_disp_t * disp)
  * @param disp pointer to a display where to assign the screen
  * @param scr pointer to a screen object to assign
  */
-void lv_disp_assign_screen(lv_disp_t * disp, lv_obj_t * scr)
+LV_FUNC_CORE_DISP_ATTR void lv_disp_assign_screen(lv_disp_t * disp, lv_obj_t * scr)
 {
     if(lv_obj_get_parent(scr) != NULL) {
         LV_LOG_WARN("lv_disp_assign_screen: try to assign a non-screen object");
@@ -121,7 +121,7 @@ void lv_disp_assign_screen(lv_disp_t * disp, lv_obj_t * scr)
  * @param disp pointer to a display
  * @return pointer to the display refresher task. (NULL on error)
  */
-lv_task_t * lv_disp_get_refr_task(lv_disp_t * disp)
+LV_FUNC_CORE_DISP_ATTR lv_task_t * lv_disp_get_refr_task(lv_disp_t * disp)
 {
     if(!disp) disp = lv_disp_get_default();
     if(!disp) {
@@ -137,7 +137,7 @@ lv_task_t * lv_disp_get_refr_task(lv_disp_t * disp)
  * @param disp pointer to an display (NULL to get the overall smallest inactivity)
  * @return elapsed ticks (milliseconds) since the last activity
  */
-uint32_t lv_disp_get_inactive_time(const lv_disp_t * disp)
+LV_FUNC_CORE_DISP_ATTR uint32_t lv_disp_get_inactive_time(const lv_disp_t * disp)
 {
     if(!disp) disp = lv_disp_get_default();
     if(!disp) {
@@ -162,7 +162,7 @@ uint32_t lv_disp_get_inactive_time(const lv_disp_t * disp)
  * Manually trigger an activity on a display
  * @param disp pointer to an display (NULL to use the default display)
  */
-void lv_disp_trig_activity(lv_disp_t * disp)
+LV_FUNC_CORE_DISP_ATTR void lv_disp_trig_activity(lv_disp_t * disp)
 {
     if(!disp) disp = lv_disp_get_default();
     if(!disp) {

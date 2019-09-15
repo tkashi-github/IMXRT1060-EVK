@@ -64,7 +64,7 @@ lv_style_t lv_style_btn_ina;
 /**
  *  Init the basic styles
  */
-void lv_style_init(void)
+LV_FUNC_CORE_STYLE_ATTR void lv_style_init(void)
 {
     /* Not White/Black/Gray colors are created by HSV model with
      * HUE = 210*/
@@ -217,7 +217,7 @@ void lv_style_init(void)
  * @param dest pointer to the destination style
  * @param src pointer to the source style
  */
-void lv_style_copy(lv_style_t * dest, const lv_style_t * src)
+LV_FUNC_CORE_STYLE_ATTR void lv_style_copy(lv_style_t * dest, const lv_style_t * src)
 {
     memcpy(dest, src, sizeof(lv_style_t));
 }
@@ -229,7 +229,7 @@ void lv_style_copy(lv_style_t * dest, const lv_style_t * src)
  * @param res store the result style here
  * @param ratio the ratio of mix [0..256]; 0: `start` style; 256: `end` style
  */
-void lv_style_mix(const lv_style_t * start, const lv_style_t * end, lv_style_t * res, uint16_t ratio)
+LV_FUNC_CORE_STYLE_ATTR void lv_style_mix(const lv_style_t * start, const lv_style_t * end, lv_style_t * res, uint16_t ratio)
 {
     STYLE_ATTR_MIX(body.opa, ratio);
     STYLE_ATTR_MIX(body.radius, ratio);
@@ -276,7 +276,7 @@ void lv_style_mix(const lv_style_t * start, const lv_style_t * end, lv_style_t *
 
 #if LV_USE_ANIMATION
 
-void lv_style_anim_init(lv_anim_t * a)
+LV_FUNC_CORE_STYLE_ATTR void lv_style_anim_init(lv_anim_t * a)
 {
     lv_anim_init(a);
     a->start    = 0;
@@ -297,7 +297,7 @@ void lv_style_anim_init(lv_anim_t * a)
     a->var = (void *)dsc;
 }
 
-void lv_style_anim_set_styles(lv_anim_t * a, lv_style_t * to_anim, const lv_style_t * start, const lv_style_t * end)
+LV_FUNC_CORE_STYLE_ATTR void lv_style_anim_set_styles(lv_anim_t * a, lv_style_t * to_anim, const lv_style_t * start, const lv_style_t * end)
 {
 
     lv_style_anim_dsc_t * dsc = a->var;
@@ -316,7 +316,7 @@ void lv_style_anim_set_styles(lv_anim_t * a, lv_style_t * to_anim, const lv_styl
  * @param dsc the 'animated variable' set by lv_style_anim_create()
  * @param val the current state of the animation between 0 and LV_ANIM_RESOLUTION
  */
-static void style_animator(lv_style_anim_dsc_t * dsc, lv_anim_value_t val)
+LV_FUNC_CORE_STYLE_ATTR static void style_animator(lv_style_anim_dsc_t * dsc, lv_anim_value_t val)
 {
     const lv_style_t * start = &dsc->style_start;
     const lv_style_t * end   = &dsc->style_end;
@@ -332,7 +332,7 @@ static void style_animator(lv_style_anim_dsc_t * dsc, lv_anim_value_t val)
  * It called the user defined call back and free the allocated memories
  * @param a pointer to the animation
  */
-static void style_animation_common_end_cb(lv_anim_t * a)
+LV_FUNC_CORE_STYLE_ATTR static void style_animation_common_end_cb(lv_anim_t * a)
 {
 
     (void)a;                            /*Unused*/

@@ -41,7 +41,7 @@
 /**********************
  *  STATIC VARIABLES
  **********************/
-static uint16_t entry_cnt;
+LV_VAL_DRAW_ATTR static uint16_t entry_cnt;
 
 /**********************
  *      MACROS
@@ -59,7 +59,7 @@ static uint16_t entry_cnt;
  * @param style style of the image
  * @return pointer to the cache entry or NULL if can open the image
  */
-lv_img_cache_entry_t * lv_img_cache_open(const void * src, const lv_style_t * style)
+LV_FUNC_DRAW_IMAGE_CACHE_ATTR lv_img_cache_entry_t * lv_img_cache_open(const void * src, const lv_style_t * style)
 {
     if(entry_cnt == 0) {
         LV_LOG_WARN("lv_img_cache_open: the cache size is 0");
@@ -142,7 +142,7 @@ lv_img_cache_entry_t * lv_img_cache_open(const void * src, const lv_style_t * st
  * E.g. if 20 PNG or JPG images are open in the RAM they consume memory while opened in the cache.
  * @param new_entry_cnt number of image to cache
  */
-void lv_img_cache_set_size(uint16_t new_entry_cnt)
+LV_FUNC_DRAW_IMAGE_CACHE_ATTR void lv_img_cache_set_size(uint16_t new_entry_cnt)
 {
     if(LV_GC_ROOT(_lv_img_cache_array) != NULL) {
         /*Clean the cache before free it*/
@@ -172,7 +172,7 @@ void lv_img_cache_set_size(uint16_t new_entry_cnt)
  * Useful if the image source is updated therefore it needs to be cached again.
  * @param src an image source path to a file or pointer to an `lv_img_dsc_t` variable.
  */
-void lv_img_cache_invalidate_src(const void * src)
+LV_FUNC_DRAW_IMAGE_CACHE_ATTR void lv_img_cache_invalidate_src(const void * src)
 {
 
     lv_img_cache_entry_t * cache = LV_GC_ROOT(_lv_img_cache_array);

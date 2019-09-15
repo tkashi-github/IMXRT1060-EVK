@@ -59,7 +59,7 @@ static lv_disp_t * disp_refr; /*Display being refreshed*/
 /**
  * Initialize the screen refresh subsystem
  */
-void lv_refr_init(void)
+LV_FUNC_CORE_REFR_ATTR void lv_refr_init(void)
 {
     /*Nothing to do*/
 }
@@ -71,7 +71,7 @@ void lv_refr_init(void)
  * (e.g. progress bar) this function can be called when the screen should be updated.
  * @param disp pointer to display to refresh. NULL to refresh all displays.
  */
-void lv_refr_now(lv_disp_t * disp)
+LV_FUNC_CORE_REFR_ATTR void lv_refr_now(lv_disp_t * disp)
 {
     if(disp) {
         lv_disp_refr_task(disp->refr_task);
@@ -91,7 +91,7 @@ void lv_refr_now(lv_disp_t * disp)
  * @param disp pointer to display where the area should be invalidated (NULL can be used if there is
  * only one display)
  */
-void lv_inv_area(lv_disp_t * disp, const lv_area_t * area_p)
+LV_FUNC_CORE_REFR_ATTR void lv_inv_area(lv_disp_t * disp, const lv_area_t * area_p)
 {
     if(!disp) disp = lv_disp_get_default();
     if(!disp) return;
@@ -138,7 +138,7 @@ void lv_inv_area(lv_disp_t * disp, const lv_area_t * area_p)
  * Get the display which is being refreshed
  * @return the display being refreshed
  */
-lv_disp_t * lv_refr_get_disp_refreshing(void)
+LV_FUNC_CORE_REFR_ATTR lv_disp_t * lv_refr_get_disp_refreshing(void)
 {
     return disp_refr;
 }
@@ -149,7 +149,7 @@ lv_disp_t * lv_refr_get_disp_refreshing(void)
  * It can be used to trick the drawing functions about there is an active display.
  * @param the display being refreshed
  */
-void lv_refr_set_disp_refreshing(lv_disp_t * disp)
+LV_FUNC_CORE_REFR_ATTR void lv_refr_set_disp_refreshing(lv_disp_t * disp)
 {
     disp_refr = disp;
 }
@@ -158,7 +158,7 @@ void lv_refr_set_disp_refreshing(lv_disp_t * disp)
  * Called periodically to handle the refreshing
  * @param task pointer to the task itself
  */
-void lv_disp_refr_task(lv_task_t * task)
+LV_FUNC_CORE_REFR_ATTR void lv_disp_refr_task(lv_task_t * task)
 {
     LV_LOG_TRACE("lv_refr_task: started");
 
@@ -229,7 +229,7 @@ void lv_disp_refr_task(lv_task_t * task)
 /**
  * Join the areas which has got common parts
  */
-static void lv_refr_join_area(void)
+LV_FUNC_CORE_REFR_ATTR static void lv_refr_join_area(void)
 {
     uint32_t join_from;
     uint32_t join_in;
@@ -266,7 +266,7 @@ static void lv_refr_join_area(void)
 /**
  * Refresh the joined areas
  */
-static void lv_refr_areas(void)
+LV_FUNC_CORE_REFR_ATTR static void lv_refr_areas(void)
 {
     px_num = 0;
     uint32_t i;
@@ -286,7 +286,7 @@ static void lv_refr_areas(void)
  * Refresh an area if there is Virtual Display Buffer
  * @param area_p  pointer to an area to refresh
  */
-static void lv_refr_area(const lv_area_t * area_p)
+LV_FUNC_CORE_REFR_ATTR static void lv_refr_area(const lv_area_t * area_p)
 {
     /*True double buffering: there are two screen sized buffers. Just redraw directly into a
      * buffer*/
@@ -371,7 +371,7 @@ static void lv_refr_area(const lv_area_t * area_p)
  * Refresh a part of an area which is on the actual Virtual Display Buffer
  * @param area_p pointer to an area to refresh
  */
-static void lv_refr_area_part(const lv_area_t * area_p)
+LV_FUNC_CORE_REFR_ATTR static void lv_refr_area_part(const lv_area_t * area_p)
 {
 
     lv_disp_buf_t * vdb = lv_disp_get_buf(disp_refr);
@@ -413,7 +413,7 @@ static void lv_refr_area_part(const lv_area_t * area_p)
  * @param obj the first object to start the searching (typically a screen)
  * @return
  */
-static lv_obj_t * lv_refr_get_top_obj(const lv_area_t * area_p, lv_obj_t * obj)
+LV_FUNC_CORE_REFR_ATTR static lv_obj_t * lv_refr_get_top_obj(const lv_area_t * area_p, lv_obj_t * obj)
 {
     lv_obj_t * found_p = NULL;
 
@@ -448,7 +448,7 @@ static lv_obj_t * lv_refr_get_top_obj(const lv_area_t * area_p, lv_obj_t * obj)
  * @param top_p pointer to an objects. Start the drawing from it.
  * @param mask_p pointer to an area, the objects will be drawn only here
  */
-static void lv_refr_obj_and_children(lv_obj_t * top_p, const lv_area_t * mask_p)
+LV_FUNC_CORE_REFR_ATTR static void lv_refr_obj_and_children(lv_obj_t * top_p, const lv_area_t * mask_p)
 {
     /* Normally always will be a top_obj (at least the screen)
      * but in special cases (e.g. if the screen has alpha) it won't.
@@ -491,7 +491,7 @@ static void lv_refr_obj_and_children(lv_obj_t * top_p, const lv_area_t * mask_p)
  * @param obj pointer to an object to refresh
  * @param mask_ori_p pointer to an area, the objects will be drawn only here
  */
-static void lv_refr_obj(lv_obj_t * obj, const lv_area_t * mask_ori_p)
+LV_FUNC_CORE_REFR_ATTR static void lv_refr_obj(lv_obj_t * obj, const lv_area_t * mask_ori_p)
 {
     /*Do not refresh hidden objects*/
     if(obj->hidden != 0) return;
@@ -557,7 +557,7 @@ static void lv_refr_obj(lv_obj_t * obj, const lv_area_t * mask_ori_p)
 /**
  * Flush the content of the VDB
  */
-static void lv_refr_vdb_flush(void)
+LV_FUNC_CORE_REFR_ATTR static void lv_refr_vdb_flush(void)
 {
     lv_disp_buf_t * vdb = lv_disp_get_buf(disp_refr);
 

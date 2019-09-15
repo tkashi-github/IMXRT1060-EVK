@@ -15,7 +15,31 @@
 
 #include <stdint.h>
 
-#define LV_FUNC_ATTR  __attribute__((section(".ramfunc.$SRAM_ITC"))) 
+#define LV_FUNC_ATTR  __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_CORE_DISP_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_CORE_GROUP_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_CORE_INDEV_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_CORE_OBJ_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_CORE_REFR_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_CORE_STYLE_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+
+#define LV_FUNC_DRAW_ARC_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_DRAW_BASIC_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_DRAW_IMAGE_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_DRAW_LABEL_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_DRAW_LINE_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_DRAW_RECT_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_DRAW_TRIANGLE_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_DRAW_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_DRAW_IMAGE_CACHE_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_DRAW_IMAGE_DECORDER_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+
+#define LV_FUNC_MISC_LL_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_MISC_MEM_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+
+
+#define LV_VAL_DRAW_ATTR __attribute__((section(".bss.$SRAM_DTC")))
+#define LV_VAL_LL_MEM_ATTR __attribute__((section(".bss.$SRAM_DTC"))) 
 /*====================
    Graphical settings
  *====================*/

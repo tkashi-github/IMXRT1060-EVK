@@ -54,7 +54,7 @@ static uint8_t hex_char_to_num(char hex);
  * @param sel_start start index of selected area (`LV_LABEL_TXT_SEL_OFF` if none)
  * @param sel_end end index of selected area (`LV_LABEL_TXT_SEL_OFF` if none)
  */
-void lv_draw_label(const lv_area_t * coords, const lv_area_t * mask, const lv_style_t * style, lv_opa_t opa_scale,
+LV_FUNC_DRAW_LABEL_ATTR void lv_draw_label(const lv_area_t * coords, const lv_area_t * mask, const lv_style_t * style, lv_opa_t opa_scale,
                    const char * txt, lv_txt_flag_t flag, lv_point_t * offset, uint16_t sel_start, uint16_t sel_end,
                    lv_draw_label_hint_t * hint)
 {
@@ -259,7 +259,7 @@ void lv_draw_label(const lv_area_t * coords, const lv_area_t * mask, const lv_st
  * @param hex Pointer to a hexadecimal character (0..9, A..F)
  * @return the numerical value of `hex` or 0 on error
  */
-static uint8_t hex_char_to_num(char hex)
+LV_FUNC_DRAW_LABEL_ATTR static uint8_t hex_char_to_num(char hex)
 {
     uint8_t result = 0;
 

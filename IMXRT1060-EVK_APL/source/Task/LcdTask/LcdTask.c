@@ -58,7 +58,7 @@
  * https://mcuoneclipse.com/2018/08/12/tutorial-open-source-embedded-gui-library-littlevgl-with-i-mx-rt1050-evk/
 */
 #include "lvgl.h"
-void LCD_WritePixel(int32_t x, int32_t y, uint16_t color)
+DefALLOCATE_ITCM void LCD_WritePixel(int32_t x, int32_t y, uint16_t color)
 {
 	g_u16frameBuffer[y][x] = color;
 }
@@ -66,7 +66,7 @@ void LCD_WritePixel(int32_t x, int32_t y, uint16_t color)
 /* Flush the content of the internal buffer the specific area on the display
  * You can use DMA or any hardware acceleration to do this operation in the background but
  * 'lv_disp_flush_ready()' has to be called when finished. */
-static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_t * color_p)
+DefALLOCATE_ITCM static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_t * color_p)
 {
     /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
 
@@ -76,7 +76,7 @@ static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_colo
         for(x = area->x1; x <= area->x2; x++) {
             /* Put a pixel to the display. For example: */
             /* put_px(x, y, *color_p)*/
-			LCD_WritePixel(x, y, color_p->full);
+			g_u16frameBuffer[y][x] = color_p->full;
             color_p++;
         }
     }
@@ -91,7 +91,7 @@ static uint32_t s_u32PosY = 0;
 static touch_event_t s_enLastTouchEvent = kTouch_Up;
 
 /* Will be called by the library to read the touchpad */
-static bool touchpad_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
+DefALLOCATE_ITCM static bool touchpad_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
 {
     /*Save the pressed coordinates and the state*/
     if ((s_enLastTouchEvent == kTouch_Down) || (s_enLastTouchEvent == kTouch_Contact))
@@ -113,11 +113,20 @@ static bool touchpad_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
 
 DefALLOCATE_DATA_DTCM static lv_indev_drv_t indev_drv; /*Descriptor of an input device driver*/
 DefALLOCATE_DATA_DTCM static lv_disp_drv_t disp_drv;
+DefALLOCATE_BSS_DTCM static lv_disp_buf_t disp_buf_2;
+DefALLOCATE_BSS_DTCM static lv_color_t buf2_1[LV_HOR_RES_MAX * 10];                        /*A buffer for 10 rows*/
+DefALLOCATE_BSS_DTCM static lv_color_t buf2_2[LV_HOR_RES_MAX * 10];                        /*An other buffer for 10 rows*/
 
 void LV_Init(void)
 {
 	lv_init();
+
+    lv_disp_buf_init(&disp_buf_2, buf2_1, buf2_2, LV_HOR_RES_MAX * 10);   /*Initialize the display buffer*/
+
 	lv_disp_drv_init(&disp_drv);
+    /*Set the resolution of the display*/
+    disp_drv.hor_res = LV_HOR_RES_MAX;
+    disp_drv.ver_res = LV_VER_RES_MAX;
 
 	/*Set up the functions to access to your display*/
 	disp_drv.flush_cb = disp_flush; /*Used in buffered mode (LV_VDB_SIZE != 0  in lv_conf.h)*/
@@ -127,6 +136,7 @@ void LV_Init(void)
 	disp_drv.mem_blend = ex_mem_blend; /*Blend two color array using opacity*/
 	disp_drv.mem_fill = ex_mem_fill;   /*Fill a memory array with a color*/
 #endif
+	disp_drv.buffer = &disp_buf_2;
 
 	/*Finally register the driver*/
 	lv_disp_drv_register(&disp_drv);
@@ -148,7 +158,7 @@ static lv_obj_t *slider1;
 static lv_obj_t *vol_slider;
 
 #include "Task/ExtLedCtrlTask/ExtLedCtrlTask.h"
-static void slider_action(lv_obj_t * slider, lv_event_t event)
+DefALLOCATE_ITCM static void slider_action(lv_obj_t * slider, lv_event_t event)
 {
 	if(event == LV_EVENT_VALUE_CHANGED) {
 		uint16_t temp = lv_slider_get_value(slider);
@@ -159,7 +169,7 @@ static void slider_action(lv_obj_t * slider, lv_event_t event)
 	}
 }
 #include "Task/SoundTask/SoundTask.h"
-static void vol_slider_action(lv_obj_t * slider, lv_event_t event)
+DefALLOCATE_ITCM static void vol_slider_action(lv_obj_t * slider, lv_event_t event)
 {
 	if(event == LV_EVENT_VALUE_CHANGED) {
 		uint16_t temp = lv_slider_get_value(slider);
@@ -269,11 +279,11 @@ DefALLOCATE_ITCM void LcdTask(void const *argument)
 
 	LastTick = xTaskGetTickCount();
 	DrvELCDIFInit();
-	osDelay(portMAX_DELAY);
+	
 	LV_Init();
-
-	//SampleSlider();
-	//VolumeSlider();
+	//osDelay(portMAX_DELAY);
+	SampleSlider();
+	VolumeSlider();
 	for (;;)
 	{
 		uint8_t msg_prio; /* Message priority is ignored */

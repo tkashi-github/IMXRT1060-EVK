@@ -51,7 +51,7 @@ static bool deg_test_inv(uint16_t deg, uint16_t start, uint16_t end);
  * @param style style of the arc (`body.thickness`, `body.main_color`, `body.opa` is used)
  * @param opa_scale scale down all opacities by the factor
  */
-void lv_draw_arc(lv_coord_t center_x, lv_coord_t center_y, uint16_t radius, const lv_area_t * mask,
+LV_FUNC_DRAW_ARC_ATTR void lv_draw_arc(lv_coord_t center_x, lv_coord_t center_y, uint16_t radius, const lv_area_t * mask,
                  uint16_t start_angle, uint16_t end_angle, const lv_style_t * style, lv_opa_t opa_scale)
 {
     lv_coord_t thickness = style->line.width;
@@ -162,7 +162,7 @@ void lv_draw_arc(lv_coord_t center_x, lv_coord_t center_y, uint16_t radius, cons
     }
 }
 
-static uint16_t fast_atan2(int x, int y)
+LV_FUNC_DRAW_ARC_ATTR static uint16_t fast_atan2(int x, int y)
 {
     // Fast XY vector to integer degree algorithm - Jan 2011 www.RomanBlack.com
     // Converts any XY values including 0 to a degree value that should be
@@ -238,7 +238,7 @@ static uint16_t fast_atan2(int x, int y)
 /**********************
  *   STATIC FUNCTIONS
  **********************/
-static void ver_line(lv_coord_t x, lv_coord_t y, const lv_area_t * mask, lv_coord_t len, lv_color_t color, lv_opa_t opa)
+LV_FUNC_DRAW_ARC_ATTR static void ver_line(lv_coord_t x, lv_coord_t y, const lv_area_t * mask, lv_coord_t len, lv_color_t color, lv_opa_t opa)
 {
     lv_area_t area;
     lv_area_set(&area, x, y, x, y + len);
@@ -246,7 +246,7 @@ static void ver_line(lv_coord_t x, lv_coord_t y, const lv_area_t * mask, lv_coor
     lv_draw_fill(&area, mask, color, opa);
 }
 
-static void hor_line(lv_coord_t x, lv_coord_t y, const lv_area_t * mask, lv_coord_t len, lv_color_t color, lv_opa_t opa)
+LV_FUNC_DRAW_ARC_ATTR static void hor_line(lv_coord_t x, lv_coord_t y, const lv_area_t * mask, lv_coord_t len, lv_color_t color, lv_opa_t opa)
 {
     lv_area_t area;
     lv_area_set(&area, x, y, x + len, y);
@@ -254,7 +254,7 @@ static void hor_line(lv_coord_t x, lv_coord_t y, const lv_area_t * mask, lv_coor
     lv_draw_fill(&area, mask, color, opa);
 }
 
-static bool deg_test_norm(uint16_t deg, uint16_t start, uint16_t end)
+LV_FUNC_DRAW_ARC_ATTR static bool deg_test_norm(uint16_t deg, uint16_t start, uint16_t end)
 {
     if(deg >= start && deg <= end)
         return true;
@@ -262,7 +262,7 @@ static bool deg_test_norm(uint16_t deg, uint16_t start, uint16_t end)
         return false;
 }
 
-static bool deg_test_inv(uint16_t deg, uint16_t start, uint16_t end)
+LV_FUNC_DRAW_ARC_ATTR static bool deg_test_inv(uint16_t deg, uint16_t start, uint16_t end)
 {
     if(deg >= start || deg <= end) {
         return true;
