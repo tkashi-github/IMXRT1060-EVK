@@ -407,13 +407,13 @@ void BOARD_ConfigMPU(void)
     MPU->RBAR = ARM_MPU_RBAR(3, 0x20000000U);
     MPU->RASR = ARM_MPU_RASR(1, ARM_MPU_AP_FULL, 1, 1, 0, 0, 0, ARM_MPU_REGION_SIZE_256KB);
     
-	/* Region 4 setting: Memory with VRAM, shareable,noncache*/
+	/* Region 4 setting: Memory with VRAM, shareable,noncache */
     MPU->RBAR = ARM_MPU_RBAR(4, 0x20200000U);
-    MPU->RASR = ARM_MPU_RASR(1, ARM_MPU_AP_FULL, 0, 1, 0, 1, 0, ARM_MPU_REGION_SIZE_256KB);
+    MPU->RASR = ARM_MPU_RASR(1, ARM_MPU_AP_FULL, 1, 1, 0, 0, 0, ARM_MPU_REGION_SIZE_256KB);
 
-	/* Region 5 setting: Memory with Normal, shareable, outer and inner noncache*/
+	/* Region 5 setting: Memory with Normal, shareable,noncache */
     MPU->RBAR = ARM_MPU_RBAR(5, 0x20240000U);
-    MPU->RASR = ARM_MPU_RASR(1, ARM_MPU_AP_FULL, 1, 1, 1, 1, 0, ARM_MPU_REGION_SIZE_256KB);
+    MPU->RASR = ARM_MPU_RASR(1, ARM_MPU_AP_FULL, 1, 1, 0, 0, 0, ARM_MPU_REGION_SIZE_256KB);
 
     /* Region 6 setting: Memory with Normal type, shareable, outer and inner write back write/read acllocate */
     MPU->RBAR = ARM_MPU_RBAR(6, 0x80000000U);

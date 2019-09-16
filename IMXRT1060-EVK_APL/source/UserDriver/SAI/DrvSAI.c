@@ -58,8 +58,8 @@
 static void txCallback(I2S_Type *base, sai_edma_handle_t *handle, status_t status, void *userData);
 static void rxCallback(I2S_Type *base, sai_edma_handle_t *handle, status_t status, void *userData);
 
-alignas(4) static uint8_t s_TxAudioBuff[enNumOfSAI][DEF_AUDIO_BUFFER_SIZE] __attribute__((section(".NonCacheable")));
-alignas(4) static uint8_t s_RxAudioBuff[enNumOfSAI][DEF_AUDIO_BUFFER_SIZE] __attribute__((section(".NonCacheable")));
+alignas(4) static uint8_t s_TxAudioBuff[enNumOfSAI][DEF_AUDIO_BUFFER_SIZE] __attribute__((section(".bss.$AUDIOBUF")));
+alignas(4) static uint8_t s_RxAudioBuff[enNumOfSAI][DEF_AUDIO_BUFFER_SIZE] __attribute__((section(".bss.$AUDIOBUF")));
 
 /**  */
 static volatile uint32_t s_u32EDMATxBufSize[enNumOfSAI] = {
@@ -79,11 +79,11 @@ static volatile _Bool s_bIsTxFinished[enNumOfSAI] = {false};
 static volatile _Bool s_bIsRxFinished[enNumOfSAI] = {false};
 
 /** Chacheなしエリアへの配置 */
-alignas(256) static __attribute__((section("NonCacheable.init"))) sai_edma_handle_t s_stSAI1Es_hndDmaTx = {0};
-alignas(256) static __attribute__((section("NonCacheable.init"))) sai_edma_handle_t s_stSAI2Es_hndDmaTx = {0};
+alignas(256) static __attribute__((section(".data.$AUDIOBUF"))) sai_edma_handle_t s_stSAI1Es_hndDmaTx = {0};
+alignas(256) static __attribute__((section(".data.$AUDIOBUF"))) sai_edma_handle_t s_stSAI2Es_hndDmaTx = {0};
 //alignas(256) static __attribute__((section("NonCacheable.init"))) sai_edma_handle_t s_stSAI3Es_hndDmaTx = {0};
-alignas(256) static __attribute__((section("NonCacheable.init"))) sai_edma_handle_t s_stSAI1Es_hndDmaRx = {0};
-alignas(256) static __attribute__((section("NonCacheable.init"))) sai_edma_handle_t s_stSAI2Es_hndDmaRx = {0};
+alignas(256) static __attribute__((section(".data.$AUDIOBUF"))) sai_edma_handle_t s_stSAI1Es_hndDmaRx = {0};
+alignas(256) static __attribute__((section(".data.$AUDIOBUF"))) sai_edma_handle_t s_stSAI2Es_hndDmaRx = {0};
 //alignas(256) static __attribute__((section("NonCacheable.init"))) sai_edma_handle_t s_stSAI3Es_hndDmaRx = {0};
 
 static uint32_t s_u32Index[enNumOfSAI] = {0};
