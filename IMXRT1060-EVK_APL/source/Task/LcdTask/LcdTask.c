@@ -153,9 +153,9 @@ void LV_Init(void)
 	lv_indev_drv_register(&indev_drv);		/*Finally register the driver*/
 }
 
-DefALLOCATE_DATA_DTCM static lv_obj_t *slider1;
+
 DefALLOCATE_DATA_DTCM static lv_obj_t *vol_slider;
-static lv_obj_t * s_Vollabel1;
+DefALLOCATE_DATA_DTCM static lv_obj_t * s_Vollabel1;
     
 #include "Task/SoundTask/SoundTask.h"
 DefALLOCATE_ITCM static void vol_slider_action(lv_obj_t * slider, lv_event_t event)
@@ -169,7 +169,7 @@ DefALLOCATE_ITCM static void vol_slider_action(lv_obj_t * slider, lv_event_t eve
 	}
 }
 
-void lv_ex_label_1(void)
+void volume_label_init(void)
 {
 	s_Vollabel1 = lv_label_create(lv_scr_act(), NULL);
     lv_label_set_long_mode(s_Vollabel1, LV_LABEL_LONG_BREAK);     /*Break the long lines*/
@@ -177,7 +177,7 @@ void lv_ex_label_1(void)
     lv_label_set_align(s_Vollabel1, LV_LABEL_ALIGN_CENTER);       /*Center aligned lines*/
     lv_label_set_text(s_Vollabel1, "70");
     lv_obj_set_width(s_Vollabel1, 150);
-    lv_obj_align(s_Vollabel1, NULL, LV_ALIGN_CENTER, 0, -30);
+    lv_obj_align(s_Vollabel1, NULL, LV_ALIGN_IN_TOP_RIGHT, -30, 60);
 }
 
 DefALLOCATE_ITCM void VolumeSlider(void)
@@ -186,7 +186,7 @@ DefALLOCATE_ITCM void VolumeSlider(void)
 
 	/*Create a default slider*/
 	vol_slider = lv_slider_create(lv_scr_act(), NULL);
-	lv_obj_set_size(vol_slider, 200, 30);
+	lv_obj_set_size(vol_slider, 400, 30);
 	lv_obj_align(vol_slider, NULL, LV_ALIGN_IN_TOP_RIGHT, -30, 90);
 	lv_obj_set_event_cb(vol_slider, vol_slider_action);
 	lv_bar_set_value(vol_slider, 70, LV_ANIM_ON);
@@ -236,6 +236,8 @@ DefALLOCATE_ITCM void LcdTask(void const *argument)
 	DrvELCDIFInit();
 	
 	LV_Init();
+	
+	volume_label_init();
 
 	VolumeSlider();
 	for (;;)
