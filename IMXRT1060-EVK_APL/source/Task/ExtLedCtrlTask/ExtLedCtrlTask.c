@@ -46,12 +46,12 @@ DefALLOCATE_ITCM void ExtLedCtrlTask(void const *argument)
 	uint8_t msg_prio;
 	stTaskMsgBlock_t stTaskMsg = {0};
 	uint32_t ExtLedVal[enPCA9685PortNum];
-	_Bool bUp[enPCA9685PortNum];
+	_Bool b_Updating = true;
+	osDelay(1000);
 
 	for(uint32_t i=enPCA9685PortBegin;i<=enPCA9685PortEnd;i++)
 	{
 		ExtLedVal[i] = 100 * ((double)i/enPCA9685PortNum);
-		bUp[i] = true;
 	}
 
 	if(false == DrvPCA9685Init(LPI2C1))
@@ -65,8 +65,20 @@ DefALLOCATE_ITCM void ExtLedCtrlTask(void const *argument)
 		{
 			switch (stTaskMsg.enMsgId)
 			{
-			case enExtLedUpdate:
+			case enExtLedSetVal:
 				DrvPCA9685SetPWMVal(LPI2C1, (enPCA9685PortNo_t)stTaskMsg.param[0], stTaskMsg.param[1]);
+				b_Updating = false;
+				break;
+			case enExtLedUpdate:
+				if(b_Updating == (_Bool)stTaskMsg.param[0])
+				{
+					mimic_printf("[%s (%d)] No change Ext Led Mode\r\n", __func__, __LINE__);
+				}
+				else
+				{
+					b_Updating = (_Bool)stTaskMsg.param[0];
+					mimic_printf("[%s (%d)] change Ext Led Mode to %s\r\n", __func__, __LINE__, b_Updating?"Enable":"Disable");
+				}
 				break;
 			default:
 				mimic_printf("[%s (%d)] Unkown Msg!\r\n", __func__, __LINE__);
@@ -81,30 +93,13 @@ DefALLOCATE_ITCM void ExtLedCtrlTask(void const *argument)
 		}
 		else
 		{
-			for(uint32_t i=enPCA9685PortBegin;i<=enPCA9685PortEnd;i++)
+			if(b_Updating)
 			{
-				DrvPCA9685SetPWMVal(LPI2C1, (enPCA9685PortNo_t)i, 100*arm_sin_f32(PI*ExtLedVal[i]/100.0));
-				if(bUp[i] != false)
+				for(uint32_t i=enPCA9685PortBegin;i<=enPCA9685PortEnd;i++)
 				{
-					if(ExtLedVal[i] < 100)
-					{
-						ExtLedVal[i]++;
-					}
-					else
-					{
-						bUp[i] = false;
-					}
-				}
-				else
-				{
-					if(ExtLedVal[i] > 0)
-					{
-						ExtLedVal[i]--;
-					}
-					else
-					{
-						bUp[i] = true;
-					}
+					DrvPCA9685SetPWMVal(LPI2C1, (enPCA9685PortNo_t)i, 50.0 + 50.0*arm_sin_f32(2*PI*ExtLedVal[i]/200.0));
+					ExtLedVal[i]++;
+					ExtLedVal[i] %= 200;
 				}
 			}
 		}
@@ -120,7 +115,7 @@ DefALLOCATE_ITCM _Bool PostMsgExtLedCtrlTaskLedVal(enPCA9685PortNo_t enExtLedNo,
 	if((enExtLedNo >= enPCA9685Port0) && (enExtLedNo <= enPCA9685Port15))
 	{
 		stTaskMsgBlock_t stTaskMsg = {0};
-		stTaskMsg.enMsgId = enExtLedUpdate;
+		stTaskMsg.enMsgId = enExtLedSetVal;
 		stTaskMsg.param[0] = enExtLedNo;
 		stTaskMsg.param[1] = val;
 
@@ -132,45 +127,37 @@ DefALLOCATE_ITCM _Bool PostMsgExtLedCtrlTaskLedVal(enPCA9685PortNo_t enExtLedNo,
 
 	return bret;
 }
+DefALLOCATE_ITCM _Bool PostMsgExtLedCtrlTaskSetUpdateMode(_Bool bMode)
+{
+	_Bool bret = false;
 
+	stTaskMsgBlock_t stTaskMsg = {0};
+	stTaskMsg.enMsgId = enExtLedUpdate;
+	stTaskMsg.param[0] = bMode;
+
+	if(osOK == osMessageQueuePut(g_mqidExtLedCtrlTask, &stTaskMsg, 0, 50))
+	{
+		bret = true;
+	}
+	return bret;
+}
 
 void CmdExtLed(uint32_t argc, const char *argv[])
 {
-	uint32_t val=4095;
-
-	if(argc == 1)
+	if(argc > 1)
 	{
-		for(uint32_t k=0;k<3;k++)
-		{
-			for(uint32_t j=0;j<100;j++)
-			{
-				val = j;
-				for(uint32_t i=enPCA9685PortBegin;i<=enPCA9685PortEnd;i++)
-				{
-					PostMsgExtLedCtrlTaskLedVal((enPCA9685PortNo_t)i, val);
-				}
-				osDelay(10);
-			}
-			for(uint32_t j=100;j>0;j--)
-			{
-				val = j;
-				for(uint32_t i=enPCA9685PortBegin;i<=enPCA9685PortEnd;i++)
-				{
-					PostMsgExtLedCtrlTaskLedVal((enPCA9685PortNo_t)i, val);
-				}
-				osDelay(10);
-			}
-		}
+		_Bool bMode = mimic_strtoul(argv[1], 16, 10);
+		PostMsgExtLedCtrlTaskSetUpdateMode(bMode);
 	}
-	else if(argc > 1)
+	else
 	{
-		val = mimic_strtoul(argv[1], 32, 10);
-		mimic_printf("[%s (%d)] %s, %d\r\n", __func__, __LINE__, argv[1], val);
-		for(uint32_t i=enPCA9685PortBegin;i<=enPCA9685PortEnd;i++)
-		{
-			PostMsgExtLedCtrlTaskLedVal((enPCA9685PortNo_t)i, val);
-		}
+		goto _USAGE;
 	}
-
+	return;
+_USAGE:
+	mimic_printf("USAGE:\r\n");
+	mimic_printf("EXTLED 0 --> disable Ext Led Blink\r\n");
+	mimic_printf("EXTLED 1 --> Enable Ext Led Blink\r\n");
+	
 	
 }

@@ -7,7 +7,7 @@
  *      INCLUDES
  *********************/
 #include <stdbool.h>
-
+#include "lv_conf.h"
 #include "lv_utils.h"
 #include "lv_math.h"
 
@@ -41,7 +41,7 @@
  * @param buf pointer to a `char` buffer. The result will be stored here (max 10 elements)
  * @return same as `buf` (just for convenience)
  */
-char * lv_utils_num_to_str(int32_t num, char * buf)
+LV_FUNC_MISC_UTILS_ATTR char * lv_utils_num_to_str(int32_t num, char * buf)
 {
     if(num == 0) {
         buf[0] = '0';
@@ -89,7 +89,7 @@ char * lv_utils_num_to_str(int32_t num, char * buf)
  *
  * @return a pointer to a matching item, or NULL if none exists.
  */
-void * lv_utils_bsearch(const void * key, const void * base, uint32_t n, uint32_t size,
+LV_FUNC_MISC_UTILS_ATTR void * lv_utils_bsearch(const void * key, const void * base, uint32_t n, uint32_t size,
                         int32_t (*cmp)(const void * pRef, const void * pElement))
 {
     const char * middle;

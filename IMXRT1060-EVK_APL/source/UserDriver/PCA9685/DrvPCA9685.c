@@ -145,21 +145,21 @@ _END:
 	return bret;
 }
 
-DefALLOCATE_ITCM _Bool DrvPCA9685SetPWMVal(LPI2C_Type *base, enPCA9685PortNo_t enPortNo, uint16_t PwmVal)
+DefALLOCATE_ITCM _Bool DrvPCA9685SetPWMVal(LPI2C_Type *base, enPCA9685PortNo_t enPortNo, double PwmVal)
 {
 	_Bool bret = false;
 
 	if(((LPI2C1 != base) && (LPI2C2 != base) && (LPI2C3 != base) && (LPI2C4 != base)) ||
 		(enPortNo < enPCA9685Port0) ||
 		(enPortNo > enPCA9685Port15) ||
-		(PwmVal > 100))
+		(PwmVal > 100.0))
 	{
 		mimic_printf("[%s (%d)] EXIT!\r\n", __func__, __LINE__);
 		goto _END;
 	}
 
 	uint8_t val[4] = {0x00, 0x00, 0x00, 0x00};
-	if(PwmVal > 0)
+	if(PwmVal > 0.0)
 	{
 		uint16_t u16tempON = 1;
 		uint16_t u16tempOff = 4095 * PwmVal / 100;

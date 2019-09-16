@@ -48,7 +48,13 @@
 #define LV_FUNC_MISC_MATH_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
 #define LV_FUNC_MISC_MEM_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
 #define LV_FUNC_MISC_TASK_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_MISC_TEXT_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_MISC_UTILS_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
 
+#define LV_FUNC_OBJX_ARC_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_OBJX_BAR_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_OBJX_BTN_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_OBJX_BTNM_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
 
 #define LV_VAL_DRAW_ATTR __attribute__((section(".bss.$SRAM_DTC")))
 #define LV_VAL_LL_MEM_ATTR __attribute__((section(".bss.$SRAM_DTC")))
@@ -57,6 +63,11 @@
 #define LV_VAL_MISC_ANIME_ATTR __attribute__((section(".bss.$SRAM_DTC")))
 #define LV_VAL_MISC_MATH_ATTR __attribute__((section(".data.$SRAM_DTC")))
 #define LV_VAL_MISC_TASK_ATTR __attribute__((section(".bss.$SRAM_DTC")))
+
+#define LV_VAL_OBJX_ARC_ATTR __attribute__((section(".bss.$SRAM_DTC")))
+#define LV_VAL_OBJX_BAR_ATTR __attribute__((section(".bss.$SRAM_DTC")))
+#define LV_VAL_OBJX_BTN_ATTR __attribute__((section(".bss.$SRAM_DTC")))
+#define LV_VAL_OBJX_BTNM_ATTR __attribute__((section(".bss.$SRAM_DTC")))
 
 /*====================
    Graphical settings

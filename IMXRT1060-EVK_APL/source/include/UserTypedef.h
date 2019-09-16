@@ -106,6 +106,7 @@ typedef enum{
 	enPlaying,
 	enRec,
 	enRecording,
+	enExtLedSetVal,
 	enExtLedUpdate,
 	enMsgID_MAX,
 }enMsgID_t;
