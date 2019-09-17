@@ -44,7 +44,7 @@ static void lv_cont_refr_autofit(lv_obj_t * cont);
 /**********************
  *  STATIC VARIABLES
  **********************/
-static lv_signal_cb_t ancestor_signal;
+LV_VAL_OBJX_CONT_ATTR static lv_signal_cb_t ancestor_signal;
 
 /**********************
  *      MACROS
@@ -60,7 +60,7 @@ static lv_signal_cb_t ancestor_signal;
  * @param copy pointer to a container object, if not NULL then the new object will be copied from it
  * @return pointer to the created container
  */
-lv_obj_t * lv_cont_create(lv_obj_t * par, const lv_obj_t * copy)
+LV_FUNC_OBJX_CONT_ATTR lv_obj_t * lv_cont_create(lv_obj_t * par, const lv_obj_t * copy)
 {
 
     LV_LOG_TRACE("container create started");
@@ -124,7 +124,7 @@ lv_obj_t * lv_cont_create(lv_obj_t * par, const lv_obj_t * copy)
  * @param cont pointer to a container object
  * @param layout a layout from 'lv_cont_layout_t'
  */
-void lv_cont_set_layout(lv_obj_t * cont, lv_layout_t layout)
+LV_FUNC_OBJX_CONT_ATTR void lv_cont_set_layout(lv_obj_t * cont, lv_layout_t layout)
 {
     lv_cont_ext_t * ext = lv_obj_get_ext_attr(cont);
     if(ext->layout == layout) return;
@@ -144,7 +144,7 @@ void lv_cont_set_layout(lv_obj_t * cont, lv_layout_t layout)
  * @param top bottom fit policy from `lv_fit_t`
  * @param bottom bottom fit policy from `lv_fit_t`
  */
-void lv_cont_set_fit4(lv_obj_t * cont, lv_fit_t left, lv_fit_t right, lv_fit_t top, lv_fit_t bottom)
+LV_FUNC_OBJX_CONT_ATTR void lv_cont_set_fit4(lv_obj_t * cont, lv_fit_t left, lv_fit_t right, lv_fit_t top, lv_fit_t bottom)
 {
     lv_obj_invalidate(cont);
     lv_cont_ext_t * ext = lv_obj_get_ext_attr(cont);
@@ -170,7 +170,7 @@ void lv_cont_set_fit4(lv_obj_t * cont, lv_fit_t left, lv_fit_t right, lv_fit_t t
  * @param cont pointer to container object
  * @return the layout from 'lv_cont_layout_t'
  */
-lv_layout_t lv_cont_get_layout(const lv_obj_t * cont)
+LV_FUNC_OBJX_CONT_ATTR lv_layout_t lv_cont_get_layout(const lv_obj_t * cont)
 {
     lv_cont_ext_t * ext = lv_obj_get_ext_attr(cont);
     return ext->layout;
@@ -181,7 +181,7 @@ lv_layout_t lv_cont_get_layout(const lv_obj_t * cont)
  * @param cont pointer to a container object
  * @return an element of `lv_fit_t`
  */
-lv_fit_t lv_cont_get_fit_left(const lv_obj_t * cont)
+LV_FUNC_OBJX_CONT_ATTR lv_fit_t lv_cont_get_fit_left(const lv_obj_t * cont)
 {
     lv_cont_ext_t * ext = lv_obj_get_ext_attr(cont);
     return ext->fit_left;
@@ -192,7 +192,7 @@ lv_fit_t lv_cont_get_fit_left(const lv_obj_t * cont)
  * @param cont pointer to a container object
  * @return an element of `lv_fit_t`
  */
-lv_fit_t lv_cont_get_fit_right(const lv_obj_t * cont)
+LV_FUNC_OBJX_CONT_ATTR lv_fit_t lv_cont_get_fit_right(const lv_obj_t * cont)
 {
     lv_cont_ext_t * ext = lv_obj_get_ext_attr(cont);
     return ext->fit_right;
@@ -203,7 +203,7 @@ lv_fit_t lv_cont_get_fit_right(const lv_obj_t * cont)
  * @param cont pointer to a container object
  * @return an element of `lv_fit_t`
  */
-lv_fit_t lv_cont_get_fit_top(const lv_obj_t * cont)
+LV_FUNC_OBJX_CONT_ATTR lv_fit_t lv_cont_get_fit_top(const lv_obj_t * cont)
 {
     lv_cont_ext_t * ext = lv_obj_get_ext_attr(cont);
     return ext->fit_top;
@@ -214,7 +214,7 @@ lv_fit_t lv_cont_get_fit_top(const lv_obj_t * cont)
  * @param cont pointer to a container object
  * @return an element of `lv_fit_t`
  */
-lv_fit_t lv_cont_get_fit_bottom(const lv_obj_t * cont)
+LV_FUNC_OBJX_CONT_ATTR lv_fit_t lv_cont_get_fit_bottom(const lv_obj_t * cont)
 {
     lv_cont_ext_t * ext = lv_obj_get_ext_attr(cont);
     return ext->fit_bottom;
@@ -231,7 +231,7 @@ lv_fit_t lv_cont_get_fit_bottom(const lv_obj_t * cont)
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-static lv_res_t lv_cont_signal(lv_obj_t * cont, lv_signal_t sign, void * param)
+LV_FUNC_OBJX_CONT_ATTR static lv_res_t lv_cont_signal(lv_obj_t * cont, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 
@@ -270,7 +270,7 @@ static lv_res_t lv_cont_signal(lv_obj_t * cont, lv_signal_t sign, void * param)
  * Refresh the layout of a container
  * @param cont pointer to an object which layout should be refreshed
  */
-static void lv_cont_refr_layout(lv_obj_t * cont)
+LV_FUNC_OBJX_CONT_ATTR static void lv_cont_refr_layout(lv_obj_t * cont)
 {
     lv_layout_t type = lv_cont_get_layout(cont);
 
@@ -296,7 +296,7 @@ static void lv_cont_refr_layout(lv_obj_t * cont)
  * Handle column type layouts
  * @param cont pointer to an object which layout should be handled
  */
-static void lv_cont_layout_col(lv_obj_t * cont)
+LV_FUNC_OBJX_CONT_ATTR static void lv_cont_layout_col(lv_obj_t * cont)
 {
     lv_layout_t type = lv_cont_get_layout(cont);
     lv_obj_t * child;
@@ -345,7 +345,7 @@ static void lv_cont_layout_col(lv_obj_t * cont)
  * Handle row type layouts
  * @param cont pointer to an object which layout should be handled
  */
-static void lv_cont_layout_row(lv_obj_t * cont)
+LV_FUNC_OBJX_CONT_ATTR static void lv_cont_layout_row(lv_obj_t * cont)
 {
     lv_layout_t type = lv_cont_get_layout(cont);
     lv_obj_t * child;
@@ -395,7 +395,7 @@ static void lv_cont_layout_row(lv_obj_t * cont)
  * Handle the center layout
  * @param cont pointer to an object which layout should be handled
  */
-static void lv_cont_layout_center(lv_obj_t * cont)
+LV_FUNC_OBJX_CONT_ATTR static void lv_cont_layout_center(lv_obj_t * cont)
 {
     lv_obj_t * child;
     const lv_style_t * style = lv_obj_get_style(cont);
@@ -435,7 +435,7 @@ static void lv_cont_layout_center(lv_obj_t * cont)
  * then begin a new row
  * @param cont pointer to an object which layout should be handled
  */
-static void lv_cont_layout_pretty(lv_obj_t * cont)
+LV_FUNC_OBJX_CONT_ATTR static void lv_cont_layout_pretty(lv_obj_t * cont)
 {
     lv_obj_t * child_rs;  /* Row starter child */
     lv_obj_t * child_rc;  /* Row closer child */
@@ -531,7 +531,7 @@ static void lv_cont_layout_pretty(lv_obj_t * cont)
  * Handle the grid layout. Align same-sized objects in a grid
  * @param cont pointer to an object which layout should be handled
  */
-static void lv_cont_layout_grid(lv_obj_t * cont)
+LV_FUNC_OBJX_CONT_ATTR static void lv_cont_layout_grid(lv_obj_t * cont)
 {
     lv_obj_t * child;
     const lv_style_t * style = lv_obj_get_style(cont);
@@ -582,7 +582,7 @@ static void lv_cont_layout_grid(lv_obj_t * cont)
  * Handle auto fit. Set the size of the object to involve all children.
  * @param cont pointer to an object which size will be modified
  */
-static void lv_cont_refr_autofit(lv_obj_t * cont)
+LV_FUNC_OBJX_CONT_ATTR static void lv_cont_refr_autofit(lv_obj_t * cont)
 {
     lv_cont_ext_t * ext = lv_obj_get_ext_attr(cont);
 

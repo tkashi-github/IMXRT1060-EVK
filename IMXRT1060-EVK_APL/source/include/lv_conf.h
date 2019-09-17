@@ -55,6 +55,16 @@
 #define LV_FUNC_OBJX_BAR_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
 #define LV_FUNC_OBJX_BTN_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
 #define LV_FUNC_OBJX_BTNM_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_OBJX_CALENDER_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_OBJX_CANVAS_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_OBJX_CB_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_OBJX_CHART_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_OBJX_CONT_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_OBJX_DDIST_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_OBJX_GAUGE_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_OBJX_IMAGE_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_OBJX_IMAGEBTN_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_FUNC_OBJX_KB_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
 
 #define LV_VAL_DRAW_ATTR __attribute__((section(".bss.$SRAM_DTC")))
 #define LV_VAL_LL_MEM_ATTR __attribute__((section(".bss.$SRAM_DTC")))
@@ -68,6 +78,18 @@
 #define LV_VAL_OBJX_BAR_ATTR __attribute__((section(".bss.$SRAM_DTC")))
 #define LV_VAL_OBJX_BTN_ATTR __attribute__((section(".bss.$SRAM_DTC")))
 #define LV_VAL_OBJX_BTNM_ATTR __attribute__((section(".bss.$SRAM_DTC")))
+#define LV_VAL_OBJX_CALENDER_ATTR __attribute__((section(".bss.$SRAM_DTC")))
+#define LV_VAL_OBJX_CANVAS_ATTR __attribute__((section(".bss.$SRAM_DTC")))
+#define LV_VAL_OBJX_CB_ATTR __attribute__((section(".bss.$SRAM_DTC")))
+#define LV_VAL_OBJX_CHART_ATTR __attribute__((section(".bss.$SRAM_DTC")))
+#define LV_VAL_OBJX_CONT_ATTR __attribute__((section(".bss.$SRAM_DTC")))
+#define LV_VAL_OBJX_DDLIST_ATTR __attribute__((section(".bss.$SRAM_DTC")))
+#define LV_VAL_OBJX_GAUGE_ATTR __attribute__((section(".bss.$SRAM_DTC")))
+#define LV_VAL_OBJX_IMG_ATTR __attribute__((section(".bss.$SRAM_DTC")))
+#define LV_VAL_OBJX_IMGBTN_ATTR __attribute__((section(".bss.$SRAM_DTC")))
+#define LV_VAL_OBJX_KB_ATTR __attribute__((section(".bss.$SRAM_DTC")))
+#define LV_CVAL_OBJX_KB_ATTR __attribute__((section(".data.$SRAM_DTC")))
+
 
 /*====================
    Graphical settings
@@ -190,7 +212,7 @@ typedef void * lv_anim_user_data_t;
 #define LV_USE_SHADOW           1
 
 /* 1: Enable object groups (for keyboard/encoder navigation) */
-#define LV_USE_GROUP            0
+#define LV_USE_GROUP            1
 #if LV_USE_GROUP
 typedef void * lv_group_user_data_t;
 #endif  /*LV_USE_GROUP*/

@@ -30,8 +30,8 @@ static lv_res_t lv_canvas_signal(lv_obj_t * canvas, lv_signal_t sign, void * par
 /**********************
  *  STATIC VARIABLES
  **********************/
-static lv_signal_cb_t ancestor_signal;
-static lv_design_cb_t ancestor_design;
+LV_VAL_OBJX_CANVAS_ATTR static lv_signal_cb_t ancestor_signal;
+LV_VAL_OBJX_CANVAS_ATTR static lv_design_cb_t ancestor_design;
 
 /**********************
  *      MACROS
@@ -47,7 +47,7 @@ static lv_design_cb_t ancestor_design;
  * @param copy pointer to a canvas object, if not NULL then the new object will be copied from it
  * @return pointer to the created canvas
  */
-lv_obj_t * lv_canvas_create(lv_obj_t * par, const lv_obj_t * copy)
+LV_FUNC_OBJX_CANVAS_ATTR lv_obj_t * lv_canvas_create(lv_obj_t * par, const lv_obj_t * copy)
 {
     LV_LOG_TRACE("canvas create started");
 
@@ -109,7 +109,7 @@ lv_obj_t * lv_canvas_create(lv_obj_t * par, const lv_obj_t * copy)
  *      LV_IMG_CF_TRUE_COLOR, LV_IMG_CF_TRUE_COLOR_CHROMA_KEYED, LV_IMG_CF_INDEXES_1/2/4/8BIT
  *
  */
-void lv_canvas_set_buffer(lv_obj_t * canvas, void * buf, lv_coord_t w, lv_coord_t h, lv_img_cf_t cf)
+LV_FUNC_OBJX_CANVAS_ATTR void lv_canvas_set_buffer(lv_obj_t * canvas, void * buf, lv_coord_t w, lv_coord_t h, lv_img_cf_t cf)
 {
     lv_canvas_ext_t * ext = lv_obj_get_ext_attr(canvas);
 
@@ -129,7 +129,7 @@ void lv_canvas_set_buffer(lv_obj_t * canvas, void * buf, lv_coord_t w, lv_coord_
  * @param y x coordinate of the point to set
  * @param c color of the point
  */
-void lv_canvas_set_px(lv_obj_t * canvas, lv_coord_t x, lv_coord_t y, lv_color_t c)
+LV_FUNC_OBJX_CANVAS_ATTR void lv_canvas_set_px(lv_obj_t * canvas, lv_coord_t x, lv_coord_t y, lv_color_t c)
 {
     lv_canvas_ext_t * ext = lv_obj_get_ext_attr(canvas);
 
@@ -147,7 +147,7 @@ void lv_canvas_set_px(lv_obj_t * canvas, lv_coord_t x, lv_coord_t y, lv_color_t 
  *   - for `LV_IMG_CF_INDEXED8`: 0..255
  * @param c the color to set
  */
-void lv_canvas_set_palette(lv_obj_t * canvas, uint8_t id, lv_color_t c)
+LV_FUNC_OBJX_CANVAS_ATTR void lv_canvas_set_palette(lv_obj_t * canvas, uint8_t id, lv_color_t c)
 {
     lv_canvas_ext_t * ext = lv_obj_get_ext_attr(canvas);
 
@@ -161,7 +161,7 @@ void lv_canvas_set_palette(lv_obj_t * canvas, uint8_t id, lv_color_t c)
  * @param type which style should be set
  * @param style pointer to a style
  */
-void lv_canvas_set_style(lv_obj_t * canvas, lv_canvas_style_t type, const lv_style_t * style)
+LV_FUNC_OBJX_CANVAS_ATTR void lv_canvas_set_style(lv_obj_t * canvas, lv_canvas_style_t type, const lv_style_t * style)
 {
     switch(type) {
         case LV_CANVAS_STYLE_MAIN: lv_img_set_style(canvas, LV_IMG_STYLE_MAIN, style); break;
@@ -179,7 +179,7 @@ void lv_canvas_set_style(lv_obj_t * canvas, lv_canvas_style_t type, const lv_sty
  * @param y x coordinate of the point to set
  * @return color of the point
  */
-lv_color_t lv_canvas_get_px(lv_obj_t * canvas, lv_coord_t x, lv_coord_t y)
+LV_FUNC_OBJX_CANVAS_ATTR lv_color_t lv_canvas_get_px(lv_obj_t * canvas, lv_coord_t x, lv_coord_t y)
 {
     lv_canvas_ext_t * ext    = lv_obj_get_ext_attr(canvas);
     const lv_style_t * style = lv_canvas_get_style(canvas, LV_CANVAS_STYLE_MAIN);
@@ -192,7 +192,7 @@ lv_color_t lv_canvas_get_px(lv_obj_t * canvas, lv_coord_t x, lv_coord_t y)
  * @param canvas pointer to a canvas object
  * @return pointer to the image descriptor.
  */
-lv_img_dsc_t * lv_canvas_get_img(lv_obj_t * canvas)
+LV_FUNC_OBJX_CANVAS_ATTR lv_img_dsc_t * lv_canvas_get_img(lv_obj_t * canvas)
 {
     lv_canvas_ext_t * ext = lv_obj_get_ext_attr(canvas);
 
@@ -205,7 +205,7 @@ lv_img_dsc_t * lv_canvas_get_img(lv_obj_t * canvas)
  * @param type which style should be get
  * @return style pointer to the style
  */
-const lv_style_t * lv_canvas_get_style(const lv_obj_t * canvas, lv_canvas_style_t type)
+LV_FUNC_OBJX_CANVAS_ATTR const lv_style_t * lv_canvas_get_style(const lv_obj_t * canvas, lv_canvas_style_t type)
 {
     const lv_style_t * style = NULL;
 
@@ -231,7 +231,7 @@ const lv_style_t * lv_canvas_get_style(const lv_obj_t * canvas, lv_canvas_style_
  * @param x left side of the destination position
  * @param y top side of the destination position
  */
-void lv_canvas_copy_buf(lv_obj_t * canvas, const void * to_copy, lv_coord_t x, lv_coord_t y, lv_coord_t w, lv_coord_t h)
+LV_FUNC_OBJX_CANVAS_ATTR void lv_canvas_copy_buf(lv_obj_t * canvas, const void * to_copy, lv_coord_t x, lv_coord_t y, lv_coord_t w, lv_coord_t h)
 {
     lv_canvas_ext_t * ext = lv_obj_get_ext_attr(canvas);
     if(x + w >= ext->dsc.header.w || y + h >= ext->dsc.header.h) {
@@ -263,7 +263,7 @@ void lv_canvas_copy_buf(lv_obj_t * canvas, const void * to_copy, lv_coord_t x, l
  * @param pivot_y pivot Y of rotation. Relative to the source canvas
  *                Set to `source height / 2` to rotate around the center
  */
-void lv_canvas_rotate(lv_obj_t * canvas, lv_img_dsc_t * img, int16_t angle, lv_coord_t offset_x, lv_coord_t offset_y,
+LV_FUNC_OBJX_CANVAS_ATTR void lv_canvas_rotate(lv_obj_t * canvas, lv_img_dsc_t * img, int16_t angle, lv_coord_t offset_x, lv_coord_t offset_y,
                       int32_t pivot_x, int32_t pivot_y)
 {
     lv_canvas_ext_t * ext_dst = lv_obj_get_ext_attr(canvas);
@@ -428,7 +428,7 @@ void lv_canvas_rotate(lv_obj_t * canvas, lv_img_dsc_t * img, int16_t angle, lv_c
  * @param canvas pointer to a canvas
  * @param color the background color
  */
-void lv_canvas_fill_bg(lv_obj_t * canvas, lv_color_t color)
+LV_FUNC_OBJX_CANVAS_ATTR void lv_canvas_fill_bg(lv_obj_t * canvas, lv_color_t color)
 {
     lv_img_dsc_t * dsc = lv_canvas_get_img(canvas);
 
@@ -450,7 +450,7 @@ void lv_canvas_fill_bg(lv_obj_t * canvas, lv_color_t color)
  * @param h height of the rectangle
  * @param style style of the rectangle (`body` properties are used except `padding`)
  */
-void lv_canvas_draw_rect(lv_obj_t * canvas, lv_coord_t x, lv_coord_t y, lv_coord_t w, lv_coord_t h,
+LV_FUNC_OBJX_CANVAS_ATTR void lv_canvas_draw_rect(lv_obj_t * canvas, lv_coord_t x, lv_coord_t y, lv_coord_t w, lv_coord_t h,
                          const lv_style_t * style)
 {
     lv_img_dsc_t * dsc = lv_canvas_get_img(canvas);
@@ -509,7 +509,7 @@ void lv_canvas_draw_rect(lv_obj_t * canvas, lv_coord_t x, lv_coord_t y, lv_coord
  * @param txt text to display
  * @param align align of the text (`LV_LABEL_ALIGN_LEFT/RIGHT/CENTER`)
  */
-void lv_canvas_draw_text(lv_obj_t * canvas, lv_coord_t x, lv_coord_t y, lv_coord_t max_w, const lv_style_t * style,
+LV_FUNC_OBJX_CANVAS_ATTR void lv_canvas_draw_text(lv_obj_t * canvas, lv_coord_t x, lv_coord_t y, lv_coord_t max_w, const lv_style_t * style,
                          const char * txt, lv_label_align_t align)
 {
     lv_img_dsc_t * dsc = lv_canvas_get_img(canvas);
@@ -564,7 +564,7 @@ void lv_canvas_draw_text(lv_obj_t * canvas, lv_coord_t x, lv_coord_t y, lv_coord
  * @param src image source. Can be a pointer an `lv_img_dsc_t` variable or a path an image.
  * @param style style of the image (`image` properties are used)
  */
-void lv_canvas_draw_img(lv_obj_t * canvas, lv_coord_t x, lv_coord_t y, const void * src, const lv_style_t * style)
+LV_FUNC_OBJX_CANVAS_ATTR void lv_canvas_draw_img(lv_obj_t * canvas, lv_coord_t x, lv_coord_t y, const void * src, const lv_style_t * style)
 {
     lv_img_dsc_t * dsc = lv_canvas_get_img(canvas);
 
@@ -617,7 +617,7 @@ void lv_canvas_draw_img(lv_obj_t * canvas, lv_coord_t x, lv_coord_t y, const voi
  * @param point_cnt number of points
  * @param style style of the line (`line` properties are used)
  */
-void lv_canvas_draw_line(lv_obj_t * canvas, const lv_point_t * points, uint32_t point_cnt, const lv_style_t * style)
+LV_FUNC_OBJX_CANVAS_ATTR void lv_canvas_draw_line(lv_obj_t * canvas, const lv_point_t * points, uint32_t point_cnt, const lv_style_t * style)
 {
     lv_img_dsc_t * dsc = lv_canvas_get_img(canvas);
 
@@ -669,7 +669,7 @@ void lv_canvas_draw_line(lv_obj_t * canvas, const lv_point_t * points, uint32_t 
  * @param point_cnt number of points
  * @param style style of the polygon (`body.main_color` and `body.opa` is used)
  */
-void lv_canvas_draw_polygon(lv_obj_t * canvas, const lv_point_t * points, uint32_t point_cnt, const lv_style_t * style)
+LV_FUNC_OBJX_CANVAS_ATTR void lv_canvas_draw_polygon(lv_obj_t * canvas, const lv_point_t * points, uint32_t point_cnt, const lv_style_t * style)
 {
     lv_img_dsc_t * dsc = lv_canvas_get_img(canvas);
 
@@ -721,7 +721,7 @@ void lv_canvas_draw_polygon(lv_obj_t * canvas, const lv_point_t * points, uint32
  * @param end_angle end angle in degrees
  * @param style style of the polygon (`body.main_color` and `body.opa` is used)
  */
-void lv_canvas_draw_arc(lv_obj_t * canvas, lv_coord_t x, lv_coord_t y, lv_coord_t r, int32_t start_angle,
+LV_FUNC_OBJX_CANVAS_ATTR void lv_canvas_draw_arc(lv_obj_t * canvas, lv_coord_t x, lv_coord_t y, lv_coord_t r, int32_t start_angle,
                         int32_t end_angle, const lv_style_t * style)
 {
     lv_img_dsc_t * dsc = lv_canvas_get_img(canvas);
@@ -775,7 +775,7 @@ void lv_canvas_draw_arc(lv_obj_t * canvas, lv_coord_t x, lv_coord_t y, lv_coord_
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-static lv_res_t lv_canvas_signal(lv_obj_t * canvas, lv_signal_t sign, void * param)
+LV_FUNC_OBJX_CANVAS_ATTR static lv_res_t lv_canvas_signal(lv_obj_t * canvas, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 

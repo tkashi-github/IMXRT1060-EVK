@@ -27,8 +27,8 @@ static void refr_img(lv_obj_t * imgbtn);
 /**********************
  *  STATIC VARIABLES
  **********************/
-static lv_signal_cb_t ancestor_signal;
-static lv_design_cb_t ancestor_design;
+LV_VAL_OBJX_IMGBTN_ATTR static lv_signal_cb_t ancestor_signal;
+LV_VAL_OBJX_IMGBTN_ATTR static lv_design_cb_t ancestor_design;
 
 /**********************
  *      MACROS
@@ -45,7 +45,7 @@ static lv_design_cb_t ancestor_design;
  * it
  * @return pointer to the created image button
  */
-lv_obj_t * lv_imgbtn_create(lv_obj_t * par, const lv_obj_t * copy)
+LV_FUNC_OBJX_IMAGEBTN_ATTR lv_obj_t * lv_imgbtn_create(lv_obj_t * par, const lv_obj_t * copy)
 {
     LV_LOG_TRACE("image button create started");
 
@@ -110,7 +110,7 @@ lv_obj_t * lv_imgbtn_create(lv_obj_t * par, const lv_obj_t * copy)
  * @param state for which state set the new image (from `lv_btn_state_t`) `
  * @param src pointer to an image source (a C array or path to a file)
  */
-void lv_imgbtn_set_src(lv_obj_t * imgbtn, lv_btn_state_t state, const void * src)
+LV_FUNC_OBJX_IMAGEBTN_ATTR void lv_imgbtn_set_src(lv_obj_t * imgbtn, lv_btn_state_t state, const void * src)
 {
     lv_imgbtn_ext_t * ext = lv_obj_get_ext_attr(imgbtn);
 
@@ -131,7 +131,7 @@ void lv_imgbtn_set_src(lv_obj_t * imgbtn, lv_btn_state_t state, const void * src
  * @param src_right pointer to an image source for the right side of the button (a C array or path
  * to a file)
  */
-void lv_imgbtn_set_src(lv_obj_t * imgbtn, lv_btn_state_t state, const void * src_left, const void * src_mid,
+LV_FUNC_OBJX_IMAGEBTN_ATTR void lv_imgbtn_set_src(lv_obj_t * imgbtn, lv_btn_state_t state, const void * src_left, const void * src_mid,
                        const void * src_right)
 {
     lv_imgbtn_ext_t * ext = lv_obj_get_ext_attr(imgbtn);
@@ -151,7 +151,7 @@ void lv_imgbtn_set_src(lv_obj_t * imgbtn, lv_btn_state_t state, const void * src
  * @param type which style should be set
  * @param style pointer to a style
  */
-void lv_imgbtn_set_style(lv_obj_t * imgbtn, lv_imgbtn_style_t type, const lv_style_t * style)
+LV_FUNC_OBJX_IMAGEBTN_ATTR void lv_imgbtn_set_style(lv_obj_t * imgbtn, lv_imgbtn_style_t type, const lv_style_t * style)
 {
     lv_btn_set_style(imgbtn, type, style);
 }
@@ -167,7 +167,7 @@ void lv_imgbtn_set_style(lv_obj_t * imgbtn, lv_imgbtn_style_t type, const lv_sty
  * @param state the state where to get the image (from `lv_btn_state_t`) `
  * @return pointer to an image source (a C array or path to a file)
  */
-const void * lv_imgbtn_get_src(lv_obj_t * imgbtn, lv_btn_state_t state)
+LV_FUNC_OBJX_IMAGEBTN_ATTR const void * lv_imgbtn_get_src(lv_obj_t * imgbtn, lv_btn_state_t state)
 {
     lv_imgbtn_ext_t * ext = lv_obj_get_ext_attr(imgbtn);
 
@@ -181,7 +181,7 @@ const void * lv_imgbtn_get_src(lv_obj_t * imgbtn, lv_btn_state_t state)
  * @param state the state where to get the image (from `lv_btn_state_t`) `
  * @return pointer to the left image source (a C array or path to a file)
  */
-const void * lv_imgbtn_get_src_left(lv_obj_t * imgbtn, lv_btn_state_t state)
+LV_FUNC_OBJX_IMAGEBTN_ATTR const void * lv_imgbtn_get_src_left(lv_obj_t * imgbtn, lv_btn_state_t state)
 {
     lv_imgbtn_ext_t * ext = lv_obj_get_ext_attr(imgbtn);
 
@@ -194,7 +194,7 @@ const void * lv_imgbtn_get_src_left(lv_obj_t * imgbtn, lv_btn_state_t state)
  * @param state the state where to get the image (from `lv_btn_state_t`) `
  * @return pointer to the middle image source (a C array or path to a file)
  */
-const void * lv_imgbtn_get_src_middle(lv_obj_t * imgbtn, lv_btn_state_t state)
+LV_FUNC_OBJX_IMAGEBTN_ATTR const void * lv_imgbtn_get_src_middle(lv_obj_t * imgbtn, lv_btn_state_t state)
 {
     lv_imgbtn_ext_t * ext = lv_obj_get_ext_attr(imgbtn);
 
@@ -207,7 +207,7 @@ const void * lv_imgbtn_get_src_middle(lv_obj_t * imgbtn, lv_btn_state_t state)
  * @param state the state where to get the image (from `lv_btn_state_t`) `
  * @return pointer to the left image source (a C array or path to a file)
  */
-const void * lv_imgbtn_get_src_right(lv_obj_t * imgbtn, lv_btn_state_t state)
+LV_FUNC_OBJX_IMAGEBTN_ATTR const void * lv_imgbtn_get_src_right(lv_obj_t * imgbtn, lv_btn_state_t state)
 {
     lv_imgbtn_ext_t * ext = lv_obj_get_ext_attr(imgbtn);
 
@@ -222,7 +222,7 @@ const void * lv_imgbtn_get_src_right(lv_obj_t * imgbtn, lv_btn_state_t state)
  * @param type which style should be get
  * @return style pointer to the style
  */
-const lv_style_t * lv_imgbtn_get_style(const lv_obj_t * imgbtn, lv_imgbtn_style_t type)
+LV_FUNC_OBJX_IMAGEBTN_ATTR const lv_style_t * lv_imgbtn_get_style(const lv_obj_t * imgbtn, lv_imgbtn_style_t type)
 {
     return lv_btn_get_style(imgbtn, type);
 }
@@ -249,7 +249,7 @@ const lv_style_t * lv_imgbtn_get_style(const lv_obj_t * imgbtn, lv_imgbtn_style_
  *             LV_DESIGN_DRAW_POST: drawing after every children are drawn
  * @param return true/false, depends on 'mode'
  */
-static bool lv_imgbtn_design(lv_obj_t * imgbtn, const lv_area_t * mask, lv_design_mode_t mode)
+LV_FUNC_OBJX_IMAGEBTN_ATTR static bool lv_imgbtn_design(lv_obj_t * imgbtn, const lv_area_t * mask, lv_design_mode_t mode)
 {
     /*Return false if the object is not covers the mask_p area*/
     if(mode == LV_DESIGN_COVER_CHK) {
@@ -336,7 +336,7 @@ static bool lv_imgbtn_design(lv_obj_t * imgbtn, const lv_area_t * mask, lv_desig
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-static lv_res_t lv_imgbtn_signal(lv_obj_t * imgbtn, lv_signal_t sign, void * param)
+LV_FUNC_OBJX_IMAGEBTN_ATTR static lv_res_t lv_imgbtn_signal(lv_obj_t * imgbtn, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 
@@ -362,7 +362,7 @@ static lv_res_t lv_imgbtn_signal(lv_obj_t * imgbtn, lv_signal_t sign, void * par
     return res;
 }
 
-static void refr_img(lv_obj_t * imgbtn)
+LV_FUNC_OBJX_IMAGEBTN_ATTR static void refr_img(lv_obj_t * imgbtn)
 {
     lv_imgbtn_ext_t * ext = lv_obj_get_ext_attr(imgbtn);
     lv_btn_state_t state  = lv_imgbtn_get_state(imgbtn);

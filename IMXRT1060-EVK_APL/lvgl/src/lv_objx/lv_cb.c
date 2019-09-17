@@ -30,9 +30,9 @@ static lv_res_t lv_cb_signal(lv_obj_t * cb, lv_signal_t sign, void * param);
 /**********************
  *  STATIC VARIABLES
  **********************/
-static lv_design_cb_t ancestor_bg_design;
-static lv_design_cb_t ancestor_bullet_design;
-static lv_signal_cb_t ancestor_signal;
+LV_VAL_OBJX_CB_ATTR static lv_design_cb_t ancestor_bg_design;
+LV_VAL_OBJX_CB_ATTR static lv_design_cb_t ancestor_bullet_design;
+LV_VAL_OBJX_CB_ATTR static lv_signal_cb_t ancestor_signal;
 
 /**********************
  *      MACROS
@@ -48,7 +48,7 @@ static lv_signal_cb_t ancestor_signal;
  * @param copy pointer to a check box object, if not NULL then the new object will be copied from it
  * @return pointer to the created check box
  */
-lv_obj_t * lv_cb_create(lv_obj_t * par, const lv_obj_t * copy)
+LV_FUNC_OBJX_CB_ATTR lv_obj_t * lv_cb_create(lv_obj_t * par, const lv_obj_t * copy)
 {
 
     LV_LOG_TRACE("check box create started");
@@ -124,7 +124,7 @@ lv_obj_t * lv_cb_create(lv_obj_t * par, const lv_obj_t * copy)
  * @param cb pointer to a check box
  * @param txt the text of the check box. NULL to refresh with the current text.
  */
-void lv_cb_set_text(lv_obj_t * cb, const char * txt)
+LV_FUNC_OBJX_CB_ATTR void lv_cb_set_text(lv_obj_t * cb, const char * txt)
 {
     lv_cb_ext_t * ext = lv_obj_get_ext_attr(cb);
     lv_label_set_text(ext->label, txt);
@@ -136,7 +136,7 @@ void lv_cb_set_text(lv_obj_t * cb, const char * txt)
  * @param cb pointer to a check box
  * @param txt the text of the check box. NULL to refresh with the current text.
  */
-void lv_cb_set_static_text(lv_obj_t * cb, const char * txt)
+LV_FUNC_OBJX_CB_ATTR void lv_cb_set_static_text(lv_obj_t * cb, const char * txt)
 {
     lv_cb_ext_t * ext = lv_obj_get_ext_attr(cb);
     lv_label_set_static_text(ext->label, txt);
@@ -148,7 +148,7 @@ void lv_cb_set_static_text(lv_obj_t * cb, const char * txt)
  * @param type which style should be set
  * @param style pointer to a style
  *  */
-void lv_cb_set_style(lv_obj_t * cb, lv_cb_style_t type, const lv_style_t * style)
+LV_FUNC_OBJX_CB_ATTR void lv_cb_set_style(lv_obj_t * cb, lv_cb_style_t type, const lv_style_t * style)
 {
     lv_cb_ext_t * ext = lv_obj_get_ext_attr(cb);
 
@@ -177,7 +177,7 @@ void lv_cb_set_style(lv_obj_t * cb, lv_cb_style_t type, const lv_style_t * style
  * @param cb pointer to check box object
  * @return pointer to the text of the check box
  */
-const char * lv_cb_get_text(const lv_obj_t * cb)
+LV_FUNC_OBJX_CB_ATTR const char * lv_cb_get_text(const lv_obj_t * cb)
 {
     lv_cb_ext_t * ext = lv_obj_get_ext_attr(cb);
     return lv_label_get_text(ext->label);
@@ -189,7 +189,7 @@ const char * lv_cb_get_text(const lv_obj_t * cb)
  * @param type which style should be get
  * @return style pointer to the style
  *  */
-const lv_style_t * lv_cb_get_style(const lv_obj_t * cb, lv_cb_style_t type)
+LV_FUNC_OBJX_CB_ATTR const lv_style_t * lv_cb_get_style(const lv_obj_t * cb, lv_cb_style_t type)
 {
     const lv_style_t * style = NULL;
     lv_cb_ext_t * ext        = lv_obj_get_ext_attr(cb);
@@ -220,7 +220,7 @@ const lv_style_t * lv_cb_get_style(const lv_obj_t * cb, lv_cb_style_t type)
  *             LV_DESIGN_DRAW_POST: drawing after every children are drawn
  * @param return true/false, depends on 'mode'
  */
-static bool lv_cb_design(lv_obj_t * cb, const lv_area_t * mask, lv_design_mode_t mode)
+LV_FUNC_OBJX_CB_ATTR static bool lv_cb_design(lv_obj_t * cb, const lv_area_t * mask, lv_design_mode_t mode)
 {
     bool result = true;
 
@@ -253,7 +253,7 @@ static bool lv_cb_design(lv_obj_t * cb, const lv_area_t * mask, lv_design_mode_t
  *             LV_DESIGN_DRAW_POST: drawing after every children are drawn
  * @param return true/false, depends on 'mode'
  */
-static bool lv_bullet_design(lv_obj_t * bullet, const lv_area_t * mask, lv_design_mode_t mode)
+LV_FUNC_OBJX_CB_ATTR static bool lv_bullet_design(lv_obj_t * bullet, const lv_area_t * mask, lv_design_mode_t mode)
 {
     if(mode == LV_DESIGN_COVER_CHK) {
         return ancestor_bullet_design(bullet, mask, mode);
@@ -293,7 +293,7 @@ static bool lv_bullet_design(lv_obj_t * bullet, const lv_area_t * mask, lv_desig
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-static lv_res_t lv_cb_signal(lv_obj_t * cb, lv_signal_t sign, void * param)
+LV_FUNC_OBJX_CB_ATTR static lv_res_t lv_cb_signal(lv_obj_t * cb, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 

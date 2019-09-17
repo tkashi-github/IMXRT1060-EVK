@@ -30,47 +30,47 @@ static lv_res_t lv_kb_signal(lv_obj_t * kb, lv_signal_t sign, void * param);
 /**********************
  *  STATIC VARIABLES
  **********************/
-static lv_signal_cb_t ancestor_signal;
+LV_VAL_OBJX_KB_ATTR static lv_signal_cb_t ancestor_signal;
 /* clang-format off */
-static const char * kb_map_lc[] = {"1#", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "Bksp", "\n",
+LV_CVAL_OBJX_KB_ATTR static const char * kb_map_lc[] = {"1#", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "Bksp", "\n",
                                    "ABC", "a", "s", "d", "f", "g", "h", "j", "k", "l", "Enter", "\n",
                                    "_", "-", "z", "x", "c", "v", "b", "n", "m", ".", ",", ":", "\n",
                                    LV_SYMBOL_CLOSE, LV_SYMBOL_LEFT, " ", LV_SYMBOL_RIGHT, LV_SYMBOL_OK, ""};
 
-static const lv_btnm_ctrl_t kb_ctrl_lc_map[] = {
+LV_CVAL_OBJX_KB_ATTR static const lv_btnm_ctrl_t kb_ctrl_lc_map[] = {
     LV_KB_CTRL_BTN_FLAGS | 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 7,
     LV_KB_CTRL_BTN_FLAGS | 6, 3, 3, 3, 3, 3, 3, 3, 3, 3, 7,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     LV_KB_CTRL_BTN_FLAGS | 2, 2, 6, 2, LV_KB_CTRL_BTN_FLAGS | 2};
 
-static const char * kb_map_uc[] = {"1#", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "Bksp", "\n",
+LV_CVAL_OBJX_KB_ATTR static const char * kb_map_uc[] = {"1#", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "Bksp", "\n",
                                    "abc", "A", "S", "D", "F", "G", "H", "J", "K", "L", "Enter", "\n",
                                    "_", "-", "Z", "X", "C", "V", "B", "N", "M", ".", ",", ":", "\n",
                                    LV_SYMBOL_CLOSE, LV_SYMBOL_LEFT, " ", LV_SYMBOL_RIGHT, LV_SYMBOL_OK, ""};
 
-static const lv_btnm_ctrl_t kb_ctrl_uc_map[] = {
+LV_CVAL_OBJX_KB_ATTR static const lv_btnm_ctrl_t kb_ctrl_uc_map[] = {
     LV_KB_CTRL_BTN_FLAGS | 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 7,
     LV_KB_CTRL_BTN_FLAGS | 6, 3, 3, 3, 3, 3, 3, 3, 3, 3, 7,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     LV_KB_CTRL_BTN_FLAGS | 2, 2, 6, 2, LV_KB_CTRL_BTN_FLAGS | 2};
 
-static const char * kb_map_spec[] = {"0", "1", "2", "3", "4" ,"5", "6", "7", "8", "9", "Bksp", "\n",
+LV_CVAL_OBJX_KB_ATTR static const char * kb_map_spec[] = {"0", "1", "2", "3", "4" ,"5", "6", "7", "8", "9", "Bksp", "\n",
                                      "abc", "+", "-", "/", "*", "=", "%", "!", "?", "#", "<", ">", "\n",
                                      "\\",  "@", "$", "(", ")", "{", "}", "[", "]", ";", "\"", "'", "\n",
                                      LV_SYMBOL_CLOSE, LV_SYMBOL_LEFT, " ", LV_SYMBOL_RIGHT, LV_SYMBOL_OK, ""};
 
-static const lv_btnm_ctrl_t kb_ctrl_spec_map[] = {
+LV_CVAL_OBJX_KB_ATTR static const lv_btnm_ctrl_t kb_ctrl_spec_map[] = {
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, LV_KB_CTRL_BTN_FLAGS | 2,
     LV_KB_CTRL_BTN_FLAGS | 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     LV_KB_CTRL_BTN_FLAGS | 2, 2, 6, 2, LV_KB_CTRL_BTN_FLAGS | 2};
 
-static const char * kb_map_num[] = {"1", "2", "3", LV_SYMBOL_CLOSE, "\n",
+LV_CVAL_OBJX_KB_ATTR static const char * kb_map_num[] = {"1", "2", "3", LV_SYMBOL_CLOSE, "\n",
                                     "4", "5", "6", LV_SYMBOL_OK, "\n",
                                     "7", "8", "9", "Bksp", "\n",
                                     "+/-", "0", ".", LV_SYMBOL_LEFT, LV_SYMBOL_RIGHT, ""};
 
-static const lv_btnm_ctrl_t kb_ctrl_num_map[] = {
+LV_CVAL_OBJX_KB_ATTR static const lv_btnm_ctrl_t kb_ctrl_num_map[] = {
         1, 1, 1, LV_KB_CTRL_BTN_FLAGS | 2,
         1, 1, 1, LV_KB_CTRL_BTN_FLAGS | 2,
         1, 1, 1, 2,
@@ -91,7 +91,7 @@ static const lv_btnm_ctrl_t kb_ctrl_num_map[] = {
  * @param copy pointer to a keyboard object, if not NULL then the new object will be copied from it
  * @return pointer to the created keyboard
  */
-lv_obj_t * lv_kb_create(lv_obj_t * par, const lv_obj_t * copy)
+LV_FUNC_OBJX_KB_ATTR lv_obj_t * lv_kb_create(lv_obj_t * par, const lv_obj_t * copy)
 {
     LV_LOG_TRACE("keyboard create started");
 
@@ -168,7 +168,7 @@ lv_obj_t * lv_kb_create(lv_obj_t * par, const lv_obj_t * copy)
  * @param kb pointer to a Keyboard object
  * @param ta pointer to a Text Area object to write there
  */
-void lv_kb_set_ta(lv_obj_t * kb, lv_obj_t * ta)
+LV_FUNC_OBJX_KB_ATTR void lv_kb_set_ta(lv_obj_t * kb, lv_obj_t * ta)
 {
     lv_kb_ext_t * ext = lv_obj_get_ext_attr(kb);
     lv_cursor_type_t cur_type;
@@ -193,7 +193,7 @@ void lv_kb_set_ta(lv_obj_t * kb, lv_obj_t * ta)
  * @param kb pointer to a Keyboard object
  * @param mode the mode from 'lv_kb_mode_t'
  */
-void lv_kb_set_mode(lv_obj_t * kb, lv_kb_mode_t mode)
+LV_FUNC_OBJX_KB_ATTR void lv_kb_set_mode(lv_obj_t * kb, lv_kb_mode_t mode)
 {
     lv_kb_ext_t * ext = lv_obj_get_ext_attr(kb);
     if(ext->mode == mode) return;
@@ -213,7 +213,7 @@ void lv_kb_set_mode(lv_obj_t * kb, lv_kb_mode_t mode)
  * @param kb pointer to a Keyboard object
  * @param en true: show cursor on the current text area, false: hide cursor
  */
-void lv_kb_set_cursor_manage(lv_obj_t * kb, bool en)
+LV_FUNC_OBJX_KB_ATTR void lv_kb_set_cursor_manage(lv_obj_t * kb, bool en)
 {
     lv_kb_ext_t * ext = lv_obj_get_ext_attr(kb);
     if(ext->cursor_mng == en) return;
@@ -238,7 +238,7 @@ void lv_kb_set_cursor_manage(lv_obj_t * kb, bool en)
  * @param type which style should be set
  * @param style pointer to a style
  */
-void lv_kb_set_style(lv_obj_t * kb, lv_kb_style_t type, const lv_style_t * style)
+LV_FUNC_OBJX_KB_ATTR void lv_kb_set_style(lv_obj_t * kb, lv_kb_style_t type, const lv_style_t * style)
 {
     switch(type) {
         case LV_KB_STYLE_BG: lv_btnm_set_style(kb, LV_BTNM_STYLE_BG, style); break;
@@ -259,7 +259,7 @@ void lv_kb_set_style(lv_obj_t * kb, lv_kb_style_t type, const lv_style_t * style
  * @param kb pointer to a Keyboard object
  * @return pointer to the assigned Text Area object
  */
-lv_obj_t * lv_kb_get_ta(const lv_obj_t * kb)
+LV_FUNC_OBJX_KB_ATTR lv_obj_t * lv_kb_get_ta(const lv_obj_t * kb)
 {
     lv_kb_ext_t * ext = lv_obj_get_ext_attr(kb);
     return ext->ta;
@@ -270,7 +270,7 @@ lv_obj_t * lv_kb_get_ta(const lv_obj_t * kb)
  * @param kb pointer to a Keyboard object
  * @return the current mode from 'lv_kb_mode_t'
  */
-lv_kb_mode_t lv_kb_get_mode(const lv_obj_t * kb)
+LV_FUNC_OBJX_KB_ATTR lv_kb_mode_t lv_kb_get_mode(const lv_obj_t * kb)
 {
     lv_kb_ext_t * ext = lv_obj_get_ext_attr(kb);
     return ext->mode;
@@ -281,7 +281,7 @@ lv_kb_mode_t lv_kb_get_mode(const lv_obj_t * kb)
  * @param kb pointer to a Keyboard object
  * @return true: show cursor on the current text area, false: hide cursor
  */
-bool lv_kb_get_cursor_manage(const lv_obj_t * kb)
+LV_FUNC_OBJX_KB_ATTR bool lv_kb_get_cursor_manage(const lv_obj_t * kb)
 {
     lv_kb_ext_t * ext = lv_obj_get_ext_attr(kb);
     return ext->cursor_mng == 0 ? false : true;
@@ -293,7 +293,7 @@ bool lv_kb_get_cursor_manage(const lv_obj_t * kb)
  * @param type which style should be get
  * @return style pointer to a style
  */
-const lv_style_t * lv_kb_get_style(const lv_obj_t * kb, lv_kb_style_t type)
+LV_FUNC_OBJX_KB_ATTR const lv_style_t * lv_kb_get_style(const lv_obj_t * kb, lv_kb_style_t type)
 {
     const lv_style_t * style = NULL;
 
@@ -321,7 +321,7 @@ const lv_style_t * lv_kb_get_style(const lv_obj_t * kb, lv_kb_style_t type)
  * @param kb pointer to a  keyboard
  * @param event the triggering event
  */
-void lv_kb_def_event_cb(lv_obj_t * kb, lv_event_t event)
+LV_FUNC_OBJX_KB_ATTR void lv_kb_def_event_cb(lv_obj_t * kb, lv_event_t event)
 {
     if(event != LV_EVENT_VALUE_CHANGED) return;
 
@@ -412,7 +412,7 @@ void lv_kb_def_event_cb(lv_obj_t * kb, lv_event_t event)
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-static lv_res_t lv_kb_signal(lv_obj_t * kb, lv_signal_t sign, void * param)
+LV_FUNC_OBJX_KB_ATTR static lv_res_t lv_kb_signal(lv_obj_t * kb, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 
