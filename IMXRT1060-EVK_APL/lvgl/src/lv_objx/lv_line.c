@@ -32,7 +32,7 @@ static lv_res_t lv_line_signal(lv_obj_t * line, lv_signal_t sign, void * param);
 /**********************
  *  STATIC VARIABLES
  **********************/
-static lv_signal_cb_t ancestor_signal;
+LV_VAL_OBJX_LINE_ATTR static lv_signal_cb_t ancestor_signal;
 
 /**********************
  *      MACROS
@@ -47,7 +47,7 @@ static lv_signal_cb_t ancestor_signal;
  * @param par pointer to an object, it will be the parent of the new line
  * @return pointer to the created line
  */
-lv_obj_t * lv_line_create(lv_obj_t * par, const lv_obj_t * copy)
+LV_FUNC_OBJX_LINE_ATTR lv_obj_t * lv_line_create(lv_obj_t * par, const lv_obj_t * copy)
 {
     LV_LOG_TRACE("line create started");
 
@@ -105,7 +105,7 @@ lv_obj_t * lv_line_create(lv_obj_t * par, const lv_obj_t * copy)
  * so the array can NOT be a local variable which will be destroyed
  * @param point_num number of points in 'point_a'
  */
-void lv_line_set_points(lv_obj_t * line, const lv_point_t point_a[], uint16_t point_num)
+LV_FUNC_OBJX_LINE_ATTR void lv_line_set_points(lv_obj_t * line, const lv_point_t point_a[], uint16_t point_num)
 {
     lv_line_ext_t * ext = lv_obj_get_ext_attr(line);
     ext->point_array    = point_a;
@@ -133,7 +133,7 @@ void lv_line_set_points(lv_obj_t * line, const lv_point_t point_a[], uint16_t po
  * @param line pointer to a line object
  * @param en true: auto size is enabled, false: auto size is disabled
  */
-void lv_line_set_auto_size(lv_obj_t * line, bool en)
+LV_FUNC_OBJX_LINE_ATTR void lv_line_set_auto_size(lv_obj_t * line, bool en)
 {
     lv_line_ext_t * ext = lv_obj_get_ext_attr(line);
     if(ext->auto_size == en) return;
@@ -151,7 +151,7 @@ void lv_line_set_auto_size(lv_obj_t * line, bool en)
  * @param line pointer to a line object
  * @param en true: enable the y inversion, false:disable the y inversion
  */
-void lv_line_set_y_invert(lv_obj_t * line, bool en)
+LV_FUNC_OBJX_LINE_ATTR void lv_line_set_y_invert(lv_obj_t * line, bool en)
 {
     lv_line_ext_t * ext = lv_obj_get_ext_attr(line);
     if(ext->y_inv == en) return;
@@ -170,7 +170,7 @@ void lv_line_set_y_invert(lv_obj_t * line, bool en)
  * @param line pointer to a line object
  * @return true: auto size is enabled, false: disabled
  */
-bool lv_line_get_auto_size(const lv_obj_t * line)
+LV_FUNC_OBJX_LINE_ATTR bool lv_line_get_auto_size(const lv_obj_t * line)
 {
     lv_line_ext_t * ext = lv_obj_get_ext_attr(line);
 
@@ -182,7 +182,7 @@ bool lv_line_get_auto_size(const lv_obj_t * line)
  * @param line pointer to a line object
  * @return true: y inversion is enabled, false: disabled
  */
-bool lv_line_get_y_invert(const lv_obj_t * line)
+LV_FUNC_OBJX_LINE_ATTR bool lv_line_get_y_invert(const lv_obj_t * line)
 {
     lv_line_ext_t * ext = lv_obj_get_ext_attr(line);
 
@@ -203,7 +203,7 @@ bool lv_line_get_y_invert(const lv_obj_t * line)
  *             LV_DESIGN_DRAW_POST: drawing after every children are drawn
  * @param return true/false, depends on 'mode'
  */
-static bool lv_line_design(lv_obj_t * line, const lv_area_t * mask, lv_design_mode_t mode)
+LV_FUNC_OBJX_LINE_ATTR static bool lv_line_design(lv_obj_t * line, const lv_area_t * mask, lv_design_mode_t mode)
 {
     /*A line never covers an area*/
     if(mode == LV_DESIGN_COVER_CHK)
@@ -275,7 +275,7 @@ static bool lv_line_design(lv_obj_t * line, const lv_area_t * mask, lv_design_mo
  * @param sign a signal type from lv_signal_t enum
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-static lv_res_t lv_line_signal(lv_obj_t * line, lv_signal_t sign, void * param)
+LV_FUNC_OBJX_LINE_ATTR static lv_res_t lv_line_signal(lv_obj_t * line, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 

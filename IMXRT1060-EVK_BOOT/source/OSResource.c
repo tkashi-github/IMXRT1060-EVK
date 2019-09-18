@@ -117,7 +117,7 @@ static stEventFlagTable_t s_stEventFlagTable[] = {
 	{&g_efLPUART[enLPUART8], {"EF_LPUART", 0, &s_xLPUARTEventGroupBuffer[enLPUART8], sizeof(StaticEventGroup_t)}},
 
 	{&g_efFSReady, {"EF_FSREADY", 0, &s_xFSReadyEventGroupBuffer, sizeof(StaticEventGroup_t)}},
-	{NULL, NULL},
+	{NULL, {NULL}},
 };
 
 void CreateEventGroup(void){	

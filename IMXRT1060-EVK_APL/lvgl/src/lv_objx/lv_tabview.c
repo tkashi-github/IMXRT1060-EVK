@@ -46,9 +46,9 @@ static void tabview_realign(lv_obj_t * tabview);
 /**********************
  *  STATIC VARIABLES
  **********************/
-static lv_signal_cb_t ancestor_signal;
-static lv_signal_cb_t page_signal;
-static lv_signal_cb_t page_scrl_signal;
+LV_VAL_OBJX_TABVIEW_ATTR static lv_signal_cb_t ancestor_signal;
+LV_VAL_OBJX_TABVIEW_ATTR static lv_signal_cb_t page_signal;
+LV_VAL_OBJX_TABVIEW_ATTR static lv_signal_cb_t page_scrl_signal;
 static const char * tab_def[] = {""};
 
 /**********************
@@ -65,7 +65,7 @@ static const char * tab_def[] = {""};
  * @param copy pointer to a tab object, if not NULL then the new object will be copied from it
  * @return pointer to the created tab
  */
-lv_obj_t * lv_tabview_create(lv_obj_t * par, const lv_obj_t * copy)
+LV_FUNC_OBJX_TABVIEW_ATTR lv_obj_t * lv_tabview_create(lv_obj_t * par, const lv_obj_t * copy)
 {
     LV_LOG_TRACE("tab view create started");
 
@@ -190,7 +190,7 @@ lv_obj_t * lv_tabview_create(lv_obj_t * par, const lv_obj_t * copy)
  * Delete all children of the scrl object, without deleting scrl child.
  * @param obj pointer to an object
  */
-void lv_tabview_clean(lv_obj_t * obj)
+LV_FUNC_OBJX_TABVIEW_ATTR void lv_tabview_clean(lv_obj_t * obj)
 {
     lv_obj_t * scrl = lv_page_get_scrl(obj);
     lv_obj_clean(scrl);
@@ -206,7 +206,7 @@ void lv_tabview_clean(lv_obj_t * obj)
  * @param name the text on the tab button
  * @return pointer to the created page object (lv_page). You can create your content here
  */
-lv_obj_t * lv_tabview_add_tab(lv_obj_t * tabview, const char * name)
+LV_FUNC_OBJX_TABVIEW_ATTR lv_obj_t * lv_tabview_add_tab(lv_obj_t * tabview, const char * name)
 {
     lv_tabview_ext_t * ext = lv_obj_get_ext_attr(tabview);
 
@@ -326,7 +326,7 @@ lv_obj_t * lv_tabview_add_tab(lv_obj_t * tabview, const char * name)
  * @param id index of a tab to load
  * @param anim LV_ANIM_ON: set the value with an animation; LV_ANIM_OFF: change the value immediately
  */
-void lv_tabview_set_tab_act(lv_obj_t * tabview, uint16_t id, lv_anim_enable_t anim)
+LV_FUNC_OBJX_TABVIEW_ATTR void lv_tabview_set_tab_act(lv_obj_t * tabview, uint16_t id, lv_anim_enable_t anim)
 {
 #if LV_USE_ANIMATION == 0
     anim = LV_ANIM_OFF;
@@ -450,7 +450,7 @@ void lv_tabview_set_tab_act(lv_obj_t * tabview, uint16_t id, lv_anim_enable_t an
  * @param tabview pointer to Tab view object
  * @param en true: enable sliding; false: disable sliding
  */
-void lv_tabview_set_sliding(lv_obj_t * tabview, bool en)
+LV_FUNC_OBJX_TABVIEW_ATTR void lv_tabview_set_sliding(lv_obj_t * tabview, bool en)
 {
     lv_tabview_ext_t * ext = lv_obj_get_ext_attr(tabview);
     ext->slide_enable      = en == false ? 0 : 1;
@@ -461,7 +461,7 @@ void lv_tabview_set_sliding(lv_obj_t * tabview, bool en)
  * @param tabview pointer to Tab view object
  * @param anim_time_ms time of animation in milliseconds
  */
-void lv_tabview_set_anim_time(lv_obj_t * tabview, uint16_t anim_time)
+LV_FUNC_OBJX_TABVIEW_ATTR void lv_tabview_set_anim_time(lv_obj_t * tabview, uint16_t anim_time)
 {
 #if LV_USE_ANIMATION
     lv_tabview_ext_t * ext = lv_obj_get_ext_attr(tabview);
@@ -478,7 +478,7 @@ void lv_tabview_set_anim_time(lv_obj_t * tabview, uint16_t anim_time)
  * @param type which style should be set
  * @param style pointer to the new style
  */
-void lv_tabview_set_style(lv_obj_t * tabview, lv_tabview_style_t type, const lv_style_t * style)
+LV_FUNC_OBJX_TABVIEW_ATTR void lv_tabview_set_style(lv_obj_t * tabview, lv_tabview_style_t type, const lv_style_t * style)
 {
     lv_tabview_ext_t * ext = lv_obj_get_ext_attr(tabview);
 
@@ -515,7 +515,7 @@ void lv_tabview_set_style(lv_obj_t * tabview, lv_tabview_style_t type, const lv_
  * @param tabview pointer to a tan view object
  * @param btns_pos which button position
  */
-void lv_tabview_set_btns_pos(lv_obj_t * tabview, lv_tabview_btns_pos_t btns_pos)
+LV_FUNC_OBJX_TABVIEW_ATTR void lv_tabview_set_btns_pos(lv_obj_t * tabview, lv_tabview_btns_pos_t btns_pos)
 {
     lv_tabview_ext_t * ext = lv_obj_get_ext_attr(tabview);
 
@@ -528,7 +528,7 @@ void lv_tabview_set_btns_pos(lv_obj_t * tabview, lv_tabview_btns_pos_t btns_pos)
  * @param tabview pointer to a tab view object
  * @param en whether tab buttons are hidden
  */
-void lv_tabview_set_btns_hidden(lv_obj_t * tabview, bool en)
+LV_FUNC_OBJX_TABVIEW_ATTR void lv_tabview_set_btns_hidden(lv_obj_t * tabview, bool en)
 {
     lv_tabview_ext_t * ext = lv_obj_get_ext_attr(tabview);
 
@@ -545,7 +545,7 @@ void lv_tabview_set_btns_hidden(lv_obj_t * tabview, bool en)
  * @param tabview pointer to Tab view object
  * @return the active btn index
  */
-uint16_t lv_tabview_get_tab_act(const lv_obj_t * tabview)
+LV_FUNC_OBJX_TABVIEW_ATTR uint16_t lv_tabview_get_tab_act(const lv_obj_t * tabview)
 {
     lv_tabview_ext_t * ext = lv_obj_get_ext_attr(tabview);
     return ext->tab_cur;
@@ -556,7 +556,7 @@ uint16_t lv_tabview_get_tab_act(const lv_obj_t * tabview)
  * @param tabview pointer to Tab view object
  * @return btn count
  */
-uint16_t lv_tabview_get_tab_count(const lv_obj_t * tabview)
+LV_FUNC_OBJX_TABVIEW_ATTR uint16_t lv_tabview_get_tab_count(const lv_obj_t * tabview)
 {
     lv_tabview_ext_t * ext = lv_obj_get_ext_attr(tabview);
     return ext->tab_cnt;
@@ -568,7 +568,7 @@ uint16_t lv_tabview_get_tab_count(const lv_obj_t * tabview)
  * @param id index of the btn (>= 0)
  * @return pointer to page (lv_page) object
  */
-lv_obj_t * lv_tabview_get_tab(const lv_obj_t * tabview, uint16_t id)
+LV_FUNC_OBJX_TABVIEW_ATTR lv_obj_t * lv_tabview_get_tab(const lv_obj_t * tabview, uint16_t id)
 {
     lv_tabview_ext_t * ext = lv_obj_get_ext_attr(tabview);
     uint16_t i             = 0;
@@ -589,7 +589,7 @@ lv_obj_t * lv_tabview_get_tab(const lv_obj_t * tabview, uint16_t id)
  * @param tabview pointer to Tab view object
  * @return true: enable sliding; false: disable sliding
  */
-bool lv_tabview_get_sliding(const lv_obj_t * tabview)
+LV_FUNC_OBJX_TABVIEW_ATTR bool lv_tabview_get_sliding(const lv_obj_t * tabview)
 {
     lv_tabview_ext_t * ext = lv_obj_get_ext_attr(tabview);
     return ext->slide_enable ? true : false;
@@ -600,7 +600,7 @@ bool lv_tabview_get_sliding(const lv_obj_t * tabview)
  * @param tabview pointer to Tab view object
  * @return time of animation in milliseconds
  */
-uint16_t lv_tabview_get_anim_time(const lv_obj_t * tabview)
+LV_FUNC_OBJX_TABVIEW_ATTR uint16_t lv_tabview_get_anim_time(const lv_obj_t * tabview)
 {
 #if LV_USE_ANIMATION
     lv_tabview_ext_t * ext = lv_obj_get_ext_attr(tabview);
@@ -617,7 +617,7 @@ uint16_t lv_tabview_get_anim_time(const lv_obj_t * tabview)
  * @param type which style should be get
  * @return style pointer to a style
  */
-const lv_style_t * lv_tabview_get_style(const lv_obj_t * tabview, lv_tabview_style_t type)
+LV_FUNC_OBJX_TABVIEW_ATTR const lv_style_t * lv_tabview_get_style(const lv_obj_t * tabview, lv_tabview_style_t type)
 {
     const lv_style_t * style = NULL;
     lv_tabview_ext_t * ext   = lv_obj_get_ext_attr(tabview);
@@ -639,7 +639,7 @@ const lv_style_t * lv_tabview_get_style(const lv_obj_t * tabview, lv_tabview_sty
  * Get position of tab select buttons
  * @param tabview pointer to a ab view object
  */
-lv_tabview_btns_pos_t lv_tabview_get_btns_pos(const lv_obj_t * tabview)
+LV_FUNC_OBJX_TABVIEW_ATTR lv_tabview_btns_pos_t lv_tabview_get_btns_pos(const lv_obj_t * tabview)
 {
     lv_tabview_ext_t * ext = lv_obj_get_ext_attr(tabview);
     return ext->btns_pos;
@@ -650,7 +650,7 @@ lv_tabview_btns_pos_t lv_tabview_get_btns_pos(const lv_obj_t * tabview)
  * @param tabview pointer to a tab view object
  * @return whether tab buttons are hidden
  */
-bool lv_tabview_get_btns_hidden(const lv_obj_t * tabview)
+LV_FUNC_OBJX_TABVIEW_ATTR bool lv_tabview_get_btns_hidden(const lv_obj_t * tabview)
 {
     lv_tabview_ext_t * ext = lv_obj_get_ext_attr(tabview);
 
@@ -668,7 +668,7 @@ bool lv_tabview_get_btns_hidden(const lv_obj_t * tabview)
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-static lv_res_t lv_tabview_signal(lv_obj_t * tabview, lv_signal_t sign, void * param)
+LV_FUNC_OBJX_TABVIEW_ATTR static lv_res_t lv_tabview_signal(lv_obj_t * tabview, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 
@@ -748,7 +748,7 @@ static lv_res_t lv_tabview_signal(lv_obj_t * tabview, lv_signal_t sign, void * p
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-static lv_res_t tabpage_signal(lv_obj_t * tab_page, lv_signal_t sign, void * param)
+LV_FUNC_OBJX_TABVIEW_ATTR static lv_res_t tabpage_signal(lv_obj_t * tab_page, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 
@@ -778,7 +778,7 @@ static lv_res_t tabpage_signal(lv_obj_t * tab_page, lv_signal_t sign, void * par
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-static lv_res_t tabpage_scrl_signal(lv_obj_t * tab_scrl, lv_signal_t sign, void * param)
+LV_FUNC_OBJX_TABVIEW_ATTR static lv_res_t tabpage_scrl_signal(lv_obj_t * tab_scrl, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 
@@ -808,7 +808,7 @@ static lv_res_t tabpage_scrl_signal(lv_obj_t * tab_scrl, lv_signal_t sign, void 
  * @param tabview pointer to the btn view object
  * @param tabpage pointer to the page of a btn
  */
-static void tabpage_pressed_handler(lv_obj_t * tabview, lv_obj_t * tabpage)
+LV_FUNC_OBJX_TABVIEW_ATTR static void tabpage_pressed_handler(lv_obj_t * tabview, lv_obj_t * tabpage)
 {
     (void)tabpage;
 
@@ -822,7 +822,7 @@ static void tabpage_pressed_handler(lv_obj_t * tabview, lv_obj_t * tabpage)
  * @param tabview pointer to the btn view object
  * @param tabpage pointer to the page of a btn
  */
-static void tabpage_pressing_handler(lv_obj_t * tabview, lv_obj_t * tabpage)
+LV_FUNC_OBJX_TABVIEW_ATTR static void tabpage_pressing_handler(lv_obj_t * tabview, lv_obj_t * tabpage)
 {
     lv_tabview_ext_t * ext = lv_obj_get_ext_attr(tabview);
     lv_indev_t * indev     = lv_indev_get_act();
@@ -891,7 +891,7 @@ static void tabpage_pressing_handler(lv_obj_t * tabview, lv_obj_t * tabpage)
  * @param tabview pointer to the btn view object
  * @param tabpage pointer to the page of a btn
  */
-static void tabpage_press_lost_handler(lv_obj_t * tabview, lv_obj_t * tabpage)
+LV_FUNC_OBJX_TABVIEW_ATTR static void tabpage_press_lost_handler(lv_obj_t * tabview, lv_obj_t * tabpage)
 {
     lv_tabview_ext_t * ext = lv_obj_get_ext_attr(tabview);
     ext->drag_hor          = 0;
@@ -938,7 +938,7 @@ static void tabpage_press_lost_handler(lv_obj_t * tabview, lv_obj_t * tabpage)
  * @param tab_btnm pointer to the tab's button matrix object
  * @param event type of the event
  */
-static void tab_btnm_event_cb(lv_obj_t * tab_btnm, lv_event_t event)
+LV_FUNC_OBJX_TABVIEW_ATTR static void tab_btnm_event_cb(lv_obj_t * tab_btnm, lv_event_t event)
 {
     if(event != LV_EVENT_CLICKED) return;
 
@@ -964,7 +964,7 @@ static void tab_btnm_event_cb(lv_obj_t * tab_btnm, lv_event_t event)
  * Realign and resize the elements of Tab view
  * @param tabview pointer to a Tab view object
  */
-static void tabview_realign(lv_obj_t * tabview)
+LV_FUNC_OBJX_TABVIEW_ATTR static void tabview_realign(lv_obj_t * tabview)
 {
     lv_tabview_ext_t * ext = lv_obj_get_ext_attr(tabview);
 

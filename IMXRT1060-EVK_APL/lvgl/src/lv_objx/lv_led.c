@@ -33,8 +33,8 @@ static lv_res_t lv_led_signal(lv_obj_t * led, lv_signal_t sign, void * param);
 /**********************
  *  STATIC VARIABLES
  **********************/
-static lv_design_cb_t ancestor_design_f;
-static lv_signal_cb_t ancestor_signal;
+LV_VAL_OBJX_LED_ATTR static lv_design_cb_t ancestor_design_f;
+LV_VAL_OBJX_LED_ATTR static lv_signal_cb_t ancestor_signal;
 
 /**********************
  *      MACROS
@@ -50,7 +50,7 @@ static lv_signal_cb_t ancestor_signal;
  * @param copy pointer to a led object, if not NULL then the new object will be copied from it
  * @return pointer to the created led
  */
-lv_obj_t * lv_led_create(lv_obj_t * par, const lv_obj_t * copy)
+LV_FUNC_OBJX_LED_ATTR lv_obj_t * lv_led_create(lv_obj_t * par, const lv_obj_t * copy)
 {
     LV_LOG_TRACE("led create started");
 
@@ -107,7 +107,7 @@ lv_obj_t * lv_led_create(lv_obj_t * par, const lv_obj_t * copy)
  * @param led pointer to a LED object
  * @param bright 0 (max. dark) ... 255 (max. light)
  */
-void lv_led_set_bright(lv_obj_t * led, uint8_t bright)
+LV_FUNC_OBJX_LED_ATTR void lv_led_set_bright(lv_obj_t * led, uint8_t bright)
 {
     /*Set the brightness*/
     lv_led_ext_t * ext = lv_obj_get_ext_attr(led);
@@ -123,7 +123,7 @@ void lv_led_set_bright(lv_obj_t * led, uint8_t bright)
  * Light on a LED
  * @param led pointer to a LED object
  */
-void lv_led_on(lv_obj_t * led)
+LV_FUNC_OBJX_LED_ATTR void lv_led_on(lv_obj_t * led)
 {
     lv_led_set_bright(led, LV_LED_BRIGHT_ON);
 }
@@ -132,7 +132,7 @@ void lv_led_on(lv_obj_t * led)
  * Light off a LED
  * @param led pointer to a LED object
  */
-void lv_led_off(lv_obj_t * led)
+LV_FUNC_OBJX_LED_ATTR void lv_led_off(lv_obj_t * led)
 {
     lv_led_set_bright(led, LV_LED_BRIGHT_OFF);
 }
@@ -141,7 +141,7 @@ void lv_led_off(lv_obj_t * led)
  * Toggle the state of a LED
  * @param led pointer to a LED object
  */
-void lv_led_toggle(lv_obj_t * led)
+LV_FUNC_OBJX_LED_ATTR void lv_led_toggle(lv_obj_t * led)
 {
     uint8_t bright = lv_led_get_bright(led);
     if(bright > (LV_LED_BRIGHT_OFF + LV_LED_BRIGHT_ON) >> 1)
@@ -159,7 +159,7 @@ void lv_led_toggle(lv_obj_t * led)
  * @param led pointer to LED object
  * @return bright 0 (max. dark) ... 255 (max. light)
  */
-uint8_t lv_led_get_bright(const lv_obj_t * led)
+LV_FUNC_OBJX_LED_ATTR uint8_t lv_led_get_bright(const lv_obj_t * led)
 {
     lv_led_ext_t * ext = lv_obj_get_ext_attr(led);
     return ext->bright;
@@ -179,7 +179,7 @@ uint8_t lv_led_get_bright(const lv_obj_t * led)
  *             LV_DESIGN_DRAW_POST: drawing after every children are drawn
  * @param return true/false, depends on 'mode'
  */
-static bool lv_led_design(lv_obj_t * led, const lv_area_t * mask, lv_design_mode_t mode)
+LV_FUNC_OBJX_LED_ATTR static bool lv_led_design(lv_obj_t * led, const lv_area_t * mask, lv_design_mode_t mode)
 {
     if(mode == LV_DESIGN_COVER_CHK) {
         /*Return false if the object is not covers the mask area*/
@@ -223,7 +223,7 @@ static bool lv_led_design(lv_obj_t * led, const lv_area_t * mask, lv_design_mode
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-static lv_res_t lv_led_signal(lv_obj_t * led, lv_signal_t sign, void * param)
+LV_FUNC_OBJX_LED_ATTR static lv_res_t lv_led_signal(lv_obj_t * led, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 

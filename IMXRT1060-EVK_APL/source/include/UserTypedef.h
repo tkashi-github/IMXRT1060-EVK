@@ -59,8 +59,10 @@ extern "C"
 #include "stream_buffer.h"
 #include "queue.h"
 
-/*  */
+/* MCU specification Header */
 #include "MIMXRT1062.h"
+#include "MIMXRT1062_features.h"
+#include "fsl_device_registers.h"
 
 /** version.h */
 #include "version.h"
@@ -76,13 +78,7 @@ typedef enum{
 	enLPUART_MIN = 1,
 	enLPUART1=1,
 	enLPUART2,
-	enLPUART3,
-	enLPUART4,
-	enLPUART5,
-	enLPUART6,
-	enLPUART7,
-	enLPUART8,
-	enLPUART_MAX = enLPUART8,
+	enLPUART_MAX = enLPUART2,
 }enLPUART_t;
 
 /** Task Message */

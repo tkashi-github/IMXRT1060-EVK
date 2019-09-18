@@ -34,8 +34,8 @@ static lv_res_t lv_slider_signal(lv_obj_t * slider, lv_signal_t sign, void * par
 /**********************
  *  STATIC VARIABLES
  **********************/
-static lv_design_cb_t ancestor_design_f;
-static lv_signal_cb_t ancestor_signal;
+LV_VAL_OBJX_SLIDER_ATTR static lv_design_cb_t ancestor_design_f;
+LV_VAL_OBJX_SLIDER_ATTR static lv_signal_cb_t ancestor_signal;
 
 /**********************
  *      MACROS
@@ -51,7 +51,7 @@ static lv_signal_cb_t ancestor_signal;
  * @param copy pointer to a slider object, if not NULL then the new object will be copied from it
  * @return pointer to the created slider
  */
-lv_obj_t * lv_slider_create(lv_obj_t * par, const lv_obj_t * copy)
+LV_FUNC_OBJX_SLIDER_ATTR lv_obj_t * lv_slider_create(lv_obj_t * par, const lv_obj_t * copy)
 {
     LV_LOG_TRACE("slider create started");
 
@@ -116,7 +116,7 @@ lv_obj_t * lv_slider_create(lv_obj_t * par, const lv_obj_t * copy)
  * @param in true: the knob is drawn always in the slider;
  *           false: the knob can be out on the edges
  */
-void lv_slider_set_knob_in(lv_obj_t * slider, bool in)
+LV_FUNC_OBJX_SLIDER_ATTR void lv_slider_set_knob_in(lv_obj_t * slider, bool in)
 {
     lv_slider_ext_t * ext = lv_obj_get_ext_attr(slider);
     if(ext->knob_in == in) return;
@@ -131,7 +131,7 @@ void lv_slider_set_knob_in(lv_obj_t * slider, bool in)
  * @param type which style should be set
  * @param style pointer to a style
  */
-void lv_slider_set_style(lv_obj_t * slider, lv_slider_style_t type, const lv_style_t * style)
+LV_FUNC_OBJX_SLIDER_ATTR void lv_slider_set_style(lv_obj_t * slider, lv_slider_style_t type, const lv_style_t * style)
 {
     lv_slider_ext_t * ext = lv_obj_get_ext_attr(slider);
 
@@ -154,7 +154,7 @@ void lv_slider_set_style(lv_obj_t * slider, lv_slider_style_t type, const lv_sty
  * @param slider pointer to a slider object
  * @return the value of the slider
  */
-int16_t lv_slider_get_value(const lv_obj_t * slider)
+LV_FUNC_OBJX_SLIDER_ATTR int16_t lv_slider_get_value(const lv_obj_t * slider)
 {
     lv_slider_ext_t * ext = lv_obj_get_ext_attr(slider);
 
@@ -169,7 +169,7 @@ int16_t lv_slider_get_value(const lv_obj_t * slider)
  * @param slider pointer to a slider object
  * @return true: drag in progress false: not dragged
  */
-bool lv_slider_is_dragged(const lv_obj_t * slider)
+LV_FUNC_OBJX_SLIDER_ATTR bool lv_slider_is_dragged(const lv_obj_t * slider)
 {
     lv_slider_ext_t * ext = lv_obj_get_ext_attr(slider);
     return ext->drag_value == LV_SLIDER_NOT_PRESSED ? false : true;
@@ -181,7 +181,7 @@ bool lv_slider_is_dragged(const lv_obj_t * slider)
  * @return true: the knob is drawn always in the slider;
  *         false: the knob can be out on the edges
  */
-bool lv_slider_get_knob_in(const lv_obj_t * slider)
+LV_FUNC_OBJX_SLIDER_ATTR bool lv_slider_get_knob_in(const lv_obj_t * slider)
 {
     lv_slider_ext_t * ext = lv_obj_get_ext_attr(slider);
     return ext->knob_in == 0 ? false : true;
@@ -193,7 +193,7 @@ bool lv_slider_get_knob_in(const lv_obj_t * slider)
  * @param type which style should be get
  * @return style pointer to a style
  */
-const lv_style_t * lv_slider_get_style(const lv_obj_t * slider, lv_slider_style_t type)
+LV_FUNC_OBJX_SLIDER_ATTR const lv_style_t * lv_slider_get_style(const lv_obj_t * slider, lv_slider_style_t type)
 {
     const lv_style_t * style = NULL;
     lv_slider_ext_t * ext    = lv_obj_get_ext_attr(slider);
@@ -222,7 +222,7 @@ const lv_style_t * lv_slider_get_style(const lv_obj_t * slider, lv_slider_style_
  *             LV_DESIGN_DRAW_POST: drawing after every children are drawn
  * @param return true/false, depends on 'mode'
  */
-static bool lv_slider_design(lv_obj_t * slider, const lv_area_t * mask, lv_design_mode_t mode)
+LV_FUNC_OBJX_SLIDER_ATTR static bool lv_slider_design(lv_obj_t * slider, const lv_area_t * mask, lv_design_mode_t mode)
 {
     /*Return false if the object is not covers the mask_p area*/
     if(mode == LV_DESIGN_COVER_CHK) {
@@ -458,7 +458,7 @@ static bool lv_slider_design(lv_obj_t * slider, const lv_area_t * mask, lv_desig
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-static lv_res_t lv_slider_signal(lv_obj_t * slider, lv_signal_t sign, void * param)
+LV_FUNC_OBJX_SLIDER_ATTR static lv_res_t lv_slider_signal(lv_obj_t * slider, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 

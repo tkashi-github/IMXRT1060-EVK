@@ -37,7 +37,7 @@ LV_CVAL_OBJX_KB_ATTR static const char * kb_map_lc[] = {"1#", "q", "w", "e", "r"
                                    "_", "-", "z", "x", "c", "v", "b", "n", "m", ".", ",", ":", "\n",
                                    LV_SYMBOL_CLOSE, LV_SYMBOL_LEFT, " ", LV_SYMBOL_RIGHT, LV_SYMBOL_OK, ""};
 
-LV_CVAL_OBJX_KB_ATTR static const lv_btnm_ctrl_t kb_ctrl_lc_map[] = {
+static const lv_btnm_ctrl_t kb_ctrl_lc_map[] = {
     LV_KB_CTRL_BTN_FLAGS | 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 7,
     LV_KB_CTRL_BTN_FLAGS | 6, 3, 3, 3, 3, 3, 3, 3, 3, 3, 7,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -48,7 +48,7 @@ LV_CVAL_OBJX_KB_ATTR static const char * kb_map_uc[] = {"1#", "Q", "W", "E", "R"
                                    "_", "-", "Z", "X", "C", "V", "B", "N", "M", ".", ",", ":", "\n",
                                    LV_SYMBOL_CLOSE, LV_SYMBOL_LEFT, " ", LV_SYMBOL_RIGHT, LV_SYMBOL_OK, ""};
 
-LV_CVAL_OBJX_KB_ATTR static const lv_btnm_ctrl_t kb_ctrl_uc_map[] = {
+static const lv_btnm_ctrl_t kb_ctrl_uc_map[] = {
     LV_KB_CTRL_BTN_FLAGS | 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 7,
     LV_KB_CTRL_BTN_FLAGS | 6, 3, 3, 3, 3, 3, 3, 3, 3, 3, 7,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -59,7 +59,7 @@ LV_CVAL_OBJX_KB_ATTR static const char * kb_map_spec[] = {"0", "1", "2", "3", "4
                                      "\\",  "@", "$", "(", ")", "{", "}", "[", "]", ";", "\"", "'", "\n",
                                      LV_SYMBOL_CLOSE, LV_SYMBOL_LEFT, " ", LV_SYMBOL_RIGHT, LV_SYMBOL_OK, ""};
 
-LV_CVAL_OBJX_KB_ATTR static const lv_btnm_ctrl_t kb_ctrl_spec_map[] = {
+static const lv_btnm_ctrl_t kb_ctrl_spec_map[] = {
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, LV_KB_CTRL_BTN_FLAGS | 2,
     LV_KB_CTRL_BTN_FLAGS | 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -70,7 +70,7 @@ LV_CVAL_OBJX_KB_ATTR static const char * kb_map_num[] = {"1", "2", "3", LV_SYMBO
                                     "7", "8", "9", "Bksp", "\n",
                                     "+/-", "0", ".", LV_SYMBOL_LEFT, LV_SYMBOL_RIGHT, ""};
 
-LV_CVAL_OBJX_KB_ATTR static const lv_btnm_ctrl_t kb_ctrl_num_map[] = {
+static const lv_btnm_ctrl_t kb_ctrl_num_map[] = {
         1, 1, 1, LV_KB_CTRL_BTN_FLAGS | 2,
         1, 1, 1, LV_KB_CTRL_BTN_FLAGS | 2,
         1, 1, 1, 2,

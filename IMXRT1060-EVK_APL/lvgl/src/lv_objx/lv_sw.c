@@ -34,7 +34,7 @@ static lv_res_t lv_sw_signal(lv_obj_t * sw, lv_signal_t sign, void * param);
 /**********************
  *  STATIC VARIABLES
  **********************/
-static lv_signal_cb_t ancestor_signal;
+LV_VAL_OBJX_SW_ATTR static lv_signal_cb_t ancestor_signal;
 
 /**********************
  *      MACROS
@@ -50,7 +50,7 @@ static lv_signal_cb_t ancestor_signal;
  * @param copy pointer to a switch object, if not NULL then the new object will be copied from it
  * @return pointer to the created switch
  */
-lv_obj_t * lv_sw_create(lv_obj_t * par, const lv_obj_t * copy)
+LV_FUNC_OBJX_SW_ATTR lv_obj_t * lv_sw_create(lv_obj_t * par, const lv_obj_t * copy)
 {
     LV_LOG_TRACE("switch create started");
 
@@ -127,7 +127,7 @@ lv_obj_t * lv_sw_create(lv_obj_t * par, const lv_obj_t * copy)
  * @param sw pointer to a switch objec
  * @param anim LV_ANOM_ON: set the value with an animation; LV_ANIM_OFF: change the value immediately
  */
-void lv_sw_on(lv_obj_t * sw, lv_anim_enable_t anim)
+LV_FUNC_OBJX_SW_ATTR void lv_sw_on(lv_obj_t * sw, lv_anim_enable_t anim)
 {
 #if LV_USE_ANIMATION == 0
     anim = LV_ANIM_OFF;
@@ -142,7 +142,7 @@ void lv_sw_on(lv_obj_t * sw, lv_anim_enable_t anim)
  * @param sw pointer to a switch object
  * @param anim LV_ANIM_ON: set the value with an animation; LV_ANIM_OFF: change the value immediately
  */
-void lv_sw_off(lv_obj_t * sw, lv_anim_enable_t anim)
+LV_FUNC_OBJX_SW_ATTR void lv_sw_off(lv_obj_t * sw, lv_anim_enable_t anim)
 {
 #if LV_USE_ANIMATION == 0
     anim = LV_ANIM_OFF;
@@ -158,7 +158,7 @@ void lv_sw_off(lv_obj_t * sw, lv_anim_enable_t anim)
  * @param anim LV_ANIM_ON: set the value with an animation; LV_ANIM_OFF: change the value immediately
  * @return resulting state of the switch.
  */
-bool lv_sw_toggle(lv_obj_t * sw, lv_anim_enable_t anim)
+LV_FUNC_OBJX_SW_ATTR bool lv_sw_toggle(lv_obj_t * sw, lv_anim_enable_t anim)
 {
 #if LV_USE_ANIMATION == 0
     anim = LV_ANIM_OFF;
@@ -179,7 +179,7 @@ bool lv_sw_toggle(lv_obj_t * sw, lv_anim_enable_t anim)
  * @param type which style should be set
  * @param style pointer to a style
  */
-void lv_sw_set_style(lv_obj_t * sw, lv_sw_style_t type, const lv_style_t * style)
+LV_FUNC_OBJX_SW_ATTR void lv_sw_set_style(lv_obj_t * sw, lv_sw_style_t type, const lv_style_t * style)
 {
     lv_sw_ext_t * ext = lv_obj_get_ext_attr(sw);
 
@@ -197,7 +197,7 @@ void lv_sw_set_style(lv_obj_t * sw, lv_sw_style_t type, const lv_style_t * style
     }
 }
 
-void lv_sw_set_anim_time(lv_obj_t * sw, uint16_t anim_time)
+LV_FUNC_OBJX_SW_ATTR void lv_sw_set_anim_time(lv_obj_t * sw, uint16_t anim_time)
 {
 #if LV_USE_ANIMATION
     lv_sw_ext_t * ext = lv_obj_get_ext_attr(sw);
@@ -218,7 +218,7 @@ void lv_sw_set_anim_time(lv_obj_t * sw, uint16_t anim_time)
  * @param type which style should be get
  * @return style pointer to a style
  */
-const lv_style_t * lv_sw_get_style(const lv_obj_t * sw, lv_sw_style_t type)
+LV_FUNC_OBJX_SW_ATTR const lv_style_t * lv_sw_get_style(const lv_obj_t * sw, lv_sw_style_t type)
 {
     const lv_style_t * style = NULL;
     lv_sw_ext_t * ext        = lv_obj_get_ext_attr(sw);
@@ -234,7 +234,7 @@ const lv_style_t * lv_sw_get_style(const lv_obj_t * sw, lv_sw_style_t type)
     return style;
 }
 
-uint16_t lv_sw_get_anim_time(const lv_obj_t * sw)
+LV_FUNC_OBJX_SW_ATTR uint16_t lv_sw_get_anim_time(const lv_obj_t * sw)
 {
 
 #if LV_USE_ANIMATION
@@ -257,7 +257,7 @@ uint16_t lv_sw_get_anim_time(const lv_obj_t * sw)
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-static lv_res_t lv_sw_signal(lv_obj_t * sw, lv_signal_t sign, void * param)
+LV_FUNC_OBJX_SW_ATTR static lv_res_t lv_sw_signal(lv_obj_t * sw, lv_signal_t sign, void * param)
 {
     lv_sw_ext_t * ext = lv_obj_get_ext_attr(sw);
 
