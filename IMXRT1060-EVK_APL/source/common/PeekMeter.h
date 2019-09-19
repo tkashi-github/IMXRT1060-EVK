@@ -46,6 +46,7 @@ extern "C"
 #include "UserTypedef.h"
 #include "OSResource.h"
 
+#include "arm_math.h"
 extern void LoudnessFilter16bitStereo(const q15_t pi16Src[], q15_t pi16Dst[], uint32_t SampleCount);
 
 #ifdef __cplusplus

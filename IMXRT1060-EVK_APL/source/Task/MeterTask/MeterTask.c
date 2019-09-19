@@ -89,7 +89,7 @@ void CreatePeekMeter(void)
 
 static inline float64_t GetPeekdBFS(float64_t dfpPrevPeekdBFS){
 	float64_t dfpTemp = dfpPrevPeekdBFS;
-	dfpTemp -= 0.012 * DEF_REFRESH_RATE;
+	dfpTemp -= 0.012 * DEF_PEEK_METER_REFRESH_RATE;
 
 	return dfpTemp;
 }
@@ -176,7 +176,7 @@ DefALLOCATE_ITCM void MeterTask(void const *argument)
 				/* NOP */
 			}
 		}
-		vTaskDelayUntil((TickType_t *const)&tick, 1000/DEF_REFRESH_RATE);	// 50FPS
+		vTaskDelayUntil((TickType_t *const)&tick, 1000/DEF_PEEK_METER_REFRESH_RATE);	// 50FPS
 	}
 }
 

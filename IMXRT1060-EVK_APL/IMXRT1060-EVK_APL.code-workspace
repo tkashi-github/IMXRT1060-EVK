@@ -132,6 +132,7 @@
 			"ENABLE_RAM_VECTOR_TABLE",
 			"FSL_SDK_ENABLE_DRIVER_CACHE_CONTROL",
 			"SDK_I2C_BASED_COMPONENT_USED",
+			"ARM_MATH_DSP",
 		],
 		"editor.autoClosingBrackets": "never",
 	}

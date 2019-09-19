@@ -46,7 +46,7 @@ extern "C"
 #include "UserTypedef.h"
 #include "OSResource.h"
 
-#define DEF_REFRESH_RATE	(50u)
+#define DEF_PEEK_METER_REFRESH_RATE	(50u)
 
 extern void MeterTask(void const *argument);
 extern _Bool PostMsgLcdMeterTask(uint32_t u32X, uint32_t u32Y);

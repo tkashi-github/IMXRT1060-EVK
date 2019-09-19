@@ -33,7 +33,6 @@
 #include "PeekMeter.h"
 #include "common.h"
 #include <stdlib.h>
-#include "arm_math.h"
 #include "Task/MeterTask/MeterTask.h"
 
 DefALLOCATE_DATA_DTCM static float32_t s_sfpACoef1[] = {
@@ -262,15 +261,124 @@ DefALLOCATE_ITCM __attribute__((optimize("-O3"))) void LoudnessFilter32bitStereo
 	return;
 }
 
-DefALLOCATE_BSS_DTCM static q15_t s_aq15AbsSample[2 * kAudioMaxOfSampleRate * kAudioMaxOfChannels / DEF_PEEK_METER_REFRESH_RATE];
-DefALLOCATE_BSS_DTCM static q15_t s_aq15LoudnessedSample[kAudioMaxOfSampleRate * kAudioMaxOfChannels / DEF_PEEK_METER_REFRESH_RATE];
+DefALLOCATE_ITCM __attribute__((optimize("-O3"))) void peekMeterAbsQ15(
+	const q15_t *pSrc,
+	q15_t *pDst,
+	uint32_t blockSize)
+{
+	uint32_t blkCnt; /* Loop counter */
+	q15_t in;		 /* Temporary input variable */
+
+	/* Loop unrolling: Compute 4 outputs at a time */
+	blkCnt = blockSize >> 2U;
+
+	while (blkCnt > 0U)
+	{
+		/* C = |A| */
+
+		/* Calculate absolute of input (if -1 then saturated to 0x7fff) and store result in destination buffer. */
+		in = *pSrc++;
+#if defined(ARM_MATH_DSP)
+		*pDst++ = (in > 0) ? in : (q15_t)__QSUB16(0, in);
+#else
+		*pDst++ = (in > 0) ? in : ((in == (q15_t)0x8000) ? 0x7fff : -in);
+#endif
+
+		in = *pSrc++;
+#if defined(ARM_MATH_DSP)
+		*pDst++ = (in > 0) ? in : (q15_t)__QSUB16(0, in);
+#else
+		*pDst++ = (in > 0) ? in : ((in == (q15_t)0x8000) ? 0x7fff : -in);
+#endif
+
+		in = *pSrc++;
+#if defined(ARM_MATH_DSP)
+		*pDst++ = (in > 0) ? in : (q15_t)__QSUB16(0, in);
+#else
+		*pDst++ = (in > 0) ? in : ((in == (q15_t)0x8000) ? 0x7fff : -in);
+#endif
+
+		in = *pSrc++;
+#if defined(ARM_MATH_DSP)
+		*pDst++ = (in > 0) ? in : (q15_t)__QSUB16(0, in);
+#else
+		*pDst++ = (in > 0) ? in : ((in == (q15_t)0x8000) ? 0x7fff : -in);
+#endif
+
+		/* Decrement loop counter */
+		blkCnt--;
+	}
+
+	/* Loop unrolling: Compute remaining outputs */
+	blkCnt = blockSize % 0x4U;
+
+	while (blkCnt > 0U)
+	{
+		/* C = |A| */
+
+		/* Calculate absolute of input (if -1 then saturated to 0x7fff) and store result in destination buffer. */
+		in = *pSrc++;
+#if defined(ARM_MATH_DSP)
+		*pDst++ = (in > 0) ? in : (q15_t)__QSUB16(0, in);
+#else
+		*pDst++ = (in > 0) ? in : ((in == (q15_t)0x8000) ? 0x7fff : -in);
+#endif
+
+		/* Decrement loop counter */
+		blkCnt--;
+	}
+}
+
+DefALLOCATE_ITCM __attribute__((optimize("-O3"))) void peekMeterCopyQ15(
+	const q15_t *pSrc,
+	q15_t *pDst,
+	uint32_t blockSize)
+{
+	uint32_t blkCnt; /* Loop counter */
+
+	/* Loop unrolling: Compute 4 outputs at a time */
+	blkCnt = blockSize >> 2U;
+
+	while (blkCnt > 0U)
+	{
+		/* C = A */
+
+		/* read 2 times 2 samples at a time */
+		write_q15x2_ia(&pDst, read_q15x2_ia((q15_t **)&pSrc));
+		write_q15x2_ia(&pDst, read_q15x2_ia((q15_t **)&pSrc));
+
+		/* Decrement loop counter */
+		blkCnt--;
+	}
+
+	/* Loop unrolling: Compute remaining outputs */
+	blkCnt = blockSize % 0x4U;
+
+	while (blkCnt > 0U)
+	{
+		/* C = A */
+
+		/* Copy and store result in destination buffer */
+		*pDst++ = *pSrc++;
+
+		/* Decrement loop counter */
+		blkCnt--;
+	}
+}
+
+#define DEF_MAX_SAMPLE_RATE	(96000u)
+#define DEF_MAX_CHANNELS	(2u)
+#include "Task/MeterTask/MeterTask.h"
+
+DefALLOCATE_BSS_DTCM static q15_t s_aq15AbsSample[(2 * DEF_MAX_SAMPLE_RATE * DEF_MAX_CHANNELS) / DEF_PEEK_METER_REFRESH_RATE];
+DefALLOCATE_BSS_DTCM static q15_t s_aq15LoudnessedSample[(DEF_MAX_SAMPLE_RATE * DEF_MAX_CHANNELS) / DEF_PEEK_METER_REFRESH_RATE];
 
 DefALLOCATE_ITCM __attribute__((optimize("-O3"))) void DrvSAIGetPeek16bitStereo(uint32_t u32SampleRate, const int16_t pu16[], uint32_t u32SampleCnt)
 {
 	uint32_t u32Cnt = 0;
-	uint32_t u32ElementCnt = u32SampleCnt * kAudioMaxOfChannels;
+	uint32_t u32ElementCnt = u32SampleCnt * DEF_MAX_CHANNELS;
 	uint32_t u32SampleCntPerRR = u32SampleRate / DEF_PEEK_METER_REFRESH_RATE;
-	uint32_t u32ElementCntPerRR = u32SampleCntPerRR * kAudioMaxOfChannels;
+	uint32_t u32ElementCntPerRR = u32SampleCntPerRR * DEF_MAX_CHANNELS;
 	static uint32_t s_u32Wp = 0;
 
 	LoudnessFilterStereoInit();
@@ -292,13 +400,13 @@ DefALLOCATE_ITCM __attribute__((optimize("-O3"))) void DrvSAIGetPeek16bitStereo(
 			u32ElementCnt = 0;
 		}
 
-		LoudnessFilter16bitStereo(&pu16[u32Rp], s_aq15LoudnessedSample, u32Elem / kAudioMaxOfChannels);
+		LoudnessFilter16bitStereo(&pu16[u32Rp], s_aq15LoudnessedSample, u32Elem / DEF_MAX_CHANNELS);
 		/** 絶対値の算出 */
-		arm_abs_q15(s_aq15LoudnessedSample, &s_aq15AbsSample[s_u32Wp], u32Elem);
+		peekMeterAbsQ15(s_aq15LoudnessedSample, &s_aq15AbsSample[s_u32Wp], u32Elem);
 		s_u32Wp += u32Elem;
 
 		if (s_u32Wp >= u32ElementCntPerRR)
-		{	/* DEF_PEEK_METER_REFRESH_RATE分のデータがたまった */
+		{ /* DEF_PEEK_METER_REFRESH_RATE分のデータがたまった */
 			q15_t i16RMax = 0;
 			q15_t i16LMax = 0;
 
@@ -320,7 +428,7 @@ DefALLOCATE_ITCM __attribute__((optimize("-O3"))) void DrvSAIGetPeek16bitStereo(
 				if (s_u32Wp > u32ElementCntPerRR)
 				{
 					uint32_t u32CopyCnt = s_u32Wp - u32ElementCntPerRR;
-					arm_copy_q15(&s_aq15AbsSample[u32ElementCntPerRR], s_aq15AbsSample, u32CopyCnt);
+					peekMeterCopyQ15(&s_aq15AbsSample[u32ElementCntPerRR], s_aq15AbsSample, u32CopyCnt);
 					s_u32Wp = u32CopyCnt;
 				}
 				else
@@ -336,9 +444,9 @@ DefALLOCATE_ITCM __attribute__((optimize("-O3"))) void DrvSAIGetPeek16bitStereo(
 DefALLOCATE_ITCM __attribute__((optimize("-O3"))) void DrvSAIGetPeek24bitStereo(uint32_t u32SampleRate, const uint8_t pu8[], uint32_t u32SampleCnt)
 {
 	uint32_t u32Cnt = 0;
-	uint32_t u32ElementCnt = u32SampleCnt * kAudioMaxOfChannels;
+	uint32_t u32ElementCnt = u32SampleCnt * DEF_MAX_CHANNELS;
 	uint32_t u32SampleCntPerRR = u32SampleRate / DEF_PEEK_METER_REFRESH_RATE;
-	uint32_t u32ElementCntPerRR = u32SampleCntPerRR * kAudioMaxOfChannels;
+	uint32_t u32ElementCntPerRR = u32SampleCntPerRR * DEF_MAX_CHANNELS;
 	static uint32_t s_u32Wp = 0;
 
 	LoudnessFilterStereoInit();
@@ -360,13 +468,13 @@ DefALLOCATE_ITCM __attribute__((optimize("-O3"))) void DrvSAIGetPeek24bitStereo(
 			u32ElementCnt = 0;
 		}
 
-		LoudnessFilter24bitStereo(&pu8[u32Rp * 3], s_aq15LoudnessedSample, u32Elem / kAudioMaxOfChannels);
+		LoudnessFilter24bitStereo(&pu8[u32Rp * 3], s_aq15LoudnessedSample, u32Elem / DEF_MAX_CHANNELS);
 		/** 絶対値の算出 */
-		arm_abs_q15(s_aq15LoudnessedSample, &s_aq15AbsSample[s_u32Wp], u32Elem);
+		peekMeterAbsQ15(s_aq15LoudnessedSample, &s_aq15AbsSample[s_u32Wp], u32Elem);
 		s_u32Wp += u32Elem;
 
 		if (s_u32Wp >= u32ElementCntPerRR)
-		{	/* DEF_PEEK_METER_REFRESH_RATE分のデータがたまった */
+		{ /* DEF_PEEK_METER_REFRESH_RATE分のデータがたまった */
 			q15_t i16RMax = 0;
 			q15_t i16LMax = 0;
 
@@ -387,7 +495,7 @@ DefALLOCATE_ITCM __attribute__((optimize("-O3"))) void DrvSAIGetPeek24bitStereo(
 			if (s_u32Wp > u32ElementCntPerRR)
 			{
 				uint32_t u32CopyCnt = s_u32Wp - u32ElementCntPerRR;
-				arm_copy_q15(&s_aq15AbsSample[u32ElementCntPerRR], s_aq15AbsSample, u32CopyCnt);
+				peekMeterCopyQ15(&s_aq15AbsSample[u32ElementCntPerRR], s_aq15AbsSample, u32CopyCnt);
 				s_u32Wp = u32CopyCnt;
 			}
 			else
@@ -401,9 +509,9 @@ DefALLOCATE_ITCM __attribute__((optimize("-O3"))) void DrvSAIGetPeek24bitStereo(
 DefALLOCATE_ITCM __attribute__((optimize("-O3"))) void DrvSAIGetPeek32bitStereo(uint32_t u32SampleRate, const int32_t pu32[], uint32_t u32SampleCnt)
 {
 	uint32_t u32Cnt = 0;
-	uint32_t u32ElementCnt = u32SampleCnt * 2;
+	uint32_t u32ElementCnt = u32SampleCnt * DEF_MAX_CHANNELS;
 	uint32_t u32SampleCntPerRR = u32SampleRate / DEF_PEEK_METER_REFRESH_RATE;
-	uint32_t u32ElementCntPerRR = u32SampleCntPerRR * 2;
+	uint32_t u32ElementCntPerRR = u32SampleCntPerRR * DEF_MAX_CHANNELS;
 	static uint32_t s_u32Wp = 0;
 
 	LoudnessFilterStereoInit();
@@ -425,13 +533,13 @@ DefALLOCATE_ITCM __attribute__((optimize("-O3"))) void DrvSAIGetPeek32bitStereo(
 			u32ElementCnt = 0;
 		}
 
-		LoudnessFilter32bitStereo(&pu32[u32Rp], s_aq15LoudnessedSample, u32Elem / kAudioMaxOfChannels);
+		LoudnessFilter32bitStereo(&pu32[u32Rp], s_aq15LoudnessedSample, u32Elem / DEF_MAX_CHANNELS);
 		/** 絶対値の算出 */
-		arm_abs_q15(s_aq15LoudnessedSample, &s_aq15AbsSample[s_u32Wp], u32Elem);
+		peekMeterAbsQ15(s_aq15LoudnessedSample, &s_aq15AbsSample[s_u32Wp], u32Elem);
 		s_u32Wp += u32Elem;
 
 		if (s_u32Wp >= u32ElementCntPerRR)
-		{	/* DEF_PEEK_METER_REFRESH_RATE分のデータがたまった */
+		{ /* DEF_PEEK_METER_REFRESH_RATE分のデータがたまった */
 			q15_t i16RMax = 0;
 			q15_t i16LMax = 0;
 
@@ -447,13 +555,13 @@ DefALLOCATE_ITCM __attribute__((optimize("-O3"))) void DrvSAIGetPeek32bitStereo(
 					i16LMax = s_aq15AbsSample[2 * i + 1];
 				}
 			}
-			PostMsgMeterTaskPeek34BitStereo(i16RMax, i16LMax);
+			PostMsgMeterTaskPeek32BitStereo(i16RMax, i16LMax);
 			{
 
 				if (s_u32Wp > u32ElementCntPerRR)
 				{
 					uint32_t u32CopyCnt = s_u32Wp - u32ElementCntPerRR;
-					arm_copy_q15(&s_aq15AbsSample[u32ElementCntPerRR], s_aq15AbsSample, u32CopyCnt);
+					peekMeterCopyQ15(&s_aq15AbsSample[u32ElementCntPerRR], s_aq15AbsSample, u32CopyCnt);
 					s_u32Wp = u32CopyCnt;
 				}
 				else
