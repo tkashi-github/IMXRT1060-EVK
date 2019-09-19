@@ -373,7 +373,7 @@ DefALLOCATE_ITCM __attribute__((optimize("-O3"))) void peekMeterCopyQ15(
 DefALLOCATE_BSS_DTCM static q15_t s_aq15AbsSample[(2 * DEF_MAX_SAMPLE_RATE * DEF_MAX_CHANNELS) / DEF_PEEK_METER_REFRESH_RATE];
 DefALLOCATE_BSS_DTCM static q15_t s_aq15LoudnessedSample[(DEF_MAX_SAMPLE_RATE * DEF_MAX_CHANNELS) / DEF_PEEK_METER_REFRESH_RATE];
 
-DefALLOCATE_ITCM __attribute__((optimize("-O3"))) void DrvSAIGetPeek16bitStereo(uint32_t u32SampleRate, const int16_t pu16[], uint32_t u32SampleCnt)
+DefALLOCATE_ITCM __attribute__((optimize("-O3"))) void PeekMeterGetPeek16bitStereo(uint32_t u32SampleRate, const int16_t pu16[], uint32_t u32SampleCnt)
 {
 	uint32_t u32Cnt = 0;
 	uint32_t u32ElementCnt = u32SampleCnt * DEF_MAX_CHANNELS;
@@ -441,7 +441,7 @@ DefALLOCATE_ITCM __attribute__((optimize("-O3"))) void DrvSAIGetPeek16bitStereo(
 	}
 }
 
-DefALLOCATE_ITCM __attribute__((optimize("-O3"))) void DrvSAIGetPeek24bitStereo(uint32_t u32SampleRate, const uint8_t pu8[], uint32_t u32SampleCnt)
+DefALLOCATE_ITCM __attribute__((optimize("-O3"))) void PeekMeterGetPeek24bitStereo(uint32_t u32SampleRate, const uint8_t pu8[], uint32_t u32SampleCnt)
 {
 	uint32_t u32Cnt = 0;
 	uint32_t u32ElementCnt = u32SampleCnt * DEF_MAX_CHANNELS;
@@ -506,7 +506,7 @@ DefALLOCATE_ITCM __attribute__((optimize("-O3"))) void DrvSAIGetPeek24bitStereo(
 		u32Cnt++;
 	}
 }
-DefALLOCATE_ITCM __attribute__((optimize("-O3"))) void DrvSAIGetPeek32bitStereo(uint32_t u32SampleRate, const int32_t pu32[], uint32_t u32SampleCnt)
+DefALLOCATE_ITCM __attribute__((optimize("-O3"))) void PeekMeterGetPeek32bitStereo(uint32_t u32SampleRate, const int32_t pu32[], uint32_t u32SampleCnt)
 {
 	uint32_t u32Cnt = 0;
 	uint32_t u32ElementCnt = u32SampleCnt * DEF_MAX_CHANNELS;

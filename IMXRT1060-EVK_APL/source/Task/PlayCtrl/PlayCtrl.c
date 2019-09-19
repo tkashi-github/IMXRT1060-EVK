@@ -39,7 +39,7 @@
 #include "AudioFile/AudioFileList.h"
 #include "PlayCtrl/PlayCtrlAudio.h"
 #include "AudioFile/wav/wav.h"
-
+#include "Task/MeterTask/MeterTask.h"
 typedef enum
 {
 	enPlayCtrlStateStop = 0,
@@ -117,6 +117,7 @@ DefALLOCATE_DATA_DTCM static stCodecCondition_t s_stRecCondition = {
 
 DefALLOCATE_ITCM static void StopPlayRecProcess(void)
 {
+	MeterTaskStop();
 	PostMsgSoundTaskStop(enSAI1, __func__, __LINE__);
 	s_enPlayCtrlState = enPlayCtrlStateStop;
 }
@@ -176,6 +177,7 @@ DefALLOCATE_ITCM static void S0_E1(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 	/** Send Playing */
 	if (PostMsgPlayCtrlPlaying() != false)
 	{
+		MeterTaskRun();
 		s_enPlayCtrlState = enPlayCtrlStatePlay;
 	}
 	else

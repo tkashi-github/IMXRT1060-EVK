@@ -55,7 +55,9 @@ extern void CreatePeekMeter(void);
 extern _Bool PostMsgMeterTaskPeek16BitStereo(int16_t i16RMax, int16_t i16LMax);
 extern _Bool PostMsgMeterTaskPeek24BitStereo(int32_t i32RMax, int32_t i32LMax);
 extern _Bool PostMsgMeterTaskPeek32BitStereo(int32_t i32RMax, int32_t i32LMax);
-
+extern  void MeterTaskRestart(void);
+extern  void MeterTaskRun(void);
+extern  void MeterTaskStop(void);
 #ifdef __cplusplus
 }
 #endif

@@ -48,7 +48,9 @@ extern "C"
 
 #include "arm_math.h"
 extern void LoudnessFilter16bitStereo(const q15_t pi16Src[], q15_t pi16Dst[], uint32_t SampleCount);
-
+extern void PeekMeterGetPeek32bitStereo(uint32_t u32SampleRate, const int32_t pu32[], uint32_t u32SampleCnt);
+extern void PeekMeterGetPeek24bitStereo(uint32_t u32SampleRate, const uint8_t pu8[], uint32_t u32SampleCnt);
+extern void PeekMeterGetPeek16bitStereo(uint32_t u32SampleRate, const int16_t pu16[], uint32_t u32SampleCnt);
 #ifdef __cplusplus
 }
 #endif

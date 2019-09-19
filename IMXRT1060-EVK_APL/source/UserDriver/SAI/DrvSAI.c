@@ -357,6 +357,7 @@ static codec_config_t boardCodecConfig = {.I2C_SendFunc = BOARD_Codec_I2C_Send,
                                    .op.Deinit = WM8960_Deinit,
                                    .op.SetFormat = WM8960_ConfigDataFormat};
 
+#include "Task/MeterTask/MeterTask.h"
 _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t enPcmBit, _Bool bRec)
 {
 	I2S_Type *base[enNumOfSAI] = {SAI1, SAI2};
@@ -524,15 +525,15 @@ _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t
 		mimic_printf("[%s (%d)] CODEC_SetFormat NG\r\n", __func__, __LINE__);
 		return false;
 	}
-	#if 0
+
 	WM8960_SetProtocol(&s_HndCodec[enSAI], kWM8960_BusI2S);
     WM8960_SetMasterSlave(&s_HndCodec[enSAI], false);
 	WM8960_SetDataRoute(&s_HndCodec[enSAI], kWM8960_RoutePlaybackandRecord);
 	WM8960_SetLeftInput(&s_HndCodec[enSAI], kWM8960_InputDifferentialMicInput3);
 	WM8960_SetRightInput(&s_HndCodec[enSAI], kWM8960_InputDifferentialMicInput2);
 	WM8960_SetModule(&s_HndCodec[enSAI], kWM8960_ModuleHP, true);
-	#endif
 	//WM8960_RegDump(&s_HndCodec[enSAI]);
+	MeterTaskRestart();
 	mimic_printf("[%s (%d)] EXIT OK\r\n", __func__, __LINE__);
 	return true;
 }
@@ -620,6 +621,7 @@ _Bool DrvSAIIsStop(enSAI_t enSAI)
 	return s_bIsTxFinished[enSAI];
 }
 
+#include "PeekMeter.h"
 _Bool DrvSAITx(enSAI_t enSAI, const uint8_t pu8[], uint32_t u32ByteCnt)
 {
 	sai_transfer_t stxfer = {0};
@@ -680,11 +682,13 @@ _Bool DrvSAITx(enSAI_t enSAI, const uint8_t pu8[], uint32_t u32ByteCnt)
 			/** 24bit PCMは細工が必要 */
 			if (s_sai_word_width[enSAI] == kSAI_WordWidth16bits)
 			{
+				PeekMeterGetPeek16bitStereo(s_sai_sample_rate[enSAI], (int16_t*)&pu8[u32TxCnt], u32ByteCnt / 4);
 				memcpy(&s_TxAudioBuff[enSAI][index], &pu8[u32TxCnt], u32ByteCnt);
 				u32TxCnt += u32ByteCnt;
 			}
 			else if (s_sai_word_width[enSAI] == kSAI_WordWidth24bits)
 			{
+				PeekMeterGetPeek24bitStereo(s_sai_sample_rate[enSAI], &pu8[u32TxCnt], u32ByteCnt / 8);	/** u32ByteCntには要注意 */
 				for (uint32_t i = 0; i < u32ByteCnt; i += 4)
 				{
 					s_TxAudioBuff[enSAI][index + i] = pu8[u32TxCnt];
@@ -696,6 +700,7 @@ _Bool DrvSAITx(enSAI_t enSAI, const uint8_t pu8[], uint32_t u32ByteCnt)
 			}
 			else
 			{
+				PeekMeterGetPeek32bitStereo(s_sai_sample_rate[enSAI], (int32_t*)&pu8[u32TxCnt], u32ByteCnt / 8);
 				memcpy(&s_TxAudioBuff[enSAI][index], &pu8[u32TxCnt], u32ByteCnt);
 				u32TxCnt += u32ByteCnt;
 			}
@@ -800,6 +805,7 @@ _Bool DrvSAIRx(enSAI_t enSAI, uint8_t pu8[], uint32_t *pu32RxCnt)
 			{
 				memcpy(pu8, &s_RxAudioBuff[enSAI][index], s_u32EDMARxBufSize[enSAI]);
 				*pu32RxCnt = s_u32EDMARxBufSize[enSAI];
+				PeekMeterGetPeek16bitStereo(s_sai_sample_rate[enSAI], (int16_t*)pu8, s_u32EDMARxBufSize[enSAI] / 4);
 			}
 			else if (s_sai_word_width[enSAI] == kSAI_WordWidth24bits)
 			{
@@ -813,11 +819,13 @@ _Bool DrvSAIRx(enSAI_t enSAI, uint8_t pu8[], uint32_t *pu32RxCnt)
 					u32RxCnt += 3;
 				}
 				*pu32RxCnt = u32RxCnt;
+				PeekMeterGetPeek24bitStereo(s_sai_sample_rate[enSAI], pu8, s_u32EDMARxBufSize[enSAI] / 8);
 			}
 			else
 			{
 				memcpy(pu8, &s_RxAudioBuff[enSAI][index], s_u32EDMARxBufSize[enSAI]);
 				*pu32RxCnt = s_u32EDMARxBufSize[enSAI];
+				PeekMeterGetPeek32bitStereo(s_sai_sample_rate[enSAI], (int32_t*)pu8, s_u32EDMARxBufSize[enSAI] / 8);
 			}
 			__DMB();
 			{
