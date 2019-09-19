@@ -49,7 +49,7 @@ static void tabview_realign(lv_obj_t * tabview);
 LV_VAL_OBJX_TABVIEW_ATTR static lv_signal_cb_t ancestor_signal;
 LV_VAL_OBJX_TABVIEW_ATTR static lv_signal_cb_t page_signal;
 LV_VAL_OBJX_TABVIEW_ATTR static lv_signal_cb_t page_scrl_signal;
-static const char * tab_def[] = {""};
+LV_CVAL_OBJX_TABVIEW_ATTR static const char * const tab_def[] = {""};
 
 /**********************
  *      MACROS
@@ -119,7 +119,7 @@ LV_FUNC_OBJX_TABVIEW_ATTR lv_obj_t * lv_tabview_create(lv_obj_t * par, const lv_
         ext->indic   = lv_obj_create(ext->btns, NULL);
 
         lv_obj_set_height(ext->btns, 3 * LV_DPI / 4);
-        lv_btnm_set_map(ext->btns, tab_def);
+        lv_btnm_set_map(ext->btns, (const char **)tab_def);
         lv_obj_set_event_cb(ext->btns, tab_btnm_event_cb);
 
         lv_obj_set_width(ext->indic, LV_DPI);

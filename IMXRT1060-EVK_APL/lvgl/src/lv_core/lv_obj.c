@@ -57,9 +57,9 @@ static lv_res_t lv_obj_signal(lv_obj_t * obj, lv_signal_t sign, void * param);
 /**********************
  *  STATIC VARIABLES
  **********************/
-static bool lv_initialized = false;
-static lv_event_temp_data_t * event_temp_data_head;
-static const void * event_act_data;
+LV_CVAL_CORE_OBJ_ATTR static bool lv_initialized = false;
+LV_VAL_CORE_OBJ_ATTR static lv_event_temp_data_t * event_temp_data_head;
+LV_VAL_CORE_OBJ_ATTR static const void * event_act_data;
 
 /**********************
  *      MACROS

@@ -1493,10 +1493,10 @@ LV_FUNC_DRAW_RECT_ATTR static uint16_t lv_draw_cont_radius_corr(uint16_t r, lv_c
 LV_FUNC_DRAW_RECT_ATTR static lv_opa_t antialias_get_opa_circ(lv_coord_t seg, lv_coord_t px_id, lv_opa_t opa)
 {
     /*Empirical non-linear values anti-aliasing values*/
-    static const lv_opa_t opa_map2[2] = {210, 80};
-    static const lv_opa_t opa_map3[3] = {230, 150, 60};
-    static const lv_opa_t opa_map4[4] = {235, 185, 125, 50};
-    static const lv_opa_t opa_map8[8] = {250, 242, 219, 191, 158, 117, 76, 40};
+    LV_CVAL_DRAW_REACT_ATTR static const lv_opa_t opa_map2[2] = {210, 80};
+    LV_CVAL_DRAW_REACT_ATTR static const lv_opa_t opa_map3[3] = {230, 150, 60};
+    LV_CVAL_DRAW_REACT_ATTR static const lv_opa_t opa_map4[4] = {235, 185, 125, 50};
+    LV_CVAL_DRAW_REACT_ATTR static const lv_opa_t opa_map8[8] = {250, 242, 219, 191, 158, 117, 76, 40};
 
 #if CIRCLE_AA_NON_LINEAR_OPA_THRESHOLD < 1
     if(seg == 1) return 170;

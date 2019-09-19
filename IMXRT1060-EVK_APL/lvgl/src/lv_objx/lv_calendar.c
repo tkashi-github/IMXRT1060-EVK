@@ -53,8 +53,8 @@ static uint8_t is_leap_year(uint32_t year);
  **********************/
 LV_VAL_OBJX_CALENDER_ATTR static lv_signal_cb_t ancestor_signal;
 LV_VAL_OBJX_CALENDER_ATTR static lv_design_cb_t ancestor_design;
-static const char * day_name[7]    = {"Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
-static const char * month_name[12] = {"January", "February", "March",     "April",   "May",      "June",
+LV_CVAL_OBJX_CALENDER_ATTR static const char * day_name[7]    = {"Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
+LV_CVAL_OBJX_CALENDER_ATTR static const char * month_name[12] = {"January", "February", "March",     "April",   "May",      "June",
                                       "July",    "August",   "September", "October", "November", "December"};
 
 /**********************

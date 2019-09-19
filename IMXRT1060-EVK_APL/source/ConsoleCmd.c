@@ -81,7 +81,7 @@ static void CmdNvic(uint32_t argc, const char *argv[]);
 static void CmdPing(uint32_t argc, const char *argv[]);
 static void CmdReboot(uint32_t argc, const char *argv[]);
 
-stCmdTable_t g_stCmdTable[] = {
+ __attribute__((section(".data.$SRAM_DTC"))) const stCmdTable_t g_stCmdTable[] = {
 	{"HELP", CmdHelp, "Help"},			/* Help Command*/
 	{"VERSION", CmdVersion, "Version"}, /* Version Command*/
 	{"ARG", CmdArg, "Argment Test"},	/* Argment Command*/

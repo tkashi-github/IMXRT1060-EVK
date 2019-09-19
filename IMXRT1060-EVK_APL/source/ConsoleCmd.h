@@ -52,7 +52,7 @@ typedef struct{
 }stCmdTable_t;
 
 
-extern stCmdTable_t g_stCmdTable[];
+extern const stCmdTable_t g_stCmdTable[];
 #ifdef __cplusplus
 }
 #endif

@@ -44,7 +44,7 @@ static void make_one_button_toggled(lv_obj_t * btnm, uint16_t btn_idx);
 /**********************
  *  STATIC VARIABLES
  **********************/
-static const char * lv_btnm_def_map[] = {"Btn1", "Btn2", "Btn3", "\n", "Btn4", "Btn5", ""};
+LV_CVAL_OBJX_CALENDER_ATTR static const char * lv_btnm_def_map[] = {"Btn1", "Btn2", "Btn3", "\n", "Btn4", "Btn5", ""};
 
 LV_VAL_OBJX_BTNM_ATTR static lv_design_cb_t ancestor_design_f;
 LV_VAL_OBJX_BTNM_ATTR static lv_signal_cb_t ancestor_signal;

@@ -265,7 +265,7 @@ LV_FUNC_HAL_DISP_ATTR bool lv_disp_get_antialiasing(lv_disp_t * disp)
  * Call in the display driver's `flush_cb` function when the flushing is finished
  * @param disp_drv pointer to display driver in `flush_cb` where this function is called
  */
-LV_ATTRIBUTE_FLUSH_READY void lv_disp_flush_ready(lv_disp_drv_t * disp_drv)
+LV_FUNC_HAL_DISP_ATTR void lv_disp_flush_ready(lv_disp_drv_t * disp_drv)
 {
     disp_drv->buffer->flushing = 0;
 

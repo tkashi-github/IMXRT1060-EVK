@@ -14,115 +14,6 @@
 /* clang-format off */
 
 #include <stdint.h>
-#define LV_ATTRIBUTE_FLUSH_READY __attribute__((section(".ramfunc.$SRAM_ITC")))
-
-#define LV_FUNC_ATTR  __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_CORE_DISP_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_CORE_GROUP_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_CORE_INDEV_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_CORE_OBJ_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_CORE_REFR_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_CORE_STYLE_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-
-#define LV_FUNC_DRAW_ARC_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_DRAW_BASIC_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_DRAW_IMAGE_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_DRAW_LABEL_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_DRAW_LINE_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_DRAW_RECT_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_DRAW_TRIANGLE_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_DRAW_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_DRAW_IMAGE_CACHE_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_DRAW_IMAGE_DECORDER_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-
-#define LV_FUNC_HAL_DISP_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_HAL_INDEV_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_HAL_TICK_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-
-#define LV_FUNC_MISC_ANIME_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_MISC_AREA_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_MISC_ASYNC_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_MISC_CIRC_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_MISC_COLOR_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_MISC_LL_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_MISC_MATH_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_MISC_MEM_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_MISC_TASK_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_MISC_TEXT_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_MISC_UTILS_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-
-#define LV_FUNC_OBJX_ARC_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_BAR_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_BTN_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_BTNM_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_CALENDER_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_CANVAS_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_CB_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_CHART_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_CONT_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_DDLIST_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_GAUGE_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_IMAGE_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_IMAGEBTN_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_KB_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_LABEL_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_LED_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_LINE_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_LIST_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_LMETER_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_MBOX_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_PAGE_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_PRELOAD_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_ROLLER_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_SLIDER_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_SPINBOX_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_SW_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_TA_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_TABLE_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_TABVIEW_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_TITLEVIEW_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-#define LV_FUNC_OBJX_WIN_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
-
-#define LV_VAL_DRAW_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_LL_MEM_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_HAL_DISP_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_HAL_TICK_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_MISC_ANIME_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_MISC_MATH_ATTR __attribute__((section(".data.$SRAM_DTC")))
-#define LV_VAL_MISC_TASK_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-
-#define LV_VAL_OBJX_ARC_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_BAR_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_BTN_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_BTNM_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_CALENDER_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_CANVAS_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_CB_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_CHART_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_CONT_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_DDLIST_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_GAUGE_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_IMG_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_IMGBTN_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_KB_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_CVAL_OBJX_KB_ATTR __attribute__((section(".data.$SRAM_DTC")))
-#define LV_VAL_OBJX_LABEL_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_LED_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_LINE_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_LIST_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_LMETER_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_MBOX_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_PAGE_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_PRELOAD_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_ROLLER_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_SLIDER_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_SPINBOX_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_SW_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_TA_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_TABLE_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_TABVIEW_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_TITLEVIEW_ATTR __attribute__((section(".bss.$SRAM_DTC")))
-#define LV_VAL_OBJX_WIN_ATTR __attribute__((section(".bss.$SRAM_DTC")))
 
 /*====================
    Graphical settings
@@ -585,6 +476,124 @@ typedef void * lv_obj_user_data_t;
 
 /*Window (dependencies: lv_cont, lv_btn, lv_label, lv_img, lv_page)*/
 #define LV_USE_WIN      1
+
+/*Placement of functions and variables in TCM*/
+#define LV_FUNC_ATTR  __attribute__((section(".ramfunc.$SRAM_ITC")))
+#define LV_VAL_ATTR __attribute__((section(".bss.$SRAM_DTC")))
+#define LV_CVAL_ATTR __attribute__((section(".data.$SRAM_DTC")))
+
+#define LV_FUNC_CORE_DISP_ATTR LV_FUNC_ATTR
+#define LV_FUNC_CORE_GROUP_ATTR LV_FUNC_ATTR
+#define LV_FUNC_CORE_INDEV_ATTR LV_FUNC_ATTR
+#define LV_FUNC_CORE_OBJ_ATTR LV_FUNC_ATTR
+#define LV_FUNC_CORE_REFR_ATTR LV_FUNC_ATTR
+#define LV_FUNC_CORE_STYLE_ATTR LV_FUNC_ATTR
+
+#define LV_FUNC_DRAW_ARC_ATTR LV_FUNC_ATTR
+#define LV_FUNC_DRAW_BASIC_ATTR LV_FUNC_ATTR
+#define LV_FUNC_DRAW_IMAGE_ATTR LV_FUNC_ATTR
+#define LV_FUNC_DRAW_LABEL_ATTR LV_FUNC_ATTR
+#define LV_FUNC_DRAW_LINE_ATTR LV_FUNC_ATTR
+#define LV_FUNC_DRAW_RECT_ATTR LV_FUNC_ATTR
+#define LV_FUNC_DRAW_TRIANGLE_ATTR LV_FUNC_ATTR
+#define LV_FUNC_DRAW_ATTR LV_FUNC_ATTR
+#define LV_FUNC_DRAW_IMAGE_CACHE_ATTR LV_FUNC_ATTR
+#define LV_FUNC_DRAW_IMAGE_DECORDER_ATTR LV_FUNC_ATTR
+
+#define LV_FUNC_HAL_DISP_ATTR LV_FUNC_ATTR
+#define LV_FUNC_HAL_INDEV_ATTR LV_FUNC_ATTR
+#define LV_FUNC_HAL_TICK_ATTR LV_FUNC_ATTR
+
+#define LV_FUNC_MISC_ANIME_ATTR LV_FUNC_ATTR
+#define LV_FUNC_MISC_AREA_ATTR LV_FUNC_ATTR
+#define LV_FUNC_MISC_ASYNC_ATTR LV_FUNC_ATTR
+#define LV_FUNC_MISC_CIRC_ATTR LV_FUNC_ATTR
+#define LV_FUNC_MISC_COLOR_ATTR LV_FUNC_ATTR
+#define LV_FUNC_MISC_LL_ATTR LV_FUNC_ATTR
+#define LV_FUNC_MISC_MATH_ATTR LV_FUNC_ATTR
+#define LV_FUNC_MISC_MEM_ATTR LV_FUNC_ATTR
+#define LV_FUNC_MISC_TASK_ATTR LV_FUNC_ATTR
+#define LV_FUNC_MISC_TEXT_ATTR LV_FUNC_ATTR
+#define LV_FUNC_MISC_UTILS_ATTR LV_FUNC_ATTR
+
+#define LV_FUNC_OBJX_ARC_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_BAR_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_BTN_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_BTNM_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_CALENDER_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_CANVAS_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_CB_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_CHART_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_CONT_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_DDLIST_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_GAUGE_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_IMAGE_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_IMAGEBTN_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_KB_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_LABEL_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_LED_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_LINE_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_LIST_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_LMETER_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_MBOX_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_PAGE_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_PRELOAD_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_ROLLER_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_SLIDER_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_SPINBOX_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_SW_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_TA_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_TABLE_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_TABVIEW_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_TITLEVIEW_ATTR LV_FUNC_ATTR
+#define LV_FUNC_OBJX_WIN_ATTR LV_FUNC_ATTR
+
+#define LV_VAL_CORE_OBJ_ATTR LV_VAL_ATTR
+#define LV_CVAL_CORE_OBJ_ATTR LV_CVAL_ATTR
+#define LV_VAL_DRAW_ATTR LV_VAL_ATTR
+#define LV_VAL_DRAW_REACT_ATTR LV_VAL_ATTR
+#define LV_CVAL_DRAW_REACT_ATTR LV_CVAL_ATTR
+#define LV_VAL_LL_MEM_ATTR LV_VAL_ATTR
+#define LV_VAL_HAL_DISP_ATTR LV_VAL_ATTR
+#define LV_VAL_HAL_TICK_ATTR LV_VAL_ATTR
+#define LV_VAL_MISC_ANIME_ATTR LV_VAL_ATTR
+#define LV_CVAL_MISC_MATH_ATTR LV_CVAL_ATTR
+#define LV_VAL_MISC_TASK_ATTR LV_VAL_ATTR
+
+#define LV_VAL_OBJX_ARC_ATTR LV_VAL_ATTR
+#define LV_VAL_OBJX_BAR_ATTR LV_VAL_ATTR
+#define LV_VAL_OBJX_BTN_ATTR LV_VAL_ATTR
+#define LV_VAL_OBJX_BTNM_ATTR LV_VAL_ATTR
+#define LV_VAL_OBJX_CALENDER_ATTR LV_VAL_ATTR
+#define LV_CVAL_OBJX_CALENDER_ATTR LV_CVAL_ATTR
+#define LV_VAL_OBJX_CANVAS_ATTR LV_VAL_ATTR
+#define LV_VAL_OBJX_CB_ATTR LV_VAL_ATTR
+#define LV_VAL_OBJX_CHART_ATTR LV_VAL_ATTR
+#define LV_VAL_OBJX_CONT_ATTR LV_VAL_ATTR
+#define LV_VAL_OBJX_DDLIST_ATTR LV_VAL_ATTR
+#define LV_VAL_OBJX_GAUGE_ATTR LV_VAL_ATTR
+#define LV_VAL_OBJX_IMG_ATTR LV_VAL_ATTR
+#define LV_VAL_OBJX_IMGBTN_ATTR LV_VAL_ATTR
+#define LV_VAL_OBJX_KB_ATTR LV_VAL_ATTR
+#define LV_CVAL_OBJX_KB_ATTR LV_CVAL_ATTR
+#define LV_VAL_OBJX_LABEL_ATTR LV_VAL_ATTR
+#define LV_VAL_OBJX_LED_ATTR LV_VAL_ATTR
+#define LV_VAL_OBJX_LINE_ATTR LV_VAL_ATTR
+#define LV_VAL_OBJX_LIST_ATTR LV_VAL_ATTR
+#define LV_VAL_OBJX_LMETER_ATTR LV_VAL_ATTR
+#define LV_VAL_OBJX_MBOX_ATTR LV_VAL_ATTR
+#define LV_VAL_OBJX_PAGE_ATTR LV_VAL_ATTR
+#define LV_VAL_OBJX_PRELOAD_ATTR LV_VAL_ATTR
+#define LV_VAL_OBJX_ROLLER_ATTR LV_VAL_ATTR
+#define LV_VAL_OBJX_SLIDER_ATTR LV_VAL_ATTR
+#define LV_VAL_OBJX_SPINBOX_ATTR LV_VAL_ATTR
+#define LV_VAL_OBJX_SW_ATTR LV_VAL_ATTR
+#define LV_VAL_OBJX_TA_ATTR LV_VAL_ATTR
+#define LV_VAL_OBJX_TABLE_ATTR LV_VAL_ATTR
+#define LV_VAL_OBJX_TABVIEW_ATTR LV_VAL_ATTR
+#define LV_CVAL_OBJX_TABVIEW_ATTR LV_CVAL_ATTR
+#define LV_VAL_OBJX_TITLEVIEW_ATTR LV_VAL_ATTR
+#define LV_VAL_OBJX_WIN_ATTR LV_VAL_ATTR 
 
 /*==================
  * Non-user section
