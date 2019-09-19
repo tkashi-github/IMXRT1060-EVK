@@ -49,7 +49,7 @@
 #include "Task/SoundTask/SoundTask.h"
 #include "Task/PlayCtrl/PlayCtrl.h"
 #include "Task/ExtLedCtrlTask/ExtLedCtrlTask.h"
-
+#include "Task/MeterTask/MeterTask.h"
 /** typedef Task Table */
 typedef struct{
 	osThreadId_t   *pOsId;
@@ -70,7 +70,7 @@ OS_RESOURCE_MACRO_TASK_DEFINE(TempMoniTask, 2048);
 OS_RESOURCE_MACRO_TASK_DEFINE(SoundTask, 8192);
 OS_RESOURCE_MACRO_TASK_DEFINE(PlayCtrl, 16384);
 OS_RESOURCE_MACRO_TASK_DEFINE(ExtLedCtrlTask, 2048);
-
+OS_RESOURCE_MACRO_TASK_DEFINE(MeterTask, 4096);
 /** Task Table */
 static const stOSdefTable_t s_stTaskTable[] = {
 	OS_RESOURCE_MACRO_TASK_TABLE(InitialTask, NULL, osPriorityLow),
@@ -83,6 +83,7 @@ static const stOSdefTable_t s_stTaskTable[] = {
 	OS_RESOURCE_MACRO_TASK_TABLE(SoundTask, NULL, osPriorityHigh),
 	OS_RESOURCE_MACRO_TASK_TABLE(PlayCtrl, NULL, osPriorityAboveNormal),
 	OS_RESOURCE_MACRO_TASK_TABLE(ExtLedCtrlTask, NULL, osPriorityBelowNormal),
+	OS_RESOURCE_MACRO_TASK_TABLE(MeterTask, NULL, osPriorityNormal),
 
 	// Terminate
 	{NULL,NULL,NULL,{0}},
@@ -193,6 +194,7 @@ OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(StorageTask[enNumOfSD], sizeof(stTaskMsgBlock_
 OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(LanTask, sizeof(stTaskMsgBlock_t), 32);
 OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(CameraTask, sizeof(stTaskMsgBlock_t), 32);
 OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(ExtLedCtrlTask, sizeof(stTaskMsgBlock_t), 32);
+OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(MeterTask, 3*sizeof(uint32_t), 32);
 
 static stMsgQueueTable_t s_stMsgQueueTable[] = {
 	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(LcdTask, sizeof(stTaskMsgBlock_t), 32),
@@ -205,6 +207,7 @@ static stMsgQueueTable_t s_stMsgQueueTable[] = {
 	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(LanTask, sizeof(stTaskMsgBlock_t), 32),
 	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(CameraTask, sizeof(stTaskMsgBlock_t), 32),
 	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(ExtLedCtrlTask, sizeof(stTaskMsgBlock_t), 32),
+	OS_RESOURCE_MACRO_MSGQUEUE_TABLE(MeterTask, 3*sizeof(uint32_t), 32),
 	{NULL, 0, 0, {0}},
 };
 

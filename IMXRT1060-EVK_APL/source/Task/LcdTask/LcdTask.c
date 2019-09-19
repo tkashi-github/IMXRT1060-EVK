@@ -222,6 +222,8 @@ DefALLOCATE_ITCM void VolumeSlider(void)
 	style_knob.body.padding.top = 10;
 	style_knob.body.padding.bottom = 10;
 }
+
+#include "Task/MeterTask/MeterTask.h"
 /**
  * @brief Task Entry
  * @param [in]  argument nouse
@@ -240,6 +242,8 @@ DefALLOCATE_ITCM void LcdTask(void const *argument)
 	volume_label_init();
 
 	VolumeSlider();
+
+	CreatePeekMeter();
 	for (;;)
 	{
 		uint8_t msg_prio; /* Message priority is ignored */

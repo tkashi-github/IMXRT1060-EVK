@@ -32,6 +32,7 @@
 			"${workspaceFolder}/amazon-freertos/include",
 			"${workspaceFolder}/xip",
 			"${workspaceFolder}/lvgl",
+			"${workspaceFolder}/lvgl/src",
 		],
 		"files.associations": {
 			"mimiclib.h": "c",
@@ -108,7 +109,8 @@
 			"xtr1common": "cpp",
 			"arm_math.h": "c",
 			"lv_math.h": "c",
-			"fsl_device_registers.h": "c"
+			"fsl_device_registers.h": "c",
+			"metertask.h": "c"
 		},
 		"C_Cpp.default.defines": [
 			"__GNUC__",
