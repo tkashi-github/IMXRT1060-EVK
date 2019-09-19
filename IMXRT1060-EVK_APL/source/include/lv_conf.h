@@ -478,9 +478,15 @@ typedef void * lv_obj_user_data_t;
 #define LV_USE_WIN      1
 
 /*Placement of functions and variables in TCM*/
-#define LV_FUNC_ATTR  __attribute__((section(".ramfunc.$SRAM_ITC")))
+#if 1
+#define LV_FUNC_ATTR __attribute__((section(".ramfunc.$SRAM_ITC")))
 #define LV_VAL_ATTR __attribute__((section(".bss.$SRAM_DTC")))
 #define LV_CVAL_ATTR __attribute__((section(".data.$SRAM_DTC")))
+#else
+#define LV_FUNC_ATTR
+#define LV_VAL_ATTR
+#define LV_CVAL_ATTR
+#endif
 
 #define LV_FUNC_CORE_DISP_ATTR LV_FUNC_ATTR
 #define LV_FUNC_CORE_GROUP_ATTR LV_FUNC_ATTR
@@ -593,7 +599,7 @@ typedef void * lv_obj_user_data_t;
 #define LV_VAL_OBJX_TABVIEW_ATTR LV_VAL_ATTR
 #define LV_CVAL_OBJX_TABVIEW_ATTR LV_CVAL_ATTR
 #define LV_VAL_OBJX_TITLEVIEW_ATTR LV_VAL_ATTR
-#define LV_VAL_OBJX_WIN_ATTR LV_VAL_ATTR 
+#define LV_VAL_OBJX_WIN_ATTR LV_VAL_ATTR
 
 /*==================
  * Non-user section
