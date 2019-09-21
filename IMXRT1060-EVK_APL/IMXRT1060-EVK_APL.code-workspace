@@ -110,7 +110,8 @@
 			"arm_math.h": "c",
 			"lv_math.h": "c",
 			"fsl_device_registers.h": "c",
-			"metertask.h": "c"
+			"metertask.h": "c",
+			"benchmark.h": "c"
 		},
 		"C_Cpp.default.defines": [
 			"__GNUC__",

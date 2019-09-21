@@ -483,9 +483,9 @@ typedef void * lv_obj_user_data_t;
 #define LV_BSS_ATTR __attribute__((section(".bss.$SRAM_DTC")))
 #define LV_DATA_ATTR __attribute__((section(".data.$SRAM_DTC")))
 #else
-#define LV_FUNC_ATTR
-#define LV_VAL_ATTR
-#define LV_CVAL_ATTR
+#define LV_FUNC_ATTR 
+#define LV_BSS_ATTR 
+#define LV_DATA_ATTR 
 #endif
 
 /*==================

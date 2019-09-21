@@ -224,6 +224,7 @@ DefALLOCATE_ITCM void VolumeSlider(void)
 }
 
 #include "Task/MeterTask/MeterTask.h"
+#include "lv_ex_conf.h"
 /**
  * @brief Task Entry
  * @param [in]  argument nouse
@@ -238,12 +239,14 @@ DefALLOCATE_ITCM void LcdTask(void const *argument)
 	DrvELCDIFInit();
 	
 	LV_Init();
-	
+
+#if (LV_USE_BENCHMARK == 0)
 	volume_label_init();
 
 	VolumeSlider();
 
 	CreatePeekMeter();
+#endif
 	for (;;)
 	{
 		uint8_t msg_prio; /* Message priority is ignored */
@@ -261,7 +264,7 @@ DefALLOCATE_ITCM void LcdTask(void const *argument)
 			}
 		}
 
-		if (LastTick != xTaskGetTickCount())
+		if ((LastTick + 4) < xTaskGetTickCount())
 		{
 			LastTick = xTaskGetTickCount();
 			lv_task_handler();

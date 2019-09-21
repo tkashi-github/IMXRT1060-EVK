@@ -60,6 +60,7 @@
 #include "AudioFile/AudioFileList.h"
 
 #include "ExtLedCtrlTask/ExtLedCtrlTask.h"
+#include "BenchMark/lvgl/benchmark.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -80,6 +81,8 @@ static void CmdTask(uint32_t argc, const char *argv[]);
 static void CmdNvic(uint32_t argc, const char *argv[]);
 static void CmdPing(uint32_t argc, const char *argv[]);
 static void CmdReboot(uint32_t argc, const char *argv[]);
+
+static void CmdGUI(uint32_t argc, const char *argv[]);
 
  __attribute__((section(".data.$SRAM_DTC"))) const stCmdTable_t g_stCmdTable[] = {
 	{"HELP", CmdHelp, "Help"},			/* Help Command*/
@@ -110,6 +113,7 @@ static void CmdReboot(uint32_t argc, const char *argv[]);
 	{"REC", CmdRec, "Rec Start"},
 	{"LIST", CmdMakeAudioFileList, "AUdio File List"},
 	{"EXTLED", CmdExtLed, "Ext Led Test"},
+	{"GUIBM", CmdGUI, "GUI BenchMark"},
 	{NULL, NULL, NULL}, /* Terminator */
 };
 
@@ -315,3 +319,14 @@ static void CmdReboot(uint32_t argc, const char *argv[]){
 	reboot();
 }
 
+static void CmdGUI(uint32_t argc, const char *argv[])
+{
+	
+	mimic_printf("\r\nGUI Bench Mark\r\n");
+	benchmark_create();
+	while(benchmark_get_refr_time() == 0)
+	{
+		osDelay(1000);
+	}
+	mimic_printf("benchmark_get_refr_time = %lu msec\r\n", benchmark_get_refr_time());
+}
