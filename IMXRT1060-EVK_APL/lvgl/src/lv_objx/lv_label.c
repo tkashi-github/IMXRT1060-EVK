@@ -50,7 +50,7 @@ static void lv_label_dot_tmp_free(lv_obj_t * label);
 /**********************
  *  STATIC VARIABLES
  **********************/
-LV_VAL_OBJX_LABEL_ATTR static lv_signal_cb_t ancestor_signal;
+LV_BSS_ATTR static lv_signal_cb_t ancestor_signal;
 
 /**********************
  *      MACROS
@@ -66,7 +66,7 @@ LV_VAL_OBJX_LABEL_ATTR static lv_signal_cb_t ancestor_signal;
  * @param copy pointer to a button object, if not NULL then the new object will be copied from it
  * @return pointer to the created button
  */
-LV_FUNC_OBJX_LABEL_ATTR lv_obj_t * lv_label_create(lv_obj_t * par, const lv_obj_t * copy)
+LV_FUNC_ATTR lv_obj_t * lv_label_create(lv_obj_t * par, const lv_obj_t * copy)
 {
     LV_LOG_TRACE("label create started");
 
@@ -167,7 +167,7 @@ LV_FUNC_OBJX_LABEL_ATTR lv_obj_t * lv_label_create(lv_obj_t * par, const lv_obj_
  * @param label pointer to a label object
  * @param text '\0' terminated character string. NULL to refresh with the current text.
  */
-LV_FUNC_OBJX_LABEL_ATTR void lv_label_set_text(lv_obj_t * label, const char * text)
+LV_FUNC_ATTR void lv_label_set_text(lv_obj_t * label, const char * text)
 {
     lv_obj_invalidate(label);
 
@@ -210,7 +210,7 @@ LV_FUNC_OBJX_LABEL_ATTR void lv_label_set_text(lv_obj_t * label, const char * te
  * @param array array of characters or NULL to refresh the label
  * @param size the size of 'array' in bytes
  */
-LV_FUNC_OBJX_LABEL_ATTR void lv_label_set_array_text(lv_obj_t * label, const char * array, uint16_t size)
+LV_FUNC_ATTR void lv_label_set_array_text(lv_obj_t * label, const char * array, uint16_t size)
 {
     lv_obj_invalidate(label);
 
@@ -244,7 +244,7 @@ LV_FUNC_OBJX_LABEL_ATTR void lv_label_set_array_text(lv_obj_t * label, const cha
  * @param label pointer to a label object
  * @param text pointer to a text. NULL to refresh with the current text.
  */
-LV_FUNC_OBJX_LABEL_ATTR void lv_label_set_static_text(lv_obj_t * label, const char * text)
+LV_FUNC_ATTR void lv_label_set_static_text(lv_obj_t * label, const char * text)
 {
     lv_label_ext_t * ext = lv_obj_get_ext_attr(label);
     if(ext->static_txt == 0 && ext->text != NULL) {
@@ -267,7 +267,7 @@ LV_FUNC_OBJX_LABEL_ATTR void lv_label_set_static_text(lv_obj_t * label, const ch
  *                  In LV_LONG_BREAK/LONG/ROLL the size of the label should be set AFTER this
  * function
  */
-LV_FUNC_OBJX_LABEL_ATTR void lv_label_set_long_mode(lv_obj_t * label, lv_label_long_mode_t long_mode)
+LV_FUNC_ATTR void lv_label_set_long_mode(lv_obj_t * label, lv_label_long_mode_t long_mode)
 {
     lv_label_ext_t * ext = lv_obj_get_ext_attr(label);
 
@@ -300,7 +300,7 @@ LV_FUNC_OBJX_LABEL_ATTR void lv_label_set_long_mode(lv_obj_t * label, lv_label_l
  * @param label pointer to a label object
  * @param align 'LV_LABEL_ALIGN_LEFT' or 'LV_LABEL_ALIGN_LEFT'
  */
-LV_FUNC_OBJX_LABEL_ATTR void lv_label_set_align(lv_obj_t * label, lv_label_align_t align)
+LV_FUNC_ATTR void lv_label_set_align(lv_obj_t * label, lv_label_align_t align)
 {
     lv_label_ext_t * ext = lv_obj_get_ext_attr(label);
     if(ext->align == align) return;
@@ -316,7 +316,7 @@ LV_FUNC_OBJX_LABEL_ATTR void lv_label_set_align(lv_obj_t * label, lv_label_align
  * @param label pointer to a label object
  * @param en true: enable recoloring, false: disable
  */
-LV_FUNC_OBJX_LABEL_ATTR void lv_label_set_recolor(lv_obj_t * label, bool en)
+LV_FUNC_ATTR void lv_label_set_recolor(lv_obj_t * label, bool en)
 {
     lv_label_ext_t * ext = lv_obj_get_ext_attr(label);
     if(ext->recolor == en) return;
@@ -332,7 +332,7 @@ LV_FUNC_OBJX_LABEL_ATTR void lv_label_set_recolor(lv_obj_t * label, bool en)
  * @param label pointer to a label object
  * @param en true: draw body; false: don't draw body
  */
-LV_FUNC_OBJX_LABEL_ATTR void lv_label_set_body_draw(lv_obj_t * label, bool en)
+LV_FUNC_ATTR void lv_label_set_body_draw(lv_obj_t * label, bool en)
 {
     lv_label_ext_t * ext = lv_obj_get_ext_attr(label);
     if(ext->body_draw == en) return;
@@ -349,7 +349,7 @@ LV_FUNC_OBJX_LABEL_ATTR void lv_label_set_body_draw(lv_obj_t * label, bool en)
  * @param label pointer to a label object
  * @param anim_speed speed of animation in px/sec unit
  */
-LV_FUNC_OBJX_LABEL_ATTR void lv_label_set_anim_speed(lv_obj_t * label, uint16_t anim_speed)
+LV_FUNC_ATTR void lv_label_set_anim_speed(lv_obj_t * label, uint16_t anim_speed)
 {
 #if LV_USE_ANIMATION
     lv_label_ext_t * ext = lv_obj_get_ext_attr(label);
@@ -366,7 +366,7 @@ LV_FUNC_OBJX_LABEL_ATTR void lv_label_set_anim_speed(lv_obj_t * label, uint16_t 
 #endif
 }
 
-LV_FUNC_OBJX_LABEL_ATTR void lv_label_set_text_sel_start(lv_obj_t * label, uint16_t index)
+LV_FUNC_ATTR void lv_label_set_text_sel_start(lv_obj_t * label, uint16_t index)
 {
 #if LV_LABEL_TEXT_SEL
     lv_label_ext_t * ext = lv_obj_get_ext_attr(label);
@@ -378,7 +378,7 @@ LV_FUNC_OBJX_LABEL_ATTR void lv_label_set_text_sel_start(lv_obj_t * label, uint1
 #endif
 }
 
-LV_FUNC_OBJX_LABEL_ATTR void lv_label_set_text_sel_end(lv_obj_t * label, uint16_t index)
+LV_FUNC_ATTR void lv_label_set_text_sel_end(lv_obj_t * label, uint16_t index)
 {
 #if LV_LABEL_TEXT_SEL
     lv_label_ext_t * ext = lv_obj_get_ext_attr(label);
@@ -399,7 +399,7 @@ LV_FUNC_OBJX_LABEL_ATTR void lv_label_set_text_sel_end(lv_obj_t * label, uint16_
  * @param label pointer to a label object
  * @return the text of the label
  */
-LV_FUNC_OBJX_LABEL_ATTR char * lv_label_get_text(const lv_obj_t * label)
+LV_FUNC_ATTR char * lv_label_get_text(const lv_obj_t * label)
 {
     lv_label_ext_t * ext = lv_obj_get_ext_attr(label);
 
@@ -411,7 +411,7 @@ LV_FUNC_OBJX_LABEL_ATTR char * lv_label_get_text(const lv_obj_t * label)
  * @param label pointer to a label object
  * @return the long mode
  */
-LV_FUNC_OBJX_LABEL_ATTR lv_label_long_mode_t lv_label_get_long_mode(const lv_obj_t * label)
+LV_FUNC_ATTR lv_label_long_mode_t lv_label_get_long_mode(const lv_obj_t * label)
 {
     lv_label_ext_t * ext = lv_obj_get_ext_attr(label);
     return ext->long_mode;
@@ -422,7 +422,7 @@ LV_FUNC_OBJX_LABEL_ATTR lv_label_long_mode_t lv_label_get_long_mode(const lv_obj
  * @param label pointer to a label object
  * @return LV_LABEL_ALIGN_LEFT or LV_LABEL_ALIGN_CENTER
  */
-LV_FUNC_OBJX_LABEL_ATTR lv_label_align_t lv_label_get_align(const lv_obj_t * label)
+LV_FUNC_ATTR lv_label_align_t lv_label_get_align(const lv_obj_t * label)
 {
     lv_label_ext_t * ext = lv_obj_get_ext_attr(label);
     return ext->align;
@@ -433,7 +433,7 @@ LV_FUNC_OBJX_LABEL_ATTR lv_label_align_t lv_label_get_align(const lv_obj_t * lab
  * @param label pointer to a label object
  * @return true: recoloring is enabled, false: disable
  */
-LV_FUNC_OBJX_LABEL_ATTR bool lv_label_get_recolor(const lv_obj_t * label)
+LV_FUNC_ATTR bool lv_label_get_recolor(const lv_obj_t * label)
 {
     lv_label_ext_t * ext = lv_obj_get_ext_attr(label);
     return ext->recolor == 0 ? false : true;
@@ -444,7 +444,7 @@ LV_FUNC_OBJX_LABEL_ATTR bool lv_label_get_recolor(const lv_obj_t * label)
  * @param label pointer to a label object
  * @return true: draw body; false: don't draw body
  */
-LV_FUNC_OBJX_LABEL_ATTR bool lv_label_get_body_draw(const lv_obj_t * label)
+LV_FUNC_ATTR bool lv_label_get_body_draw(const lv_obj_t * label)
 {
     lv_label_ext_t * ext = lv_obj_get_ext_attr(label);
     return ext->body_draw == 0 ? false : true;
@@ -455,7 +455,7 @@ LV_FUNC_OBJX_LABEL_ATTR bool lv_label_get_body_draw(const lv_obj_t * label)
  * @param label pointer to a label object
  * @return speed of animation in px/sec unit
  */
-LV_FUNC_OBJX_LABEL_ATTR uint16_t lv_label_get_anim_speed(const lv_obj_t * label)
+LV_FUNC_ATTR uint16_t lv_label_get_anim_speed(const lv_obj_t * label)
 {
 #if LV_USE_ANIMATION
     lv_label_ext_t * ext = lv_obj_get_ext_attr(label);
@@ -473,7 +473,7 @@ LV_FUNC_OBJX_LABEL_ATTR uint16_t lv_label_get_anim_speed(const lv_obj_t * label)
  * index (different in UTF-8)
  * @param pos store the result here (E.g. index = 0 gives 0;0 coordinates)
  */
-LV_FUNC_OBJX_LABEL_ATTR void lv_label_get_letter_pos(const lv_obj_t * label, uint16_t index, lv_point_t * pos)
+LV_FUNC_ATTR void lv_label_get_letter_pos(const lv_obj_t * label, uint16_t index, lv_point_t * pos)
 {
     const char * txt         = lv_label_get_text(label);
     lv_label_ext_t * ext     = lv_obj_get_ext_attr(label);
@@ -542,7 +542,7 @@ LV_FUNC_OBJX_LABEL_ATTR void lv_label_get_letter_pos(const lv_obj_t * label, uin
  * @return the index of the letter on the 'pos_p' point (E.g. on 0;0 is the 0. letter)
  * Expressed in character index and not byte index (different in UTF-8)
  */
-LV_FUNC_OBJX_LABEL_ATTR uint16_t lv_label_get_letter_on(const lv_obj_t * label, lv_point_t * pos)
+LV_FUNC_ATTR uint16_t lv_label_get_letter_on(const lv_obj_t * label, lv_point_t * pos)
 {
     const char * txt         = lv_label_get_text(label);
     lv_label_ext_t * ext     = lv_obj_get_ext_attr(label);
@@ -623,7 +623,7 @@ LV_FUNC_OBJX_LABEL_ATTR uint16_t lv_label_get_letter_on(const lv_obj_t * label, 
  * @param label pointer to a label object.
  * @return selection start index. `LV_LABEL_TXT_SEL_OFF` if nothing is selected.
  */
-LV_FUNC_OBJX_LABEL_ATTR uint16_t lv_label_get_text_sel_start(const lv_obj_t * label)
+LV_FUNC_ATTR uint16_t lv_label_get_text_sel_start(const lv_obj_t * label)
 {
 #if LV_LABEL_TEXT_SEL
     lv_label_ext_t * ext = lv_obj_get_ext_attr(label);
@@ -640,7 +640,7 @@ LV_FUNC_OBJX_LABEL_ATTR uint16_t lv_label_get_text_sel_start(const lv_obj_t * la
  * @param label pointer to a label object.
  * @return selection end index. `LV_LABEL_TXT_SEL_OFF` if nothing is selected.
  */
-LV_FUNC_OBJX_LABEL_ATTR uint16_t lv_label_get_text_sel_end(const lv_obj_t * label)
+LV_FUNC_ATTR uint16_t lv_label_get_text_sel_end(const lv_obj_t * label)
 {
 #if LV_LABEL_TEXT_SEL
     lv_label_ext_t * ext = lv_obj_get_ext_attr(label);
@@ -657,7 +657,7 @@ LV_FUNC_OBJX_LABEL_ATTR uint16_t lv_label_get_text_sel_end(const lv_obj_t * labe
  * @param pos Point to check for characte under
  * @return whether a character is drawn under the point
  */
-LV_FUNC_OBJX_LABEL_ATTR bool lv_label_is_char_under_pos(const lv_obj_t * label, lv_point_t * pos)
+LV_FUNC_ATTR bool lv_label_is_char_under_pos(const lv_obj_t * label, lv_point_t * pos)
 {
     const char * txt         = lv_label_get_text(label);
     lv_label_ext_t * ext     = lv_obj_get_ext_attr(label);
@@ -746,7 +746,7 @@ LV_FUNC_OBJX_LABEL_ATTR bool lv_label_is_char_under_pos(const lv_obj_t * label, 
  * in UTF-8) 0: before first char. LV_LABEL_POS_LAST: after last char.
  * @param txt pointer to the text to insert
  */
-LV_FUNC_OBJX_LABEL_ATTR void lv_label_ins_text(lv_obj_t * label, uint32_t pos, const char * txt)
+LV_FUNC_ATTR void lv_label_ins_text(lv_obj_t * label, uint32_t pos, const char * txt)
 {
     lv_label_ext_t * ext = lv_obj_get_ext_attr(label);
 
@@ -779,7 +779,7 @@ LV_FUNC_OBJX_LABEL_ATTR void lv_label_ins_text(lv_obj_t * label, uint32_t pos, c
  * in UTF-8) 0: before first char.
  * @param cnt number of characters to cut
  */
-LV_FUNC_OBJX_LABEL_ATTR void lv_label_cut_text(lv_obj_t * label, uint32_t pos, uint32_t cnt)
+LV_FUNC_ATTR void lv_label_cut_text(lv_obj_t * label, uint32_t pos, uint32_t cnt)
 {
     lv_label_ext_t * ext = lv_obj_get_ext_attr(label);
 
@@ -810,7 +810,7 @@ LV_FUNC_OBJX_LABEL_ATTR void lv_label_cut_text(lv_obj_t * label, uint32_t pos, u
  *             LV_DESIGN_DRAW_POST: drawing after every children are drawn
  * @param return true/false, depends on 'mode'
  */
-LV_FUNC_OBJX_LABEL_ATTR static bool lv_label_design(lv_obj_t * label, const lv_area_t * mask, lv_design_mode_t mode)
+LV_FUNC_ATTR static bool lv_label_design(lv_obj_t * label, const lv_area_t * mask, lv_design_mode_t mode)
 {
     /* A label never covers an area */
     if(mode == LV_DESIGN_COVER_CHK)
@@ -911,7 +911,7 @@ LV_FUNC_OBJX_LABEL_ATTR static bool lv_label_design(lv_obj_t * label, const lv_a
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-LV_FUNC_OBJX_LABEL_ATTR static lv_res_t lv_label_signal(lv_obj_t * label, lv_signal_t sign, void * param)
+LV_FUNC_ATTR static lv_res_t lv_label_signal(lv_obj_t * label, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 
@@ -962,7 +962,7 @@ LV_FUNC_OBJX_LABEL_ATTR static lv_res_t lv_label_signal(lv_obj_t * label, lv_sig
  * Refresh the label with its text stored in its extended data
  * @param label pointer to a label object
  */
-LV_FUNC_OBJX_LABEL_ATTR static void lv_label_refr_text(lv_obj_t * label)
+LV_FUNC_ATTR static void lv_label_refr_text(lv_obj_t * label)
 {
     lv_label_ext_t * ext = lv_obj_get_ext_attr(label);
 
@@ -1121,7 +1121,7 @@ LV_FUNC_OBJX_LABEL_ATTR static void lv_label_refr_text(lv_obj_t * label)
     lv_obj_invalidate(label);
 }
 
-LV_FUNC_OBJX_LABEL_ATTR static void lv_label_revert_dots(lv_obj_t * label)
+LV_FUNC_ATTR static void lv_label_revert_dots(lv_obj_t * label)
 {
     lv_label_ext_t * ext = lv_obj_get_ext_attr(label);
     if(ext->long_mode != LV_LABEL_LONG_DOT) return;
@@ -1143,14 +1143,14 @@ LV_FUNC_OBJX_LABEL_ATTR static void lv_label_revert_dots(lv_obj_t * label)
 }
 
 #if LV_USE_ANIMATION
-LV_FUNC_OBJX_LABEL_ATTR static void lv_label_set_offset_x(lv_obj_t * label, lv_coord_t x)
+LV_FUNC_ATTR static void lv_label_set_offset_x(lv_obj_t * label, lv_coord_t x)
 {
     lv_label_ext_t * ext = lv_obj_get_ext_attr(label);
     ext->offset.x        = x;
     lv_obj_invalidate(label);
 }
 
-LV_FUNC_OBJX_LABEL_ATTR static void lv_label_set_offset_y(lv_obj_t * label, lv_coord_t y)
+LV_FUNC_ATTR static void lv_label_set_offset_y(lv_obj_t * label, lv_coord_t y)
 {
     lv_label_ext_t * ext = lv_obj_get_ext_attr(label);
     ext->offset.y        = y;
@@ -1165,7 +1165,7 @@ LV_FUNC_OBJX_LABEL_ATTR static void lv_label_set_offset_y(lv_obj_t * label, lv_c
  * @param len Number of characters to store.
  * @return true on success.
  */
-LV_FUNC_OBJX_LABEL_ATTR static bool lv_label_set_dot_tmp(lv_obj_t * label, char * data, uint16_t len)
+LV_FUNC_ATTR static bool lv_label_set_dot_tmp(lv_obj_t * label, char * data, uint16_t len)
 {
     lv_label_ext_t * ext = lv_obj_get_ext_attr(label);
     lv_label_dot_tmp_free(label); /* Deallocate any existing space */
@@ -1193,7 +1193,7 @@ LV_FUNC_OBJX_LABEL_ATTR static bool lv_label_set_dot_tmp(lv_obj_t * label, char 
  * @param label pointer to label object
  * @return char pointer to a stored characters. Is *not* necessarily NULL-terminated.
  */
-LV_FUNC_OBJX_LABEL_ATTR static char * lv_label_get_dot_tmp(lv_obj_t * label)
+LV_FUNC_ATTR static char * lv_label_get_dot_tmp(lv_obj_t * label)
 {
     lv_label_ext_t * ext = lv_obj_get_ext_attr(label);
     if(ext->dot_tmp_alloc) {
@@ -1208,7 +1208,7 @@ LV_FUNC_OBJX_LABEL_ATTR static char * lv_label_get_dot_tmp(lv_obj_t * label)
  * Always clears the field
  * @param label pointer to label object.
  */
-LV_FUNC_OBJX_LABEL_ATTR static void lv_label_dot_tmp_free(lv_obj_t * label)
+LV_FUNC_ATTR static void lv_label_dot_tmp_free(lv_obj_t * label)
 {
     lv_label_ext_t * ext = lv_obj_get_ext_attr(label);
     if(ext->dot_tmp_alloc && ext->dot.tmp_ptr) {

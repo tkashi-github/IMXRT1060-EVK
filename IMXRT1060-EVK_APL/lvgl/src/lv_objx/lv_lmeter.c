@@ -34,7 +34,7 @@ static lv_coord_t lv_lmeter_coord_round(int32_t x);
 /**********************
  *  STATIC VARIABLES
  **********************/
-LV_VAL_OBJX_LMETER_ATTR static lv_signal_cb_t ancestor_signal;
+LV_BSS_ATTR static lv_signal_cb_t ancestor_signal;
 
 /**********************
  *      MACROS
@@ -51,7 +51,7 @@ LV_VAL_OBJX_LMETER_ATTR static lv_signal_cb_t ancestor_signal;
  * it
  * @return pointer to the created line meter
  */
-LV_FUNC_OBJX_LMETER_ATTR lv_obj_t * lv_lmeter_create(lv_obj_t * par, const lv_obj_t * copy)
+LV_FUNC_ATTR lv_obj_t * lv_lmeter_create(lv_obj_t * par, const lv_obj_t * copy)
 {
     LV_LOG_TRACE("line meter create started");
 
@@ -117,7 +117,7 @@ LV_FUNC_OBJX_LMETER_ATTR lv_obj_t * lv_lmeter_create(lv_obj_t * par, const lv_ob
  * @param lmeter pointer to a line meter object
  * @param value new value
  */
-LV_FUNC_OBJX_LMETER_ATTR void lv_lmeter_set_value(lv_obj_t * lmeter, int16_t value)
+LV_FUNC_ATTR void lv_lmeter_set_value(lv_obj_t * lmeter, int16_t value)
 {
     lv_lmeter_ext_t * ext = lv_obj_get_ext_attr(lmeter);
     if(ext->cur_value == value) return;
@@ -133,7 +133,7 @@ LV_FUNC_OBJX_LMETER_ATTR void lv_lmeter_set_value(lv_obj_t * lmeter, int16_t val
  * @param min minimum value
  * @param max maximum value
  */
-LV_FUNC_OBJX_LMETER_ATTR void lv_lmeter_set_range(lv_obj_t * lmeter, int16_t min, int16_t max)
+LV_FUNC_ATTR void lv_lmeter_set_range(lv_obj_t * lmeter, int16_t min, int16_t max)
 {
     lv_lmeter_ext_t * ext = lv_obj_get_ext_attr(lmeter);
     if(ext->min_value == min && ext->max_value == max) return;
@@ -157,7 +157,7 @@ LV_FUNC_OBJX_LMETER_ATTR void lv_lmeter_set_range(lv_obj_t * lmeter, int16_t min
  * @param angle angle of the scale (0..360)
  * @param line_cnt number of lines
  */
-LV_FUNC_OBJX_LMETER_ATTR void lv_lmeter_set_scale(lv_obj_t * lmeter, uint16_t angle, uint8_t line_cnt)
+LV_FUNC_ATTR void lv_lmeter_set_scale(lv_obj_t * lmeter, uint16_t angle, uint8_t line_cnt)
 {
     lv_lmeter_ext_t * ext = lv_obj_get_ext_attr(lmeter);
     if(ext->scale_angle == angle && ext->line_cnt == line_cnt) return;
@@ -177,7 +177,7 @@ LV_FUNC_OBJX_LMETER_ATTR void lv_lmeter_set_scale(lv_obj_t * lmeter, uint16_t an
  * @param lmeter pointer to a line meter object
  * @return the value of the line meter
  */
-LV_FUNC_OBJX_LMETER_ATTR int16_t lv_lmeter_get_value(const lv_obj_t * lmeter)
+LV_FUNC_ATTR int16_t lv_lmeter_get_value(const lv_obj_t * lmeter)
 {
     lv_lmeter_ext_t * ext = lv_obj_get_ext_attr(lmeter);
     return ext->cur_value;
@@ -188,7 +188,7 @@ LV_FUNC_OBJX_LMETER_ATTR int16_t lv_lmeter_get_value(const lv_obj_t * lmeter)
  * @param lmeter pointer to a line meter object
  * @return the minimum value of the line meter
  */
-LV_FUNC_OBJX_LMETER_ATTR int16_t lv_lmeter_get_min_value(const lv_obj_t * lmeter)
+LV_FUNC_ATTR int16_t lv_lmeter_get_min_value(const lv_obj_t * lmeter)
 {
     lv_lmeter_ext_t * ext = lv_obj_get_ext_attr(lmeter);
     return ext->min_value;
@@ -199,7 +199,7 @@ LV_FUNC_OBJX_LMETER_ATTR int16_t lv_lmeter_get_min_value(const lv_obj_t * lmeter
  * @param lmeter pointer to a line meter object
  * @return the maximum value of the line meter
  */
-LV_FUNC_OBJX_LMETER_ATTR int16_t lv_lmeter_get_max_value(const lv_obj_t * lmeter)
+LV_FUNC_ATTR int16_t lv_lmeter_get_max_value(const lv_obj_t * lmeter)
 {
     lv_lmeter_ext_t * ext = lv_obj_get_ext_attr(lmeter);
     return ext->max_value;
@@ -210,7 +210,7 @@ LV_FUNC_OBJX_LMETER_ATTR int16_t lv_lmeter_get_max_value(const lv_obj_t * lmeter
  * @param lmeter pointer to a line meter object
  * @return number of the scale units
  */
-LV_FUNC_OBJX_LMETER_ATTR uint8_t lv_lmeter_get_line_count(const lv_obj_t * lmeter)
+LV_FUNC_ATTR uint8_t lv_lmeter_get_line_count(const lv_obj_t * lmeter)
 {
     lv_lmeter_ext_t * ext = lv_obj_get_ext_attr(lmeter);
     return ext->line_cnt;
@@ -221,7 +221,7 @@ LV_FUNC_OBJX_LMETER_ATTR uint8_t lv_lmeter_get_line_count(const lv_obj_t * lmete
  * @param lmeter pointer to a line meter object
  * @return angle of the scale
  */
-LV_FUNC_OBJX_LMETER_ATTR uint16_t lv_lmeter_get_scale_angle(const lv_obj_t * lmeter)
+LV_FUNC_ATTR uint16_t lv_lmeter_get_scale_angle(const lv_obj_t * lmeter)
 {
     lv_lmeter_ext_t * ext = lv_obj_get_ext_attr(lmeter);
     return ext->scale_angle;
@@ -241,7 +241,7 @@ LV_FUNC_OBJX_LMETER_ATTR uint16_t lv_lmeter_get_scale_angle(const lv_obj_t * lme
  *             LV_DESIGN_DRAW_POST: drawing after every children are drawn
  * @param return true/false, depends on 'mode'
  */
-LV_FUNC_OBJX_LMETER_ATTR static bool lv_lmeter_design(lv_obj_t * lmeter, const lv_area_t * mask, lv_design_mode_t mode)
+LV_FUNC_ATTR static bool lv_lmeter_design(lv_obj_t * lmeter, const lv_area_t * mask, lv_design_mode_t mode)
 {
     /*Return false if the object is not covers the mask_p area*/
     if(mode == LV_DESIGN_COVER_CHK) {
@@ -328,7 +328,7 @@ LV_FUNC_OBJX_LMETER_ATTR static bool lv_lmeter_design(lv_obj_t * lmeter, const l
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-LV_FUNC_OBJX_LMETER_ATTR static lv_res_t lv_lmeter_signal(lv_obj_t * lmeter, lv_signal_t sign, void * param)
+LV_FUNC_ATTR static lv_res_t lv_lmeter_signal(lv_obj_t * lmeter, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 
@@ -360,7 +360,7 @@ LV_FUNC_OBJX_LMETER_ATTR static lv_res_t lv_lmeter_signal(lv_obj_t * lmeter, lv_
  * @param x a coordinate which is greater then it should be
  * @return the downscaled and rounded coordinate  (+-1)
  */
-LV_FUNC_OBJX_LMETER_ATTR static lv_coord_t lv_lmeter_coord_round(int32_t x)
+LV_FUNC_ATTR static lv_coord_t lv_lmeter_coord_round(int32_t x)
 {
 #if LV_LMETER_LINE_UPSCALE > 0
     bool was_negative = false;

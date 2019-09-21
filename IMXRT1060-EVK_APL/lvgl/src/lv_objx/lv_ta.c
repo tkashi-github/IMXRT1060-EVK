@@ -59,11 +59,11 @@ static void update_cursor_position_on_click(lv_obj_t * ta, lv_signal_t sign, lv_
 /**********************
  *  STATIC VARIABLES
  **********************/
-LV_VAL_OBJX_TA_ATTR static lv_design_cb_t ancestor_design;
-LV_VAL_OBJX_TA_ATTR static lv_design_cb_t scrl_design;
-LV_VAL_OBJX_TA_ATTR static lv_signal_cb_t ancestor_signal;
-LV_VAL_OBJX_TA_ATTR static lv_signal_cb_t scrl_signal;
-LV_VAL_OBJX_TA_ATTR static const char * ta_insert_replace;
+LV_BSS_ATTR static lv_design_cb_t ancestor_design;
+LV_BSS_ATTR static lv_design_cb_t scrl_design;
+LV_BSS_ATTR static lv_signal_cb_t ancestor_signal;
+LV_BSS_ATTR static lv_signal_cb_t scrl_signal;
+LV_BSS_ATTR static const char * ta_insert_replace;
 
 /**********************
  *      MACROS
@@ -79,7 +79,7 @@ LV_VAL_OBJX_TA_ATTR static const char * ta_insert_replace;
  * @param copy pointer to a text area object, if not NULL then the new object will be copied from it
  * @return pointer to the created text area
  */
-LV_FUNC_OBJX_TA_ATTR lv_obj_t * lv_ta_create(lv_obj_t * par, const lv_obj_t * copy)
+LV_FUNC_ATTR lv_obj_t * lv_ta_create(lv_obj_t * par, const lv_obj_t * copy)
 {
     LV_LOG_TRACE("text area create started");
 
@@ -205,7 +205,7 @@ LV_FUNC_OBJX_TA_ATTR lv_obj_t * lv_ta_create(lv_obj_t * par, const lv_obj_t * co
  * @param ta pointer to a text area object
  * @param c a character (e.g. 'a')
  */
-LV_FUNC_OBJX_TA_ATTR void lv_ta_add_char(lv_obj_t * ta, uint32_t c)
+LV_FUNC_ATTR void lv_ta_add_char(lv_obj_t * ta, uint32_t c)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
 
@@ -293,7 +293,7 @@ LV_FUNC_OBJX_TA_ATTR void lv_ta_add_char(lv_obj_t * ta, uint32_t c)
  * @param ta pointer to a text area object
  * @param txt a '\0' terminated string to insert
  */
-LV_FUNC_OBJX_TA_ATTR void lv_ta_add_text(lv_obj_t * ta, const char * txt)
+LV_FUNC_ATTR void lv_ta_add_text(lv_obj_t * ta, const char * txt)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
 
@@ -372,7 +372,7 @@ LV_FUNC_OBJX_TA_ATTR void lv_ta_add_text(lv_obj_t * ta, const char * txt)
  * Delete a the left character from the current cursor position
  * @param ta pointer to a text area object
  */
-LV_FUNC_OBJX_TA_ATTR void lv_ta_del_char(lv_obj_t * ta)
+LV_FUNC_ATTR void lv_ta_del_char(lv_obj_t * ta)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
     uint16_t cur_pos  = ext->cursor.pos;
@@ -426,7 +426,7 @@ LV_FUNC_OBJX_TA_ATTR void lv_ta_del_char(lv_obj_t * ta)
  * Delete the right character from the current cursor position
  * @param ta pointer to a text area object
  */
-LV_FUNC_OBJX_TA_ATTR void lv_ta_del_char_forward(lv_obj_t * ta)
+LV_FUNC_ATTR void lv_ta_del_char_forward(lv_obj_t * ta)
 {
     uint16_t cp = lv_ta_get_cursor_pos(ta);
     lv_ta_set_cursor_pos(ta, cp + 1);
@@ -442,7 +442,7 @@ LV_FUNC_OBJX_TA_ATTR void lv_ta_del_char_forward(lv_obj_t * ta)
  * @param ta pointer to a text area
  * @param txt pointer to the text
  */
-LV_FUNC_OBJX_TA_ATTR void lv_ta_set_text(lv_obj_t * ta, const char * txt)
+LV_FUNC_ATTR void lv_ta_set_text(lv_obj_t * ta, const char * txt)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
 
@@ -507,7 +507,7 @@ LV_FUNC_OBJX_TA_ATTR void lv_ta_set_text(lv_obj_t * ta, const char * txt)
  * @param ta pointer to a text area
  * @param txt pointer to the text
  */
-LV_FUNC_OBJX_TA_ATTR void lv_ta_set_placeholder_text(lv_obj_t * ta, const char * txt)
+LV_FUNC_ATTR void lv_ta_set_placeholder_text(lv_obj_t * ta, const char * txt)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
 
@@ -534,7 +534,7 @@ LV_FUNC_OBJX_TA_ATTR void lv_ta_set_placeholder_text(lv_obj_t * ta, const char *
  *             < 0 : index from the end of the text
  *             LV_TA_CURSOR_LAST: go after the last character
  */
-LV_FUNC_OBJX_TA_ATTR void lv_ta_set_cursor_pos(lv_obj_t * ta, int16_t pos)
+LV_FUNC_ATTR void lv_ta_set_cursor_pos(lv_obj_t * ta, int16_t pos)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
     if(ext->cursor.pos == pos) return;
@@ -610,7 +610,7 @@ LV_FUNC_OBJX_TA_ATTR void lv_ta_set_cursor_pos(lv_obj_t * ta, int16_t pos)
  * @param ta pointer to a text area object
  * @param cur_type: element of 'lv_ta_cursor_type_t'
  */
-LV_FUNC_OBJX_TA_ATTR void lv_ta_set_cursor_type(lv_obj_t * ta, lv_cursor_type_t cur_type)
+LV_FUNC_ATTR void lv_ta_set_cursor_type(lv_obj_t * ta, lv_cursor_type_t cur_type)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
     if(ext->cursor.type == cur_type) return;
@@ -625,7 +625,7 @@ LV_FUNC_OBJX_TA_ATTR void lv_ta_set_cursor_type(lv_obj_t * ta, lv_cursor_type_t 
  * @param ta pointer to a text area object
  * @param en true: enable click positions; false: disable
  */
-LV_FUNC_OBJX_TA_ATTR void lv_ta_set_cursor_click_pos(lv_obj_t * ta, bool en)
+LV_FUNC_ATTR void lv_ta_set_cursor_click_pos(lv_obj_t * ta, bool en)
 {
     lv_ta_ext_t * ext     = lv_obj_get_ext_attr(ta);
     ext->cursor.click_pos = en ? 1 : 0;
@@ -636,7 +636,7 @@ LV_FUNC_OBJX_TA_ATTR void lv_ta_set_cursor_click_pos(lv_obj_t * ta, bool en)
  * @param ta pointer to a text area object
  * @param en true: enable, false: disable
  */
-LV_FUNC_OBJX_TA_ATTR void lv_ta_set_pwd_mode(lv_obj_t * ta, bool en)
+LV_FUNC_ATTR void lv_ta_set_pwd_mode(lv_obj_t * ta, bool en)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
     if(ext->pwd_mode == en) return;
@@ -679,7 +679,7 @@ LV_FUNC_OBJX_TA_ATTR void lv_ta_set_pwd_mode(lv_obj_t * ta, bool en)
  * @param ta pointer to a Text area object
  * @param en true: one line, false: normal
  */
-LV_FUNC_OBJX_TA_ATTR void lv_ta_set_one_line(lv_obj_t * ta, bool en)
+LV_FUNC_ATTR void lv_ta_set_one_line(lv_obj_t * ta, bool en)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
     if(ext->one_line == en) return;
@@ -720,7 +720,7 @@ LV_FUNC_OBJX_TA_ATTR void lv_ta_set_one_line(lv_obj_t * ta, bool en)
  * @param ta pointer to a text are object
  * @param align the desired alignment from `lv_label_align_t`. (LV_LABEL_ALIGN_LEFT/CENTER/RIGHT)
  */
-LV_FUNC_OBJX_TA_ATTR void lv_ta_set_text_align(lv_obj_t * ta, lv_label_align_t align)
+LV_FUNC_ATTR void lv_ta_set_text_align(lv_obj_t * ta, lv_label_align_t align)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
     lv_obj_t * label  = lv_ta_get_label(ta);
@@ -752,7 +752,7 @@ LV_FUNC_OBJX_TA_ATTR void lv_ta_set_text_align(lv_obj_t * ta, lv_label_align_t a
  * @param ta pointer to  Text Area
  * @param list list of characters. Only the pointer is saved. E.g. "+-.,0123456789"
  */
-LV_FUNC_OBJX_TA_ATTR void lv_ta_set_accepted_chars(lv_obj_t * ta, const char * list)
+LV_FUNC_ATTR void lv_ta_set_accepted_chars(lv_obj_t * ta, const char * list)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
 
@@ -764,7 +764,7 @@ LV_FUNC_OBJX_TA_ATTR void lv_ta_set_accepted_chars(lv_obj_t * ta, const char * l
  * @param ta pointer to  Text Area
  * @param num the maximal number of characters can be added (`lv_ta_set_text` ignores it)
  */
-LV_FUNC_OBJX_TA_ATTR void lv_ta_set_max_length(lv_obj_t * ta, uint16_t num)
+LV_FUNC_ATTR void lv_ta_set_max_length(lv_obj_t * ta, uint16_t num)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
 
@@ -779,7 +779,7 @@ LV_FUNC_OBJX_TA_ATTR void lv_ta_set_max_length(lv_obj_t * ta, uint16_t num)
  *            The variable must be live after the `event_cb` exists. (Should be `global` or
  * `static`)
  */
-LV_FUNC_OBJX_TA_ATTR void lv_ta_set_insert_replace(lv_obj_t * ta, const char * txt)
+LV_FUNC_ATTR void lv_ta_set_insert_replace(lv_obj_t * ta, const char * txt)
 {
     (void)ta; /*Unused*/
     ta_insert_replace = txt;
@@ -791,7 +791,7 @@ LV_FUNC_OBJX_TA_ATTR void lv_ta_set_insert_replace(lv_obj_t * ta, const char * t
  * @param type which style should be set
  * @param style pointer to a style
  */
-LV_FUNC_OBJX_TA_ATTR void lv_ta_set_style(lv_obj_t * ta, lv_ta_style_t type, const lv_style_t * style)
+LV_FUNC_ATTR void lv_ta_set_style(lv_obj_t * ta, lv_ta_style_t type, const lv_style_t * style)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
 
@@ -815,7 +815,7 @@ LV_FUNC_OBJX_TA_ATTR void lv_ta_set_style(lv_obj_t * ta, lv_ta_style_t type, con
  * @param ta pointer to a text area object
  * @param en true or false to enable/disable selection mode
  */
-LV_FUNC_OBJX_TA_ATTR void lv_ta_set_text_sel(lv_obj_t * ta, bool en)
+LV_FUNC_ATTR void lv_ta_set_text_sel(lv_obj_t * ta, bool en)
 {
 #if LV_LABEL_TEXT_SEL
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
@@ -834,7 +834,7 @@ LV_FUNC_OBJX_TA_ATTR void lv_ta_set_text_sel(lv_obj_t * ta, bool en)
  * @param ta pointer to Text area
  * @param time show time in milliseconds. 0: hide immediately.
  */
-LV_FUNC_OBJX_TA_ATTR void lv_ta_set_pwd_show_time(lv_obj_t * ta, uint16_t time)
+LV_FUNC_ATTR void lv_ta_set_pwd_show_time(lv_obj_t * ta, uint16_t time)
 {
 #if LV_USE_ANIMATION == 0
     time = 0;
@@ -849,7 +849,7 @@ LV_FUNC_OBJX_TA_ATTR void lv_ta_set_pwd_show_time(lv_obj_t * ta, uint16_t time)
  * @param ta pointer to Text area
  * @param time blink period. 0: disable blinking
  */
-LV_FUNC_OBJX_TA_ATTR void lv_ta_set_cursor_blink_time(lv_obj_t * ta, uint16_t time)
+LV_FUNC_ATTR void lv_ta_set_cursor_blink_time(lv_obj_t * ta, uint16_t time)
 {
 #if LV_USE_ANIMATION == 0
     time = 0;
@@ -892,7 +892,7 @@ LV_FUNC_OBJX_TA_ATTR void lv_ta_set_cursor_blink_time(lv_obj_t * ta, uint16_t ti
  * @param ta pointer to a text area object
  * @return pointer to the text
  */
-LV_FUNC_OBJX_TA_ATTR const char * lv_ta_get_text(const lv_obj_t * ta)
+LV_FUNC_ATTR const char * lv_ta_get_text(const lv_obj_t * ta)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
 
@@ -911,7 +911,7 @@ LV_FUNC_OBJX_TA_ATTR const char * lv_ta_get_text(const lv_obj_t * ta)
  * @param ta pointer to a text area object
  * @return pointer to the text
  */
-LV_FUNC_OBJX_TA_ATTR const char * lv_ta_get_placeholder_text(lv_obj_t * ta)
+LV_FUNC_ATTR const char * lv_ta_get_placeholder_text(lv_obj_t * ta)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
 
@@ -927,7 +927,7 @@ LV_FUNC_OBJX_TA_ATTR const char * lv_ta_get_placeholder_text(lv_obj_t * ta)
  * @param ta pointer to a text area object
  * @return pointer to the label object
  */
-LV_FUNC_OBJX_TA_ATTR lv_obj_t * lv_ta_get_label(const lv_obj_t * ta)
+LV_FUNC_ATTR lv_obj_t * lv_ta_get_label(const lv_obj_t * ta)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
     return ext->label;
@@ -938,7 +938,7 @@ LV_FUNC_OBJX_TA_ATTR lv_obj_t * lv_ta_get_label(const lv_obj_t * ta)
  * @param ta pointer to a text area object
  * @return the cursor position
  */
-LV_FUNC_OBJX_TA_ATTR uint16_t lv_ta_get_cursor_pos(const lv_obj_t * ta)
+LV_FUNC_ATTR uint16_t lv_ta_get_cursor_pos(const lv_obj_t * ta)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
     return ext->cursor.pos;
@@ -949,7 +949,7 @@ LV_FUNC_OBJX_TA_ATTR uint16_t lv_ta_get_cursor_pos(const lv_obj_t * ta)
  * @param ta pointer to a text area object
  * @return element of 'lv_ta_cursor_type_t'
  */
-LV_FUNC_OBJX_TA_ATTR lv_cursor_type_t lv_ta_get_cursor_type(const lv_obj_t * ta)
+LV_FUNC_ATTR lv_cursor_type_t lv_ta_get_cursor_type(const lv_obj_t * ta)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
     return ext->cursor.type;
@@ -960,7 +960,7 @@ LV_FUNC_OBJX_TA_ATTR lv_cursor_type_t lv_ta_get_cursor_type(const lv_obj_t * ta)
  * @param ta pointer to a text area object
  * @return true: enable click positions; false: disable
  */
-LV_FUNC_OBJX_TA_ATTR bool lv_ta_get_cursor_click_pos(lv_obj_t * ta)
+LV_FUNC_ATTR bool lv_ta_get_cursor_click_pos(lv_obj_t * ta)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
     return ext->cursor.click_pos ? true : false;
@@ -971,7 +971,7 @@ LV_FUNC_OBJX_TA_ATTR bool lv_ta_get_cursor_click_pos(lv_obj_t * ta)
  * @param ta pointer to a text area object
  * @return true: password mode is enabled, false: disabled
  */
-LV_FUNC_OBJX_TA_ATTR bool lv_ta_get_pwd_mode(const lv_obj_t * ta)
+LV_FUNC_ATTR bool lv_ta_get_pwd_mode(const lv_obj_t * ta)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
     return ext->pwd_mode == 0 ? false : true;
@@ -982,7 +982,7 @@ LV_FUNC_OBJX_TA_ATTR bool lv_ta_get_pwd_mode(const lv_obj_t * ta)
  * @param ta pointer to a text area object
  * @return true: one line configuration is enabled, false: disabled
  */
-LV_FUNC_OBJX_TA_ATTR bool lv_ta_get_one_line(const lv_obj_t * ta)
+LV_FUNC_ATTR bool lv_ta_get_one_line(const lv_obj_t * ta)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
     return ext->one_line == 0 ? false : true;
@@ -993,7 +993,7 @@ LV_FUNC_OBJX_TA_ATTR bool lv_ta_get_one_line(const lv_obj_t * ta)
  * @param ta pointer to  Text Area
  * @return list of accented characters.
  */
-LV_FUNC_OBJX_TA_ATTR const char * lv_ta_get_accepted_chars(lv_obj_t * ta)
+LV_FUNC_ATTR const char * lv_ta_get_accepted_chars(lv_obj_t * ta)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
 
@@ -1005,7 +1005,7 @@ LV_FUNC_OBJX_TA_ATTR const char * lv_ta_get_accepted_chars(lv_obj_t * ta)
  * @param ta pointer to  Text Area
  * @return the maximal number of characters to be add
  */
-LV_FUNC_OBJX_TA_ATTR uint16_t lv_ta_get_max_length(lv_obj_t * ta)
+LV_FUNC_ATTR uint16_t lv_ta_get_max_length(lv_obj_t * ta)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
     return ext->max_length;
@@ -1017,7 +1017,7 @@ LV_FUNC_OBJX_TA_ATTR uint16_t lv_ta_get_max_length(lv_obj_t * ta)
  * @param type which style should be get
  * @return style pointer to a style
  */
-LV_FUNC_OBJX_TA_ATTR const lv_style_t * lv_ta_get_style(const lv_obj_t * ta, lv_ta_style_t type)
+LV_FUNC_ATTR const lv_style_t * lv_ta_get_style(const lv_obj_t * ta, lv_ta_style_t type)
 {
     const lv_style_t * style = NULL;
     lv_ta_ext_t * ext        = lv_obj_get_ext_attr(ta);
@@ -1041,7 +1041,7 @@ LV_FUNC_OBJX_TA_ATTR const lv_style_t * lv_ta_get_style(const lv_obj_t * ta, lv_
  * @param ta Text area object
  * @return whether text is selected or not
  */
-LV_FUNC_OBJX_TA_ATTR bool lv_ta_text_is_selected(const lv_obj_t * ta)
+LV_FUNC_ATTR bool lv_ta_text_is_selected(const lv_obj_t * ta)
 {
 #if LV_LABEL_TEXT_SEL
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
@@ -1063,7 +1063,7 @@ LV_FUNC_OBJX_TA_ATTR bool lv_ta_text_is_selected(const lv_obj_t * ta)
  * @param ta pointer to a text area object
  * @return true: selection mode is enabled, false: disabled
  */
-LV_FUNC_OBJX_TA_ATTR bool lv_ta_get_text_sel_en(lv_obj_t * ta)
+LV_FUNC_ATTR bool lv_ta_get_text_sel_en(lv_obj_t * ta)
 {
 #if LV_LABEL_TEXT_SEL
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
@@ -1079,7 +1079,7 @@ LV_FUNC_OBJX_TA_ATTR bool lv_ta_get_text_sel_en(lv_obj_t * ta)
  * @param ta pointer to Text area
  * @return show time in milliseconds. 0: hide immediately.
  */
-LV_FUNC_OBJX_TA_ATTR uint16_t lv_ta_get_pwd_show_time(lv_obj_t * ta)
+LV_FUNC_ATTR uint16_t lv_ta_get_pwd_show_time(lv_obj_t * ta)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
 
@@ -1091,7 +1091,7 @@ LV_FUNC_OBJX_TA_ATTR uint16_t lv_ta_get_pwd_show_time(lv_obj_t * ta)
  * @param ta pointer to Text area
  * @return time blink period. 0: disable blinking
  */
-LV_FUNC_OBJX_TA_ATTR uint16_t lv_ta_get_cursor_blink_time(lv_obj_t * ta)
+LV_FUNC_ATTR uint16_t lv_ta_get_cursor_blink_time(lv_obj_t * ta)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
     return ext->cursor.blink_time;
@@ -1105,7 +1105,7 @@ LV_FUNC_OBJX_TA_ATTR uint16_t lv_ta_get_cursor_blink_time(lv_obj_t * ta)
  * Clear the selection on the text area.
  * @param ta Text area object
  */
-LV_FUNC_OBJX_TA_ATTR void lv_ta_clear_selection(lv_obj_t * ta)
+LV_FUNC_ATTR void lv_ta_clear_selection(lv_obj_t * ta)
 {
 #if LV_LABEL_TEXT_SEL
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
@@ -1124,7 +1124,7 @@ LV_FUNC_OBJX_TA_ATTR void lv_ta_clear_selection(lv_obj_t * ta)
  * Move the cursor one character right
  * @param ta pointer to a text area object
  */
-LV_FUNC_OBJX_TA_ATTR void lv_ta_cursor_right(lv_obj_t * ta)
+LV_FUNC_ATTR void lv_ta_cursor_right(lv_obj_t * ta)
 {
     uint16_t cp = lv_ta_get_cursor_pos(ta);
     cp++;
@@ -1135,7 +1135,7 @@ LV_FUNC_OBJX_TA_ATTR void lv_ta_cursor_right(lv_obj_t * ta)
  * Move the cursor one character left
  * @param ta pointer to a text area object
  */
-LV_FUNC_OBJX_TA_ATTR void lv_ta_cursor_left(lv_obj_t * ta)
+LV_FUNC_ATTR void lv_ta_cursor_left(lv_obj_t * ta)
 {
     uint16_t cp = lv_ta_get_cursor_pos(ta);
     if(cp > 0) {
@@ -1148,7 +1148,7 @@ LV_FUNC_OBJX_TA_ATTR void lv_ta_cursor_left(lv_obj_t * ta)
  * Move the cursor one line down
  * @param ta pointer to a text area object
  */
-LV_FUNC_OBJX_TA_ATTR void lv_ta_cursor_down(lv_obj_t * ta)
+LV_FUNC_ATTR void lv_ta_cursor_down(lv_obj_t * ta)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
     lv_point_t pos;
@@ -1178,7 +1178,7 @@ LV_FUNC_OBJX_TA_ATTR void lv_ta_cursor_down(lv_obj_t * ta)
  * Move the cursor one line up
  * @param ta pointer to a text area object
  */
-LV_FUNC_OBJX_TA_ATTR void lv_ta_cursor_up(lv_obj_t * ta)
+LV_FUNC_ATTR void lv_ta_cursor_up(lv_obj_t * ta)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
     lv_point_t pos;
@@ -1214,7 +1214,7 @@ LV_FUNC_OBJX_TA_ATTR void lv_ta_cursor_up(lv_obj_t * ta)
  *             LV_DESIGN_DRAW_POST: drawing after every children are drawn
  * @param return true/false, depends on 'mode'
  */
-LV_FUNC_OBJX_TA_ATTR static bool lv_ta_design(lv_obj_t * ta, const lv_area_t * mask, lv_design_mode_t mode)
+LV_FUNC_ATTR static bool lv_ta_design(lv_obj_t * ta, const lv_area_t * mask, lv_design_mode_t mode)
 {
     if(mode == LV_DESIGN_COVER_CHK) {
         /*Return false if the object is not covers the mask_p area*/
@@ -1239,7 +1239,7 @@ LV_FUNC_OBJX_TA_ATTR static bool lv_ta_design(lv_obj_t * ta, const lv_area_t * m
  *             LV_DESIGN_DRAW_POST: drawing after every children are drawn
  * @return return true/false, depends on 'mode'
  */
-LV_FUNC_OBJX_TA_ATTR static bool lv_ta_scrollable_design(lv_obj_t * scrl, const lv_area_t * mask, lv_design_mode_t mode)
+LV_FUNC_ATTR static bool lv_ta_scrollable_design(lv_obj_t * scrl, const lv_area_t * mask, lv_design_mode_t mode)
 {
     if(mode == LV_DESIGN_COVER_CHK) {
         /*Return false if the object is not covers the mask_p area*/
@@ -1306,7 +1306,7 @@ LV_FUNC_OBJX_TA_ATTR static bool lv_ta_scrollable_design(lv_obj_t * scrl, const 
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-LV_FUNC_OBJX_TA_ATTR static lv_res_t lv_ta_signal(lv_obj_t * ta, lv_signal_t sign, void * param)
+LV_FUNC_ATTR static lv_res_t lv_ta_signal(lv_obj_t * ta, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 
@@ -1436,7 +1436,7 @@ LV_FUNC_OBJX_TA_ATTR static lv_res_t lv_ta_signal(lv_obj_t * ta, lv_signal_t sig
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-LV_FUNC_OBJX_TA_ATTR static lv_res_t lv_ta_scrollable_signal(lv_obj_t * scrl, lv_signal_t sign, void * param)
+LV_FUNC_ATTR static lv_res_t lv_ta_scrollable_signal(lv_obj_t * scrl, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 
@@ -1481,7 +1481,7 @@ LV_FUNC_OBJX_TA_ATTR static lv_res_t lv_ta_scrollable_signal(lv_obj_t * scrl, lv
  * @param ta pointer to a text area
  * @param hide 1: hide the cursor, 0: show it
  */
-LV_FUNC_OBJX_TA_ATTR static void cursor_blink_anim(lv_obj_t * ta, lv_anim_value_t show)
+LV_FUNC_ATTR static void cursor_blink_anim(lv_obj_t * ta, lv_anim_value_t show)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
     if(show != ext->cursor.state) {
@@ -1506,7 +1506,7 @@ LV_FUNC_OBJX_TA_ATTR static void cursor_blink_anim(lv_obj_t * ta, lv_anim_value_
  * @param ta unused
  * @param x unused
  */
-LV_FUNC_OBJX_TA_ATTR static void pwd_char_hider_anim(lv_obj_t * ta, lv_anim_value_t x)
+LV_FUNC_ATTR static void pwd_char_hider_anim(lv_obj_t * ta, lv_anim_value_t x)
 {
     (void)ta;
     (void)x;
@@ -1516,7 +1516,7 @@ LV_FUNC_OBJX_TA_ATTR static void pwd_char_hider_anim(lv_obj_t * ta, lv_anim_valu
  * Call when an animation is ready to convert all characters to '*'
  * @param a pointer to the animation
  */
-LV_FUNC_OBJX_TA_ATTR static void pwd_char_hider_anim_ready(lv_anim_t * a)
+LV_FUNC_ATTR static void pwd_char_hider_anim_ready(lv_anim_t * a)
 {
     lv_obj_t * ta = a->var;
     pwd_char_hider(ta);
@@ -1527,7 +1527,7 @@ LV_FUNC_OBJX_TA_ATTR static void pwd_char_hider_anim_ready(lv_anim_t * a)
  * Hide all characters (convert them to '*')
  * @param ta: pointer to text area object
  */
-LV_FUNC_OBJX_TA_ATTR static void pwd_char_hider(lv_obj_t * ta)
+LV_FUNC_ATTR static void pwd_char_hider(lv_obj_t * ta)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
     if(ext->pwd_mode != 0) {
@@ -1552,7 +1552,7 @@ LV_FUNC_OBJX_TA_ATTR static void pwd_char_hider(lv_obj_t * ta)
  * @param c an unicode character
  * @return true: accapted; false: rejected
  */
-LV_FUNC_OBJX_TA_ATTR static bool char_is_accepted(lv_obj_t * ta, uint32_t c)
+LV_FUNC_ATTR static bool char_is_accepted(lv_obj_t * ta, uint32_t c)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
 
@@ -1579,7 +1579,7 @@ LV_FUNC_OBJX_TA_ATTR static bool char_is_accepted(lv_obj_t * ta, uint32_t c)
     }
 }
 
-LV_FUNC_OBJX_TA_ATTR static void get_cursor_style(lv_obj_t * ta, lv_style_t * style_res)
+LV_FUNC_ATTR static void get_cursor_style(lv_obj_t * ta, lv_style_t * style_res)
 {
     lv_ta_ext_t * ext              = lv_obj_get_ext_attr(ta);
     const lv_style_t * label_style = lv_obj_get_style(ext->label);
@@ -1609,7 +1609,7 @@ LV_FUNC_OBJX_TA_ATTR static void get_cursor_style(lv_obj_t * ta, lv_style_t * st
     }
 }
 
-LV_FUNC_OBJX_TA_ATTR static void refr_cursor_area(lv_obj_t * ta)
+LV_FUNC_ATTR static void refr_cursor_area(lv_obj_t * ta)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
 
@@ -1709,7 +1709,7 @@ LV_FUNC_OBJX_TA_ATTR static void refr_cursor_area(lv_obj_t * ta)
     lv_inv_area(disp, &area_tmp);
 }
 
-LV_FUNC_OBJX_TA_ATTR static void placeholder_update(lv_obj_t * ta)
+LV_FUNC_ATTR static void placeholder_update(lv_obj_t * ta)
 {
     lv_ta_ext_t * ext = lv_obj_get_ext_attr(ta);
     const char * ta_text;
@@ -1732,7 +1732,7 @@ LV_FUNC_OBJX_TA_ATTR static void placeholder_update(lv_obj_t * ta)
     }
 }
 
-LV_FUNC_OBJX_TA_ATTR static void update_cursor_position_on_click(lv_obj_t * ta, lv_signal_t sign, lv_indev_t * click_source)
+LV_FUNC_ATTR static void update_cursor_position_on_click(lv_obj_t * ta, lv_signal_t sign, lv_indev_t * click_source)
 {
 
     if(click_source == NULL) return;

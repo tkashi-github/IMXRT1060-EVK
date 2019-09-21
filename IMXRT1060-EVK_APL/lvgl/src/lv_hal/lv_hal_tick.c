@@ -34,8 +34,8 @@
 /**********************
  *  STATIC VARIABLES
  **********************/
-LV_VAL_HAL_TICK_ATTR static uint32_t sys_time = 0;
-LV_VAL_HAL_TICK_ATTR static volatile uint8_t tick_irq_flag;
+LV_BSS_ATTR static uint32_t sys_time = 0;
+LV_BSS_ATTR static volatile uint8_t tick_irq_flag;
 
 /**********************
  *      MACROS
@@ -59,7 +59,7 @@ LV_ATTRIBUTE_TICK_INC void lv_tick_inc(uint32_t tick_period)
  * Get the elapsed milliseconds since start up
  * @return the elapsed milliseconds
  */
-LV_FUNC_HAL_TICK_ATTR uint32_t lv_tick_get(void)
+LV_FUNC_ATTR uint32_t lv_tick_get(void)
 {
 #if LV_TICK_CUSTOM == 0
     uint32_t result;
@@ -80,7 +80,7 @@ LV_FUNC_HAL_TICK_ATTR uint32_t lv_tick_get(void)
  * @param prev_tick a previous time stamp (return value of systick_get() )
  * @return the elapsed milliseconds since 'prev_tick'
  */
-LV_FUNC_HAL_TICK_ATTR uint32_t lv_tick_elaps(uint32_t prev_tick)
+LV_FUNC_ATTR uint32_t lv_tick_elaps(uint32_t prev_tick)
 {
     uint32_t act_time = lv_tick_get();
 

@@ -43,7 +43,7 @@ static void point_swap(lv_point_t * p1, lv_point_t * p2);
  * @param style style for of the triangle
  * @param opa_scale scale down all opacities by the factor (0..255)
  */
-LV_FUNC_DRAW_TRIANGLE_ATTR void lv_draw_triangle(const lv_point_t * points, const lv_area_t * mask, const lv_style_t * style, lv_opa_t opa_scale)
+LV_FUNC_ATTR void lv_draw_triangle(const lv_point_t * points, const lv_area_t * mask, const lv_style_t * style, lv_opa_t opa_scale)
 {
 
     /*Return is the triangle is degenerated*/
@@ -86,7 +86,7 @@ LV_FUNC_DRAW_TRIANGLE_ATTR void lv_draw_triangle(const lv_point_t * points, cons
  * @param style style of the polygon
  * @param opa_scale scale down all opacities by the factor (0..255)
  */
-LV_FUNC_DRAW_TRIANGLE_ATTR void lv_draw_polygon(const lv_point_t * points, uint32_t point_cnt, const lv_area_t * mask, const lv_style_t * style,
+LV_FUNC_ATTR void lv_draw_polygon(const lv_point_t * points, uint32_t point_cnt, const lv_area_t * mask, const lv_style_t * style,
                      lv_opa_t opa_scale)
 {
     if(point_cnt < 3) return;
@@ -109,7 +109,7 @@ LV_FUNC_DRAW_TRIANGLE_ATTR void lv_draw_polygon(const lv_point_t * points, uint3
  *   STATIC FUNCTIONS
  **********************/
 
-LV_FUNC_DRAW_TRIANGLE_ATTR void tri_draw_flat(const lv_point_t * points, const lv_area_t * mask, const lv_style_t * style, lv_opa_t opa)
+LV_FUNC_ATTR void tri_draw_flat(const lv_point_t * points, const lv_area_t * mask, const lv_style_t * style, lv_opa_t opa)
 {
     /*Return if the points are out of the mask*/
     if(points[0].x < mask->x1 && points[1].x < mask->x1 && points[2].x < mask->x1) {
@@ -220,7 +220,7 @@ LV_FUNC_DRAW_TRIANGLE_ATTR void tri_draw_flat(const lv_point_t * points, const l
     }
 }
 
-LV_FUNC_DRAW_TRIANGLE_ATTR void tri_draw_tall(const lv_point_t * points, const lv_area_t * mask, const lv_style_t * style, lv_opa_t opa)
+LV_FUNC_ATTR void tri_draw_tall(const lv_point_t * points, const lv_area_t * mask, const lv_style_t * style, lv_opa_t opa)
 {
     /*
      * Better to draw from vertical lines
@@ -330,7 +330,7 @@ LV_FUNC_DRAW_TRIANGLE_ATTR void tri_draw_tall(const lv_point_t * points, const l
  * p1 pointer to the first point
  * p2 pointer to the second point
  */
-LV_FUNC_DRAW_TRIANGLE_ATTR static void point_swap(lv_point_t * p1, lv_point_t * p2)
+LV_FUNC_ATTR static void point_swap(lv_point_t * p1, lv_point_t * p2)
 {
     lv_point_t tmp;
     tmp.x = p1->x;

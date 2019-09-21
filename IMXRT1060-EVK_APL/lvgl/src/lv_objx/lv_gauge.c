@@ -42,8 +42,8 @@ static void lv_gauge_draw_needle(lv_obj_t * gauge, const lv_area_t * mask);
 /**********************
  *  STATIC VARIABLES
  **********************/
-LV_VAL_OBJX_GAUGE_ATTR static lv_design_cb_t ancestor_design;
-LV_VAL_OBJX_GAUGE_ATTR static lv_signal_cb_t ancestor_signal;
+LV_BSS_ATTR static lv_design_cb_t ancestor_design;
+LV_BSS_ATTR static lv_signal_cb_t ancestor_signal;
 
 /**********************
  *      MACROS
@@ -59,7 +59,7 @@ LV_VAL_OBJX_GAUGE_ATTR static lv_signal_cb_t ancestor_signal;
  * @param copy pointer to a gauge object, if not NULL then the new object will be copied from it
  * @return pointer to the created gauge
  */
-LV_FUNC_OBJX_GAUGE_ATTR lv_obj_t * lv_gauge_create(lv_obj_t * par, const lv_obj_t * copy)
+LV_FUNC_ATTR lv_obj_t * lv_gauge_create(lv_obj_t * par, const lv_obj_t * copy)
 {
     LV_LOG_TRACE("gauge create started");
 
@@ -129,7 +129,7 @@ LV_FUNC_OBJX_GAUGE_ATTR lv_obj_t * lv_gauge_create(lv_obj_t * par, const lv_obj_
  * @param needle_cnt new count of needles
  * @param colors an array of colors for needles (with 'num' elements)
  */
-LV_FUNC_OBJX_GAUGE_ATTR void lv_gauge_set_needle_count(lv_obj_t * gauge, uint8_t needle_cnt, const lv_color_t colors[])
+LV_FUNC_ATTR void lv_gauge_set_needle_count(lv_obj_t * gauge, uint8_t needle_cnt, const lv_color_t colors[])
 {
     lv_gauge_ext_t * ext = lv_obj_get_ext_attr(gauge);
 
@@ -162,7 +162,7 @@ LV_FUNC_OBJX_GAUGE_ATTR void lv_gauge_set_needle_count(lv_obj_t * gauge, uint8_t
  * @param needle_id the id of the needle
  * @param value the new value
  */
-LV_FUNC_OBJX_GAUGE_ATTR void lv_gauge_set_value(lv_obj_t * gauge, uint8_t needle_id, int16_t value)
+LV_FUNC_ATTR void lv_gauge_set_value(lv_obj_t * gauge, uint8_t needle_id, int16_t value)
 {
     lv_gauge_ext_t * ext = lv_obj_get_ext_attr(gauge);
 
@@ -191,7 +191,7 @@ LV_FUNC_OBJX_GAUGE_ATTR void lv_gauge_set_value(lv_obj_t * gauge, uint8_t needle
  * 1
  * @param label_cnt count of scale labels.
  */
-LV_FUNC_OBJX_GAUGE_ATTR void lv_gauge_set_scale(lv_obj_t * gauge, uint16_t angle, uint8_t line_cnt, uint8_t label_cnt)
+LV_FUNC_ATTR void lv_gauge_set_scale(lv_obj_t * gauge, uint16_t angle, uint8_t line_cnt, uint8_t label_cnt)
 {
     lv_lmeter_set_scale(gauge, angle, line_cnt);
 
@@ -210,7 +210,7 @@ LV_FUNC_OBJX_GAUGE_ATTR void lv_gauge_set_scale(lv_obj_t * gauge, uint16_t angle
  * @param needle the id of the needle
  * @return the value of the needle [min,max]
  */
-LV_FUNC_OBJX_GAUGE_ATTR int16_t lv_gauge_get_value(const lv_obj_t * gauge, uint8_t needle)
+LV_FUNC_ATTR int16_t lv_gauge_get_value(const lv_obj_t * gauge, uint8_t needle)
 {
     lv_gauge_ext_t * ext = lv_obj_get_ext_attr(gauge);
     int16_t min          = lv_gauge_get_min_value(gauge);
@@ -225,7 +225,7 @@ LV_FUNC_OBJX_GAUGE_ATTR int16_t lv_gauge_get_value(const lv_obj_t * gauge, uint8
  * @param gauge pointer to gauge
  * @return count of needles
  */
-LV_FUNC_OBJX_GAUGE_ATTR uint8_t lv_gauge_get_needle_count(const lv_obj_t * gauge)
+LV_FUNC_ATTR uint8_t lv_gauge_get_needle_count(const lv_obj_t * gauge)
 {
     lv_gauge_ext_t * ext = lv_obj_get_ext_attr(gauge);
     return ext->needle_count;
@@ -236,7 +236,7 @@ LV_FUNC_OBJX_GAUGE_ATTR uint8_t lv_gauge_get_needle_count(const lv_obj_t * gauge
  * @param gauge pointer to a gauge object
  * @return count of labels
  */
-LV_FUNC_OBJX_GAUGE_ATTR uint8_t lv_gauge_get_label_count(const lv_obj_t * gauge)
+LV_FUNC_ATTR uint8_t lv_gauge_get_label_count(const lv_obj_t * gauge)
 {
     lv_gauge_ext_t * ext = lv_obj_get_ext_attr(gauge);
     return ext->label_count;
@@ -256,7 +256,7 @@ LV_FUNC_OBJX_GAUGE_ATTR uint8_t lv_gauge_get_label_count(const lv_obj_t * gauge)
  *             LV_DESIGN_DRAW_POST: drawing after every children are drawn
  * @param return true/false, depends on 'mode'
  */
-LV_FUNC_OBJX_GAUGE_ATTR static bool lv_gauge_design(lv_obj_t * gauge, const lv_area_t * mask, lv_design_mode_t mode)
+LV_FUNC_ATTR static bool lv_gauge_design(lv_obj_t * gauge, const lv_area_t * mask, lv_design_mode_t mode)
 {
 
     /*Return false if the object is not covers the mask_p area*/
@@ -310,7 +310,7 @@ LV_FUNC_OBJX_GAUGE_ATTR static bool lv_gauge_design(lv_obj_t * gauge, const lv_a
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-LV_FUNC_OBJX_GAUGE_ATTR static lv_res_t lv_gauge_signal(lv_obj_t * gauge, lv_signal_t sign, void * param)
+LV_FUNC_ATTR static lv_res_t lv_gauge_signal(lv_obj_t * gauge, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 
@@ -339,7 +339,7 @@ LV_FUNC_OBJX_GAUGE_ATTR static lv_res_t lv_gauge_signal(lv_obj_t * gauge, lv_sig
  * @param gauge pointer to gauge object
  * @param mask mask of drawing
  */
-LV_FUNC_OBJX_GAUGE_ATTR static void lv_gauge_draw_scale(lv_obj_t * gauge, const lv_area_t * mask)
+LV_FUNC_ATTR static void lv_gauge_draw_scale(lv_obj_t * gauge, const lv_area_t * mask)
 {
     char scale_txt[16];
 
@@ -389,7 +389,7 @@ LV_FUNC_OBJX_GAUGE_ATTR static void lv_gauge_draw_scale(lv_obj_t * gauge, const 
  * @param gauge pointer to gauge object
  * @param mask mask of drawing
  */
-LV_FUNC_OBJX_GAUGE_ATTR static void lv_gauge_draw_needle(lv_obj_t * gauge, const lv_area_t * mask)
+LV_FUNC_ATTR static void lv_gauge_draw_needle(lv_obj_t * gauge, const lv_area_t * mask)
 {
     lv_style_t style_needle;
     lv_gauge_ext_t * ext     = lv_obj_get_ext_attr(gauge);

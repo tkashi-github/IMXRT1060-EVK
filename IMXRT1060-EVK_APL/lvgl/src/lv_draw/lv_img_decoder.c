@@ -58,7 +58,7 @@ static lv_res_t lv_img_decoder_built_in_line_indexed(lv_img_decoder_dsc_t * dsc,
 /**
  * Initialize the image decoder module
  * */
-LV_FUNC_DRAW_IMAGE_DECORDER_ATTR void lv_img_decoder_init(void)
+LV_FUNC_ATTR void lv_img_decoder_init(void)
 {
     lv_ll_init(&LV_GC_ROOT(_lv_img_defoder_ll), sizeof(lv_img_decoder_t));
 
@@ -85,7 +85,7 @@ LV_FUNC_DRAW_IMAGE_DECORDER_ATTR void lv_img_decoder_init(void)
  * @param header the image info will be stored here
  * @return LV_RES_OK: success; LV_RES_INV: wasn't able to get info about the image
  */
-LV_FUNC_DRAW_IMAGE_DECORDER_ATTR lv_res_t lv_img_decoder_get_info(const char * src, lv_img_header_t * header)
+LV_FUNC_ATTR lv_res_t lv_img_decoder_get_info(const char * src, lv_img_header_t * header)
 {
     header->always_zero = 0;
 
@@ -115,7 +115,7 @@ LV_FUNC_DRAW_IMAGE_DECORDER_ATTR lv_res_t lv_img_decoder_get_info(const char * s
  * @return LV_RES_OK: opened the image. `dsc->img_data` and `dsc->header` are set.
  *         LV_RES_INV: none of the registered image decoders were able to open the image.
  */
-LV_FUNC_DRAW_IMAGE_DECORDER_ATTR lv_res_t lv_img_decoder_open(lv_img_decoder_dsc_t * dsc, const void * src, const lv_style_t * style)
+LV_FUNC_ATTR lv_res_t lv_img_decoder_open(lv_img_decoder_dsc_t * dsc, const void * src, const lv_style_t * style)
 {
     dsc->style     = style;
     dsc->src       = src;
@@ -159,7 +159,7 @@ LV_FUNC_DRAW_IMAGE_DECORDER_ATTR lv_res_t lv_img_decoder_open(lv_img_decoder_dsc
  * @param buf store the data here
  * @return LV_RES_OK: success; LV_RES_INV: an error occurred
  */
-LV_FUNC_DRAW_IMAGE_DECORDER_ATTR lv_res_t lv_img_decoder_read_line(lv_img_decoder_dsc_t * dsc, lv_coord_t x, lv_coord_t y, lv_coord_t len, uint8_t * buf)
+LV_FUNC_ATTR lv_res_t lv_img_decoder_read_line(lv_img_decoder_dsc_t * dsc, lv_coord_t x, lv_coord_t y, lv_coord_t len, uint8_t * buf)
 {
     lv_res_t res = LV_RES_INV;
     if(dsc->decoder->read_line_cb) res = dsc->decoder->read_line_cb(dsc->decoder, dsc, x, y, len, buf);
@@ -171,7 +171,7 @@ LV_FUNC_DRAW_IMAGE_DECORDER_ATTR lv_res_t lv_img_decoder_read_line(lv_img_decode
  * Close a decoding session
  * @param dsc pointer to `lv_img_decoder_dsc_t` used in `lv_img_decoder_open`
  */
-LV_FUNC_DRAW_IMAGE_DECORDER_ATTR void lv_img_decoder_close(lv_img_decoder_dsc_t * dsc)
+LV_FUNC_ATTR void lv_img_decoder_close(lv_img_decoder_dsc_t * dsc)
 {
     if(dsc->decoder) {
         if(dsc->decoder->close_cb) dsc->decoder->close_cb(dsc->decoder, dsc);
@@ -182,7 +182,7 @@ LV_FUNC_DRAW_IMAGE_DECORDER_ATTR void lv_img_decoder_close(lv_img_decoder_dsc_t 
  * Create a new image decoder
  * @return pointer to the new image decoder
  */
-LV_FUNC_DRAW_IMAGE_DECORDER_ATTR lv_img_decoder_t * lv_img_decoder_create(void)
+LV_FUNC_ATTR lv_img_decoder_t * lv_img_decoder_create(void)
 {
     lv_img_decoder_t * decoder;
     decoder = lv_ll_ins_head(&LV_GC_ROOT(_lv_img_defoder_ll));
@@ -198,7 +198,7 @@ LV_FUNC_DRAW_IMAGE_DECORDER_ATTR lv_img_decoder_t * lv_img_decoder_create(void)
  * Delete an image decoder
  * @param decoder pointer to an image decoder
  */
-LV_FUNC_DRAW_IMAGE_DECORDER_ATTR void lv_img_decoder_delete(lv_img_decoder_t * decoder)
+LV_FUNC_ATTR void lv_img_decoder_delete(lv_img_decoder_t * decoder)
 {
     lv_ll_rem(&LV_GC_ROOT(_lv_img_defoder_ll), decoder);
     lv_mem_free(decoder);
@@ -209,7 +209,7 @@ LV_FUNC_DRAW_IMAGE_DECORDER_ATTR void lv_img_decoder_delete(lv_img_decoder_t * d
  * @param decoder pointer to an image decoder
  * @param info_cb a function to collect info about an image (fill an `lv_img_header_t` struct)
  */
-LV_FUNC_DRAW_IMAGE_DECORDER_ATTR void lv_img_decoder_set_info_cb(lv_img_decoder_t * decoder, lv_img_decoder_info_f_t info_cb)
+LV_FUNC_ATTR void lv_img_decoder_set_info_cb(lv_img_decoder_t * decoder, lv_img_decoder_info_f_t info_cb)
 {
     decoder->info_cb = info_cb;
 }
@@ -219,7 +219,7 @@ LV_FUNC_DRAW_IMAGE_DECORDER_ATTR void lv_img_decoder_set_info_cb(lv_img_decoder_
  * @param decoder pointer to an image decoder
  * @param open_cb a function to open an image
  */
-LV_FUNC_DRAW_IMAGE_DECORDER_ATTR void lv_img_decoder_set_open_cb(lv_img_decoder_t * decoder, lv_img_decoder_open_f_t open_cb)
+LV_FUNC_ATTR void lv_img_decoder_set_open_cb(lv_img_decoder_t * decoder, lv_img_decoder_open_f_t open_cb)
 {
     decoder->open_cb = open_cb;
 }
@@ -229,7 +229,7 @@ LV_FUNC_DRAW_IMAGE_DECORDER_ATTR void lv_img_decoder_set_open_cb(lv_img_decoder_
  * @param decoder pointer to an image decoder
  * @param read_line_cb a function to read a line of an image
  */
-LV_FUNC_DRAW_IMAGE_DECORDER_ATTR void lv_img_decoder_set_read_line_cb(lv_img_decoder_t * decoder, lv_img_decoder_read_line_f_t read_line_cb)
+LV_FUNC_ATTR void lv_img_decoder_set_read_line_cb(lv_img_decoder_t * decoder, lv_img_decoder_read_line_f_t read_line_cb)
 {
     decoder->read_line_cb = read_line_cb;
 }
@@ -239,7 +239,7 @@ LV_FUNC_DRAW_IMAGE_DECORDER_ATTR void lv_img_decoder_set_read_line_cb(lv_img_dec
  * @param decoder pointer to an image decoder
  * @param close_cb a function to close a decoding session
  */
-LV_FUNC_DRAW_IMAGE_DECORDER_ATTR void lv_img_decoder_set_close_cb(lv_img_decoder_t * decoder, lv_img_decoder_close_f_t close_cb)
+LV_FUNC_ATTR void lv_img_decoder_set_close_cb(lv_img_decoder_t * decoder, lv_img_decoder_close_f_t close_cb)
 {
     decoder->close_cb = close_cb;
 }
@@ -251,7 +251,7 @@ LV_FUNC_DRAW_IMAGE_DECORDER_ATTR void lv_img_decoder_set_close_cb(lv_img_decoder
  * @param header store the image data here
  * @return LV_RES_OK: the info is successfully stored in `header`; LV_RES_INV: unknown format or other error.
  */
-LV_FUNC_DRAW_IMAGE_DECORDER_ATTR lv_res_t lv_img_decoder_built_in_info(lv_img_decoder_t * decoder, const void * src, lv_img_header_t * header)
+LV_FUNC_ATTR lv_res_t lv_img_decoder_built_in_info(lv_img_decoder_t * decoder, const void * src, lv_img_header_t * header)
 {
     (void)decoder; /*Unused*/
 
@@ -300,7 +300,7 @@ LV_FUNC_DRAW_IMAGE_DECORDER_ATTR lv_res_t lv_img_decoder_built_in_info(lv_img_de
  * @param dsc pointer to decoder descriptor. `src`, `style` are already initialized in it.
  * @return LV_RES_OK: the info is successfully stored in `header`; LV_RES_INV: unknown format or other error.
  */
-LV_FUNC_DRAW_IMAGE_DECORDER_ATTR lv_res_t lv_img_decoder_built_in_open(lv_img_decoder_t * decoder, lv_img_decoder_dsc_t * dsc)
+LV_FUNC_ATTR lv_res_t lv_img_decoder_built_in_open(lv_img_decoder_t * decoder, lv_img_decoder_dsc_t * dsc)
 {
     /*Open the file if it's a file*/
     if(dsc->src_type == LV_IMG_SRC_FILE) {
@@ -440,7 +440,7 @@ LV_FUNC_DRAW_IMAGE_DECORDER_ATTR lv_res_t lv_img_decoder_built_in_open(lv_img_de
  * @param buf a buffer to store the decoded pixels
  * @return LV_RES_OK: ok; LV_RES_INV: failed
  */
-LV_FUNC_DRAW_IMAGE_DECORDER_ATTR lv_res_t lv_img_decoder_built_in_read_line(lv_img_decoder_t * decoder, lv_img_decoder_dsc_t * dsc, lv_coord_t x,
+LV_FUNC_ATTR lv_res_t lv_img_decoder_built_in_read_line(lv_img_decoder_t * decoder, lv_img_decoder_dsc_t * dsc, lv_coord_t x,
                                                   lv_coord_t y, lv_coord_t len, uint8_t * buf)
 {
     (void)decoder; /*Unused*/
@@ -474,7 +474,7 @@ LV_FUNC_DRAW_IMAGE_DECORDER_ATTR lv_res_t lv_img_decoder_built_in_read_line(lv_i
  * @param decoder pointer to the decoder the function associated with
  * @param dsc pointer to decoder descriptor
  */
-LV_FUNC_DRAW_IMAGE_DECORDER_ATTR void lv_img_decoder_built_in_close(lv_img_decoder_t * decoder, lv_img_decoder_dsc_t * dsc)
+LV_FUNC_ATTR void lv_img_decoder_built_in_close(lv_img_decoder_t * decoder, lv_img_decoder_dsc_t * dsc)
 {
     (void)decoder; /*Unused*/
 
@@ -499,7 +499,7 @@ LV_FUNC_DRAW_IMAGE_DECORDER_ATTR void lv_img_decoder_built_in_close(lv_img_decod
  *   STATIC FUNCTIONS
  **********************/
 
-LV_FUNC_DRAW_IMAGE_DECORDER_ATTR static lv_res_t lv_img_decoder_built_in_line_true_color(lv_img_decoder_dsc_t * dsc, lv_coord_t x, lv_coord_t y,
+LV_FUNC_ATTR static lv_res_t lv_img_decoder_built_in_line_true_color(lv_img_decoder_dsc_t * dsc, lv_coord_t x, lv_coord_t y,
                                                         lv_coord_t len, uint8_t * buf)
 {
 #if LV_USE_FILESYSTEM
@@ -529,7 +529,7 @@ LV_FUNC_DRAW_IMAGE_DECORDER_ATTR static lv_res_t lv_img_decoder_built_in_line_tr
 #endif
 }
 
-LV_FUNC_DRAW_IMAGE_DECORDER_ATTR static lv_res_t lv_img_decoder_built_in_line_alpha(lv_img_decoder_dsc_t * dsc, lv_coord_t x, lv_coord_t y,
+LV_FUNC_ATTR static lv_res_t lv_img_decoder_built_in_line_alpha(lv_img_decoder_dsc_t * dsc, lv_coord_t x, lv_coord_t y,
                                                    lv_coord_t len, uint8_t * buf)
 {
 
@@ -637,7 +637,7 @@ LV_FUNC_DRAW_IMAGE_DECORDER_ATTR static lv_res_t lv_img_decoder_built_in_line_al
 #endif
 }
 
-LV_FUNC_DRAW_IMAGE_DECORDER_ATTR static lv_res_t lv_img_decoder_built_in_line_indexed(lv_img_decoder_dsc_t * dsc, lv_coord_t x, lv_coord_t y,
+LV_FUNC_ATTR static lv_res_t lv_img_decoder_built_in_line_indexed(lv_img_decoder_dsc_t * dsc, lv_coord_t x, lv_coord_t y,
                                                      lv_coord_t len, uint8_t * buf)
 {
 

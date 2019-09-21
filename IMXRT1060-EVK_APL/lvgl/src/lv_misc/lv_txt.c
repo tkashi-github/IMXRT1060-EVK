@@ -89,7 +89,7 @@ uint32_t (*lv_txt_get_encoded_length)(const char *)            = lv_txt_iso8859_
  * @param max_width max with of the text (break the lines to fit this size) Set CORD_MAX to avoid
  * line breaks
  */
-LV_FUNC_MISC_TEXT_ATTR void lv_txt_get_size(lv_point_t * size_res, const char * text, const lv_font_t * font, lv_coord_t letter_space,
+LV_FUNC_ATTR void lv_txt_get_size(lv_point_t * size_res, const char * text, const lv_font_t * font, lv_coord_t letter_space,
                      lv_coord_t line_space, lv_coord_t max_width, lv_txt_flag_t flag)
 {
     size_res->x = 0;
@@ -139,7 +139,7 @@ LV_FUNC_MISC_TEXT_ATTR void lv_txt_get_size(lv_point_t * size_res, const char * 
  * @param flags settings for the text from 'txt_flag_type' enum
  * @return the index of the first char of the new line (in byte index not letter index. With UTF-8 they are different)
  */
-LV_FUNC_MISC_TEXT_ATTR uint16_t lv_txt_get_next_line(const char * txt, const lv_font_t * font, lv_coord_t letter_space, lv_coord_t max_width,
+LV_FUNC_ATTR uint16_t lv_txt_get_next_line(const char * txt, const lv_font_t * font, lv_coord_t letter_space, lv_coord_t max_width,
                               lv_txt_flag_t flag)
 {
     if(txt == NULL) return 0;
@@ -223,7 +223,7 @@ LV_FUNC_MISC_TEXT_ATTR uint16_t lv_txt_get_next_line(const char * txt, const lv_
  * @param flags settings for the text from 'txt_flag_t' enum
  * @return length of a char_num long text
  */
-LV_FUNC_MISC_TEXT_ATTR lv_coord_t lv_txt_get_width(const char * txt, uint16_t length, const lv_font_t * font, lv_coord_t letter_space,
+LV_FUNC_ATTR lv_coord_t lv_txt_get_width(const char * txt, uint16_t length, const lv_font_t * font, lv_coord_t letter_space,
                             lv_txt_flag_t flag)
 {
     if(txt == NULL) return 0;
@@ -269,7 +269,7 @@ LV_FUNC_MISC_TEXT_ATTR lv_coord_t lv_txt_get_width(const char * txt, uint16_t le
  * @return true: the character is part of a command and should not be written,
  *         false: the character should be written
  */
-LV_FUNC_MISC_TEXT_ATTR bool lv_txt_is_cmd(lv_txt_cmd_state_t * state, uint32_t c)
+LV_FUNC_ATTR bool lv_txt_is_cmd(lv_txt_cmd_state_t * state, uint32_t c)
 {
     bool ret = false;
 
@@ -307,7 +307,7 @@ LV_FUNC_MISC_TEXT_ATTR bool lv_txt_is_cmd(lv_txt_cmd_state_t * state, uint32_t c
  * UTF-8) 0: before the original text, 1: after the first char etc.
  * @param ins_txt text to insert
  */
-LV_FUNC_MISC_TEXT_ATTR void lv_txt_ins(char * txt_buf, uint32_t pos, const char * ins_txt)
+LV_FUNC_ATTR void lv_txt_ins(char * txt_buf, uint32_t pos, const char * ins_txt)
 {
     uint32_t old_len = strlen(txt_buf);
     uint32_t ins_len = strlen(ins_txt);
@@ -331,7 +331,7 @@ LV_FUNC_MISC_TEXT_ATTR void lv_txt_ins(char * txt_buf, uint32_t pos, const char 
  * char etc.)
  * @param len number of characters to delete
  */
-LV_FUNC_MISC_TEXT_ATTR void lv_txt_cut(char * txt, uint32_t pos, uint32_t len)
+LV_FUNC_ATTR void lv_txt_cut(char * txt, uint32_t pos, uint32_t len)
 {
 
     uint32_t old_len = strlen(txt);
@@ -356,7 +356,7 @@ LV_FUNC_MISC_TEXT_ATTR void lv_txt_cut(char * txt, uint32_t pos, uint32_t len)
  * @param str pointer to a character in a string
  * @return length of the UTF-8 character (1,2,3 or 4). O on invalid code
  */
-LV_FUNC_MISC_TEXT_ATTR static uint8_t lv_txt_utf8_size(const char * str)
+LV_FUNC_ATTR static uint8_t lv_txt_utf8_size(const char * str)
 {
     if((str[0] & 0x80) == 0)
         return 1;
@@ -374,7 +374,7 @@ LV_FUNC_MISC_TEXT_ATTR static uint8_t lv_txt_utf8_size(const char * str)
  * @param letter_uni an Unicode letter
  * @return UTF-8 coded character in Little Endian to be compatible with C chars (e.g. 'Á', 'Ű')
  */
-LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_unicode_to_utf8(uint32_t letter_uni)
+LV_FUNC_ATTR static uint32_t lv_txt_unicode_to_utf8(uint32_t letter_uni)
 {
     if(letter_uni < 128) return letter_uni;
     uint8_t bytes[4];
@@ -405,7 +405,7 @@ LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_unicode_to_utf8(uint32_t letter_un
  * @param c a wide character or a  Little endian number
  * @return `c` in big endian
  */
-LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_utf8_conv_wc(uint32_t c)
+LV_FUNC_ATTR static uint32_t lv_txt_utf8_conv_wc(uint32_t c)
 {
     /*Swap the bytes (UTF-8 is big endian, but the MCUs are little endian)*/
     if((c & 0x80) != 0) {
@@ -432,7 +432,7 @@ LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_utf8_conv_wc(uint32_t c)
  *          NULL to use txt[0] as index
  * @return the decoded Unicode character or 0 on invalid UTF-8 code
  */
-LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_utf8_next(const char * txt, uint32_t * i)
+LV_FUNC_ATTR static uint32_t lv_txt_utf8_next(const char * txt, uint32_t * i)
 {
     /* Unicode to UTF-8
      * 00000000 00000000 00000000 0xxxxxxx -> 0xxxxxxx
@@ -505,7 +505,7 @@ LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_utf8_next(const char * txt, uint32
  * UTF-8 char in 'txt'.
  * @return the decoded Unicode character or 0 on invalid UTF-8 code
  */
-LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_utf8_prev(const char * txt, uint32_t * i)
+LV_FUNC_ATTR static uint32_t lv_txt_utf8_prev(const char * txt, uint32_t * i)
 {
     uint8_t c_size;
     uint8_t cnt = 0;
@@ -538,7 +538,7 @@ LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_utf8_prev(const char * txt, uint32
  * @param utf8_id character index
  * @return byte index of the 'utf8_id'th letter
  */
-LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_utf8_get_byte_id(const char * txt, uint32_t utf8_id)
+LV_FUNC_ATTR static uint32_t lv_txt_utf8_get_byte_id(const char * txt, uint32_t utf8_id)
 {
     uint32_t i;
     uint32_t byte_cnt = 0;
@@ -556,7 +556,7 @@ LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_utf8_get_byte_id(const char * txt,
  * @param byte_id byte index
  * @return character index of the letter at 'byte_id'th position
  */
-LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_utf8_get_char_id(const char * txt, uint32_t byte_id)
+LV_FUNC_ATTR static uint32_t lv_txt_utf8_get_char_id(const char * txt, uint32_t byte_id)
 {
     uint32_t i        = 0;
     uint32_t char_cnt = 0;
@@ -575,7 +575,7 @@ LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_utf8_get_char_id(const char * txt,
  * @param txt a '\0' terminated char string
  * @return number of characters
  */
-LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_utf8_get_length(const char * txt)
+LV_FUNC_ATTR static uint32_t lv_txt_utf8_get_length(const char * txt)
 {
     uint32_t len = 0;
     uint32_t i   = 0;
@@ -598,7 +598,7 @@ LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_utf8_get_length(const char * txt)
  * @param str pointer to a character in a string
  * @return length of the UTF-8 character (1,2,3 or 4). O on invalid code
  */
-LV_FUNC_MISC_TEXT_ATTR static uint8_t lv_txt_iso8859_1_size(const char * str)
+LV_FUNC_ATTR static uint8_t lv_txt_iso8859_1_size(const char * str)
 {
     (void)str; /*Unused*/
     return 1;
@@ -609,7 +609,7 @@ LV_FUNC_MISC_TEXT_ATTR static uint8_t lv_txt_iso8859_1_size(const char * str)
  * @param letter_uni an Unicode letter
  * @return ISO8859-1 coded character in Little Endian to be compatible with C chars (e.g. 'Á', 'Ű')
  */
-LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_unicode_to_iso8859_1(uint32_t letter_uni)
+LV_FUNC_ATTR static uint32_t lv_txt_unicode_to_iso8859_1(uint32_t letter_uni)
 {
     if(letter_uni < 128)
         return letter_uni;
@@ -623,7 +623,7 @@ LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_unicode_to_iso8859_1(uint32_t lett
  * @param c a character, e.g. 'A'
  * @return same as `c`
  */
-LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_iso8859_1_conv_wc(uint32_t c)
+LV_FUNC_ATTR static uint32_t lv_txt_iso8859_1_conv_wc(uint32_t c)
 {
     return c;
 }
@@ -636,7 +636,7 @@ LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_iso8859_1_conv_wc(uint32_t c)
  *          NULL to use txt[0] as index
  * @return the decoded Unicode character or 0 on invalid UTF-8 code
  */
-LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_iso8859_1_next(const char * txt, uint32_t * i)
+LV_FUNC_ATTR static uint32_t lv_txt_iso8859_1_next(const char * txt, uint32_t * i)
 {
     if(i == NULL) return txt[1]; /*Get the next char */
 
@@ -651,7 +651,7 @@ LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_iso8859_1_next(const char * txt, u
  * @param i start byte index in 'txt' where to start. After the call it will point to the previous UTF-8 char in 'txt'.
  * @return the decoded Unicode character or 0 on invalid UTF-8 code
  */
-LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_iso8859_1_prev(const char * txt, uint32_t * i)
+LV_FUNC_ATTR static uint32_t lv_txt_iso8859_1_prev(const char * txt, uint32_t * i)
 {
     if(i == NULL) return *(txt - 1); /*Get the prev. char */
 
@@ -668,7 +668,7 @@ LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_iso8859_1_prev(const char * txt, u
  * @param utf8_id character index
  * @return byte index of the 'utf8_id'th letter
  */
-LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_iso8859_1_get_byte_id(const char * txt, uint32_t utf8_id)
+LV_FUNC_ATTR static uint32_t lv_txt_iso8859_1_get_byte_id(const char * txt, uint32_t utf8_id)
 {
     (void)txt;      /*Unused*/
     return utf8_id; /*In Non encoded no difference*/
@@ -681,7 +681,7 @@ LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_iso8859_1_get_byte_id(const char *
  * @param byte_id byte index
  * @return character index of the letter at 'byte_id'th position
  */
-LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_iso8859_1_get_char_id(const char * txt, uint32_t byte_id)
+LV_FUNC_ATTR static uint32_t lv_txt_iso8859_1_get_char_id(const char * txt, uint32_t byte_id)
 {
     (void)txt;      /*Unused*/
     return byte_id; /*In Non encoded no difference*/
@@ -693,7 +693,7 @@ LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_iso8859_1_get_char_id(const char *
  * @param txt a '\0' terminated char string
  * @return number of characters
  */
-LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_iso8859_1_get_length(const char * txt)
+LV_FUNC_ATTR static uint32_t lv_txt_iso8859_1_get_length(const char * txt)
 {
     return strlen(txt);
 }
@@ -712,7 +712,7 @@ LV_FUNC_MISC_TEXT_ATTR static uint32_t lv_txt_iso8859_1_get_length(const char * 
  * @param letter a letter
  * @return false: 'letter' is not break char
  */
-LV_FUNC_MISC_TEXT_ATTR static inline bool is_break_char(uint32_t letter)
+LV_FUNC_ATTR static inline bool is_break_char(uint32_t letter)
 {
     uint8_t i;
     bool ret = false;

@@ -35,7 +35,7 @@
 /**********************
  *  STATIC VARIABLES
  **********************/
-LV_VAL_DRAW_ATTR static uint32_t draw_buf_size = 0;
+LV_BSS_ATTR static uint32_t draw_buf_size = 0;
 
 /**********************
  *      MACROS
@@ -50,7 +50,7 @@ LV_VAL_DRAW_ATTR static uint32_t draw_buf_size = 0;
  * Be careful to not use the buffer while other processes are using it.
  * @param size the required size
  */
-LV_FUNC_DRAW_ATTR void * lv_draw_get_buf(uint32_t size)
+LV_FUNC_ATTR void * lv_draw_get_buf(uint32_t size)
 {
     if(size <= draw_buf_size) return LV_GC_ROOT(_lv_draw_buf);
 
@@ -72,7 +72,7 @@ LV_FUNC_DRAW_ATTR void * lv_draw_get_buf(uint32_t size)
 /**
  * Free the draw buffer
  */
-LV_FUNC_DRAW_ATTR void lv_draw_free_buf(void)
+LV_FUNC_ATTR void lv_draw_free_buf(void)
 {
     if(LV_GC_ROOT(_lv_draw_buf)) {
         lv_mem_free(LV_GC_ROOT(_lv_draw_buf));
@@ -90,7 +90,7 @@ LV_FUNC_DRAW_ATTR void lv_draw_free_buf(void)
  * @param base_opa the base opacity
  * @return the opacity of the given pixel
  */
-LV_FUNC_DRAW_ATTR lv_opa_t lv_draw_aa_get_opa(lv_coord_t seg, lv_coord_t px_id, lv_opa_t base_opa)
+LV_FUNC_ATTR lv_opa_t lv_draw_aa_get_opa(lv_coord_t seg, lv_coord_t px_id, lv_opa_t base_opa)
 {
     /* How to calculate the opacity of pixels on the edges which makes the anti-aliasing?
      * For example we have a line like this (y = -0.5 * x):
@@ -111,16 +111,16 @@ LV_FUNC_DRAW_ATTR lv_opa_t lv_draw_aa_get_opa(lv_coord_t seg, lv_coord_t px_id, 
      */
 
     /*Accelerate the common segment sizes to avoid division*/
-    LV_CVAL_DRAW_REACT_ATTR static const lv_opa_t seg1[1] = {128};
-    LV_CVAL_DRAW_REACT_ATTR static const lv_opa_t seg2[2] = {64, 192};
-    LV_CVAL_DRAW_REACT_ATTR static const lv_opa_t seg3[3] = {42, 128, 212};
-    LV_CVAL_DRAW_REACT_ATTR static const lv_opa_t seg4[4] = {32, 96, 159, 223};
-    LV_CVAL_DRAW_REACT_ATTR static const lv_opa_t seg5[5] = {26, 76, 128, 178, 230};
-    LV_CVAL_DRAW_REACT_ATTR static const lv_opa_t seg6[6] = {21, 64, 106, 148, 191, 234};
-    LV_CVAL_DRAW_REACT_ATTR static const lv_opa_t seg7[7] = {18, 55, 91, 128, 164, 200, 237};
-    LV_CVAL_DRAW_REACT_ATTR static const lv_opa_t seg8[8] = {16, 48, 80, 112, 143, 175, 207, 239};
+    LV_DATA_ATTR static const lv_opa_t seg1[1] = {128};
+    LV_DATA_ATTR static const lv_opa_t seg2[2] = {64, 192};
+    LV_DATA_ATTR static const lv_opa_t seg3[3] = {42, 128, 212};
+    LV_DATA_ATTR static const lv_opa_t seg4[4] = {32, 96, 159, 223};
+    LV_DATA_ATTR static const lv_opa_t seg5[5] = {26, 76, 128, 178, 230};
+    LV_DATA_ATTR static const lv_opa_t seg6[6] = {21, 64, 106, 148, 191, 234};
+    LV_DATA_ATTR static const lv_opa_t seg7[7] = {18, 55, 91, 128, 164, 200, 237};
+    LV_DATA_ATTR static const lv_opa_t seg8[8] = {16, 48, 80, 112, 143, 175, 207, 239};
 
-    LV_CVAL_DRAW_REACT_ATTR static const lv_opa_t * const seg_map[] = {seg1, seg2, seg3, seg4, seg5, seg6, seg7, seg8};
+    LV_DATA_ATTR static const lv_opa_t * const seg_map[] = {seg1, seg2, seg3, seg4, seg5, seg6, seg7, seg8};
 
     if(seg == 0)
         return LV_OPA_TRANSP;
@@ -140,7 +140,7 @@ LV_FUNC_DRAW_ATTR lv_opa_t lv_draw_aa_get_opa(lv_coord_t seg, lv_coord_t px_id, 
  * @param color color of pixels
  * @param opa maximum opacity
  */
-LV_FUNC_DRAW_ATTR void lv_draw_aa_ver_seg(lv_coord_t x, lv_coord_t y, lv_coord_t length, const lv_area_t * mask, lv_color_t color,
+LV_FUNC_ATTR void lv_draw_aa_ver_seg(lv_coord_t x, lv_coord_t y, lv_coord_t length, const lv_area_t * mask, lv_color_t color,
                         lv_opa_t opa)
 {
     bool aa_inv = false;
@@ -166,7 +166,7 @@ LV_FUNC_DRAW_ATTR void lv_draw_aa_ver_seg(lv_coord_t x, lv_coord_t y, lv_coord_t
  * @param color color of pixels
  * @param opa maximum opacity
  */
-LV_FUNC_DRAW_ATTR void lv_draw_aa_hor_seg(lv_coord_t x, lv_coord_t y, lv_coord_t length, const lv_area_t * mask, lv_color_t color,
+LV_FUNC_ATTR void lv_draw_aa_hor_seg(lv_coord_t x, lv_coord_t y, lv_coord_t length, const lv_area_t * mask, lv_color_t color,
                         lv_opa_t opa)
 {
     bool aa_inv = false;

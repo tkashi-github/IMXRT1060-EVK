@@ -48,7 +48,7 @@
  * After it you can set the fields.
  * @param driver pointer to driver variable to initialize
  */
-LV_FUNC_HAL_INDEV_ATTR void lv_indev_drv_init(lv_indev_drv_t * driver)
+LV_FUNC_ATTR void lv_indev_drv_init(lv_indev_drv_t * driver)
 {
     memset(driver, 0, sizeof(lv_indev_drv_t));
 
@@ -64,7 +64,7 @@ LV_FUNC_HAL_INDEV_ATTR void lv_indev_drv_init(lv_indev_drv_t * driver)
  * @param driver pointer to an initialized 'lv_indev_drv_t' variable (can be local variable)
  * @return pointer to the new input device or NULL on error
  */
-LV_FUNC_HAL_INDEV_ATTR lv_indev_t * lv_indev_drv_register(lv_indev_drv_t * driver)
+LV_FUNC_ATTR lv_indev_t * lv_indev_drv_register(lv_indev_drv_t * driver)
 {
 
     if(driver->disp == NULL) driver->disp = lv_disp_get_default();
@@ -99,7 +99,7 @@ LV_FUNC_HAL_INDEV_ATTR lv_indev_t * lv_indev_drv_register(lv_indev_drv_t * drive
  * @param indev pointer to a input device. (return value of `lv_indev_drv_register`)
  * @param new_drv pointer to the new driver
  */
-LV_FUNC_HAL_INDEV_ATTR void lv_indev_drv_update(lv_indev_t * indev, lv_indev_drv_t * new_drv)
+LV_FUNC_ATTR void lv_indev_drv_update(lv_indev_t * indev, lv_indev_drv_t * new_drv)
 {
     memcpy(&indev->driver, new_drv, sizeof(lv_indev_drv_t));
 }
@@ -110,7 +110,7 @@ LV_FUNC_HAL_INDEV_ATTR void lv_indev_drv_update(lv_indev_t * indev, lv_indev_drv
  * @return the next input devise or NULL if no more. Give the first input device when the parameter
  * is NULL
  */
-LV_FUNC_HAL_INDEV_ATTR lv_indev_t * lv_indev_get_next(lv_indev_t * indev)
+LV_FUNC_ATTR lv_indev_t * lv_indev_get_next(lv_indev_t * indev)
 {
     if(indev == NULL)
         return lv_ll_get_head(&LV_GC_ROOT(_lv_indev_ll));
@@ -124,7 +124,7 @@ LV_FUNC_HAL_INDEV_ATTR lv_indev_t * lv_indev_get_next(lv_indev_t * indev)
  * @param data input device will write its data here
  * @return false: no more data; true: there more data to read (buffered)
  */
-LV_FUNC_HAL_INDEV_ATTR bool lv_indev_read(lv_indev_t * indev, lv_indev_data_t * data)
+LV_FUNC_ATTR bool lv_indev_read(lv_indev_t * indev, lv_indev_data_t * data)
 {
     bool cont = false;
 

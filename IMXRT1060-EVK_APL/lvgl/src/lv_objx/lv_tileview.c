@@ -41,9 +41,9 @@ static bool set_valid_drag_dirs(lv_obj_t * tileview);
 /**********************
  *  STATIC VARIABLES
  **********************/
-LV_VAL_OBJX_TITLEVIEW_ATTR static lv_signal_cb_t ancestor_signal;
-LV_VAL_OBJX_TITLEVIEW_ATTR static lv_signal_cb_t ancestor_scrl_signal;
-LV_VAL_OBJX_TITLEVIEW_ATTR static lv_design_cb_t ancestor_design;
+LV_BSS_ATTR static lv_signal_cb_t ancestor_signal;
+LV_BSS_ATTR static lv_signal_cb_t ancestor_scrl_signal;
+LV_BSS_ATTR static lv_design_cb_t ancestor_design;
 
 /**********************
  *      MACROS
@@ -59,7 +59,7 @@ LV_VAL_OBJX_TITLEVIEW_ATTR static lv_design_cb_t ancestor_design;
  * @param copy pointer to a tileview object, if not NULL then the new object will be copied from it
  * @return pointer to the created tileview
  */
-LV_FUNC_OBJX_TITLEVIEW_ATTR lv_obj_t * lv_tileview_create(lv_obj_t * par, const lv_obj_t * copy)
+LV_FUNC_ATTR lv_obj_t * lv_tileview_create(lv_obj_t * par, const lv_obj_t * copy)
 {
     LV_LOG_TRACE("tileview create started");
 
@@ -140,7 +140,7 @@ LV_FUNC_OBJX_TITLEVIEW_ATTR lv_obj_t * lv_tileview_create(lv_obj_t * par, const 
  * @param tileview pointer to a Tileview object
  * @param element pointer to an object
  */
-LV_FUNC_OBJX_TITLEVIEW_ATTR void lv_tileview_add_element(lv_obj_t * tileview, lv_obj_t * element)
+LV_FUNC_ATTR void lv_tileview_add_element(lv_obj_t * tileview, lv_obj_t * element)
 {
     /* Let the objects event to propagate to the scrollable part of the tileview.
      * It is required the handle dargging of the tileview with the element.*/
@@ -165,7 +165,7 @@ LV_FUNC_OBJX_TITLEVIEW_ATTR void lv_tileview_add_element(lv_obj_t * tileview, lv
  * pointer is saved so can't be a local variable.
  * @param valid_pos_cnt numner of elements in `valid_pos` array
  */
-LV_FUNC_OBJX_TITLEVIEW_ATTR void lv_tileview_set_valid_positions(lv_obj_t * tileview, const lv_point_t * valid_pos, uint16_t valid_pos_cnt)
+LV_FUNC_ATTR void lv_tileview_set_valid_positions(lv_obj_t * tileview, const lv_point_t * valid_pos, uint16_t valid_pos_cnt)
 {
     lv_tileview_ext_t * ext = lv_obj_get_ext_attr(tileview);
     ext->valid_pos          = valid_pos;
@@ -192,7 +192,7 @@ LV_FUNC_OBJX_TITLEVIEW_ATTR void lv_tileview_set_valid_positions(lv_obj_t * tile
  * @param y line id (0, 1, 2...)
  * @param anim LV_ANIM_ON: set the value with an animation; LV_ANIM_OFF: change the value immediately
  */
-LV_FUNC_OBJX_TITLEVIEW_ATTR void lv_tileview_set_tile_act(lv_obj_t * tileview, lv_coord_t x, lv_coord_t y, lv_anim_enable_t anim)
+LV_FUNC_ATTR void lv_tileview_set_tile_act(lv_obj_t * tileview, lv_coord_t x, lv_coord_t y, lv_anim_enable_t anim)
 {
 #if LV_USE_ANIMATION == 0
     anim = LV_ANIM_OFF;
@@ -261,7 +261,7 @@ LV_FUNC_OBJX_TITLEVIEW_ATTR void lv_tileview_set_tile_act(lv_obj_t * tileview, l
  * @param type which style should be set
  * @param style pointer to a style
  */
-LV_FUNC_OBJX_TITLEVIEW_ATTR void lv_tileview_set_style(lv_obj_t * tileview, lv_tileview_style_t type, const lv_style_t * style)
+LV_FUNC_ATTR void lv_tileview_set_style(lv_obj_t * tileview, lv_tileview_style_t type, const lv_style_t * style)
 {
 
     switch(type) {
@@ -283,7 +283,7 @@ LV_FUNC_OBJX_TITLEVIEW_ATTR void lv_tileview_set_style(lv_obj_t * tileview, lv_t
  * @param type which style should be get
  * @return style pointer to the style
  */
-LV_FUNC_OBJX_TITLEVIEW_ATTR const lv_style_t * lv_tileview_get_style(const lv_obj_t * tileview, lv_tileview_style_t type)
+LV_FUNC_ATTR const lv_style_t * lv_tileview_get_style(const lv_obj_t * tileview, lv_tileview_style_t type)
 {
     const lv_style_t * style = NULL;
     switch(type) {
@@ -313,7 +313,7 @@ LV_FUNC_OBJX_TITLEVIEW_ATTR const lv_style_t * lv_tileview_get_style(const lv_ob
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-LV_FUNC_OBJX_TITLEVIEW_ATTR static lv_res_t lv_tileview_signal(lv_obj_t * tileview, lv_signal_t sign, void * param)
+LV_FUNC_ATTR static lv_res_t lv_tileview_signal(lv_obj_t * tileview, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 
@@ -342,7 +342,7 @@ LV_FUNC_OBJX_TITLEVIEW_ATTR static lv_res_t lv_tileview_signal(lv_obj_t * tilevi
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-LV_FUNC_OBJX_TITLEVIEW_ATTR static lv_res_t lv_tileview_scrl_signal(lv_obj_t * scrl, lv_signal_t sign, void * param)
+LV_FUNC_ATTR static lv_res_t lv_tileview_scrl_signal(lv_obj_t * scrl, lv_signal_t sign, void * param)
 {
 
     lv_res_t res;
@@ -458,7 +458,7 @@ LV_FUNC_OBJX_TITLEVIEW_ATTR static lv_res_t lv_tileview_scrl_signal(lv_obj_t * s
     return res;
 }
 
-LV_FUNC_OBJX_TITLEVIEW_ATTR static void tileview_scrl_event_cb(lv_obj_t * scrl, lv_event_t event)
+LV_FUNC_ATTR static void tileview_scrl_event_cb(lv_obj_t * scrl, lv_event_t event)
 {
     lv_obj_t * tileview = lv_obj_get_parent(scrl);
 
@@ -487,7 +487,7 @@ LV_FUNC_OBJX_TITLEVIEW_ATTR static void tileview_scrl_event_cb(lv_obj_t * scrl, 
  * Called when the user releases an element of the tileview after dragging it.
  * @param tileview pointer to a tileview object
  */
-LV_FUNC_OBJX_TITLEVIEW_ATTR static void drag_end_handler(lv_obj_t * tileview)
+LV_FUNC_ATTR static void drag_end_handler(lv_obj_t * tileview)
 {
     lv_tileview_ext_t * ext = lv_obj_get_ext_attr(tileview);
     lv_indev_t * indev      = lv_indev_get_act();
@@ -540,7 +540,7 @@ LV_FUNC_OBJX_TITLEVIEW_ATTR static void drag_end_handler(lv_obj_t * tileview)
     lv_tileview_set_tile_act(tileview, ext->act_id.x + x_move, ext->act_id.y + y_move, true);
 }
 
-LV_FUNC_OBJX_TITLEVIEW_ATTR static bool set_valid_drag_dirs(lv_obj_t * tileview)
+LV_FUNC_ATTR static bool set_valid_drag_dirs(lv_obj_t * tileview)
 {
 
     lv_tileview_ext_t * ext = lv_obj_get_ext_attr(tileview);

@@ -42,17 +42,17 @@ static void lv_btn_ink_effect_anim_ready(lv_anim_t * a);
 /**********************
  *  STATIC VARIABLES
  **********************/
-LV_VAL_OBJX_BTN_ATTR static lv_signal_cb_t ancestor_signal;
-LV_VAL_OBJX_BTN_ATTR static lv_design_cb_t ancestor_design;
+LV_BSS_ATTR static lv_signal_cb_t ancestor_signal;
+LV_BSS_ATTR static lv_design_cb_t ancestor_design;
 
 #if LV_USE_ANIMATION && LV_BTN_INK_EFFECT
-LV_VAL_OBJX_BTN_ATTR static lv_coord_t ink_act_value;
-LV_VAL_OBJX_BTN_ATTR static lv_obj_t * ink_obj;
-LV_VAL_OBJX_BTN_ATTR static lv_btn_state_t ink_bg_state;
-LV_VAL_OBJX_BTN_ATTR static lv_btn_state_t ink_top_state;
-LV_VAL_OBJX_BTN_ATTR static bool ink_ready;
-LV_VAL_OBJX_BTN_ATTR static bool ink_playback;
-LV_VAL_OBJX_BTN_ATTR static lv_point_t ink_point;
+LV_BSS_ATTR static lv_coord_t ink_act_value;
+LV_BSS_ATTR static lv_obj_t * ink_obj;
+LV_BSS_ATTR static lv_btn_state_t ink_bg_state;
+LV_BSS_ATTR static lv_btn_state_t ink_top_state;
+LV_BSS_ATTR static bool ink_ready;
+LV_BSS_ATTR static bool ink_playback;
+LV_BSS_ATTR static lv_point_t ink_point;
 #endif
 
 /**********************
@@ -69,7 +69,7 @@ LV_VAL_OBJX_BTN_ATTR static lv_point_t ink_point;
  * @param copy pointer to a button object, if not NULL then the new object will be copied from it
  * @return pointer to the created button
  */
-LV_FUNC_OBJX_BTN_ATTR lv_obj_t * lv_btn_create(lv_obj_t * par, const lv_obj_t * copy)
+LV_FUNC_ATTR lv_obj_t * lv_btn_create(lv_obj_t * par, const lv_obj_t * copy)
 {
     LV_LOG_TRACE("button create started");
 
@@ -156,7 +156,7 @@ LV_FUNC_OBJX_BTN_ATTR lv_obj_t * lv_btn_create(lv_obj_t * par, const lv_obj_t * 
  * @param btn pointer to a button object
  * @param tgl true: enable toggled states, false: disable
  */
-LV_FUNC_OBJX_BTN_ATTR void lv_btn_set_toggle(lv_obj_t * btn, bool tgl)
+LV_FUNC_ATTR void lv_btn_set_toggle(lv_obj_t * btn, bool tgl)
 {
     lv_btn_ext_t * ext = lv_obj_get_ext_attr(btn);
 
@@ -168,7 +168,7 @@ LV_FUNC_OBJX_BTN_ATTR void lv_btn_set_toggle(lv_obj_t * btn, bool tgl)
  * @param btn pointer to a button object
  * @param state the new state of the button (from lv_btn_state_t enum)
  */
-LV_FUNC_OBJX_BTN_ATTR void lv_btn_set_state(lv_obj_t * btn, lv_btn_state_t state)
+LV_FUNC_ATTR void lv_btn_set_state(lv_obj_t * btn, lv_btn_state_t state)
 {
     lv_btn_ext_t * ext = lv_obj_get_ext_attr(btn);
     if(ext->state != state) {
@@ -181,7 +181,7 @@ LV_FUNC_OBJX_BTN_ATTR void lv_btn_set_state(lv_obj_t * btn, lv_btn_state_t state
  * Toggle the state of the button (ON->OFF, OFF->ON)
  * @param btn pointer to a button object
  */
-LV_FUNC_OBJX_BTN_ATTR void lv_btn_toggle(lv_obj_t * btn)
+LV_FUNC_ATTR void lv_btn_toggle(lv_obj_t * btn)
 {
     lv_btn_ext_t * ext = lv_obj_get_ext_attr(btn);
     switch(ext->state) {
@@ -198,7 +198,7 @@ LV_FUNC_OBJX_BTN_ATTR void lv_btn_toggle(lv_obj_t * btn)
  * @param btn pointer to a button object
  * @param time the time of the ink animation
  */
-LV_FUNC_OBJX_BTN_ATTR void lv_btn_set_ink_in_time(lv_obj_t * btn, uint16_t time)
+LV_FUNC_ATTR void lv_btn_set_ink_in_time(lv_obj_t * btn, uint16_t time)
 {
 #if LV_USE_ANIMATION && LV_BTN_INK_EFFECT
     lv_btn_ext_t * ext = lv_obj_get_ext_attr(btn);
@@ -216,7 +216,7 @@ LV_FUNC_OBJX_BTN_ATTR void lv_btn_set_ink_in_time(lv_obj_t * btn, uint16_t time)
  * @param btn pointer to a button object
  * @param time the time of the ink animation
  */
-LV_FUNC_OBJX_BTN_ATTR void lv_btn_set_ink_wait_time(lv_obj_t * btn, uint16_t time)
+LV_FUNC_ATTR void lv_btn_set_ink_wait_time(lv_obj_t * btn, uint16_t time)
 {
 
 #if LV_USE_ANIMATION && LV_BTN_INK_EFFECT
@@ -235,7 +235,7 @@ LV_FUNC_OBJX_BTN_ATTR void lv_btn_set_ink_wait_time(lv_obj_t * btn, uint16_t tim
  * @param btn pointer to a button object
  * @param time the time of the ink animation
  */
-LV_FUNC_OBJX_BTN_ATTR void lv_btn_set_ink_out_time(lv_obj_t * btn, uint16_t time)
+LV_FUNC_ATTR void lv_btn_set_ink_out_time(lv_obj_t * btn, uint16_t time)
 {
 #if LV_USE_ANIMATION && LV_BTN_INK_EFFECT
     lv_btn_ext_t * ext = lv_obj_get_ext_attr(btn);
@@ -254,7 +254,7 @@ LV_FUNC_OBJX_BTN_ATTR void lv_btn_set_ink_out_time(lv_obj_t * btn, uint16_t time
  * @param type which style should be set
  * @param style pointer to a style
  */
-LV_FUNC_OBJX_BTN_ATTR void lv_btn_set_style(lv_obj_t * btn, lv_btn_style_t type, const lv_style_t * style)
+LV_FUNC_ATTR void lv_btn_set_style(lv_obj_t * btn, lv_btn_style_t type, const lv_style_t * style)
 {
     lv_btn_ext_t * ext = lv_obj_get_ext_attr(btn);
 
@@ -279,7 +279,7 @@ LV_FUNC_OBJX_BTN_ATTR void lv_btn_set_style(lv_obj_t * btn, lv_btn_style_t type,
  * @param btn pointer to a button object
  * @return the state of the button (from lv_btn_state_t enum)
  */
-LV_FUNC_OBJX_BTN_ATTR lv_btn_state_t lv_btn_get_state(const lv_obj_t * btn)
+LV_FUNC_ATTR lv_btn_state_t lv_btn_get_state(const lv_obj_t * btn)
 {
     lv_btn_ext_t * ext = lv_obj_get_ext_attr(btn);
     return ext->state;
@@ -290,7 +290,7 @@ LV_FUNC_OBJX_BTN_ATTR lv_btn_state_t lv_btn_get_state(const lv_obj_t * btn)
  * @param btn pointer to a button object
  * @return true: toggle enabled, false: disabled
  */
-LV_FUNC_OBJX_BTN_ATTR bool lv_btn_get_toggle(const lv_obj_t * btn)
+LV_FUNC_ATTR bool lv_btn_get_toggle(const lv_obj_t * btn)
 {
     lv_btn_ext_t * ext = lv_obj_get_ext_attr(btn);
 
@@ -302,7 +302,7 @@ LV_FUNC_OBJX_BTN_ATTR bool lv_btn_get_toggle(const lv_obj_t * btn)
  * @param btn pointer to a button object
  * @return the time of the ink animation
  */
-LV_FUNC_OBJX_BTN_ATTR uint16_t lv_btn_get_ink_in_time(const lv_obj_t * btn)
+LV_FUNC_ATTR uint16_t lv_btn_get_ink_in_time(const lv_obj_t * btn)
 {
 #if LV_USE_ANIMATION && LV_BTN_INK_EFFECT
     lv_btn_ext_t * ext = lv_obj_get_ext_attr(btn);
@@ -318,7 +318,7 @@ LV_FUNC_OBJX_BTN_ATTR uint16_t lv_btn_get_ink_in_time(const lv_obj_t * btn)
  * @param btn pointer to a button object
  * @return the time of the ink animation
  */
-LV_FUNC_OBJX_BTN_ATTR uint16_t lv_btn_get_ink_wait_time(const lv_obj_t * btn)
+LV_FUNC_ATTR uint16_t lv_btn_get_ink_wait_time(const lv_obj_t * btn)
 {
 #if LV_USE_ANIMATION && LV_BTN_INK_EFFECT
     lv_btn_ext_t * ext = lv_obj_get_ext_attr(btn);
@@ -333,7 +333,7 @@ LV_FUNC_OBJX_BTN_ATTR uint16_t lv_btn_get_ink_wait_time(const lv_obj_t * btn)
  * @param btn pointer to a button object
  * @return the time of the ink animation
  */
-LV_FUNC_OBJX_BTN_ATTR uint16_t lv_btn_get_ink_out_time(const lv_obj_t * btn)
+LV_FUNC_ATTR uint16_t lv_btn_get_ink_out_time(const lv_obj_t * btn)
 {
 #if LV_USE_ANIMATION && LV_BTN_INK_EFFECT
     lv_btn_ext_t * ext = lv_obj_get_ext_attr(btn);
@@ -350,7 +350,7 @@ LV_FUNC_OBJX_BTN_ATTR uint16_t lv_btn_get_ink_out_time(const lv_obj_t * btn)
  * @param type which style should be get
  * @return style pointer to a style
  */
-LV_FUNC_OBJX_BTN_ATTR const lv_style_t * lv_btn_get_style(const lv_obj_t * btn, lv_btn_style_t type)
+LV_FUNC_ATTR const lv_style_t * lv_btn_get_style(const lv_obj_t * btn, lv_btn_style_t type)
 {
     const lv_style_t * style = NULL;
     lv_btn_ext_t * ext       = lv_obj_get_ext_attr(btn);
@@ -394,7 +394,7 @@ LV_FUNC_OBJX_BTN_ATTR const lv_style_t * lv_btn_get_style(const lv_obj_t * btn, 
  *             LV_DESIGN_DRAW_POST: drawing after every children are drawn
  * @param return true/false, depends on 'mode'
  */
-LV_FUNC_OBJX_BTN_ATTR static bool lv_btn_design(lv_obj_t * btn, const lv_area_t * mask, lv_design_mode_t mode)
+LV_FUNC_ATTR static bool lv_btn_design(lv_obj_t * btn, const lv_area_t * mask, lv_design_mode_t mode)
 {
     if(mode == LV_DESIGN_COVER_CHK) {
         return false;
@@ -476,7 +476,7 @@ LV_FUNC_OBJX_BTN_ATTR static bool lv_btn_design(lv_obj_t * btn, const lv_area_t 
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-LV_FUNC_OBJX_BTN_ATTR static lv_res_t lv_btn_signal(lv_obj_t * btn, lv_signal_t sign, void * param)
+LV_FUNC_ATTR static lv_res_t lv_btn_signal(lv_obj_t * btn, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 
@@ -653,7 +653,7 @@ LV_FUNC_OBJX_BTN_ATTR static lv_res_t lv_btn_signal(lv_obj_t * btn, lv_signal_t 
  * @param btn pointer to the animated button
  * @param val the new radius
  */
-LV_FUNC_OBJX_BTN_ATTR static void lv_btn_ink_effect_anim(lv_obj_t * btn, lv_anim_value_t val)
+LV_FUNC_ATTR static void lv_btn_ink_effect_anim(lv_obj_t * btn, lv_anim_value_t val)
 {
     if(btn) {
         ink_act_value = val;
@@ -665,7 +665,7 @@ LV_FUNC_OBJX_BTN_ATTR static void lv_btn_ink_effect_anim(lv_obj_t * btn, lv_anim
  * Called to clean up when the ink animation is ready
  * @param a unused
  */
-LV_FUNC_OBJX_BTN_ATTR static void lv_btn_ink_effect_anim_ready(lv_anim_t * a)
+LV_FUNC_ATTR static void lv_btn_ink_effect_anim_ready(lv_anim_t * a)
 {
     (void)a; /*Unused*/
 

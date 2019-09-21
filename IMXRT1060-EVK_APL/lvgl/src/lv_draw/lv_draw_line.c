@@ -75,7 +75,7 @@ static bool line_next_x(line_draw_t * line);
  * @param style pointer to a line's style
  * @param opa_scale scale down all opacities by the factor
  */
-LV_FUNC_DRAW_LINE_ATTR void lv_draw_line(const lv_point_t * point1, const lv_point_t * point2, const lv_area_t * mask,
+LV_FUNC_ATTR void lv_draw_line(const lv_point_t * point1, const lv_point_t * point2, const lv_area_t * mask,
                   const lv_style_t * style, lv_opa_t opa_scale)
 {
 
@@ -180,7 +180,7 @@ LV_FUNC_DRAW_LINE_ATTR void lv_draw_line(const lv_point_t * point1, const lv_poi
  *   STATIC FUNCTIONS
  **********************/
 
-LV_FUNC_DRAW_LINE_ATTR static void line_draw_hor(line_draw_t * main_line, const lv_area_t * mask, const lv_style_t * style, lv_opa_t opa_scale)
+LV_FUNC_ATTR static void line_draw_hor(line_draw_t * main_line, const lv_area_t * mask, const lv_style_t * style, lv_opa_t opa_scale)
 {
     lv_coord_t width      = style->line.width - 1;
     lv_coord_t width_half = width >> 1;
@@ -201,7 +201,7 @@ LV_FUNC_DRAW_LINE_ATTR static void line_draw_hor(line_draw_t * main_line, const 
     lv_draw_fill(&draw_area, mask, style->line.color, opa);
 }
 
-LV_FUNC_DRAW_LINE_ATTR static void line_draw_ver(line_draw_t * main_line, const lv_area_t * mask, const lv_style_t * style, lv_opa_t opa_scale)
+LV_FUNC_ATTR static void line_draw_ver(line_draw_t * main_line, const lv_area_t * mask, const lv_style_t * style, lv_opa_t opa_scale)
 {
     lv_coord_t width      = style->line.width - 1;
     lv_coord_t width_half = width >> 1;
@@ -222,7 +222,7 @@ LV_FUNC_DRAW_LINE_ATTR static void line_draw_ver(line_draw_t * main_line, const 
     lv_draw_fill(&draw_area, mask, style->line.color, opa);
 }
 
-LV_FUNC_DRAW_LINE_ATTR static void line_draw_skew(line_draw_t * main_line, bool dir_ori, const lv_area_t * mask, const lv_style_t * style,
+LV_FUNC_ATTR static void line_draw_skew(line_draw_t * main_line, bool dir_ori, const lv_area_t * mask, const lv_style_t * style,
                            lv_opa_t opa_scale)
 {
 
@@ -570,7 +570,7 @@ LV_FUNC_DRAW_LINE_ATTR static void line_draw_skew(line_draw_t * main_line, bool 
     }
 }
 
-LV_FUNC_DRAW_LINE_ATTR static void line_init(line_draw_t * line, const lv_point_t * p1, const lv_point_t * p2)
+LV_FUNC_ATTR static void line_init(line_draw_t * line, const lv_point_t * p1, const lv_point_t * p2)
 {
     line->p1.x = p1->x;
     line->p1.y = p1->y;
@@ -589,7 +589,7 @@ LV_FUNC_DRAW_LINE_ATTR static void line_init(line_draw_t * line, const lv_point_
     line->p_act.y = line->p1.y;
 }
 
-LV_FUNC_DRAW_LINE_ATTR static bool line_next(line_draw_t * line)
+LV_FUNC_ATTR static bool line_next(line_draw_t * line)
 {
     if(line->p_act.x == line->p2.x && line->p_act.y == line->p2.y) return false;
     line->e2 = line->err;
@@ -609,7 +609,7 @@ LV_FUNC_DRAW_LINE_ATTR static bool line_next(line_draw_t * line)
  * @param line
  * @return
  */
-LV_FUNC_DRAW_LINE_ATTR static bool line_next_y(line_draw_t * line)
+LV_FUNC_ATTR static bool line_next_y(line_draw_t * line)
 {
     lv_coord_t last_y = line->p_act.y;
 
@@ -625,7 +625,7 @@ LV_FUNC_DRAW_LINE_ATTR static bool line_next_y(line_draw_t * line)
  * @param line
  * @return
  */
-LV_FUNC_DRAW_LINE_ATTR static bool line_next_x(line_draw_t * line)
+LV_FUNC_ATTR static bool line_next_x(line_draw_t * line)
 {
     lv_coord_t last_x = line->p_act.x;
 

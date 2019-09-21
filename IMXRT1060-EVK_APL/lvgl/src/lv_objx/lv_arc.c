@@ -30,8 +30,8 @@ static lv_res_t lv_arc_signal(lv_obj_t * arc, lv_signal_t sign, void * param);
 /**********************
  *  STATIC VARIABLES
  **********************/
-LV_VAL_OBJX_ARC_ATTR static lv_signal_cb_t ancestor_signal;
-LV_VAL_OBJX_ARC_ATTR static lv_design_cb_t ancestor_design;
+LV_BSS_ATTR static lv_signal_cb_t ancestor_signal;
+LV_BSS_ATTR static lv_design_cb_t ancestor_design;
 
 /**********************
  *      MACROS
@@ -47,7 +47,7 @@ LV_VAL_OBJX_ARC_ATTR static lv_design_cb_t ancestor_design;
  * @param copy pointer to a arc object, if not NULL then the new object will be copied from it
  * @return pointer to the created arc
  */
-LV_FUNC_OBJX_ARC_ATTR lv_obj_t * lv_arc_create(lv_obj_t * par, const lv_obj_t * copy)
+LV_FUNC_ATTR lv_obj_t * lv_arc_create(lv_obj_t * par, const lv_obj_t * copy)
 {
 
     LV_LOG_TRACE("arc create started");
@@ -117,7 +117,7 @@ LV_FUNC_OBJX_ARC_ATTR lv_obj_t * lv_arc_create(lv_obj_t * par, const lv_obj_t * 
  * @param start the start angle [0..360]
  * @param end the end angle [0..360]
  */
-LV_FUNC_OBJX_ARC_ATTR void lv_arc_set_angles(lv_obj_t * arc, uint16_t start, uint16_t end)
+LV_FUNC_ATTR void lv_arc_set_angles(lv_obj_t * arc, uint16_t start, uint16_t end)
 {
     lv_arc_ext_t * ext = lv_obj_get_ext_attr(arc);
 
@@ -136,7 +136,7 @@ LV_FUNC_OBJX_ARC_ATTR void lv_arc_set_angles(lv_obj_t * arc, uint16_t start, uin
  * @param type which style should be set
  * @param style pointer to a style
  *  */
-LV_FUNC_OBJX_ARC_ATTR void lv_arc_set_style(lv_obj_t * arc, lv_arc_style_t type, const lv_style_t * style)
+LV_FUNC_ATTR void lv_arc_set_style(lv_obj_t * arc, lv_arc_style_t type, const lv_style_t * style)
 {
     switch(type) {
         case LV_ARC_STYLE_MAIN: lv_obj_set_style(arc, style); break;
@@ -152,7 +152,7 @@ LV_FUNC_OBJX_ARC_ATTR void lv_arc_set_style(lv_obj_t * arc, lv_arc_style_t type,
  * @param arc pointer to an arc object
  * @return the start angle [0..360]
  */
-LV_FUNC_OBJX_ARC_ATTR uint16_t lv_arc_get_angle_start(lv_obj_t * arc)
+LV_FUNC_ATTR uint16_t lv_arc_get_angle_start(lv_obj_t * arc)
 {
     lv_arc_ext_t * ext = lv_obj_get_ext_attr(arc);
 
@@ -164,7 +164,7 @@ LV_FUNC_OBJX_ARC_ATTR uint16_t lv_arc_get_angle_start(lv_obj_t * arc)
  * @param arc pointer to an arc object
  * @return the end angle [0..360]
  */
-LV_FUNC_OBJX_ARC_ATTR uint16_t lv_arc_get_angle_end(lv_obj_t * arc)
+LV_FUNC_ATTR uint16_t lv_arc_get_angle_end(lv_obj_t * arc)
 {
     lv_arc_ext_t * ext = lv_obj_get_ext_attr(arc);
 
@@ -177,7 +177,7 @@ LV_FUNC_OBJX_ARC_ATTR uint16_t lv_arc_get_angle_end(lv_obj_t * arc)
  * @param type which style should be get
  * @return style pointer to the style
  *  */
-LV_FUNC_OBJX_ARC_ATTR const lv_style_t * lv_arc_get_style(const lv_obj_t * arc, lv_arc_style_t type)
+LV_FUNC_ATTR const lv_style_t * lv_arc_get_style(const lv_obj_t * arc, lv_arc_style_t type)
 {
     const lv_style_t * style = NULL;
 
@@ -211,7 +211,7 @@ LV_FUNC_OBJX_ARC_ATTR const lv_style_t * lv_arc_get_style(const lv_obj_t * arc, 
  *             LV_DESIGN_DRAW_POST: drawing after every children are drawn
  * @param return true/false, depends on 'mode'
  */
-LV_FUNC_OBJX_ARC_ATTR static bool lv_arc_design(lv_obj_t * arc, const lv_area_t * mask, lv_design_mode_t mode)
+LV_FUNC_ATTR static bool lv_arc_design(lv_obj_t * arc, const lv_area_t * mask, lv_design_mode_t mode)
 {
     /*Return false if the object is not covers the mask_p area*/
     if(mode == LV_DESIGN_COVER_CHK) {
@@ -273,7 +273,7 @@ LV_FUNC_OBJX_ARC_ATTR static bool lv_arc_design(lv_obj_t * arc, const lv_area_t 
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-LV_FUNC_OBJX_ARC_ATTR static lv_res_t lv_arc_signal(lv_obj_t * arc, lv_signal_t sign, void * param)
+LV_FUNC_ATTR static lv_res_t lv_arc_signal(lv_obj_t * arc, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 

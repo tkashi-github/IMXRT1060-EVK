@@ -51,10 +51,10 @@ static uint8_t is_leap_year(uint32_t year);
 /**********************
  *  STATIC VARIABLES
  **********************/
-LV_VAL_OBJX_CALENDER_ATTR static lv_signal_cb_t ancestor_signal;
-LV_VAL_OBJX_CALENDER_ATTR static lv_design_cb_t ancestor_design;
-LV_CVAL_OBJX_CALENDER_ATTR static const char * day_name[7]    = {"Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
-LV_CVAL_OBJX_CALENDER_ATTR static const char * month_name[12] = {"January", "February", "March",     "April",   "May",      "June",
+LV_BSS_ATTR static lv_signal_cb_t ancestor_signal;
+LV_BSS_ATTR static lv_design_cb_t ancestor_design;
+LV_DATA_ATTR static const char * day_name[7]    = {"Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
+LV_DATA_ATTR static const char * month_name[12] = {"January", "February", "March",     "April",   "May",      "June",
                                       "July",    "August",   "September", "October", "November", "December"};
 
 /**********************
@@ -71,7 +71,7 @@ LV_CVAL_OBJX_CALENDER_ATTR static const char * month_name[12] = {"January", "Feb
  * @param copy pointer to a calendar object, if not NULL then the new object will be copied from it
  * @return pointer to the created calendar
  */
-LV_FUNC_OBJX_CALENDER_ATTR lv_obj_t * lv_calendar_create(lv_obj_t * par, const lv_obj_t * copy)
+LV_FUNC_ATTR lv_obj_t * lv_calendar_create(lv_obj_t * par, const lv_obj_t * copy)
 {
     LV_LOG_TRACE("calendar create started");
 
@@ -193,7 +193,7 @@ LV_FUNC_OBJX_CALENDER_ATTR lv_obj_t * lv_calendar_create(lv_obj_t * par, const l
  * @param today pointer to an `lv_calendar_date_t` variable containing the date of today. The value
  * will be saved it can be local variable too.
  */
-LV_FUNC_OBJX_CALENDER_ATTR void lv_calendar_set_today_date(lv_obj_t * calendar, lv_calendar_date_t * today)
+LV_FUNC_ATTR void lv_calendar_set_today_date(lv_obj_t * calendar, lv_calendar_date_t * today)
 {
     lv_calendar_ext_t * ext = lv_obj_get_ext_attr(calendar);
     ext->today.year         = today->year;
@@ -209,7 +209,7 @@ LV_FUNC_OBJX_CALENDER_ATTR void lv_calendar_set_today_date(lv_obj_t * calendar, 
  * @param showed pointer to an `lv_calendar_date_t` variable containing the date to show. The value
  * will be saved it can be local variable too.
  */
-LV_FUNC_OBJX_CALENDER_ATTR void lv_calendar_set_showed_date(lv_obj_t * calendar, lv_calendar_date_t * showed)
+LV_FUNC_ATTR void lv_calendar_set_showed_date(lv_obj_t * calendar, lv_calendar_date_t * showed)
 {
     lv_calendar_ext_t * ext = lv_obj_get_ext_attr(calendar);
     ext->showed_date.year   = showed->year;
@@ -226,7 +226,7 @@ LV_FUNC_OBJX_CALENDER_ATTR void lv_calendar_set_showed_date(lv_obj_t * calendar,
  * WILL BE SAVED! CAN'T BE LOCAL ARRAY.
  * @param date_num number of dates in the array
  */
-LV_FUNC_OBJX_CALENDER_ATTR void lv_calendar_set_highlighted_dates(lv_obj_t * calendar, lv_calendar_date_t * highlighted, uint16_t date_num)
+LV_FUNC_ATTR void lv_calendar_set_highlighted_dates(lv_obj_t * calendar, lv_calendar_date_t * highlighted, uint16_t date_num)
 {
     lv_calendar_ext_t * ext    = lv_obj_get_ext_attr(calendar);
     ext->highlighted_dates     = highlighted;
@@ -242,7 +242,7 @@ LV_FUNC_OBJX_CALENDER_ATTR void lv_calendar_set_highlighted_dates(lv_obj_t * cal
  * ...}` Only the pointer will be saved so this variable can't be local which will be destroyed
  * later.
  */
-LV_FUNC_OBJX_CALENDER_ATTR void lv_calendar_set_day_names(lv_obj_t * calendar, const char ** day_names)
+LV_FUNC_ATTR void lv_calendar_set_day_names(lv_obj_t * calendar, const char ** day_names)
 {
     lv_calendar_ext_t * ext = lv_obj_get_ext_attr(calendar);
     ext->day_names          = day_names;
@@ -256,7 +256,7 @@ LV_FUNC_OBJX_CALENDER_ATTR void lv_calendar_set_day_names(lv_obj_t * calendar, c
  * ...}` Only the pointer will be saved so this variable can't be local which will be destroyed
  * later.
  */
-LV_FUNC_OBJX_CALENDER_ATTR void lv_calendar_set_month_names(lv_obj_t * calendar, const char ** day_names)
+LV_FUNC_ATTR void lv_calendar_set_month_names(lv_obj_t * calendar, const char ** day_names)
 {
     lv_calendar_ext_t * ext = lv_obj_get_ext_attr(calendar);
     ext->month_names        = day_names;
@@ -269,7 +269,7 @@ LV_FUNC_OBJX_CALENDER_ATTR void lv_calendar_set_month_names(lv_obj_t * calendar,
  * @param type which style should be set
  * @param style pointer to a style
  *  */
-LV_FUNC_OBJX_CALENDER_ATTR void lv_calendar_set_style(lv_obj_t * calendar, lv_calendar_style_t type, const lv_style_t * style)
+LV_FUNC_ATTR void lv_calendar_set_style(lv_obj_t * calendar, lv_calendar_style_t type, const lv_style_t * style)
 {
     lv_calendar_ext_t * ext = lv_obj_get_ext_attr(calendar);
 
@@ -296,7 +296,7 @@ LV_FUNC_OBJX_CALENDER_ATTR void lv_calendar_set_style(lv_obj_t * calendar, lv_ca
  * @param calendar pointer to a calendar object
  * @return return pointer to an `lv_calendar_date_t` variable containing the date of today.
  */
-LV_FUNC_OBJX_CALENDER_ATTR lv_calendar_date_t * lv_calendar_get_today_date(const lv_obj_t * calendar)
+LV_FUNC_ATTR lv_calendar_date_t * lv_calendar_get_today_date(const lv_obj_t * calendar)
 {
     lv_calendar_ext_t * ext = lv_obj_get_ext_attr(calendar);
     return &ext->today;
@@ -307,7 +307,7 @@ LV_FUNC_OBJX_CALENDER_ATTR lv_calendar_date_t * lv_calendar_get_today_date(const
  * @param calendar pointer to a calendar object
  * @return pointer to an `lv_calendar_date_t` variable containing the date is being shown.
  */
-LV_FUNC_OBJX_CALENDER_ATTR lv_calendar_date_t * lv_calendar_get_showed_date(const lv_obj_t * calendar)
+LV_FUNC_ATTR lv_calendar_date_t * lv_calendar_get_showed_date(const lv_obj_t * calendar)
 {
     lv_calendar_ext_t * ext = lv_obj_get_ext_attr(calendar);
     return &ext->showed_date;
@@ -319,7 +319,7 @@ LV_FUNC_OBJX_CALENDER_ATTR lv_calendar_date_t * lv_calendar_get_showed_date(cons
  * @return pointer to an `lv_calendar_date_t` variable containing the pressed date.
  * `NULL` if not date pressed (e.g. the header)
  */
-LV_FUNC_OBJX_CALENDER_ATTR lv_calendar_date_t * lv_calendar_get_pressed_date(const lv_obj_t * calendar)
+LV_FUNC_ATTR lv_calendar_date_t * lv_calendar_get_pressed_date(const lv_obj_t * calendar)
 {
     lv_calendar_ext_t * ext = lv_obj_get_ext_attr(calendar);
     return ext->pressed_date.year != 0 ? &ext->pressed_date : NULL;
@@ -330,7 +330,7 @@ LV_FUNC_OBJX_CALENDER_ATTR lv_calendar_date_t * lv_calendar_get_pressed_date(con
  * @param calendar pointer to a calendar object
  * @return pointer to an `lv_calendar_date_t` array containing the dates.
  */
-LV_FUNC_OBJX_CALENDER_ATTR lv_calendar_date_t * lv_calendar_get_highlighted_dates(const lv_obj_t * calendar)
+LV_FUNC_ATTR lv_calendar_date_t * lv_calendar_get_highlighted_dates(const lv_obj_t * calendar)
 {
     lv_calendar_ext_t * ext = lv_obj_get_ext_attr(calendar);
     return ext->highlighted_dates;
@@ -341,7 +341,7 @@ LV_FUNC_OBJX_CALENDER_ATTR lv_calendar_date_t * lv_calendar_get_highlighted_date
  * @param calendar pointer to a calendar object
  * @return number of highlighted days
  */
-LV_FUNC_OBJX_CALENDER_ATTR uint16_t lv_calendar_get_highlighted_dates_num(const lv_obj_t * calendar)
+LV_FUNC_ATTR uint16_t lv_calendar_get_highlighted_dates_num(const lv_obj_t * calendar)
 {
     lv_calendar_ext_t * ext = lv_obj_get_ext_attr(calendar);
     return ext->highlighted_dates_num;
@@ -352,7 +352,7 @@ LV_FUNC_OBJX_CALENDER_ATTR uint16_t lv_calendar_get_highlighted_dates_num(const 
  * @param calendar pointer to a calendar object
  * @return pointer to the array of day names
  */
-LV_FUNC_OBJX_CALENDER_ATTR const char ** lv_calendar_get_day_names(const lv_obj_t * calendar)
+LV_FUNC_ATTR const char ** lv_calendar_get_day_names(const lv_obj_t * calendar)
 {
     lv_calendar_ext_t * ext = lv_obj_get_ext_attr(calendar);
     return ext->day_names;
@@ -363,7 +363,7 @@ LV_FUNC_OBJX_CALENDER_ATTR const char ** lv_calendar_get_day_names(const lv_obj_
  * @param calendar pointer to a calendar object
  * @return pointer to the array of month names
  */
-LV_FUNC_OBJX_CALENDER_ATTR const char ** lv_calendar_get_month_names(const lv_obj_t * calendar)
+LV_FUNC_ATTR const char ** lv_calendar_get_month_names(const lv_obj_t * calendar)
 {
     lv_calendar_ext_t * ext = lv_obj_get_ext_attr(calendar);
     return ext->month_names;
@@ -375,7 +375,7 @@ LV_FUNC_OBJX_CALENDER_ATTR const char ** lv_calendar_get_month_names(const lv_ob
  * @param type which style should be get
  * @return style pointer to the style
  *  */
-LV_FUNC_OBJX_CALENDER_ATTR const lv_style_t * lv_calendar_get_style(const lv_obj_t * calendar, lv_calendar_style_t type)
+LV_FUNC_ATTR const lv_style_t * lv_calendar_get_style(const lv_obj_t * calendar, lv_calendar_style_t type)
 {
     const lv_style_t * style = NULL;
     lv_calendar_ext_t * ext  = lv_obj_get_ext_attr(calendar);
@@ -417,7 +417,7 @@ LV_FUNC_OBJX_CALENDER_ATTR const lv_style_t * lv_calendar_get_style(const lv_obj
  *             LV_DESIGN_DRAW_POST: drawing after every children are drawn
  * @param return true/false, depends on 'mode'
  */
-LV_FUNC_OBJX_CALENDER_ATTR static bool lv_calendar_design(lv_obj_t * calendar, const lv_area_t * mask, lv_design_mode_t mode)
+LV_FUNC_ATTR static bool lv_calendar_design(lv_obj_t * calendar, const lv_area_t * mask, lv_design_mode_t mode)
 {
     /*Return false if the object is not covers the mask_p area*/
     if(mode == LV_DESIGN_COVER_CHK) {
@@ -447,7 +447,7 @@ LV_FUNC_OBJX_CALENDER_ATTR static bool lv_calendar_design(lv_obj_t * calendar, c
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-LV_FUNC_OBJX_CALENDER_ATTR static lv_res_t lv_calendar_signal(lv_obj_t * calendar, lv_signal_t sign, void * param)
+LV_FUNC_ATTR static lv_res_t lv_calendar_signal(lv_obj_t * calendar, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 
@@ -562,7 +562,7 @@ LV_FUNC_OBJX_CALENDER_ATTR static lv_res_t lv_calendar_signal(lv_obj_t * calenda
  * @return true: days part of calendar is touched and its related date is put in pressed date
  * false: the point is out of days part area.
  */
-LV_FUNC_OBJX_CALENDER_ATTR static bool calculate_touched_day(lv_obj_t * calendar, const lv_point_t * touched_point)
+LV_FUNC_ATTR static bool calculate_touched_day(lv_obj_t * calendar, const lv_point_t * touched_point)
 {
     lv_area_t days_area;
     lv_area_copy(&days_area, &calendar->coords);
@@ -612,7 +612,7 @@ LV_FUNC_OBJX_CALENDER_ATTR static bool calculate_touched_day(lv_obj_t * calendar
  * @param calendar point to a calendar
  * @return the header's height
  */
-LV_FUNC_OBJX_CALENDER_ATTR static lv_coord_t get_header_height(lv_obj_t * calendar)
+LV_FUNC_ATTR static lv_coord_t get_header_height(lv_obj_t * calendar)
 {
     lv_calendar_ext_t * ext = lv_obj_get_ext_attr(calendar);
 
@@ -625,7 +625,7 @@ LV_FUNC_OBJX_CALENDER_ATTR static lv_coord_t get_header_height(lv_obj_t * calend
  * @param calendar point to a calendar
  * @return the day_names's height
  */
-LV_FUNC_OBJX_CALENDER_ATTR static lv_coord_t get_day_names_height(lv_obj_t * calendar)
+LV_FUNC_ATTR static lv_coord_t get_day_names_height(lv_obj_t * calendar)
 {
     lv_calendar_ext_t * ext = lv_obj_get_ext_attr(calendar);
 
@@ -638,7 +638,7 @@ LV_FUNC_OBJX_CALENDER_ATTR static lv_coord_t get_day_names_height(lv_obj_t * cal
  * @param calendar point to a calendar
  * @param mask a mask for drawing
  */
-LV_FUNC_OBJX_CALENDER_ATTR static void draw_header(lv_obj_t * calendar, const lv_area_t * mask)
+LV_FUNC_ATTR static void draw_header(lv_obj_t * calendar, const lv_area_t * mask)
 {
     lv_calendar_ext_t * ext = lv_obj_get_ext_attr(calendar);
     lv_opa_t opa_scale      = lv_obj_get_opa_scale(calendar);
@@ -678,7 +678,7 @@ LV_FUNC_OBJX_CALENDER_ATTR static void draw_header(lv_obj_t * calendar, const lv
  * @param calendar point to a calendar
  * @param mask a mask for drawing
  */
-LV_FUNC_OBJX_CALENDER_ATTR static void draw_day_names(lv_obj_t * calendar, const lv_area_t * mask)
+LV_FUNC_ATTR static void draw_day_names(lv_obj_t * calendar, const lv_area_t * mask)
 {
     lv_calendar_ext_t * ext = lv_obj_get_ext_attr(calendar);
     lv_opa_t opa_scale      = lv_obj_get_opa_scale(calendar);
@@ -704,7 +704,7 @@ LV_FUNC_OBJX_CALENDER_ATTR static void draw_day_names(lv_obj_t * calendar, const
  * @param calendar point to a calendar
  * @param mask a mask for drawing
  */
-LV_FUNC_OBJX_CALENDER_ATTR static void draw_days(lv_obj_t * calendar, const lv_area_t * mask)
+LV_FUNC_ATTR static void draw_days(lv_obj_t * calendar, const lv_area_t * mask)
 {
     lv_calendar_ext_t * ext     = lv_obj_get_ext_attr(calendar);
     const lv_style_t * style_bg = lv_calendar_get_style(calendar, LV_CALENDAR_STYLE_BG);
@@ -844,7 +844,7 @@ LV_FUNC_OBJX_CALENDER_ATTR static void draw_days(lv_obj_t * calendar, const lv_a
  * @param day a day [1..31]
  * @return true: highlighted
  */
-LV_FUNC_OBJX_CALENDER_ATTR static bool is_highlighted(lv_obj_t * calendar, int32_t year, int32_t month, int32_t day)
+LV_FUNC_ATTR static bool is_highlighted(lv_obj_t * calendar, int32_t year, int32_t month, int32_t day)
 {
     lv_calendar_ext_t * ext = lv_obj_get_ext_attr(calendar);
 
@@ -867,7 +867,7 @@ LV_FUNC_OBJX_CALENDER_ATTR static bool is_highlighted(lv_obj_t * calendar, int32
  * @param day a day in [0..6]
  * @return
  */
-LV_FUNC_OBJX_CALENDER_ATTR static const char * get_day_name(lv_obj_t * calendar, uint8_t day)
+LV_FUNC_ATTR static const char * get_day_name(lv_obj_t * calendar, uint8_t day)
 {
 
     lv_calendar_ext_t * ext = lv_obj_get_ext_attr(calendar);
@@ -884,7 +884,7 @@ LV_FUNC_OBJX_CALENDER_ATTR static const char * get_day_name(lv_obj_t * calendar,
  * previous year
  * @return
  */
-LV_FUNC_OBJX_CALENDER_ATTR static const char * get_month_name(lv_obj_t * calendar, int32_t month)
+LV_FUNC_ATTR static const char * get_month_name(lv_obj_t * calendar, int32_t month)
 {
     month--; /*Range of months id [1..12] but range of indexes is [0..11]*/
     if(month < 0) month = 12 + month;
@@ -903,7 +903,7 @@ LV_FUNC_OBJX_CALENDER_ATTR static const char * get_month_name(lv_obj_t * calenda
  * previous year
  * @return [28..31]
  */
-LV_FUNC_OBJX_CALENDER_ATTR static uint8_t get_month_length(int32_t year, int32_t month)
+LV_FUNC_ATTR static uint8_t get_month_length(int32_t year, int32_t month)
 {
     month--; /*Range of months id [1..12] but range of indexes is [0..11]*/
     if(month < 0) {
@@ -924,7 +924,7 @@ LV_FUNC_OBJX_CALENDER_ATTR static uint8_t get_month_length(int32_t year, int32_t
  * @param year a year
  * @return 0: not leap year; 1: leap year
  */
-LV_FUNC_OBJX_CALENDER_ATTR static uint8_t is_leap_year(uint32_t year)
+LV_FUNC_ATTR static uint8_t is_leap_year(uint32_t year)
 {
     return (year % 4) || ((year % 100 == 0) && (year % 400)) ? 0 : 1;
 }
@@ -936,7 +936,7 @@ LV_FUNC_OBJX_CALENDER_ATTR static uint8_t is_leap_year(uint32_t year)
  * @param day a day
  * @return [0..6] which means [Sun..Sat]
  */
-LV_FUNC_OBJX_CALENDER_ATTR static uint8_t get_day_of_week(uint32_t year, uint32_t month, uint32_t day)
+LV_FUNC_ATTR static uint8_t get_day_of_week(uint32_t year, uint32_t month, uint32_t day)
 {
     uint32_t a = month < 3 ? 1 : 0;
     uint32_t b = year - a;

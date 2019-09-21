@@ -50,7 +50,7 @@ static void obj_to_foreground(lv_obj_t * obj);
 /**
  * Init. the group module
  */
-LV_FUNC_CORE_GROUP_ATTR void lv_group_init(void)
+LV_FUNC_ATTR void lv_group_init(void)
 {
     lv_ll_init(&LV_GC_ROOT(_lv_group_ll), sizeof(lv_group_t));
 }
@@ -59,7 +59,7 @@ LV_FUNC_CORE_GROUP_ATTR void lv_group_init(void)
  * Create a new object group
  * @return pointer to the new object group
  */
-LV_FUNC_CORE_GROUP_ATTR lv_group_t * lv_group_create(void)
+LV_FUNC_ATTR lv_group_t * lv_group_create(void)
 {
     lv_group_t * group = lv_ll_ins_head(&LV_GC_ROOT(_lv_group_ll));
     lv_mem_assert(group);
@@ -88,7 +88,7 @@ LV_FUNC_CORE_GROUP_ATTR lv_group_t * lv_group_create(void)
  * Delete a group object
  * @param group pointer to a group
  */
-LV_FUNC_CORE_GROUP_ATTR void lv_group_del(lv_group_t * group)
+LV_FUNC_ATTR void lv_group_del(lv_group_t * group)
 {
     /*Defocus the the currently focused object*/
     if(group->obj_focus != NULL) {
@@ -113,7 +113,7 @@ LV_FUNC_CORE_GROUP_ATTR void lv_group_del(lv_group_t * group)
  * @param group pointer to a group
  * @param obj pointer to an object to add
  */
-LV_FUNC_CORE_GROUP_ATTR void lv_group_add_obj(lv_group_t * group, lv_obj_t * obj)
+LV_FUNC_ATTR void lv_group_add_obj(lv_group_t * group, lv_obj_t * obj)
 {
     if(group == NULL) return;
 
@@ -153,7 +153,7 @@ LV_FUNC_CORE_GROUP_ATTR void lv_group_add_obj(lv_group_t * group, lv_obj_t * obj
  * Remove an object from its group
  * @param obj pointer to an object to remove
  */
-LV_FUNC_CORE_GROUP_ATTR void lv_group_remove_obj(lv_obj_t * obj)
+LV_FUNC_ATTR void lv_group_remove_obj(lv_obj_t * obj)
 {
     lv_group_t * g = obj->group_p;
     if(g == NULL) return;
@@ -195,7 +195,7 @@ LV_FUNC_CORE_GROUP_ATTR void lv_group_remove_obj(lv_obj_t * obj)
  * Remove all objects from a group
  * @param group pointer to a group
  */
-LV_FUNC_CORE_GROUP_ATTR void lv_group_remove_all_objs(lv_group_t * group)
+LV_FUNC_ATTR void lv_group_remove_all_objs(lv_group_t * group)
 {
     /*Defocus the the currently focused object*/
     if(group->obj_focus != NULL) {
@@ -218,7 +218,7 @@ LV_FUNC_CORE_GROUP_ATTR void lv_group_remove_all_objs(lv_group_t * group)
  * Focus on an object (defocus the current)
  * @param obj pointer to an object to focus on
  */
-LV_FUNC_CORE_GROUP_ATTR void lv_group_focus_obj(lv_obj_t * obj)
+LV_FUNC_ATTR void lv_group_focus_obj(lv_obj_t * obj)
 {
     if(obj == NULL) return;
     lv_group_t * g = obj->group_p;
@@ -261,7 +261,7 @@ LV_FUNC_CORE_GROUP_ATTR void lv_group_focus_obj(lv_obj_t * obj)
  * Focus the next object in a group (defocus the current)
  * @param group pointer to a group
  */
-LV_FUNC_CORE_GROUP_ATTR void lv_group_focus_next(lv_group_t * group)
+LV_FUNC_ATTR void lv_group_focus_next(lv_group_t * group)
 {
     focus_next_core(group, lv_ll_get_head, lv_ll_get_next);
 }
@@ -270,7 +270,7 @@ LV_FUNC_CORE_GROUP_ATTR void lv_group_focus_next(lv_group_t * group)
  * Focus the previous object in a group (defocus the current)
  * @param group pointer to a group
  */
-LV_FUNC_CORE_GROUP_ATTR void lv_group_focus_prev(lv_group_t * group)
+LV_FUNC_ATTR void lv_group_focus_prev(lv_group_t * group)
 {
     focus_next_core(group, lv_ll_get_tail, lv_ll_get_prev);
 }
@@ -280,7 +280,7 @@ LV_FUNC_CORE_GROUP_ATTR void lv_group_focus_prev(lv_group_t * group)
  * @param group pointer to a group
  * @param en true: freeze, false: release freezing (normal mode)
  */
-LV_FUNC_CORE_GROUP_ATTR void lv_group_focus_freeze(lv_group_t * group, bool en)
+LV_FUNC_ATTR void lv_group_focus_freeze(lv_group_t * group, bool en)
 {
     if(en == false)
         group->frozen = 0;
@@ -294,7 +294,7 @@ LV_FUNC_CORE_GROUP_ATTR void lv_group_focus_freeze(lv_group_t * group, bool en)
  * @param c a character (use LV_KEY_.. to navigate)
  * @return result of focused object in group.
  */
-LV_FUNC_CORE_GROUP_ATTR lv_res_t lv_group_send_data(lv_group_t * group, uint32_t c)
+LV_FUNC_ATTR lv_res_t lv_group_send_data(lv_group_t * group, uint32_t c)
 {
     lv_obj_t * act = lv_group_get_focused(group);
     if(act == NULL) return LV_RES_OK;
@@ -315,7 +315,7 @@ LV_FUNC_CORE_GROUP_ATTR lv_res_t lv_group_send_data(lv_group_t * group, uint32_t
  * @param group pointer to a group
  * @param style_mod_cb the style modifier function pointer
  */
-LV_FUNC_CORE_GROUP_ATTR void lv_group_set_style_mod_cb(lv_group_t * group, lv_group_style_mod_cb_t style_mod_cb)
+LV_FUNC_ATTR void lv_group_set_style_mod_cb(lv_group_t * group, lv_group_style_mod_cb_t style_mod_cb)
 {
     group->style_mod_cb = style_mod_cb;
     if(group->obj_focus != NULL) lv_obj_invalidate(*group->obj_focus);
@@ -326,7 +326,7 @@ LV_FUNC_CORE_GROUP_ATTR void lv_group_set_style_mod_cb(lv_group_t * group, lv_gr
  * @param group pointer to a group
  * @param style_mod_func the style modifier function pointer
  */
-LV_FUNC_CORE_GROUP_ATTR void lv_group_set_style_mod_edit_cb(lv_group_t * group, lv_group_style_mod_cb_t style_mod_edit_cb)
+LV_FUNC_ATTR void lv_group_set_style_mod_edit_cb(lv_group_t * group, lv_group_style_mod_cb_t style_mod_edit_cb)
 {
     group->style_mod_edit_cb = style_mod_edit_cb;
     if(group->obj_focus != NULL) lv_obj_invalidate(*group->obj_focus);
@@ -337,7 +337,7 @@ LV_FUNC_CORE_GROUP_ATTR void lv_group_set_style_mod_edit_cb(lv_group_t * group, 
  * @param group pointer to a group
  * @param focus_cb the call back function or NULL if unused
  */
-LV_FUNC_CORE_GROUP_ATTR void lv_group_set_focus_cb(lv_group_t * group, lv_group_focus_cb_t focus_cb)
+LV_FUNC_ATTR void lv_group_set_focus_cb(lv_group_t * group, lv_group_focus_cb_t focus_cb)
 {
     group->focus_cb = focus_cb;
 }
@@ -347,7 +347,7 @@ LV_FUNC_CORE_GROUP_ATTR void lv_group_set_focus_cb(lv_group_t * group, lv_group_
  * @param group pointer to group
  * @param edit: true: edit mode; false: navigate mode
  */
-LV_FUNC_CORE_GROUP_ATTR void lv_group_set_editing(lv_group_t * group, bool edit)
+LV_FUNC_ATTR void lv_group_set_editing(lv_group_t * group, bool edit)
 {
     uint8_t en_val = edit ? 1 : 0;
 
@@ -370,12 +370,12 @@ LV_FUNC_CORE_GROUP_ATTR void lv_group_set_editing(lv_group_t * group, bool edit)
  * @param group pointer to group
  * @param en: true: enable `click_focus`
  */
-LV_FUNC_CORE_GROUP_ATTR void lv_group_set_click_focus(lv_group_t * group, bool en)
+LV_FUNC_ATTR void lv_group_set_click_focus(lv_group_t * group, bool en)
 {
     group->click_focus = en ? 1 : 0;
 }
 
-LV_FUNC_CORE_GROUP_ATTR void lv_group_set_refocus_policy(lv_group_t * group, lv_group_refocus_policy_t policy)
+LV_FUNC_ATTR void lv_group_set_refocus_policy(lv_group_t * group, lv_group_refocus_policy_t policy)
 {
     group->refocus_policy = policy & 0x01;
 }
@@ -385,7 +385,7 @@ LV_FUNC_CORE_GROUP_ATTR void lv_group_set_refocus_policy(lv_group_t * group, lv_
  * @param group pointer to group
  * @param en: true: enable `wrap`
  */
-LV_FUNC_CORE_GROUP_ATTR void lv_group_set_wrap(lv_group_t * group, bool en)
+LV_FUNC_ATTR void lv_group_set_wrap(lv_group_t * group, bool en)
 {
     group->wrap = en ? 1 : 0;
 }
@@ -396,7 +396,7 @@ LV_FUNC_CORE_GROUP_ATTR void lv_group_set_wrap(lv_group_t * group, bool en)
  * @param style pointer to a style to modify
  * @return a copy of the input style but modified with the 'style_mod' function
  */
-LV_FUNC_CORE_GROUP_ATTR lv_style_t * lv_group_mod_style(lv_group_t * group, const lv_style_t * style)
+LV_FUNC_ATTR lv_style_t * lv_group_mod_style(lv_group_t * group, const lv_style_t * style)
 {
     /*Load the current style. It will be modified by the callback*/
     lv_style_copy(&group->style_tmp, style);
@@ -414,7 +414,7 @@ LV_FUNC_CORE_GROUP_ATTR lv_style_t * lv_group_mod_style(lv_group_t * group, cons
  * @param group pointer to a group
  * @return pointer to the focused object
  */
-LV_FUNC_CORE_GROUP_ATTR lv_obj_t * lv_group_get_focused(const lv_group_t * group)
+LV_FUNC_ATTR lv_obj_t * lv_group_get_focused(const lv_group_t * group)
 {
     if(!group) return NULL;
     if(group->obj_focus == NULL) return NULL;
@@ -428,7 +428,7 @@ LV_FUNC_CORE_GROUP_ATTR lv_obj_t * lv_group_get_focused(const lv_group_t * group
  * @param group pointer to an group
  * @return pointer to the user data
  */
-LV_FUNC_CORE_GROUP_ATTR lv_group_user_data_t * lv_group_get_user_data(lv_group_t * group)
+LV_FUNC_ATTR lv_group_user_data_t * lv_group_get_user_data(lv_group_t * group)
 {
     return &group->user_data;
 }
@@ -439,7 +439,7 @@ LV_FUNC_CORE_GROUP_ATTR lv_group_user_data_t * lv_group_get_user_data(lv_group_t
  * @param group pointer to a group
  * @return pointer to the style modifier function
  */
-LV_FUNC_CORE_GROUP_ATTR lv_group_style_mod_cb_t lv_group_get_style_mod_cb(const lv_group_t * group)
+LV_FUNC_ATTR lv_group_style_mod_cb_t lv_group_get_style_mod_cb(const lv_group_t * group)
 {
     if(!group) return false;
     return group->style_mod_cb;
@@ -450,7 +450,7 @@ LV_FUNC_CORE_GROUP_ATTR lv_group_style_mod_cb_t lv_group_get_style_mod_cb(const 
  * @param group pointer to a group
  * @return pointer to the style modifier function
  */
-LV_FUNC_CORE_GROUP_ATTR lv_group_style_mod_cb_t lv_group_get_style_mod_edit_cb(const lv_group_t * group)
+LV_FUNC_ATTR lv_group_style_mod_cb_t lv_group_get_style_mod_edit_cb(const lv_group_t * group)
 {
     if(!group) return false;
     return group->style_mod_edit_cb;
@@ -461,7 +461,7 @@ LV_FUNC_CORE_GROUP_ATTR lv_group_style_mod_cb_t lv_group_get_style_mod_edit_cb(c
  * @param group pointer to a group
  * @return the call back function or NULL if not set
  */
-LV_FUNC_CORE_GROUP_ATTR lv_group_focus_cb_t lv_group_get_focus_cb(const lv_group_t * group)
+LV_FUNC_ATTR lv_group_focus_cb_t lv_group_get_focus_cb(const lv_group_t * group)
 {
     if(!group) return false;
     return group->focus_cb;
@@ -472,7 +472,7 @@ LV_FUNC_CORE_GROUP_ATTR lv_group_focus_cb_t lv_group_get_focus_cb(const lv_group
  * @param group pointer to group
  * @return true: edit mode; false: navigate mode
  */
-LV_FUNC_CORE_GROUP_ATTR bool lv_group_get_editing(const lv_group_t * group)
+LV_FUNC_ATTR bool lv_group_get_editing(const lv_group_t * group)
 {
     if(!group) return false;
     return group->editing ? true : false;
@@ -483,7 +483,7 @@ LV_FUNC_CORE_GROUP_ATTR bool lv_group_get_editing(const lv_group_t * group)
  * @param group pointer to group
  * @return true: `click_focus` is enabled; false: disabled
  */
-LV_FUNC_CORE_GROUP_ATTR bool lv_group_get_click_focus(const lv_group_t * group)
+LV_FUNC_ATTR bool lv_group_get_click_focus(const lv_group_t * group)
 {
     if(!group) return false;
     return group->click_focus ? true : false;
@@ -494,7 +494,7 @@ LV_FUNC_CORE_GROUP_ATTR bool lv_group_get_click_focus(const lv_group_t * group)
  * @param group pointer to group
  * @param en: true: wrapping enabled; false: wrapping disabled
  */
-LV_FUNC_CORE_GROUP_ATTR bool lv_group_get_wrap(lv_group_t * group)
+LV_FUNC_ATTR bool lv_group_get_wrap(lv_group_t * group)
 {
     if(!group) return false;
     return group->wrap ? true : false;
@@ -505,7 +505,7 @@ LV_FUNC_CORE_GROUP_ATTR bool lv_group_get_wrap(lv_group_t * group)
  * refreshed.
  * @param group pointer to group. If NULL then all groups are notified.
  */
-LV_FUNC_CORE_GROUP_ATTR void lv_group_report_style_mod(lv_group_t * group)
+LV_FUNC_ATTR void lv_group_report_style_mod(lv_group_t * group)
 {
     lv_theme_t * th = lv_theme_get_current();
 
@@ -525,7 +525,7 @@ LV_FUNC_CORE_GROUP_ATTR void lv_group_report_style_mod(lv_group_t * group)
  *   STATIC FUNCTIONS
  **********************/
 
-LV_FUNC_CORE_GROUP_ATTR static void lv_group_refocus(lv_group_t * g)
+LV_FUNC_ATTR static void lv_group_refocus(lv_group_t * g)
 {
     /*Refocus must temporarily allow wrapping to work correctly*/
     uint8_t temp_wrap = g->wrap;
@@ -544,7 +544,7 @@ LV_FUNC_CORE_GROUP_ATTR static void lv_group_refocus(lv_group_t * g)
  * @param group pointer to the caller group
  * @param style pointer to a style to modify. (Typically group.style_tmp) It will be OVERWRITTEN.
  */
-LV_FUNC_CORE_GROUP_ATTR static void style_mod_def(lv_group_t * group, lv_style_t * style)
+LV_FUNC_ATTR static void style_mod_def(lv_group_t * group, lv_style_t * style)
 {
     (void)group; /*Unused*/
 #if LV_COLOR_DEPTH != 1
@@ -580,7 +580,7 @@ LV_FUNC_CORE_GROUP_ATTR static void style_mod_def(lv_group_t * group, lv_style_t
  * @param group pointer to the caller group
  * @param style pointer to a style to modify. (Typically group.style_tmp) It will be OVERWRITTEN.
  */
-LV_FUNC_CORE_GROUP_ATTR static void style_mod_edit_def(lv_group_t * group, lv_style_t * style)
+LV_FUNC_ATTR static void style_mod_edit_def(lv_group_t * group, lv_style_t * style)
 {
     (void)group; /*Unused*/
 #if LV_COLOR_DEPTH != 1
@@ -612,7 +612,7 @@ LV_FUNC_CORE_GROUP_ATTR static void style_mod_edit_def(lv_group_t * group, lv_st
 #endif
 }
 
-LV_FUNC_CORE_GROUP_ATTR static void refresh_theme(lv_group_t * g, lv_theme_t * th)
+LV_FUNC_ATTR static void refresh_theme(lv_group_t * g, lv_theme_t * th)
 {
     g->style_mod_cb      = style_mod_def;
     g->style_mod_edit_cb = style_mod_edit_def;
@@ -622,7 +622,7 @@ LV_FUNC_CORE_GROUP_ATTR static void refresh_theme(lv_group_t * g, lv_theme_t * t
     }
 }
 
-LV_FUNC_CORE_GROUP_ATTR static void focus_next_core(lv_group_t * group, void * (*begin)(const lv_ll_t *),
+LV_FUNC_ATTR static void focus_next_core(lv_group_t * group, void * (*begin)(const lv_ll_t *),
                             void * (*move)(const lv_ll_t *, const void *))
 {
     if(group->frozen) return;
@@ -688,7 +688,7 @@ LV_FUNC_CORE_GROUP_ATTR static void focus_next_core(lv_group_t * group, void * (
     if(group->focus_cb) group->focus_cb(group);
 }
 
-LV_FUNC_CORE_GROUP_ATTR static void obj_to_foreground(lv_obj_t * obj)
+LV_FUNC_ATTR static void obj_to_foreground(lv_obj_t * obj)
 {
     /*Search for 'top' attribute*/
     lv_obj_t * i        = obj;

@@ -35,7 +35,7 @@ static void lv_async_task_cb(lv_task_t *task);
  *   GLOBAL FUNCTIONS
  **********************/
 
-LV_FUNC_MISC_ASYNC_ATTR lv_res_t lv_async_call(lv_async_cb_t async_xcb, void * user_data)
+LV_FUNC_ATTR lv_res_t lv_async_call(lv_async_cb_t async_xcb, void * user_data)
 {
     /*Allocate an info structure */
     lv_async_info_t *info = lv_mem_alloc(sizeof(lv_async_info_t));
@@ -65,7 +65,7 @@ LV_FUNC_MISC_ASYNC_ATTR lv_res_t lv_async_call(lv_async_cb_t async_xcb, void * u
  *   STATIC FUNCTIONS
  **********************/
 
-LV_FUNC_MISC_ASYNC_ATTR static void lv_async_task_cb(lv_task_t *task)
+LV_FUNC_ATTR static void lv_async_task_cb(lv_task_t *task)
 {
     lv_async_info_t *info = (lv_async_info_t *)task->user_data;
     

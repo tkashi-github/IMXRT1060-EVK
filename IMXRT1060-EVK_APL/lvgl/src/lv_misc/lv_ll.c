@@ -47,7 +47,7 @@ static void node_set_next(lv_ll_t * ll_p, lv_ll_node_t * act, lv_ll_node_t * nex
  * @param ll_dsc pointer to ll_dsc variable
  * @param node_size the size of 1 node in bytes
  */
-LV_FUNC_MISC_LL_ATTR void lv_ll_init(lv_ll_t * ll_p, uint32_t node_size)
+LV_FUNC_ATTR void lv_ll_init(lv_ll_t * ll_p, uint32_t node_size)
 {
     ll_p->head = NULL;
     ll_p->tail = NULL;
@@ -73,7 +73,7 @@ LV_FUNC_MISC_LL_ATTR void lv_ll_init(lv_ll_t * ll_p, uint32_t node_size)
  * @param ll_p pointer to linked list
  * @return pointer to the new head
  */
-LV_FUNC_MISC_LL_ATTR void * lv_ll_ins_head(lv_ll_t * ll_p)
+LV_FUNC_ATTR void * lv_ll_ins_head(lv_ll_t * ll_p)
 {
     lv_ll_node_t * n_new;
 
@@ -102,7 +102,7 @@ LV_FUNC_MISC_LL_ATTR void * lv_ll_ins_head(lv_ll_t * ll_p)
  * @param n_act pointer a node
  * @return pointer to the new head
  */
-LV_FUNC_MISC_LL_ATTR void * lv_ll_ins_prev(lv_ll_t * ll_p, void * n_act)
+LV_FUNC_ATTR void * lv_ll_ins_prev(lv_ll_t * ll_p, void * n_act)
 {
     lv_ll_node_t * n_new;
     lv_ll_node_t * n_prev;
@@ -131,7 +131,7 @@ LV_FUNC_MISC_LL_ATTR void * lv_ll_ins_prev(lv_ll_t * ll_p, void * n_act)
  * @param ll_p pointer to linked list
  * @return pointer to the new tail
  */
-LV_FUNC_MISC_LL_ATTR void * lv_ll_ins_tail(lv_ll_t * ll_p)
+LV_FUNC_ATTR void * lv_ll_ins_tail(lv_ll_t * ll_p)
 {
     lv_ll_node_t * n_new;
 
@@ -160,7 +160,7 @@ LV_FUNC_MISC_LL_ATTR void * lv_ll_ins_tail(lv_ll_t * ll_p)
  * @param ll_p pointer to the linked list of 'node_p'
  * @param node_p pointer to node in 'll_p' linked list
  */
-LV_FUNC_MISC_LL_ATTR void lv_ll_rem(lv_ll_t * ll_p, void * node_p)
+LV_FUNC_ATTR void lv_ll_rem(lv_ll_t * ll_p, void * node_p)
 {
     if(lv_ll_get_head(ll_p) == node_p) {
         /*The new head will be the node after 'n_act'*/
@@ -191,7 +191,7 @@ LV_FUNC_MISC_LL_ATTR void lv_ll_rem(lv_ll_t * ll_p, void * node_p)
  * Remove and free all elements from a linked list. The list remain valid but become empty.
  * @param ll_p pointer to linked list
  */
-LV_FUNC_MISC_LL_ATTR void lv_ll_clear(lv_ll_t * ll_p)
+LV_FUNC_ATTR void lv_ll_clear(lv_ll_t * ll_p)
 {
     void * i;
     void * i_next;
@@ -217,7 +217,7 @@ LV_FUNC_MISC_LL_ATTR void lv_ll_clear(lv_ll_t * ll_p)
  * @param head true: be the head in the new list
  *             false be the head in the new list
  */
-LV_FUNC_MISC_LL_ATTR void lv_ll_chg_list(lv_ll_t * ll_ori_p, lv_ll_t * ll_new_p, void * node, bool head)
+LV_FUNC_ATTR void lv_ll_chg_list(lv_ll_t * ll_ori_p, lv_ll_t * ll_new_p, void * node, bool head)
 {
     lv_ll_rem(ll_ori_p, node);
 
@@ -255,7 +255,7 @@ LV_FUNC_MISC_LL_ATTR void lv_ll_chg_list(lv_ll_t * ll_ori_p, lv_ll_t * ll_new_p,
  * @param ll_p pointer to linked list
  * @return pointer to the head of 'll_p'
  */
-LV_FUNC_MISC_LL_ATTR void * lv_ll_get_head(const lv_ll_t * ll_p)
+LV_FUNC_ATTR void * lv_ll_get_head(const lv_ll_t * ll_p)
 {
     void * head = NULL;
 
@@ -271,7 +271,7 @@ LV_FUNC_MISC_LL_ATTR void * lv_ll_get_head(const lv_ll_t * ll_p)
  * @param ll_p pointer to linked list
  * @return pointer to the head of 'll_p'
  */
-LV_FUNC_MISC_LL_ATTR void * lv_ll_get_tail(const lv_ll_t * ll_p)
+LV_FUNC_ATTR void * lv_ll_get_tail(const lv_ll_t * ll_p)
 {
     void * tail = NULL;
 
@@ -288,7 +288,7 @@ LV_FUNC_MISC_LL_ATTR void * lv_ll_get_tail(const lv_ll_t * ll_p)
  * @param n_act pointer a node
  * @return pointer to the next node
  */
-LV_FUNC_MISC_LL_ATTR void * lv_ll_get_next(const lv_ll_t * ll_p, const void * n_act)
+LV_FUNC_ATTR void * lv_ll_get_next(const lv_ll_t * ll_p, const void * n_act)
 {
     void * next = NULL;
 
@@ -306,7 +306,7 @@ LV_FUNC_MISC_LL_ATTR void * lv_ll_get_next(const lv_ll_t * ll_p, const void * n_
  * @param n_act pointer a node
  * @return pointer to the previous node
  */
-LV_FUNC_MISC_LL_ATTR void * lv_ll_get_prev(const lv_ll_t * ll_p, const void * n_act)
+LV_FUNC_ATTR void * lv_ll_get_prev(const lv_ll_t * ll_p, const void * n_act)
 {
     void * prev = NULL;
 
@@ -323,7 +323,7 @@ LV_FUNC_MISC_LL_ATTR void * lv_ll_get_prev(const lv_ll_t * ll_p, const void * n_
  * @param ll_p pointer to linked list
  * @return length of the linked list
  */
-LV_FUNC_MISC_LL_ATTR uint32_t lv_ll_get_len(const lv_ll_t * ll_p)
+LV_FUNC_ATTR uint32_t lv_ll_get_len(const lv_ll_t * ll_p)
 {
     uint32_t len = 0;
     void * node;
@@ -335,7 +335,7 @@ LV_FUNC_MISC_LL_ATTR uint32_t lv_ll_get_len(const lv_ll_t * ll_p)
     return len;
 }
 
-LV_FUNC_MISC_LL_ATTR void lv_ll_swap(lv_ll_t * ll_p, void * n1_p, void * n2_p)
+LV_FUNC_ATTR void lv_ll_swap(lv_ll_t * ll_p, void * n1_p, void * n2_p)
 {
     (void)(ll_p);
     (void)(n1_p);
@@ -349,7 +349,7 @@ LV_FUNC_MISC_LL_ATTR void lv_ll_swap(lv_ll_t * ll_p, void * n1_p, void * n2_p)
  * @param n_act pointer to node to move
  * @param n_after pointer to a node which should be after `n_act`
  */
-LV_FUNC_MISC_LL_ATTR void lv_ll_move_before(lv_ll_t * ll_p, void * n_act, void * n_after)
+LV_FUNC_ATTR void lv_ll_move_before(lv_ll_t * ll_p, void * n_act, void * n_after)
 {
     if(n_act == n_after) return; /*Can't move before itself*/
 
@@ -382,7 +382,7 @@ LV_FUNC_MISC_LL_ATTR void lv_ll_move_before(lv_ll_t * ll_p, void * n_act, void *
  * @param ll_p pointer to a linked list
  * @return true: the linked list is empty; false: not empty
  */
-LV_FUNC_MISC_LL_ATTR bool lv_ll_is_empty(lv_ll_t * ll_p)
+LV_FUNC_ATTR bool lv_ll_is_empty(lv_ll_t * ll_p)
 {
     if(ll_p == NULL) return true;
 
@@ -401,7 +401,7 @@ LV_FUNC_MISC_LL_ATTR bool lv_ll_is_empty(lv_ll_t * ll_p)
  * @param act pointer to a node which prev. node pointer should be set
  * @param prev pointer to a node which should be the previous node before 'act'
  */
-LV_FUNC_MISC_LL_ATTR static void node_set_prev(lv_ll_t * ll_p, lv_ll_node_t * act, lv_ll_node_t * prev)
+LV_FUNC_ATTR static void node_set_prev(lv_ll_t * ll_p, lv_ll_node_t * act, lv_ll_node_t * prev)
 {
     if(act == NULL) return; /*Can't set the prev node of `NULL`*/
 
@@ -418,7 +418,7 @@ LV_FUNC_MISC_LL_ATTR static void node_set_prev(lv_ll_t * ll_p, lv_ll_node_t * ac
  * @param act pointer to a node which next node pointer should be set
  * @param next pointer to a node which should be the next node before 'act'
  */
-LV_FUNC_MISC_LL_ATTR static void node_set_next(lv_ll_t * ll_p, lv_ll_node_t * act, lv_ll_node_t * next)
+LV_FUNC_ATTR static void node_set_next(lv_ll_t * ll_p, lv_ll_node_t * act, lv_ll_node_t * next)
 {
     if(act == NULL) return; /*Can't set the next node of `NULL`*/
 

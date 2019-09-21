@@ -38,8 +38,8 @@ static void lv_bar_anim_ready(lv_anim_t * a);
 /**********************
  *  STATIC VARIABLES
  **********************/
-LV_VAL_OBJX_BAR_ATTR static lv_design_cb_t ancestor_design_f;
-LV_VAL_OBJX_BAR_ATTR static lv_signal_cb_t ancestor_signal;
+LV_BSS_ATTR static lv_design_cb_t ancestor_design_f;
+LV_BSS_ATTR static lv_signal_cb_t ancestor_signal;
 
 /**********************
  *      MACROS
@@ -55,7 +55,7 @@ LV_VAL_OBJX_BAR_ATTR static lv_signal_cb_t ancestor_signal;
  * @param copy pointer to a bar object, if not NULL then the new object will be copied from it
  * @return pointer to the created bar
  */
-LV_FUNC_OBJX_BAR_ATTR lv_obj_t * lv_bar_create(lv_obj_t * par, const lv_obj_t * copy)
+LV_FUNC_ATTR lv_obj_t * lv_bar_create(lv_obj_t * par, const lv_obj_t * copy)
 {
     LV_LOG_TRACE("lv_bar create started");
 
@@ -128,7 +128,7 @@ LV_FUNC_OBJX_BAR_ATTR lv_obj_t * lv_bar_create(lv_obj_t * par, const lv_obj_t * 
  * @param value new value
  * @param anim LV_ANIM_ON: set the value with an animation; LV_ANIM_OFF: change the value immediatelly
  */
-LV_FUNC_OBJX_BAR_ATTR void lv_bar_set_value(lv_obj_t * bar, int16_t value, lv_anim_enable_t anim)
+LV_FUNC_ATTR void lv_bar_set_value(lv_obj_t * bar, int16_t value, lv_anim_enable_t anim)
 {
 #if LV_USE_ANIMATION == 0
     anim = false;
@@ -183,7 +183,7 @@ LV_FUNC_OBJX_BAR_ATTR void lv_bar_set_value(lv_obj_t * bar, int16_t value, lv_an
  * @param min minimum value
  * @param max maximum value
  */
-LV_FUNC_OBJX_BAR_ATTR void lv_bar_set_range(lv_obj_t * bar, int16_t min, int16_t max)
+LV_FUNC_ATTR void lv_bar_set_range(lv_obj_t * bar, int16_t min, int16_t max)
 {
     lv_bar_ext_t * ext = lv_obj_get_ext_attr(bar);
     if(ext->min_value == min && ext->max_value == max) return;
@@ -207,7 +207,7 @@ LV_FUNC_OBJX_BAR_ATTR void lv_bar_set_range(lv_obj_t * bar, int16_t min, int16_t
  * @param bar pointer to a bar object
  * @param en true: enable disable symmetric behavior; false: disable
  */
-LV_FUNC_OBJX_BAR_ATTR void lv_bar_set_sym(lv_obj_t * bar, bool en)
+LV_FUNC_ATTR void lv_bar_set_sym(lv_obj_t * bar, bool en)
 {
     lv_bar_ext_t * ext = lv_obj_get_ext_attr(bar);
     ext->sym           = en ? 1 : 0;
@@ -218,7 +218,7 @@ LV_FUNC_OBJX_BAR_ATTR void lv_bar_set_sym(lv_obj_t * bar, bool en)
  * @param bar pointer to a bar object
  * @param anim_time the animation time in milliseconds.
  */
-LV_FUNC_OBJX_BAR_ATTR void lv_bar_set_anim_time(lv_obj_t * bar, uint16_t anim_time)
+LV_FUNC_ATTR void lv_bar_set_anim_time(lv_obj_t * bar, uint16_t anim_time)
 {
 #if LV_USE_ANIMATION
     lv_bar_ext_t * ext = lv_obj_get_ext_attr(bar);
@@ -235,7 +235,7 @@ LV_FUNC_OBJX_BAR_ATTR void lv_bar_set_anim_time(lv_obj_t * bar, uint16_t anim_ti
  * @param type which style should be set
  * @param style pointer to a style
  */
-LV_FUNC_OBJX_BAR_ATTR void lv_bar_set_style(lv_obj_t * bar, lv_bar_style_t type, const lv_style_t * style)
+LV_FUNC_ATTR void lv_bar_set_style(lv_obj_t * bar, lv_bar_style_t type, const lv_style_t * style)
 {
     lv_bar_ext_t * ext = lv_obj_get_ext_attr(bar);
 
@@ -257,7 +257,7 @@ LV_FUNC_OBJX_BAR_ATTR void lv_bar_set_style(lv_obj_t * bar, lv_bar_style_t type,
  * @param bar pointer to a bar object
  * @return the value of the bar
  */
-LV_FUNC_OBJX_BAR_ATTR int16_t lv_bar_get_value(const lv_obj_t * bar)
+LV_FUNC_ATTR int16_t lv_bar_get_value(const lv_obj_t * bar)
 {
     lv_bar_ext_t * ext = lv_obj_get_ext_attr(bar);
     /*If animated tell that it's already at the end value*/
@@ -273,7 +273,7 @@ LV_FUNC_OBJX_BAR_ATTR int16_t lv_bar_get_value(const lv_obj_t * bar)
  * @param bar pointer to a bar object
  * @return the minimum value of the bar
  */
-LV_FUNC_OBJX_BAR_ATTR int16_t lv_bar_get_min_value(const lv_obj_t * bar)
+LV_FUNC_ATTR int16_t lv_bar_get_min_value(const lv_obj_t * bar)
 {
     lv_bar_ext_t * ext = lv_obj_get_ext_attr(bar);
     return ext->min_value;
@@ -284,7 +284,7 @@ LV_FUNC_OBJX_BAR_ATTR int16_t lv_bar_get_min_value(const lv_obj_t * bar)
  * @param bar pointer to a bar object
  * @return the maximum value of the bar
  */
-LV_FUNC_OBJX_BAR_ATTR int16_t lv_bar_get_max_value(const lv_obj_t * bar)
+LV_FUNC_ATTR int16_t lv_bar_get_max_value(const lv_obj_t * bar)
 {
     lv_bar_ext_t * ext = lv_obj_get_ext_attr(bar);
     return ext->max_value;
@@ -295,7 +295,7 @@ LV_FUNC_OBJX_BAR_ATTR int16_t lv_bar_get_max_value(const lv_obj_t * bar)
  * @param bar pointer to a bar object
  * @return true: symmetric is enabled; false: disable
  */
-LV_FUNC_OBJX_BAR_ATTR bool lv_bar_get_sym(lv_obj_t * bar)
+LV_FUNC_ATTR bool lv_bar_get_sym(lv_obj_t * bar)
 {
     lv_bar_ext_t * ext = lv_obj_get_ext_attr(bar);
     return ext->sym ? true : false;
@@ -306,7 +306,7 @@ LV_FUNC_OBJX_BAR_ATTR bool lv_bar_get_sym(lv_obj_t * bar)
  * @param bar pointer to a bar object
  * @return the animation time in milliseconds.
  */
-LV_FUNC_OBJX_BAR_ATTR uint16_t lv_bar_get_anim_time(lv_obj_t * bar)
+LV_FUNC_ATTR uint16_t lv_bar_get_anim_time(lv_obj_t * bar)
 {
 #if LV_USE_ANIMATION
     lv_bar_ext_t * ext = lv_obj_get_ext_attr(bar);
@@ -323,7 +323,7 @@ LV_FUNC_OBJX_BAR_ATTR uint16_t lv_bar_get_anim_time(lv_obj_t * bar)
  * @param type which style should be get
  * @return style pointer to a style
  */
-LV_FUNC_OBJX_BAR_ATTR const lv_style_t * lv_bar_get_style(const lv_obj_t * bar, lv_bar_style_t type)
+LV_FUNC_ATTR const lv_style_t * lv_bar_get_style(const lv_obj_t * bar, lv_bar_style_t type)
 {
     const lv_style_t * style = NULL;
     lv_bar_ext_t * ext       = lv_obj_get_ext_attr(bar);
@@ -351,7 +351,7 @@ LV_FUNC_OBJX_BAR_ATTR const lv_style_t * lv_bar_get_style(const lv_obj_t * bar, 
  *             LV_DESIGN_DRAW_POST: drawing after every children are drawn
  * @param return true/false, depends on 'mode'
  */
-LV_FUNC_OBJX_BAR_ATTR static bool lv_bar_design(lv_obj_t * bar, const lv_area_t * mask, lv_design_mode_t mode)
+LV_FUNC_ATTR static bool lv_bar_design(lv_obj_t * bar, const lv_area_t * mask, lv_design_mode_t mode)
 {
     if(mode == LV_DESIGN_COVER_CHK) {
         /*Return false if the object is not covers the mask area*/
@@ -488,7 +488,7 @@ LV_FUNC_OBJX_BAR_ATTR static bool lv_bar_design(lv_obj_t * bar, const lv_area_t 
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-LV_FUNC_OBJX_BAR_ATTR static lv_res_t lv_bar_signal(lv_obj_t * bar, lv_signal_t sign, void * param)
+LV_FUNC_ATTR static lv_res_t lv_bar_signal(lv_obj_t * bar, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 
@@ -512,14 +512,14 @@ LV_FUNC_OBJX_BAR_ATTR static lv_res_t lv_bar_signal(lv_obj_t * bar, lv_signal_t 
 }
 
 #if LV_USE_ANIMATION
-LV_FUNC_OBJX_BAR_ATTR static void lv_bar_anim(void * bar, lv_anim_value_t value)
+LV_FUNC_ATTR static void lv_bar_anim(void * bar, lv_anim_value_t value)
 {
     lv_bar_ext_t * ext = lv_obj_get_ext_attr(bar);
     ext->anim_state    = value;
     lv_obj_invalidate(bar);
 }
 
-LV_FUNC_OBJX_BAR_ATTR static void lv_bar_anim_ready(lv_anim_t * a)
+LV_FUNC_ATTR static void lv_bar_anim_ready(lv_anim_t * a)
 {
     lv_bar_ext_t * ext = lv_obj_get_ext_attr(a->var);
     ext->anim_state    = LV_BAR_ANIM_STATE_INV;

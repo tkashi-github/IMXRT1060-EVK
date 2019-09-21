@@ -33,8 +33,8 @@ static void refr_size(lv_obj_t * table);
 /**********************
  *  STATIC VARIABLES
  **********************/
-LV_VAL_OBJX_TABLE_ATTR static lv_signal_cb_t ancestor_signal;
-LV_VAL_OBJX_TABLE_ATTR static lv_design_cb_t ancestor_scrl_design;
+LV_BSS_ATTR static lv_signal_cb_t ancestor_signal;
+LV_BSS_ATTR static lv_design_cb_t ancestor_scrl_design;
 
 /**********************
  *      MACROS
@@ -50,7 +50,7 @@ LV_VAL_OBJX_TABLE_ATTR static lv_design_cb_t ancestor_scrl_design;
  * @param copy pointer to a table object, if not NULL then the new object will be copied from it
  * @return pointer to the created table
  */
-LV_FUNC_OBJX_TABLE_ATTR lv_obj_t * lv_table_create(lv_obj_t * par, const lv_obj_t * copy)
+LV_FUNC_ATTR lv_obj_t * lv_table_create(lv_obj_t * par, const lv_obj_t * copy)
 {
     LV_LOG_TRACE("table create started");
 
@@ -130,7 +130,7 @@ LV_FUNC_OBJX_TABLE_ATTR lv_obj_t * lv_table_create(lv_obj_t * par, const lv_obj_
  * @param txt text to display in the cell. It will be copied and saved so this variable is not
  * required after this function call.
  */
-LV_FUNC_OBJX_TABLE_ATTR void lv_table_set_cell_value(lv_obj_t * table, uint16_t row, uint16_t col, const char * txt)
+LV_FUNC_ATTR void lv_table_set_cell_value(lv_obj_t * table, uint16_t row, uint16_t col, const char * txt)
 {
     lv_table_ext_t * ext = lv_obj_get_ext_attr(table);
     if(row >= ext->row_cnt || col >= ext->col_cnt) {
@@ -163,7 +163,7 @@ LV_FUNC_OBJX_TABLE_ATTR void lv_table_set_cell_value(lv_obj_t * table, uint16_t 
  * @param table table pointer to a Table object
  * @param row_cnt number of rows
  */
-LV_FUNC_OBJX_TABLE_ATTR void lv_table_set_row_cnt(lv_obj_t * table, uint16_t row_cnt)
+LV_FUNC_ATTR void lv_table_set_row_cnt(lv_obj_t * table, uint16_t row_cnt)
 {
     lv_table_ext_t * ext = lv_obj_get_ext_attr(table);
     uint16_t old_row_cnt = ext->row_cnt;
@@ -191,7 +191,7 @@ LV_FUNC_OBJX_TABLE_ATTR void lv_table_set_row_cnt(lv_obj_t * table, uint16_t row
  * @param table table pointer to a Table object
  * @param col_cnt number of columns. Must be < LV_TABLE_COL_MAX
  */
-LV_FUNC_OBJX_TABLE_ATTR void lv_table_set_col_cnt(lv_obj_t * table, uint16_t col_cnt)
+LV_FUNC_ATTR void lv_table_set_col_cnt(lv_obj_t * table, uint16_t col_cnt)
 {
 
     if(col_cnt >= LV_TABLE_COL_MAX) {
@@ -225,7 +225,7 @@ LV_FUNC_OBJX_TABLE_ATTR void lv_table_set_col_cnt(lv_obj_t * table, uint16_t col
  * @param col_id id of the column [0 .. LV_TABLE_COL_MAX -1]
  * @param w width of the column
  */
-LV_FUNC_OBJX_TABLE_ATTR void lv_table_set_col_width(lv_obj_t * table, uint16_t col_id, lv_coord_t w)
+LV_FUNC_ATTR void lv_table_set_col_width(lv_obj_t * table, uint16_t col_id, lv_coord_t w)
 {
     if(col_id >= LV_TABLE_COL_MAX) {
         LV_LOG_WARN("lv_table_set_col_width: too big 'col_id'. Must be < LV_TABLE_COL_MAX.");
@@ -244,7 +244,7 @@ LV_FUNC_OBJX_TABLE_ATTR void lv_table_set_col_width(lv_obj_t * table, uint16_t c
  * @param col id of the column [0 .. col_cnt -1]
  * @param align LV_LABEL_ALIGN_LEFT or LV_LABEL_ALIGN_CENTER or LV_LABEL_ALIGN_RIGHT
  */
-LV_FUNC_OBJX_TABLE_ATTR void lv_table_set_cell_align(lv_obj_t * table, uint16_t row, uint16_t col, lv_label_align_t align)
+LV_FUNC_ATTR void lv_table_set_cell_align(lv_obj_t * table, uint16_t row, uint16_t col, lv_label_align_t align)
 {
     lv_table_ext_t * ext = lv_obj_get_ext_attr(table);
     if(row >= ext->row_cnt || col >= ext->col_cnt) {
@@ -272,7 +272,7 @@ LV_FUNC_OBJX_TABLE_ATTR void lv_table_set_cell_align(lv_obj_t * table, uint16_t 
  * @param col id of the column [0 .. col_cnt -1]
  * @param type 1,2,3 or 4. The cell style will be chosen accordingly.
  */
-LV_FUNC_OBJX_TABLE_ATTR void lv_table_set_cell_type(lv_obj_t * table, uint16_t row, uint16_t col, uint8_t type)
+LV_FUNC_ATTR void lv_table_set_cell_type(lv_obj_t * table, uint16_t row, uint16_t col, uint8_t type)
 {
     lv_table_ext_t * ext = lv_obj_get_ext_attr(table);
     if(row >= ext->row_cnt || col >= ext->col_cnt) {
@@ -303,7 +303,7 @@ LV_FUNC_OBJX_TABLE_ATTR void lv_table_set_cell_type(lv_obj_t * table, uint16_t r
  * @param col id of the column [0 .. col_cnt -1]
  * @param crop true: crop the cell content; false: set the cell height to the content.
  */
-LV_FUNC_OBJX_TABLE_ATTR void lv_table_set_cell_crop(lv_obj_t * table, uint16_t row, uint16_t col, bool crop)
+LV_FUNC_ATTR void lv_table_set_cell_crop(lv_obj_t * table, uint16_t row, uint16_t col, bool crop)
 {
     lv_table_ext_t * ext = lv_obj_get_ext_attr(table);
     if(row >= ext->row_cnt || col >= ext->col_cnt) {
@@ -331,7 +331,7 @@ LV_FUNC_OBJX_TABLE_ATTR void lv_table_set_cell_crop(lv_obj_t * table, uint16_t r
  * @param col id of the column [0 .. col_cnt -1]
  * @param en true: merge right; false: don't merge right
  */
-LV_FUNC_OBJX_TABLE_ATTR void lv_table_set_cell_merge_right(lv_obj_t * table, uint16_t row, uint16_t col, bool en)
+LV_FUNC_ATTR void lv_table_set_cell_merge_right(lv_obj_t * table, uint16_t row, uint16_t col, bool en)
 {
     lv_table_ext_t * ext = lv_obj_get_ext_attr(table);
     if(row >= ext->row_cnt || col >= ext->col_cnt) {
@@ -360,7 +360,7 @@ LV_FUNC_OBJX_TABLE_ATTR void lv_table_set_cell_merge_right(lv_obj_t * table, uin
  * @param type which style should be set
  * @param style pointer to a style
  */
-LV_FUNC_OBJX_TABLE_ATTR void lv_table_set_style(lv_obj_t * table, lv_table_style_t type, const lv_style_t * style)
+LV_FUNC_ATTR void lv_table_set_style(lv_obj_t * table, lv_table_style_t type, const lv_style_t * style)
 {
     lv_table_ext_t * ext = lv_obj_get_ext_attr(table);
 
@@ -399,7 +399,7 @@ LV_FUNC_OBJX_TABLE_ATTR void lv_table_set_style(lv_obj_t * table, lv_table_style
  * @param col id of the column [0 .. col_cnt -1]
  * @return text in the cell
  */
-LV_FUNC_OBJX_TABLE_ATTR const char * lv_table_get_cell_value(lv_obj_t * table, uint16_t row, uint16_t col)
+LV_FUNC_ATTR const char * lv_table_get_cell_value(lv_obj_t * table, uint16_t row, uint16_t col)
 {
     lv_table_ext_t * ext = lv_obj_get_ext_attr(table);
     if(row >= ext->row_cnt || col >= ext->col_cnt) {
@@ -418,7 +418,7 @@ LV_FUNC_OBJX_TABLE_ATTR const char * lv_table_get_cell_value(lv_obj_t * table, u
  * @param table table pointer to a Table object
  * @return number of rows.
  */
-LV_FUNC_OBJX_TABLE_ATTR uint16_t lv_table_get_row_cnt(lv_obj_t * table)
+LV_FUNC_ATTR uint16_t lv_table_get_row_cnt(lv_obj_t * table)
 {
     lv_table_ext_t * ext = lv_obj_get_ext_attr(table);
     return ext->row_cnt;
@@ -429,7 +429,7 @@ LV_FUNC_OBJX_TABLE_ATTR uint16_t lv_table_get_row_cnt(lv_obj_t * table)
  * @param table table pointer to a Table object
  * @return number of columns.
  */
-LV_FUNC_OBJX_TABLE_ATTR uint16_t lv_table_get_col_cnt(lv_obj_t * table)
+LV_FUNC_ATTR uint16_t lv_table_get_col_cnt(lv_obj_t * table)
 {
     lv_table_ext_t * ext = lv_obj_get_ext_attr(table);
     return ext->col_cnt;
@@ -441,7 +441,7 @@ LV_FUNC_OBJX_TABLE_ATTR uint16_t lv_table_get_col_cnt(lv_obj_t * table)
  * @param col_id id of the column [0 .. LV_TABLE_COL_MAX -1]
  * @return width of the column
  */
-LV_FUNC_OBJX_TABLE_ATTR lv_coord_t lv_table_get_col_width(lv_obj_t * table, uint16_t col_id)
+LV_FUNC_ATTR lv_coord_t lv_table_get_col_width(lv_obj_t * table, uint16_t col_id)
 {
     if(col_id >= LV_TABLE_COL_MAX) {
         LV_LOG_WARN("lv_table_set_col_width: too big 'col_id'. Must be < LV_TABLE_COL_MAX.");
@@ -460,7 +460,7 @@ LV_FUNC_OBJX_TABLE_ATTR lv_coord_t lv_table_get_col_width(lv_obj_t * table, uint
  * @return LV_LABEL_ALIGN_LEFT (default in case of error) or LV_LABEL_ALIGN_CENTER or
  * LV_LABEL_ALIGN_RIGHT
  */
-LV_FUNC_OBJX_TABLE_ATTR lv_label_align_t lv_table_get_cell_align(lv_obj_t * table, uint16_t row, uint16_t col)
+LV_FUNC_ATTR lv_label_align_t lv_table_get_cell_align(lv_obj_t * table, uint16_t row, uint16_t col)
 {
     lv_table_ext_t * ext = lv_obj_get_ext_attr(table);
     if(row >= ext->row_cnt || col >= ext->col_cnt) {
@@ -485,7 +485,7 @@ LV_FUNC_OBJX_TABLE_ATTR lv_label_align_t lv_table_get_cell_align(lv_obj_t * tabl
  * @param col id of the column [0 .. col_cnt -1]
  * @return 1,2,3 or 4
  */
-LV_FUNC_OBJX_TABLE_ATTR lv_label_align_t lv_table_get_cell_type(lv_obj_t * table, uint16_t row, uint16_t col)
+LV_FUNC_ATTR lv_label_align_t lv_table_get_cell_type(lv_obj_t * table, uint16_t row, uint16_t col)
 {
     lv_table_ext_t * ext = lv_obj_get_ext_attr(table);
     if(row >= ext->row_cnt || col >= ext->col_cnt) {
@@ -510,7 +510,7 @@ LV_FUNC_OBJX_TABLE_ATTR lv_label_align_t lv_table_get_cell_type(lv_obj_t * table
  * @param col id of the column [0 .. col_cnt -1]
  * @return true: text crop enabled; false: disabled
  */
-LV_FUNC_OBJX_TABLE_ATTR lv_label_align_t lv_table_get_cell_crop(lv_obj_t * table, uint16_t row, uint16_t col)
+LV_FUNC_ATTR lv_label_align_t lv_table_get_cell_crop(lv_obj_t * table, uint16_t row, uint16_t col)
 {
     lv_table_ext_t * ext = lv_obj_get_ext_attr(table);
     if(row >= ext->row_cnt || col >= ext->col_cnt) {
@@ -535,7 +535,7 @@ LV_FUNC_OBJX_TABLE_ATTR lv_label_align_t lv_table_get_cell_crop(lv_obj_t * table
  * @param col id of the column [0 .. col_cnt -1]
  * @return true: merge right; false: don't merge right
  */
-LV_FUNC_OBJX_TABLE_ATTR bool lv_table_get_cell_merge_right(lv_obj_t * table, uint16_t row, uint16_t col)
+LV_FUNC_ATTR bool lv_table_get_cell_merge_right(lv_obj_t * table, uint16_t row, uint16_t col)
 {
     lv_table_ext_t * ext = lv_obj_get_ext_attr(table);
     if(row >= ext->row_cnt || col >= ext->col_cnt) {
@@ -560,7 +560,7 @@ LV_FUNC_OBJX_TABLE_ATTR bool lv_table_get_cell_merge_right(lv_obj_t * table, uin
  * @param type which style should be get
  * @return style pointer to the style
  */
-LV_FUNC_OBJX_TABLE_ATTR const lv_style_t * lv_table_get_style(const lv_obj_t * table, lv_table_style_t type)
+LV_FUNC_ATTR const lv_style_t * lv_table_get_style(const lv_obj_t * table, lv_table_style_t type)
 {
     lv_table_ext_t * ext     = lv_obj_get_ext_attr(table);
     const lv_style_t * style = NULL;
@@ -591,7 +591,7 @@ LV_FUNC_OBJX_TABLE_ATTR const lv_style_t * lv_table_get_style(const lv_obj_t * t
  *             LV_DESIGN_DRAW_POST: drawing after every children are drawn
  * @param return true/false, depends on 'mode'
  */
-LV_FUNC_OBJX_TABLE_ATTR static bool lv_table_design(lv_obj_t * table, const lv_area_t * mask, lv_design_mode_t mode)
+LV_FUNC_ATTR static bool lv_table_design(lv_obj_t * table, const lv_area_t * mask, lv_design_mode_t mode)
 {
     /*Return false if the object is not covers the mask_p area*/
     if(mode == LV_DESIGN_COVER_CHK) {
@@ -734,7 +734,7 @@ LV_FUNC_OBJX_TABLE_ATTR static bool lv_table_design(lv_obj_t * table, const lv_a
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-LV_FUNC_OBJX_TABLE_ATTR static lv_res_t lv_table_signal(lv_obj_t * table, lv_signal_t sign, void * param)
+LV_FUNC_ATTR static lv_res_t lv_table_signal(lv_obj_t * table, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 
@@ -764,7 +764,7 @@ LV_FUNC_OBJX_TABLE_ATTR static lv_res_t lv_table_signal(lv_obj_t * table, lv_sig
     return res;
 }
 
-LV_FUNC_OBJX_TABLE_ATTR static void refr_size(lv_obj_t * table)
+LV_FUNC_ATTR static void refr_size(lv_obj_t * table)
 {
     lv_coord_t h = 0;
     lv_coord_t w = 0;
@@ -788,7 +788,7 @@ LV_FUNC_OBJX_TABLE_ATTR static void refr_size(lv_obj_t * table)
     lv_obj_invalidate(table);
 }
 
-LV_FUNC_OBJX_TABLE_ATTR static lv_coord_t get_row_height(lv_obj_t * table, uint16_t row_id)
+LV_FUNC_ATTR static lv_coord_t get_row_height(lv_obj_t * table, uint16_t row_id)
 {
     lv_table_ext_t * ext = lv_obj_get_ext_attr(table);
     lv_point_t txt_size;

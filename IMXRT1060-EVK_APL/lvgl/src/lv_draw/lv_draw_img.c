@@ -44,7 +44,7 @@ static lv_res_t lv_img_draw_core(const lv_area_t * coords, const lv_area_t * mas
  * @param style style of the image
  * @param opa_scale scale down all opacities by the factor
  */
-LV_FUNC_DRAW_IMAGE_ATTR void lv_draw_img(const lv_area_t * coords, const lv_area_t * mask, const void * src, const lv_style_t * style,
+LV_FUNC_ATTR void lv_draw_img(const lv_area_t * coords, const lv_area_t * mask, const void * src, const lv_style_t * style,
                  lv_opa_t opa_scale)
 {
     if(src == NULL) {
@@ -75,7 +75,7 @@ LV_FUNC_DRAW_IMAGE_ATTR void lv_draw_img(const lv_area_t * coords, const lv_area
  * used.
  * @return color of the point
  */
-LV_FUNC_DRAW_IMAGE_ATTR lv_color_t lv_img_buf_get_px_color(lv_img_dsc_t * dsc, lv_coord_t x, lv_coord_t y, const lv_style_t * style)
+LV_FUNC_ATTR lv_color_t lv_img_buf_get_px_color(lv_img_dsc_t * dsc, lv_coord_t x, lv_coord_t y, const lv_style_t * style)
 {
     lv_color_t p_color = LV_COLOR_BLACK;
     if(x >= dsc->header.w) {
@@ -155,7 +155,7 @@ LV_FUNC_DRAW_IMAGE_ATTR lv_color_t lv_img_buf_get_px_color(lv_img_dsc_t * dsc, l
  * @param y x coordinate of the point to set
  * @return alpha value of the point
  */
-LV_FUNC_DRAW_IMAGE_ATTR lv_opa_t lv_img_buf_get_px_alpha(lv_img_dsc_t * dsc, lv_coord_t x, lv_coord_t y)
+LV_FUNC_ATTR lv_opa_t lv_img_buf_get_px_alpha(lv_img_dsc_t * dsc, lv_coord_t x, lv_coord_t y)
 {
     if(x >= dsc->header.w) {
         x = dsc->header.w - 1;
@@ -228,7 +228,7 @@ LV_FUNC_DRAW_IMAGE_ATTR lv_opa_t lv_img_buf_get_px_alpha(lv_img_dsc_t * dsc, lv_
  * @param y x coordinate of the point to set
  * @param c color of the point
  */
-LV_FUNC_DRAW_IMAGE_ATTR void lv_img_buf_set_px_color(lv_img_dsc_t * dsc, lv_coord_t x, lv_coord_t y, lv_color_t c)
+LV_FUNC_ATTR void lv_img_buf_set_px_color(lv_img_dsc_t * dsc, lv_coord_t x, lv_coord_t y, lv_color_t c)
 {
     uint8_t * buf_u8 = (uint8_t *)dsc->data;
 
@@ -289,7 +289,7 @@ LV_FUNC_DRAW_IMAGE_ATTR void lv_img_buf_set_px_color(lv_img_dsc_t * dsc, lv_coor
  * @param y x coordinate of the point to set
  * @param opa the desired opacity
  */
-LV_FUNC_DRAW_IMAGE_ATTR void lv_img_buf_set_px_alpha(lv_img_dsc_t * dsc, lv_coord_t x, lv_coord_t y, lv_opa_t opa)
+LV_FUNC_ATTR void lv_img_buf_set_px_alpha(lv_img_dsc_t * dsc, lv_coord_t x, lv_coord_t y, lv_opa_t opa)
 {
     uint8_t * buf_u8 = (uint8_t *)dsc->data;
 
@@ -346,7 +346,7 @@ LV_FUNC_DRAW_IMAGE_ATTR void lv_img_buf_set_px_alpha(lv_img_dsc_t * dsc, lv_coor
  *   - for `LV_IMG_CF_INDEXED8`: 0..255
  * @param c the color to set
  */
-LV_FUNC_DRAW_IMAGE_ATTR void lv_img_buf_set_palette(lv_img_dsc_t * dsc, uint8_t id, lv_color_t c)
+LV_FUNC_ATTR void lv_img_buf_set_palette(lv_img_dsc_t * dsc, uint8_t id, lv_color_t c)
 {
     if((dsc->header.cf == LV_IMG_CF_ALPHA_1BIT && id > 1) || (dsc->header.cf == LV_IMG_CF_ALPHA_2BIT && id > 3) ||
        (dsc->header.cf == LV_IMG_CF_ALPHA_4BIT && id > 15) || (dsc->header.cf == LV_IMG_CF_ALPHA_8BIT)) {
@@ -365,7 +365,7 @@ LV_FUNC_DRAW_IMAGE_ATTR void lv_img_buf_set_palette(lv_img_dsc_t * dsc, uint8_t 
  * @param cf a color format (`LV_IMG_CF_...`)
  * @return the pixel size in bits
  */
-LV_FUNC_DRAW_IMAGE_ATTR uint8_t lv_img_color_format_get_px_size(lv_img_cf_t cf)
+LV_FUNC_ATTR uint8_t lv_img_color_format_get_px_size(lv_img_cf_t cf)
 {
     uint8_t px_size = 0;
 
@@ -394,7 +394,7 @@ LV_FUNC_DRAW_IMAGE_ATTR uint8_t lv_img_color_format_get_px_size(lv_img_cf_t cf)
  * @param cf a color format (`LV_IMG_CF_...`)
  * @return true: chroma keyed; false: not chroma keyed
  */
-LV_FUNC_DRAW_IMAGE_ATTR bool lv_img_color_format_is_chroma_keyed(lv_img_cf_t cf)
+LV_FUNC_ATTR bool lv_img_color_format_is_chroma_keyed(lv_img_cf_t cf)
 {
     bool is_chroma_keyed = false;
 
@@ -416,7 +416,7 @@ LV_FUNC_DRAW_IMAGE_ATTR bool lv_img_color_format_is_chroma_keyed(lv_img_cf_t cf)
  * @param cf a color format (`LV_IMG_CF_...`)
  * @return true: has alpha channel; false: doesn't have alpha channel
  */
-LV_FUNC_DRAW_IMAGE_ATTR bool lv_img_color_format_has_alpha(lv_img_cf_t cf)
+LV_FUNC_ATTR bool lv_img_color_format_has_alpha(lv_img_cf_t cf)
 {
     bool has_alpha = false;
 
@@ -441,7 +441,7 @@ LV_FUNC_DRAW_IMAGE_ATTR bool lv_img_color_format_has_alpha(lv_img_cf_t cf)
  *  - or a symbol (e.g. LV_SYMBOL_CLOSE)
  * @return type of the image source LV_IMG_SRC_VARIABLE/FILE/SYMBOL/UNKNOWN
  */
-LV_FUNC_DRAW_IMAGE_ATTR lv_img_src_t lv_img_src_get_type(const void * src)
+LV_FUNC_ATTR lv_img_src_t lv_img_src_get_type(const void * src)
 {
     lv_img_src_t img_src_type = LV_IMG_SRC_UNKNOWN;
 
@@ -468,7 +468,7 @@ LV_FUNC_DRAW_IMAGE_ATTR lv_img_src_t lv_img_src_get_type(const void * src)
  *   STATIC FUNCTIONS
  **********************/
 
-LV_FUNC_DRAW_IMAGE_ATTR static lv_res_t lv_img_draw_core(const lv_area_t * coords, const lv_area_t * mask, const void * src,
+LV_FUNC_ATTR static lv_res_t lv_img_draw_core(const lv_area_t * coords, const lv_area_t * mask, const void * src,
                                  const lv_style_t * style, lv_opa_t opa_scale)
 {
 

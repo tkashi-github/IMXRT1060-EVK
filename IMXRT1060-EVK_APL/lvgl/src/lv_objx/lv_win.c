@@ -29,7 +29,7 @@ static void lv_win_realign(lv_obj_t * win);
 /**********************
  *  STATIC VARIABLES
  **********************/
-LV_VAL_OBJX_WIN_ATTR static lv_signal_cb_t ancestor_signal;
+LV_BSS_ATTR static lv_signal_cb_t ancestor_signal;
 
 /**********************
  *      MACROS
@@ -45,7 +45,7 @@ LV_VAL_OBJX_WIN_ATTR static lv_signal_cb_t ancestor_signal;
  * @param copy pointer to a window object, if not NULL then the new object will be copied from it
  * @return pointer to the created window
  */
-LV_FUNC_OBJX_WIN_ATTR lv_obj_t * lv_win_create(lv_obj_t * par, const lv_obj_t * copy)
+LV_FUNC_ATTR lv_obj_t * lv_win_create(lv_obj_t * par, const lv_obj_t * copy)
 {
     LV_LOG_TRACE("window create started");
 
@@ -148,7 +148,7 @@ LV_FUNC_OBJX_WIN_ATTR lv_obj_t * lv_win_create(lv_obj_t * par, const lv_obj_t * 
  * Delete all children of the scrl object, without deleting scrl child.
  * @param obj pointer to an object
  */
-LV_FUNC_OBJX_WIN_ATTR void lv_win_clean(lv_obj_t * obj)
+LV_FUNC_ATTR void lv_win_clean(lv_obj_t * obj)
 {
     lv_obj_t * scrl = lv_page_get_scrl(obj);
     lv_obj_clean(scrl);
@@ -164,7 +164,7 @@ LV_FUNC_OBJX_WIN_ATTR void lv_win_clean(lv_obj_t * obj)
  * @param img_src an image source ('lv_img_t' variable, path to file or a symbol)
  * @return pointer to the created button object
  */
-LV_FUNC_OBJX_WIN_ATTR lv_obj_t * lv_win_add_btn(lv_obj_t * win, const void * img_src)
+LV_FUNC_ATTR lv_obj_t * lv_win_add_btn(lv_obj_t * win, const void * img_src)
 {
     lv_win_ext_t * ext = lv_obj_get_ext_attr(win);
 
@@ -191,7 +191,7 @@ LV_FUNC_OBJX_WIN_ATTR lv_obj_t * lv_win_add_btn(lv_obj_t * win, const void * img
  * @param btn pointer to the control button on teh widows header
  * @param evet the event type
  */
-LV_FUNC_OBJX_WIN_ATTR void lv_win_close_event_cb(lv_obj_t * btn, lv_event_t event)
+LV_FUNC_ATTR void lv_win_close_event_cb(lv_obj_t * btn, lv_event_t event)
 {
     if(event == LV_EVENT_RELEASED) {
         lv_obj_t * win = lv_win_get_from_btn(btn);
@@ -205,7 +205,7 @@ LV_FUNC_OBJX_WIN_ATTR void lv_win_close_event_cb(lv_obj_t * btn, lv_event_t even
  * @param win pointer to a window object
  * @param title string of the new title
  */
-LV_FUNC_OBJX_WIN_ATTR void lv_win_set_title(lv_obj_t * win, const char * title)
+LV_FUNC_ATTR void lv_win_set_title(lv_obj_t * win, const char * title)
 {
     lv_win_ext_t * ext = lv_obj_get_ext_attr(win);
 
@@ -218,7 +218,7 @@ LV_FUNC_OBJX_WIN_ATTR void lv_win_set_title(lv_obj_t * win, const char * title)
  * @param win pointer to a window object
  * @param size control button size
  */
-LV_FUNC_OBJX_WIN_ATTR void lv_win_set_btn_size(lv_obj_t * win, lv_coord_t size)
+LV_FUNC_ATTR void lv_win_set_btn_size(lv_obj_t * win, lv_coord_t size)
 {
     lv_win_ext_t * ext = lv_obj_get_ext_attr(win);
     if(ext->btn_size == size) return;
@@ -233,7 +233,7 @@ LV_FUNC_OBJX_WIN_ATTR void lv_win_set_btn_size(lv_obj_t * win, lv_coord_t size)
  * @param win pointer to a window object
  * @param layout the layout from 'lv_layout_t'
  */
-LV_FUNC_OBJX_WIN_ATTR void lv_win_set_layout(lv_obj_t * win, lv_layout_t layout)
+LV_FUNC_ATTR void lv_win_set_layout(lv_obj_t * win, lv_layout_t layout)
 {
     lv_win_ext_t * ext = lv_obj_get_ext_attr(win);
     lv_page_set_scrl_layout(ext->page, layout);
@@ -244,7 +244,7 @@ LV_FUNC_OBJX_WIN_ATTR void lv_win_set_layout(lv_obj_t * win, lv_layout_t layout)
  * @param win pointer to a window object
  * @param sb_mode the new scroll bar mode from  'lv_sb_mode_t'
  */
-LV_FUNC_OBJX_WIN_ATTR void lv_win_set_sb_mode(lv_obj_t * win, lv_sb_mode_t sb_mode)
+LV_FUNC_ATTR void lv_win_set_sb_mode(lv_obj_t * win, lv_sb_mode_t sb_mode)
 {
     lv_win_ext_t * ext = lv_obj_get_ext_attr(win);
     lv_page_set_sb_mode(ext->page, sb_mode);
@@ -254,7 +254,7 @@ LV_FUNC_OBJX_WIN_ATTR void lv_win_set_sb_mode(lv_obj_t * win, lv_sb_mode_t sb_mo
  * @param win pointer to a window object
  * @param anim_time duration of animation [ms]
  */
-LV_FUNC_OBJX_WIN_ATTR void lv_win_set_anim_time(lv_obj_t * win, uint16_t anim_time)
+LV_FUNC_ATTR void lv_win_set_anim_time(lv_obj_t * win, uint16_t anim_time)
 {
     lv_page_set_anim_time(lv_win_get_content(win), anim_time);
 }
@@ -265,7 +265,7 @@ LV_FUNC_OBJX_WIN_ATTR void lv_win_set_anim_time(lv_obj_t * win, uint16_t anim_ti
  * @param type which style should be set
  * @param style pointer to a style
  */
-LV_FUNC_OBJX_WIN_ATTR void lv_win_set_style(lv_obj_t * win, lv_win_style_t type, const lv_style_t * style)
+LV_FUNC_ATTR void lv_win_set_style(lv_obj_t * win, lv_win_style_t type, const lv_style_t * style)
 {
     lv_win_ext_t * ext = lv_obj_get_ext_attr(win);
 
@@ -304,7 +304,7 @@ LV_FUNC_OBJX_WIN_ATTR void lv_win_set_style(lv_obj_t * win, lv_win_style_t type,
  * @param win pointer to a window object
  * @param en whether dragging is enabled
  */
-LV_FUNC_OBJX_WIN_ATTR void lv_win_set_drag(lv_obj_t * win, bool en)
+LV_FUNC_ATTR void lv_win_set_drag(lv_obj_t * win, bool en)
 {
     lv_win_ext_t * ext    = lv_obj_get_ext_attr(win);
     lv_obj_t * win_header = ext->header;
@@ -321,7 +321,7 @@ LV_FUNC_OBJX_WIN_ATTR void lv_win_set_drag(lv_obj_t * win, bool en)
  * @param win pointer to a window object
  * @return title string of the window
  */
-LV_FUNC_OBJX_WIN_ATTR const char * lv_win_get_title(const lv_obj_t * win)
+LV_FUNC_ATTR const char * lv_win_get_title(const lv_obj_t * win)
 {
     lv_win_ext_t * ext = lv_obj_get_ext_attr(win);
     return lv_label_get_text(ext->title);
@@ -332,7 +332,7 @@ LV_FUNC_OBJX_WIN_ATTR const char * lv_win_get_title(const lv_obj_t * win)
  * @param win pointer to a window object
  * @return the Page object where the window's content is
  */
-LV_FUNC_OBJX_WIN_ATTR lv_obj_t * lv_win_get_content(const lv_obj_t * win)
+LV_FUNC_ATTR lv_obj_t * lv_win_get_content(const lv_obj_t * win)
 {
     lv_win_ext_t * ext = lv_obj_get_ext_attr(win);
     return ext->page;
@@ -343,7 +343,7 @@ LV_FUNC_OBJX_WIN_ATTR lv_obj_t * lv_win_get_content(const lv_obj_t * win)
  * @param win pointer to a window object
  * @return control button size
  */
-LV_FUNC_OBJX_WIN_ATTR lv_coord_t lv_win_get_btn_size(const lv_obj_t * win)
+LV_FUNC_ATTR lv_coord_t lv_win_get_btn_size(const lv_obj_t * win)
 {
     lv_win_ext_t * ext = lv_obj_get_ext_attr(win);
     return ext->btn_size;
@@ -355,7 +355,7 @@ LV_FUNC_OBJX_WIN_ATTR lv_coord_t lv_win_get_btn_size(const lv_obj_t * win)
  * @param ctrl_btn pointer to a control button of a window
  * @return pointer to the window of 'ctrl_btn'
  */
-LV_FUNC_OBJX_WIN_ATTR lv_obj_t * lv_win_get_from_btn(const lv_obj_t * ctrl_btn)
+LV_FUNC_ATTR lv_obj_t * lv_win_get_from_btn(const lv_obj_t * ctrl_btn)
 {
     lv_obj_t * header = lv_obj_get_parent(ctrl_btn);
     lv_obj_t * win    = lv_obj_get_parent(header);
@@ -368,7 +368,7 @@ LV_FUNC_OBJX_WIN_ATTR lv_obj_t * lv_win_get_from_btn(const lv_obj_t * ctrl_btn)
  * @param win pointer to a window object
  * @return the layout of the window (from 'lv_layout_t')
  */
-LV_FUNC_OBJX_WIN_ATTR lv_layout_t lv_win_get_layout(lv_obj_t * win)
+LV_FUNC_ATTR lv_layout_t lv_win_get_layout(lv_obj_t * win)
 {
     lv_win_ext_t * ext = lv_obj_get_ext_attr(win);
     return lv_page_get_scrl_layout(ext->page);
@@ -379,7 +379,7 @@ LV_FUNC_OBJX_WIN_ATTR lv_layout_t lv_win_get_layout(lv_obj_t * win)
  * @param win pointer to a window object
  * @return the scroll bar mode of the window (from 'lv_sb_mode_t')
  */
-LV_FUNC_OBJX_WIN_ATTR lv_sb_mode_t lv_win_get_sb_mode(lv_obj_t * win)
+LV_FUNC_ATTR lv_sb_mode_t lv_win_get_sb_mode(lv_obj_t * win)
 {
     lv_win_ext_t * ext = lv_obj_get_ext_attr(win);
     return lv_page_get_sb_mode(ext->page);
@@ -390,7 +390,7 @@ LV_FUNC_OBJX_WIN_ATTR lv_sb_mode_t lv_win_get_sb_mode(lv_obj_t * win)
  * @param win pointer to a window object
  * @return duration of animation [ms]
  */
-LV_FUNC_OBJX_WIN_ATTR uint16_t lv_win_get_anim_time(const lv_obj_t * win)
+LV_FUNC_ATTR uint16_t lv_win_get_anim_time(const lv_obj_t * win)
 {
     return lv_page_get_anim_time(lv_win_get_content(win));
 }
@@ -400,7 +400,7 @@ LV_FUNC_OBJX_WIN_ATTR uint16_t lv_win_get_anim_time(const lv_obj_t * win)
  * @param win pointer to a window object
  * @return the width of the content_bg area
  */
-LV_FUNC_OBJX_WIN_ATTR lv_coord_t lv_win_get_width(lv_obj_t * win)
+LV_FUNC_ATTR lv_coord_t lv_win_get_width(lv_obj_t * win)
 {
     lv_win_ext_t * ext            = lv_obj_get_ext_attr(win);
     lv_obj_t * scrl               = lv_page_get_scrl(ext->page);
@@ -415,7 +415,7 @@ LV_FUNC_OBJX_WIN_ATTR lv_coord_t lv_win_get_width(lv_obj_t * win)
  * @param type which style window be get
  * @return style pointer to a style
  */
-LV_FUNC_OBJX_WIN_ATTR const lv_style_t * lv_win_get_style(const lv_obj_t * win, lv_win_style_t type)
+LV_FUNC_ATTR const lv_style_t * lv_win_get_style(const lv_obj_t * win, lv_win_style_t type)
 {
     const lv_style_t * style = NULL;
     lv_win_ext_t * ext       = lv_obj_get_ext_attr(win);
@@ -443,7 +443,7 @@ LV_FUNC_OBJX_WIN_ATTR const lv_style_t * lv_win_get_style(const lv_obj_t * win, 
  * @param obj pointer to an object to focus (must be in the window)
  * @param anim_en LV_ANIM_ON focus with an animation; LV_ANIM_OFF focus without animation
  */
-LV_FUNC_OBJX_WIN_ATTR void lv_win_focus(lv_obj_t * win, lv_obj_t * obj, lv_anim_enable_t anim_en)
+LV_FUNC_ATTR void lv_win_focus(lv_obj_t * win, lv_obj_t * obj, lv_anim_enable_t anim_en)
 {
     lv_win_ext_t * ext = lv_obj_get_ext_attr(win);
     lv_page_focus(ext->page, obj, anim_en);
@@ -460,7 +460,7 @@ LV_FUNC_OBJX_WIN_ATTR void lv_win_focus(lv_obj_t * win, lv_obj_t * obj, lv_anim_
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-LV_FUNC_OBJX_WIN_ATTR static lv_res_t lv_win_signal(lv_obj_t * win, lv_signal_t sign, void * param)
+LV_FUNC_ATTR static lv_res_t lv_win_signal(lv_obj_t * win, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 
@@ -514,7 +514,7 @@ LV_FUNC_OBJX_WIN_ATTR static lv_res_t lv_win_signal(lv_obj_t * win, lv_signal_t 
  * Realign the building elements of a window
  * @param win pointer to window objectker
  */
-LV_FUNC_OBJX_WIN_ATTR static void lv_win_realign(lv_obj_t * win)
+LV_FUNC_ATTR static void lv_win_realign(lv_obj_t * win)
 {
     lv_win_ext_t * ext = lv_obj_get_ext_attr(win);
 

@@ -57,9 +57,9 @@ static lv_res_t lv_obj_signal(lv_obj_t * obj, lv_signal_t sign, void * param);
 /**********************
  *  STATIC VARIABLES
  **********************/
-LV_CVAL_CORE_OBJ_ATTR static bool lv_initialized = false;
-LV_VAL_CORE_OBJ_ATTR static lv_event_temp_data_t * event_temp_data_head;
-LV_VAL_CORE_OBJ_ATTR static const void * event_act_data;
+LV_DATA_ATTR static bool lv_initialized = false;
+LV_BSS_ATTR static lv_event_temp_data_t * event_temp_data_head;
+LV_BSS_ATTR static const void * event_act_data;
 
 /**********************
  *      MACROS
@@ -72,7 +72,7 @@ LV_VAL_CORE_OBJ_ATTR static const void * event_act_data;
 /**
  * Init. the 'lv' library.
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_init(void)
+LV_FUNC_ATTR void lv_init(void)
 {
     /* Do nothing if already initialized */
     if(lv_initialized) {
@@ -128,7 +128,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_init(void)
  * @param copy pointer to a base object, if not NULL then the new object will be copied from it
  * @return pointer to the new object
  */
-LV_FUNC_CORE_OBJ_ATTR lv_obj_t * lv_obj_create(lv_obj_t * parent, const lv_obj_t * copy)
+LV_FUNC_ATTR lv_obj_t * lv_obj_create(lv_obj_t * parent, const lv_obj_t * copy)
 {
 
     lv_obj_t * new_obj = NULL;
@@ -372,7 +372,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_obj_t * lv_obj_create(lv_obj_t * parent, const lv_obj_t
  * @param obj pointer to an object to delete
  * @return LV_RES_INV because the object is deleted
  */
-LV_FUNC_CORE_OBJ_ATTR lv_res_t lv_obj_del(lv_obj_t * obj)
+LV_FUNC_ATTR lv_res_t lv_obj_del(lv_obj_t * obj)
 {
     lv_obj_invalidate(obj);
 
@@ -456,7 +456,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_res_t lv_obj_del(lv_obj_t * obj)
  * @param obj object to delete
  * @see lv_async_call
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_del_async(lv_obj_t * obj)
+LV_FUNC_ATTR void lv_obj_del_async(lv_obj_t * obj)
 {
     lv_async_call(lv_obj_del_async_cb, obj);
 }
@@ -465,7 +465,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_del_async(lv_obj_t * obj)
  * Delete all children of an object
  * @param obj pointer to an object
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_clean(lv_obj_t * obj)
+LV_FUNC_ATTR void lv_obj_clean(lv_obj_t * obj)
 {
     lv_obj_t * child = lv_obj_get_child(obj, NULL);
     lv_obj_t * child_next;
@@ -482,7 +482,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_clean(lv_obj_t * obj)
  * Mark the object as invalid therefore its current position will be redrawn by 'lv_refr_task'
  * @param obj pointer to an object
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_invalidate(const lv_obj_t * obj)
+LV_FUNC_ATTR void lv_obj_invalidate(const lv_obj_t * obj)
 {
     if(lv_obj_get_hidden(obj)) return;
 
@@ -529,7 +529,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_invalidate(const lv_obj_t * obj)
  * @param obj pointer to an object. Can't be a screen.
  * @param parent pointer to the new parent object. (Can't be NULL)
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_parent(lv_obj_t * obj, lv_obj_t * parent)
+LV_FUNC_ATTR void lv_obj_set_parent(lv_obj_t * obj, lv_obj_t * parent)
 {
     if(obj->par == NULL) {
         LV_LOG_WARN("Can't set the parent of a screen");
@@ -566,7 +566,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_parent(lv_obj_t * obj, lv_obj_t * parent)
  * Move and object to the foreground
  * @param obj pointer to an object
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_move_foreground(lv_obj_t * obj)
+LV_FUNC_ATTR void lv_obj_move_foreground(lv_obj_t * obj)
 {
     lv_obj_t * parent = lv_obj_get_parent(obj);
 
@@ -587,7 +587,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_move_foreground(lv_obj_t * obj)
  * Move and object to the background
  * @param obj pointer to an object
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_move_background(lv_obj_t * obj)
+LV_FUNC_ATTR void lv_obj_move_background(lv_obj_t * obj)
 {
     lv_obj_t * parent = lv_obj_get_parent(obj);
 
@@ -614,7 +614,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_move_background(lv_obj_t * obj)
  * @param x new distance from the left side of the parent
  * @param y new distance from the top of the parent
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_pos(lv_obj_t * obj, lv_coord_t x, lv_coord_t y)
+LV_FUNC_ATTR void lv_obj_set_pos(lv_obj_t * obj, lv_coord_t x, lv_coord_t y)
 {
     /*Convert x and y to absolute coordinates*/
     lv_obj_t * par = obj->par;
@@ -661,7 +661,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_pos(lv_obj_t * obj, lv_coord_t x, lv_coord
  * @param obj pointer to an object
  * @param x new distance from the left side from the parent
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_x(lv_obj_t * obj, lv_coord_t x)
+LV_FUNC_ATTR void lv_obj_set_x(lv_obj_t * obj, lv_coord_t x)
 {
     lv_obj_set_pos(obj, x, lv_obj_get_y(obj));
 }
@@ -671,7 +671,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_x(lv_obj_t * obj, lv_coord_t x)
  * @param obj pointer to an object
  * @param y new distance from the top of the parent
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_y(lv_obj_t * obj, lv_coord_t y)
+LV_FUNC_ATTR void lv_obj_set_y(lv_obj_t * obj, lv_coord_t y)
 {
     lv_obj_set_pos(obj, lv_obj_get_x(obj), y);
 }
@@ -682,7 +682,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_y(lv_obj_t * obj, lv_coord_t y)
  * @param w new width
  * @param h new height
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_size(lv_obj_t * obj, lv_coord_t w, lv_coord_t h)
+LV_FUNC_ATTR void lv_obj_set_size(lv_obj_t * obj, lv_coord_t w, lv_coord_t h)
 {
 
     /* Do nothing if the size is not changed */
@@ -731,7 +731,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_size(lv_obj_t * obj, lv_coord_t w, lv_coor
  * @param obj pointer to an object
  * @param w new width
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_width(lv_obj_t * obj, lv_coord_t w)
+LV_FUNC_ATTR void lv_obj_set_width(lv_obj_t * obj, lv_coord_t w)
 {
     lv_obj_set_size(obj, w, lv_obj_get_height(obj));
 }
@@ -741,7 +741,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_width(lv_obj_t * obj, lv_coord_t w)
  * @param obj pointer to an object
  * @param h new height
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_height(lv_obj_t * obj, lv_coord_t h)
+LV_FUNC_ATTR void lv_obj_set_height(lv_obj_t * obj, lv_coord_t h)
 {
     lv_obj_set_size(obj, lv_obj_get_width(obj), h);
 }
@@ -754,7 +754,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_height(lv_obj_t * obj, lv_coord_t h)
  * @param x_mod x coordinate shift after alignment
  * @param y_mod y coordinate shift after alignment
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_align(lv_obj_t * obj, const lv_obj_t * base, lv_align_t align, lv_coord_t x_mod, lv_coord_t y_mod)
+LV_FUNC_ATTR void lv_obj_align(lv_obj_t * obj, const lv_obj_t * base, lv_align_t align, lv_coord_t x_mod, lv_coord_t y_mod)
 {
     lv_coord_t new_x = lv_obj_get_x(obj);
     lv_coord_t new_y = lv_obj_get_y(obj);
@@ -899,7 +899,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_align(lv_obj_t * obj, const lv_obj_t * base, l
  * @param x_mod x coordinate shift after alignment
  * @param y_mod y coordinate shift after alignment
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_align_origo(lv_obj_t * obj, const lv_obj_t * base, lv_align_t align, lv_coord_t x_mod, lv_coord_t y_mod)
+LV_FUNC_ATTR void lv_obj_align_origo(lv_obj_t * obj, const lv_obj_t * base, lv_align_t align, lv_coord_t x_mod, lv_coord_t y_mod)
 {
     lv_coord_t new_x = lv_obj_get_x(obj);
     lv_coord_t new_y = lv_obj_get_y(obj);
@@ -1043,7 +1043,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_align_origo(lv_obj_t * obj, const lv_obj_t * b
  * Realign the object based on the last `lv_obj_align` parameters.
  * @param obj pointer to an object
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_realign(lv_obj_t * obj)
+LV_FUNC_ATTR void lv_obj_realign(lv_obj_t * obj)
 {
 #if LV_USE_OBJ_REALIGN
     if(obj->realign.origo_align)
@@ -1062,7 +1062,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_realign(lv_obj_t * obj)
  * @param obj pointer to an object
  * @param en true: enable auto realign; false: disable auto realign
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_auto_realign(lv_obj_t * obj, bool en)
+LV_FUNC_ATTR void lv_obj_set_auto_realign(lv_obj_t * obj, bool en)
 {
 #if LV_USE_OBJ_REALIGN
     obj->realign.auto_realign = en ? 1 : 0;
@@ -1080,7 +1080,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_auto_realign(lv_obj_t * obj, bool en)
  * @param w extended width to both sides
  * @param h extended height to both sides
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_ext_click_area(lv_obj_t * obj, uint8_t w, uint8_t h)
+LV_FUNC_ATTR void lv_obj_set_ext_click_area(lv_obj_t * obj, uint8_t w, uint8_t h)
 {
     obj->ext_click_pad_hor = w;
     obj->ext_click_pad_ver = h;
@@ -1097,7 +1097,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_ext_click_area(lv_obj_t * obj, uint8_t w, 
  * @param top extended clickable are on the top [px]
  * @param bottom extended clickable are on the bottom [px]
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_ext_click_area(lv_obj_t * obj, lv_coord_t left, lv_coord_t right, lv_coord_t top, lv_coord_t bottom)
+LV_FUNC_ATTR void lv_obj_set_ext_click_area(lv_obj_t * obj, lv_coord_t left, lv_coord_t right, lv_coord_t top, lv_coord_t bottom)
 {
 #if LV_USE_EXT_CLICK_AREA == LV_EXT_CLICK_AREA_FULL
     obj->ext_click_pad.x1 = left;
@@ -1125,7 +1125,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_ext_click_area(lv_obj_t * obj, lv_coord_t 
  * @param obj pointer to an object
  * @param style_p pointer to the new style
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_style(lv_obj_t * obj, const lv_style_t * style)
+LV_FUNC_ATTR void lv_obj_set_style(lv_obj_t * obj, const lv_style_t * style)
 {
     obj->style_p = style;
 
@@ -1140,7 +1140,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_style(lv_obj_t * obj, const lv_style_t * s
  * Notify an object about its style is modified
  * @param obj pointer to an object
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_refresh_style(lv_obj_t * obj)
+LV_FUNC_ATTR void lv_obj_refresh_style(lv_obj_t * obj)
 {
     lv_obj_invalidate(obj);
     obj->signal_cb(obj, LV_SIGNAL_STYLE_CHG, NULL);
@@ -1152,7 +1152,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_refresh_style(lv_obj_t * obj)
  * @param style pointer to a style. Only the objects with this style will be notified
  *               (NULL to notify all objects)
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_report_style_mod(lv_style_t * style)
+LV_FUNC_ATTR void lv_obj_report_style_mod(lv_style_t * style)
 {
     lv_disp_t * d = lv_disp_get_next(NULL);
 
@@ -1179,7 +1179,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_report_style_mod(lv_style_t * style)
  * @param obj pointer to an object
  * @param en true: hide the object
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_hidden(lv_obj_t * obj, bool en)
+LV_FUNC_ATTR void lv_obj_set_hidden(lv_obj_t * obj, bool en)
 {
     if(!obj->hidden) lv_obj_invalidate(obj); /*Invalidate when not hidden (hidden objects are ignored) */
 
@@ -1196,7 +1196,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_hidden(lv_obj_t * obj, bool en)
  * @param obj pointer to an object
  * @param en true: make the object clickable
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_click(lv_obj_t * obj, bool en)
+LV_FUNC_ATTR void lv_obj_set_click(lv_obj_t * obj, bool en)
 {
     obj->click = (en == true ? 1 : 0);
 }
@@ -1207,7 +1207,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_click(lv_obj_t * obj, bool en)
  * @param obj pointer to an object
  * @param en true: enable the auto top feature
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_top(lv_obj_t * obj, bool en)
+LV_FUNC_ATTR void lv_obj_set_top(lv_obj_t * obj, bool en)
 {
     obj->top = (en == true ? 1 : 0);
 }
@@ -1217,7 +1217,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_top(lv_obj_t * obj, bool en)
  * @param obj pointer to an object
  * @param en true: make the object dragable
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_drag(lv_obj_t * obj, bool en)
+LV_FUNC_ATTR void lv_obj_set_drag(lv_obj_t * obj, bool en)
 {
     if(en == true) lv_obj_set_click(obj, true); /*Drag is useless without enabled clicking*/
     obj->drag = (en == true ? 1 : 0);
@@ -1228,7 +1228,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_drag(lv_obj_t * obj, bool en)
  * @param obj pointer to an object
  * @param drag_dir bitwise OR of allowed directions an object can be dragged in
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_drag_dir(lv_obj_t * obj, lv_drag_dir_t drag_dir)
+LV_FUNC_ATTR void lv_obj_set_drag_dir(lv_obj_t * obj, lv_drag_dir_t drag_dir)
 {
     obj->drag_dir = drag_dir;
 
@@ -1240,7 +1240,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_drag_dir(lv_obj_t * obj, lv_drag_dir_t dra
  * @param obj pointer to an object
  * @param en true: enable the drag throw
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_drag_throw(lv_obj_t * obj, bool en)
+LV_FUNC_ATTR void lv_obj_set_drag_throw(lv_obj_t * obj, bool en)
 {
     obj->drag_throw = (en == true ? 1 : 0);
 }
@@ -1251,7 +1251,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_drag_throw(lv_obj_t * obj, bool en)
  * @param obj pointer to an object
  * @param en true: enable the 'drag parent' for the object
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_drag_parent(lv_obj_t * obj, bool en)
+LV_FUNC_ATTR void lv_obj_set_drag_parent(lv_obj_t * obj, bool en)
 {
     obj->drag_parent = (en == true ? 1 : 0);
 }
@@ -1261,7 +1261,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_drag_parent(lv_obj_t * obj, bool en)
  * @param obj pointer to an object
  * @param en true: enable the event propagation
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_parent_event(lv_obj_t * obj, bool en)
+LV_FUNC_ATTR void lv_obj_set_parent_event(lv_obj_t * obj, bool en)
 {
     obj->parent_event = (en == true ? 1 : 0);
 }
@@ -1271,7 +1271,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_parent_event(lv_obj_t * obj, bool en)
  * @param obj pointer to an object
  * @param en true: opa scaling is enabled for this object and all children; false: no opa scaling
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_opa_scale_enable(lv_obj_t * obj, bool en)
+LV_FUNC_ATTR void lv_obj_set_opa_scale_enable(lv_obj_t * obj, bool en)
 {
     obj->opa_scale_en = en ? 1 : 0;
 }
@@ -1284,7 +1284,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_opa_scale_enable(lv_obj_t * obj, bool en)
  * @param obj pointer to an object
  * @param opa_scale a factor to scale down opacity [0..255]
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_opa_scale(lv_obj_t * obj, lv_opa_t opa_scale)
+LV_FUNC_ATTR void lv_obj_set_opa_scale(lv_obj_t * obj, lv_opa_t opa_scale)
 {
     obj->opa_scale = opa_scale;
     lv_obj_invalidate(obj);
@@ -1295,7 +1295,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_opa_scale(lv_obj_t * obj, lv_opa_t opa_sca
  * @param obj pointer to an object
  * @param prot 'OR'-ed values from `lv_protect_t`
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_protect(lv_obj_t * obj, uint8_t prot)
+LV_FUNC_ATTR void lv_obj_set_protect(lv_obj_t * obj, uint8_t prot)
 {
     obj->protect |= prot;
 }
@@ -1305,7 +1305,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_protect(lv_obj_t * obj, uint8_t prot)
  * @param obj pointer to an object
  * @param prot 'OR'-ed values from `lv_protect_t`
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_clear_protect(lv_obj_t * obj, uint8_t prot)
+LV_FUNC_ATTR void lv_obj_clear_protect(lv_obj_t * obj, uint8_t prot)
 {
     prot = (~prot) & 0xFF;
     obj->protect &= prot;
@@ -1317,7 +1317,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_clear_protect(lv_obj_t * obj, uint8_t prot)
  * @param obj pointer to an object
  * @param event_cb the new event function
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_event_cb(lv_obj_t * obj, lv_event_cb_t event_cb)
+LV_FUNC_ATTR void lv_obj_set_event_cb(lv_obj_t * obj, lv_event_cb_t event_cb)
 {
     obj->event_cb = event_cb;
 }
@@ -1329,7 +1329,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_event_cb(lv_obj_t * obj, lv_event_cb_t eve
  * @param data arbitrary data depending on the object type and the event. (Usually `NULL`)
  * @return LV_RES_OK: `obj` was not deleted in the event; LV_RES_INV: `obj` was deleted in the event
  */
-LV_FUNC_CORE_OBJ_ATTR lv_res_t lv_event_send(lv_obj_t * obj, lv_event_t event, const void * data)
+LV_FUNC_ATTR lv_res_t lv_event_send(lv_obj_t * obj, lv_event_t event, const void * data)
 {
     if(obj == NULL) return LV_RES_OK;
 
@@ -1348,7 +1348,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_res_t lv_event_send(lv_obj_t * obj, lv_event_t event, c
  * @param data pointer to a custom data
  * @return LV_RES_OK: `obj` was not deleted in the event; LV_RES_INV: `obj` was deleted in the event
  */
-LV_FUNC_CORE_OBJ_ATTR lv_res_t lv_event_send_func(lv_event_cb_t event_xcb, lv_obj_t * obj, lv_event_t event, const void * data)
+LV_FUNC_ATTR lv_res_t lv_event_send_func(lv_event_cb_t event_xcb, lv_obj_t * obj, lv_event_t event, const void * data)
 {
     /* Build a simple linked list from the objects used in the events
      * It's important to know if an this object was deleted by a nested event
@@ -1401,7 +1401,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_res_t lv_event_send_func(lv_event_cb_t event_xcb, lv_ob
  * Get the `data` parameter of the current event
  * @return the `data` parameter
  */
-LV_FUNC_CORE_OBJ_ATTR const void * lv_event_get_data(void)
+LV_FUNC_ATTR const void * lv_event_get_data(void)
 {
     return event_act_data;
 }
@@ -1412,7 +1412,7 @@ LV_FUNC_CORE_OBJ_ATTR const void * lv_event_get_data(void)
  * @param obj pointer to an object
  * @param cb the new signal function
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_signal_cb(lv_obj_t * obj, lv_signal_cb_t signal_cb)
+LV_FUNC_ATTR void lv_obj_set_signal_cb(lv_obj_t * obj, lv_signal_cb_t signal_cb)
 {
     obj->signal_cb = signal_cb;
 }
@@ -1422,7 +1422,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_signal_cb(lv_obj_t * obj, lv_signal_cb_t s
  * @param obj pointer to an object
  * @param event the type of the event from `lv_event_t`.
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_signal_send(lv_obj_t * obj, lv_signal_t signal, void * param)
+LV_FUNC_ATTR void lv_signal_send(lv_obj_t * obj, lv_signal_t signal, void * param)
 {
     if(obj->signal_cb) obj->signal_cb(obj, signal, param);
 }
@@ -1432,7 +1432,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_signal_send(lv_obj_t * obj, lv_signal_t signal, vo
  * @param obj pointer to an object
  * @param design_cb the new design function
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_design_cb(lv_obj_t * obj, lv_design_cb_t design_cb)
+LV_FUNC_ATTR void lv_obj_set_design_cb(lv_obj_t * obj, lv_design_cb_t design_cb)
 {
     obj->design_cb = design_cb;
 }
@@ -1447,7 +1447,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_design_cb(lv_obj_t * obj, lv_design_cb_t d
  * @param ext_size the size of the new ext. data
  * @return Normal pointer to the allocated ext
  */
-LV_FUNC_CORE_OBJ_ATTR void * lv_obj_allocate_ext_attr(lv_obj_t * obj, uint16_t ext_size)
+LV_FUNC_ATTR void * lv_obj_allocate_ext_attr(lv_obj_t * obj, uint16_t ext_size)
 {
     obj->ext_attr = lv_mem_realloc(obj->ext_attr, ext_size);
 
@@ -1458,7 +1458,7 @@ LV_FUNC_CORE_OBJ_ATTR void * lv_obj_allocate_ext_attr(lv_obj_t * obj, uint16_t e
  * Send a 'LV_SIGNAL_REFR_EXT_SIZE' signal to the object
  * @param obj pointer to an object
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_refresh_ext_draw_pad(lv_obj_t * obj)
+LV_FUNC_ATTR void lv_obj_refresh_ext_draw_pad(lv_obj_t * obj)
 {
     obj->ext_draw_pad = 0;
     obj->signal_cb(obj, LV_SIGNAL_REFR_EXT_DRAW_PAD, NULL);
@@ -1475,7 +1475,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_refresh_ext_draw_pad(lv_obj_t * obj)
  * @param obj pointer to an object
  * @return pointer to a screen
  */
-LV_FUNC_CORE_OBJ_ATTR lv_obj_t * lv_obj_get_screen(const lv_obj_t * obj)
+LV_FUNC_ATTR lv_obj_t * lv_obj_get_screen(const lv_obj_t * obj)
 {
     const lv_obj_t * par = obj;
     const lv_obj_t * act_p;
@@ -1493,7 +1493,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_obj_t * lv_obj_get_screen(const lv_obj_t * obj)
  * @param scr pointer to an object
  * @return pointer the object's display
  */
-LV_FUNC_CORE_OBJ_ATTR lv_disp_t * lv_obj_get_disp(const lv_obj_t * obj)
+LV_FUNC_ATTR lv_disp_t * lv_obj_get_disp(const lv_obj_t * obj)
 {
     const lv_obj_t * scr;
 
@@ -1525,7 +1525,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_disp_t * lv_obj_get_disp(const lv_obj_t * obj)
  * @param obj pointer to an object
  * @return pointer to the parent of  'obj'
  */
-LV_FUNC_CORE_OBJ_ATTR lv_obj_t * lv_obj_get_parent(const lv_obj_t * obj)
+LV_FUNC_ATTR lv_obj_t * lv_obj_get_parent(const lv_obj_t * obj)
 {
     return obj->par;
 }
@@ -1537,7 +1537,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_obj_t * lv_obj_get_parent(const lv_obj_t * obj)
  *                  and the previous return value later
  * @return the child after 'act_child' or NULL if no more child
  */
-LV_FUNC_CORE_OBJ_ATTR lv_obj_t * lv_obj_get_child(const lv_obj_t * obj, const lv_obj_t * child)
+LV_FUNC_ATTR lv_obj_t * lv_obj_get_child(const lv_obj_t * obj, const lv_obj_t * child)
 {
     lv_obj_t * result = NULL;
 
@@ -1557,7 +1557,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_obj_t * lv_obj_get_child(const lv_obj_t * obj, const lv
  *                  and the previous return value later
  * @return the child after 'act_child' or NULL if no more child
  */
-LV_FUNC_CORE_OBJ_ATTR lv_obj_t * lv_obj_get_child_back(const lv_obj_t * obj, const lv_obj_t * child)
+LV_FUNC_ATTR lv_obj_t * lv_obj_get_child_back(const lv_obj_t * obj, const lv_obj_t * child)
 {
     lv_obj_t * result = NULL;
 
@@ -1575,7 +1575,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_obj_t * lv_obj_get_child_back(const lv_obj_t * obj, con
  * @param obj pointer to an object
  * @return children number of 'obj'
  */
-LV_FUNC_CORE_OBJ_ATTR uint16_t lv_obj_count_children(const lv_obj_t * obj)
+LV_FUNC_ATTR uint16_t lv_obj_count_children(const lv_obj_t * obj)
 {
     lv_obj_t * i;
     uint16_t cnt = 0;
@@ -1589,7 +1589,7 @@ LV_FUNC_CORE_OBJ_ATTR uint16_t lv_obj_count_children(const lv_obj_t * obj)
  * @param obj pointer to an object
  * @return children number of 'obj'
  */
-LV_FUNC_CORE_OBJ_ATTR uint16_t lv_obj_count_children_recursive(const lv_obj_t * obj)
+LV_FUNC_ATTR uint16_t lv_obj_count_children_recursive(const lv_obj_t * obj)
 {
     lv_obj_t * i;
     uint16_t cnt = 0;
@@ -1612,7 +1612,7 @@ LV_FUNC_CORE_OBJ_ATTR uint16_t lv_obj_count_children_recursive(const lv_obj_t * 
  * @param obj pointer to an object
  * @param cords_p pointer to an area to store the coordinates
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_get_coords(const lv_obj_t * obj, lv_area_t * cords_p)
+LV_FUNC_ATTR void lv_obj_get_coords(const lv_obj_t * obj, lv_area_t * cords_p)
 {
     lv_area_copy(cords_p, &obj->coords);
 }
@@ -1622,7 +1622,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_get_coords(const lv_obj_t * obj, lv_area_t * c
  * (Without the size of the border or other extra graphical elements)
  * @param coords_p store the result area here
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_get_inner_coords(const lv_obj_t * obj, lv_area_t * coords_p)
+LV_FUNC_ATTR void lv_obj_get_inner_coords(const lv_obj_t * obj, lv_area_t * coords_p)
 {
     const lv_style_t * style = lv_obj_get_style(obj);
     if(style->body.border.part & LV_BORDER_LEFT) coords_p->x1 += style->body.border.width;
@@ -1639,7 +1639,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_get_inner_coords(const lv_obj_t * obj, lv_area
  * @param obj pointer to an object
  * @return distance of 'obj' from the left side of its parent
  */
-LV_FUNC_CORE_OBJ_ATTR lv_coord_t lv_obj_get_x(const lv_obj_t * obj)
+LV_FUNC_ATTR lv_coord_t lv_obj_get_x(const lv_obj_t * obj)
 {
     lv_coord_t rel_x;
     lv_obj_t * parent = lv_obj_get_parent(obj);
@@ -1653,7 +1653,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_coord_t lv_obj_get_x(const lv_obj_t * obj)
  * @param obj pointer to an object
  * @return distance of 'obj' from the top of its parent
  */
-LV_FUNC_CORE_OBJ_ATTR lv_coord_t lv_obj_get_y(const lv_obj_t * obj)
+LV_FUNC_ATTR lv_coord_t lv_obj_get_y(const lv_obj_t * obj)
 {
     lv_coord_t rel_y;
     lv_obj_t * parent = lv_obj_get_parent(obj);
@@ -1667,7 +1667,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_coord_t lv_obj_get_y(const lv_obj_t * obj)
  * @param obj pointer to an object
  * @return the width
  */
-LV_FUNC_CORE_OBJ_ATTR lv_coord_t lv_obj_get_width(const lv_obj_t * obj)
+LV_FUNC_ATTR lv_coord_t lv_obj_get_width(const lv_obj_t * obj)
 {
     return lv_area_get_width(&obj->coords);
 }
@@ -1677,7 +1677,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_coord_t lv_obj_get_width(const lv_obj_t * obj)
  * @param obj pointer to an object
  * @return the height
  */
-LV_FUNC_CORE_OBJ_ATTR lv_coord_t lv_obj_get_height(const lv_obj_t * obj)
+LV_FUNC_ATTR lv_coord_t lv_obj_get_height(const lv_obj_t * obj)
 {
     return lv_area_get_height(&obj->coords);
 }
@@ -1687,7 +1687,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_coord_t lv_obj_get_height(const lv_obj_t * obj)
  * @param obj pointer to an object
  * @return the width which still fits into the container
  */
-LV_FUNC_CORE_OBJ_ATTR lv_coord_t lv_obj_get_width_fit(lv_obj_t * obj)
+LV_FUNC_ATTR lv_coord_t lv_obj_get_width_fit(lv_obj_t * obj)
 {
     const lv_style_t * style = lv_obj_get_style(obj);
 
@@ -1699,7 +1699,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_coord_t lv_obj_get_width_fit(lv_obj_t * obj)
  * @param obj pointer to an object
  * @return the height which still fits into the container
  */
-LV_FUNC_CORE_OBJ_ATTR lv_coord_t lv_obj_get_height_fit(lv_obj_t * obj)
+LV_FUNC_ATTR lv_coord_t lv_obj_get_height_fit(lv_obj_t * obj)
 {
     const lv_style_t * style = lv_obj_get_style(obj);
 
@@ -1711,7 +1711,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_coord_t lv_obj_get_height_fit(lv_obj_t * obj)
  * @param obj pointer to an object
  * @return  true: auto realign is enabled; false: auto realign is disabled
  */
-LV_FUNC_CORE_OBJ_ATTR bool lv_obj_get_auto_realign(lv_obj_t * obj)
+LV_FUNC_ATTR bool lv_obj_get_auto_realign(lv_obj_t * obj)
 {
 #if LV_USE_OBJ_REALIGN
     return obj->realign.auto_realign ? true : false;
@@ -1726,7 +1726,7 @@ LV_FUNC_CORE_OBJ_ATTR bool lv_obj_get_auto_realign(lv_obj_t * obj)
  * @param obj pointer to an object
  * @return the extended left padding
  */
-LV_FUNC_CORE_OBJ_ATTR lv_coord_t lv_obj_get_ext_click_pad_left(const lv_obj_t * obj)
+LV_FUNC_ATTR lv_coord_t lv_obj_get_ext_click_pad_left(const lv_obj_t * obj)
 {
 #if LV_USE_EXT_CLICK_AREA == LV_EXT_CLICK_AREA_TINY
     return obj->ext_click_pad_hor;
@@ -1743,7 +1743,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_coord_t lv_obj_get_ext_click_pad_left(const lv_obj_t * 
  * @param obj pointer to an object
  * @return the extended right padding
  */
-LV_FUNC_CORE_OBJ_ATTR lv_coord_t lv_obj_get_ext_click_pad_right(const lv_obj_t * obj)
+LV_FUNC_ATTR lv_coord_t lv_obj_get_ext_click_pad_right(const lv_obj_t * obj)
 {
 #if LV_USE_EXT_CLICK_AREA == LV_EXT_CLICK_AREA_TINY
     return obj->ext_click_pad_hor;
@@ -1760,7 +1760,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_coord_t lv_obj_get_ext_click_pad_right(const lv_obj_t *
  * @param obj pointer to an object
  * @return the extended top padding
  */
-LV_FUNC_CORE_OBJ_ATTR lv_coord_t lv_obj_get_ext_click_pad_top(const lv_obj_t * obj)
+LV_FUNC_ATTR lv_coord_t lv_obj_get_ext_click_pad_top(const lv_obj_t * obj)
 {
 #if LV_USE_EXT_CLICK_AREA == LV_EXT_CLICK_AREA_TINY
     return obj->ext_click_pad_ver;
@@ -1777,7 +1777,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_coord_t lv_obj_get_ext_click_pad_top(const lv_obj_t * o
  * @param obj pointer to an object
  * @return the extended bottom padding
  */
-LV_FUNC_CORE_OBJ_ATTR lv_coord_t lv_obj_get_ext_click_pad_bottom(const lv_obj_t * obj)
+LV_FUNC_ATTR lv_coord_t lv_obj_get_ext_click_pad_bottom(const lv_obj_t * obj)
 {
 #if LV_USE_EXT_CLICK_AREA == LV_EXT_CLICK_AREA_TINY
     return obj->ext_click_pad_ver
@@ -1794,7 +1794,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_coord_t lv_obj_get_ext_click_pad_bottom(const lv_obj_t 
  * @param obj pointer to an object
  * @return the extended size attribute
  */
-LV_FUNC_CORE_OBJ_ATTR lv_coord_t lv_obj_get_ext_draw_pad(const lv_obj_t * obj)
+LV_FUNC_ATTR lv_coord_t lv_obj_get_ext_draw_pad(const lv_obj_t * obj)
 {
     return obj->ext_draw_pad;
 }
@@ -1808,7 +1808,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_coord_t lv_obj_get_ext_draw_pad(const lv_obj_t * obj)
  * @param obj pointer to an object
  * @return pointer to a style
  */
-LV_FUNC_CORE_OBJ_ATTR const lv_style_t * lv_obj_get_style(const lv_obj_t * obj)
+LV_FUNC_ATTR const lv_style_t * lv_obj_get_style(const lv_obj_t * obj)
 {
     const lv_style_t * style_act = obj->style_p;
     if(style_act == NULL) {
@@ -1856,7 +1856,7 @@ LV_FUNC_CORE_OBJ_ATTR const lv_style_t * lv_obj_get_style(const lv_obj_t * obj)
  * @param obj pointer to an object
  * @return true: the object is hidden
  */
-LV_FUNC_CORE_OBJ_ATTR bool lv_obj_get_hidden(const lv_obj_t * obj)
+LV_FUNC_ATTR bool lv_obj_get_hidden(const lv_obj_t * obj)
 {
     return obj->hidden == 0 ? false : true;
 }
@@ -1866,7 +1866,7 @@ LV_FUNC_CORE_OBJ_ATTR bool lv_obj_get_hidden(const lv_obj_t * obj)
  * @param obj pointer to an object
  * @return true: the object is clickable
  */
-LV_FUNC_CORE_OBJ_ATTR bool lv_obj_get_click(const lv_obj_t * obj)
+LV_FUNC_ATTR bool lv_obj_get_click(const lv_obj_t * obj)
 {
     return obj->click == 0 ? false : true;
 }
@@ -1876,7 +1876,7 @@ LV_FUNC_CORE_OBJ_ATTR bool lv_obj_get_click(const lv_obj_t * obj)
  * @param obj pointer to an object
  * @return true: the auto top feture is enabled
  */
-LV_FUNC_CORE_OBJ_ATTR bool lv_obj_get_top(const lv_obj_t * obj)
+LV_FUNC_ATTR bool lv_obj_get_top(const lv_obj_t * obj)
 {
     return obj->top == 0 ? false : true;
 }
@@ -1886,7 +1886,7 @@ LV_FUNC_CORE_OBJ_ATTR bool lv_obj_get_top(const lv_obj_t * obj)
  * @param obj pointer to an object
  * @return true: the object is dragable
  */
-LV_FUNC_CORE_OBJ_ATTR bool lv_obj_get_drag(const lv_obj_t * obj)
+LV_FUNC_ATTR bool lv_obj_get_drag(const lv_obj_t * obj)
 {
     return obj->drag == 0 ? false : true;
 }
@@ -1896,7 +1896,7 @@ LV_FUNC_CORE_OBJ_ATTR bool lv_obj_get_drag(const lv_obj_t * obj)
  * @param obj pointer to an object
  * @return bitwise OR of allowed directions an object can be dragged in
  */
-LV_FUNC_CORE_OBJ_ATTR lv_drag_dir_t lv_obj_get_drag_dir(const lv_obj_t * obj)
+LV_FUNC_ATTR lv_drag_dir_t lv_obj_get_drag_dir(const lv_obj_t * obj)
 {
     return obj->drag_dir;
 }
@@ -1906,7 +1906,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_drag_dir_t lv_obj_get_drag_dir(const lv_obj_t * obj)
  * @param obj pointer to an object
  * @return true: drag throw is enabled
  */
-LV_FUNC_CORE_OBJ_ATTR bool lv_obj_get_drag_throw(const lv_obj_t * obj)
+LV_FUNC_ATTR bool lv_obj_get_drag_throw(const lv_obj_t * obj)
 {
     return obj->drag_throw == 0 ? false : true;
 }
@@ -1916,7 +1916,7 @@ LV_FUNC_CORE_OBJ_ATTR bool lv_obj_get_drag_throw(const lv_obj_t * obj)
  * @param obj pointer to an object
  * @return true: drag parent is enabled
  */
-LV_FUNC_CORE_OBJ_ATTR bool lv_obj_get_drag_parent(const lv_obj_t * obj)
+LV_FUNC_ATTR bool lv_obj_get_drag_parent(const lv_obj_t * obj)
 {
     return obj->drag_parent == 0 ? false : true;
 }
@@ -1926,7 +1926,7 @@ LV_FUNC_CORE_OBJ_ATTR bool lv_obj_get_drag_parent(const lv_obj_t * obj)
  * @param obj pointer to an object
  * @return true: drag parent is enabled
  */
-LV_FUNC_CORE_OBJ_ATTR bool lv_obj_get_parent_event(const lv_obj_t * obj)
+LV_FUNC_ATTR bool lv_obj_get_parent_event(const lv_obj_t * obj)
 {
     return obj->parent_event == 0 ? false : true;
 }
@@ -1936,7 +1936,7 @@ LV_FUNC_CORE_OBJ_ATTR bool lv_obj_get_parent_event(const lv_obj_t * obj)
  * @param obj pointer to an object
  * @return true: opa scaling is enabled for this object and all children; false: no opa scaling
  */
-LV_FUNC_CORE_OBJ_ATTR lv_opa_t lv_obj_get_opa_scale_enable(const lv_obj_t * obj)
+LV_FUNC_ATTR lv_opa_t lv_obj_get_opa_scale_enable(const lv_obj_t * obj)
 {
     return obj->opa_scale_en == 0 ? false : true;
 }
@@ -1946,7 +1946,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_opa_t lv_obj_get_opa_scale_enable(const lv_obj_t * obj)
  * @param obj pointer to an object
  * @return opa scale [0..255]
  */
-LV_FUNC_CORE_OBJ_ATTR lv_opa_t lv_obj_get_opa_scale(const lv_obj_t * obj)
+LV_FUNC_ATTR lv_opa_t lv_obj_get_opa_scale(const lv_obj_t * obj)
 {
     const lv_obj_t * parent = obj;
 
@@ -1963,7 +1963,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_opa_t lv_obj_get_opa_scale(const lv_obj_t * obj)
  * @param obj pointer to an object
  * @return protect field ('OR'ed values of `lv_protect_t`)
  */
-LV_FUNC_CORE_OBJ_ATTR uint8_t lv_obj_get_protect(const lv_obj_t * obj)
+LV_FUNC_ATTR uint8_t lv_obj_get_protect(const lv_obj_t * obj)
 {
     return obj->protect;
 }
@@ -1974,7 +1974,7 @@ LV_FUNC_CORE_OBJ_ATTR uint8_t lv_obj_get_protect(const lv_obj_t * obj)
  * @param prot protect bits to test ('OR'ed values of `lv_protect_t`)
  * @return false: none of the given bits are set, true: at least one bit is set
  */
-LV_FUNC_CORE_OBJ_ATTR bool lv_obj_is_protected(const lv_obj_t * obj, uint8_t prot)
+LV_FUNC_ATTR bool lv_obj_is_protected(const lv_obj_t * obj, uint8_t prot)
 {
     return (obj->protect & prot) == 0 ? false : true;
 }
@@ -1984,7 +1984,7 @@ LV_FUNC_CORE_OBJ_ATTR bool lv_obj_is_protected(const lv_obj_t * obj, uint8_t pro
  * @param obj pointer to an object
  * @return the signal function
  */
-LV_FUNC_CORE_OBJ_ATTR lv_signal_cb_t lv_obj_get_signal_cb(const lv_obj_t * obj)
+LV_FUNC_ATTR lv_signal_cb_t lv_obj_get_signal_cb(const lv_obj_t * obj)
 {
     return obj->signal_cb;
 }
@@ -1994,7 +1994,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_signal_cb_t lv_obj_get_signal_cb(const lv_obj_t * obj)
  * @param obj pointer to an object
  * @return the design function
  */
-LV_FUNC_CORE_OBJ_ATTR lv_design_cb_t lv_obj_get_design_cb(const lv_obj_t * obj)
+LV_FUNC_ATTR lv_design_cb_t lv_obj_get_design_cb(const lv_obj_t * obj)
 {
     return obj->design_cb;
 }
@@ -2004,7 +2004,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_design_cb_t lv_obj_get_design_cb(const lv_obj_t * obj)
  * @param obj pointer to an object
  * @return the event function
  */
-LV_FUNC_CORE_OBJ_ATTR lv_event_cb_t lv_obj_get_event_cb(const lv_obj_t * obj)
+LV_FUNC_ATTR lv_event_cb_t lv_obj_get_event_cb(const lv_obj_t * obj)
 {
     return obj->event_cb;
 }
@@ -2019,7 +2019,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_event_cb_t lv_obj_get_event_cb(const lv_obj_t * obj)
  * @return the ext pointer but not the dynamic version
  *         Use it as ext->data1, and NOT da(ext)->data1
  */
-LV_FUNC_CORE_OBJ_ATTR void * lv_obj_get_ext_attr(const lv_obj_t * obj)
+LV_FUNC_ATTR void * lv_obj_get_ext_attr(const lv_obj_t * obj)
 {
     return obj->ext_attr;
 }
@@ -2030,7 +2030,7 @@ LV_FUNC_CORE_OBJ_ATTR void * lv_obj_get_ext_attr(const lv_obj_t * obj)
  * @param obj pointer to an object which type should be get
  * @param buf pointer to an `lv_obj_type_t` buffer to store the types
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_get_type(lv_obj_t * obj, lv_obj_type_t * buf)
+LV_FUNC_ATTR void lv_obj_get_type(lv_obj_t * obj, lv_obj_type_t * buf)
 {
     lv_obj_type_t tmp;
 
@@ -2058,7 +2058,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_get_type(lv_obj_t * obj, lv_obj_type_t * buf)
  * @param obj pointer to an object
  * @return user data
  */
-LV_FUNC_CORE_OBJ_ATTR lv_obj_user_data_t lv_obj_get_user_data(lv_obj_t * obj)
+LV_FUNC_ATTR lv_obj_user_data_t lv_obj_get_user_data(lv_obj_t * obj)
 {
     return obj->user_data;
 }
@@ -2068,7 +2068,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_obj_user_data_t lv_obj_get_user_data(lv_obj_t * obj)
  * @param obj pointer to an object
  * @return pointer to the user data
  */
-LV_FUNC_CORE_OBJ_ATTR lv_obj_user_data_t * lv_obj_get_user_data_ptr(lv_obj_t * obj)
+LV_FUNC_ATTR lv_obj_user_data_t * lv_obj_get_user_data_ptr(lv_obj_t * obj)
 {
     return &obj->user_data;
 }
@@ -2078,7 +2078,7 @@ LV_FUNC_CORE_OBJ_ATTR lv_obj_user_data_t * lv_obj_get_user_data_ptr(lv_obj_t * o
  * @param obj pointer to an object
  * @param data user data
  */
-LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_user_data(lv_obj_t * obj, lv_obj_user_data_t data)
+LV_FUNC_ATTR void lv_obj_set_user_data(lv_obj_t * obj, lv_obj_user_data_t data)
 {
     memcpy(&obj->user_data, &data, sizeof(lv_obj_user_data_t));
 }
@@ -2090,7 +2090,7 @@ LV_FUNC_CORE_OBJ_ATTR void lv_obj_set_user_data(lv_obj_t * obj, lv_obj_user_data
  * @param obj pointer to an object
  * @return the pointer to group of the object
  */
-LV_FUNC_CORE_OBJ_ATTR void * lv_obj_get_group(const lv_obj_t * obj)
+LV_FUNC_ATTR void * lv_obj_get_group(const lv_obj_t * obj)
 {
     return obj->group_p;
 }
@@ -2100,7 +2100,7 @@ LV_FUNC_CORE_OBJ_ATTR void * lv_obj_get_group(const lv_obj_t * obj)
  * @param obj pointer to an object
  * @return true: the object is focused, false: the object is not focused or not in a group
  */
-LV_FUNC_CORE_OBJ_ATTR bool lv_obj_is_focused(const lv_obj_t * obj)
+LV_FUNC_ATTR bool lv_obj_is_focused(const lv_obj_t * obj)
 {
     if(obj->group_p) {
         if(lv_group_get_focused(obj->group_p) == obj) return true;
@@ -2114,7 +2114,7 @@ LV_FUNC_CORE_OBJ_ATTR bool lv_obj_is_focused(const lv_obj_t * obj)
  *   STATIC FUNCTIONS
  **********************/
 
-LV_FUNC_CORE_OBJ_ATTR static void lv_obj_del_async_cb(void * obj)
+LV_FUNC_ATTR static void lv_obj_del_async_cb(void * obj)
 {
     lv_obj_del(obj);
 }
@@ -2128,7 +2128,7 @@ LV_FUNC_CORE_OBJ_ATTR static void lv_obj_del_async_cb(void * obj)
  *             LV_DESIGN_DRAW: draw the object (always return 'true')
  * @param return true/false, depends on 'mode'
  */
-LV_FUNC_CORE_OBJ_ATTR static bool lv_obj_design(lv_obj_t * obj, const lv_area_t * mask_p, lv_design_mode_t mode)
+LV_FUNC_ATTR static bool lv_obj_design(lv_obj_t * obj, const lv_area_t * mask_p, lv_design_mode_t mode)
 {
     if(mode == LV_DESIGN_COVER_CHK) {
 
@@ -2174,7 +2174,7 @@ LV_FUNC_CORE_OBJ_ATTR static bool lv_obj_design(lv_obj_t * obj, const lv_area_t 
  * @param param parameter for the signal (depends on signal type)
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-LV_FUNC_CORE_OBJ_ATTR static lv_res_t lv_obj_signal(lv_obj_t * obj, lv_signal_t sign, void * param)
+LV_FUNC_ATTR static lv_res_t lv_obj_signal(lv_obj_t * obj, lv_signal_t sign, void * param)
 {
     (void)param;
 
@@ -2203,7 +2203,7 @@ LV_FUNC_CORE_OBJ_ATTR static lv_res_t lv_obj_signal(lv_obj_t * obj, lv_signal_t 
  * @param x_diff x coordinate shift
  * @param y_diff y coordinate shift
  */
-LV_FUNC_CORE_OBJ_ATTR static void refresh_children_position(lv_obj_t * obj, lv_coord_t x_diff, lv_coord_t y_diff)
+LV_FUNC_ATTR static void refresh_children_position(lv_obj_t * obj, lv_coord_t x_diff, lv_coord_t y_diff)
 {
     lv_obj_t * i;
     LV_LL_READ(obj->child_ll, i)
@@ -2222,7 +2222,7 @@ LV_FUNC_CORE_OBJ_ATTR static void refresh_children_position(lv_obj_t * obj, lv_c
  * @param style_p refresh objects only with this style.
  * @param obj pointer to an object
  */
-LV_FUNC_CORE_OBJ_ATTR static void report_style_mod_core(void * style_p, lv_obj_t * obj)
+LV_FUNC_ATTR static void report_style_mod_core(void * style_p, lv_obj_t * obj)
 {
     lv_obj_t * i;
     LV_LL_READ(obj->child_ll, i)
@@ -2241,7 +2241,7 @@ LV_FUNC_CORE_OBJ_ATTR static void report_style_mod_core(void * style_p, lv_obj_t
  * because the NULL styles are inherited from the parent
  * @param obj pointer to an object
  */
-LV_FUNC_CORE_OBJ_ATTR static void refresh_children_style(lv_obj_t * obj)
+LV_FUNC_ATTR static void refresh_children_style(lv_obj_t * obj)
 {
     lv_obj_t * child = lv_obj_get_child(obj, NULL);
     while(child != NULL) {
@@ -2260,7 +2260,7 @@ LV_FUNC_CORE_OBJ_ATTR static void refresh_children_style(lv_obj_t * obj)
  * Called by 'lv_obj_del' to delete the children objects
  * @param obj pointer to an object (all of its children will be deleted)
  */
-LV_FUNC_CORE_OBJ_ATTR static void delete_children(lv_obj_t * obj)
+LV_FUNC_ATTR static void delete_children(lv_obj_t * obj)
 {
     lv_obj_t * i;
     lv_obj_t * i_next;
@@ -2326,7 +2326,7 @@ LV_FUNC_CORE_OBJ_ATTR static void delete_children(lv_obj_t * obj)
     lv_mem_free(obj); /*Free the object itself*/
 }
 
-LV_FUNC_CORE_OBJ_ATTR static void lv_event_mark_deleted(lv_obj_t * obj)
+LV_FUNC_ATTR static void lv_event_mark_deleted(lv_obj_t * obj)
 {
     lv_event_temp_data_t * t = event_temp_data_head;
 

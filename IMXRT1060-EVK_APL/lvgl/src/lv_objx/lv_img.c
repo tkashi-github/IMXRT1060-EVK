@@ -37,7 +37,7 @@ static lv_res_t lv_img_signal(lv_obj_t * img, lv_signal_t sign, void * param);
 /**********************
  *  STATIC VARIABLES
  **********************/
-LV_VAL_OBJX_IMG_ATTR static lv_signal_cb_t ancestor_signal;
+LV_BSS_ATTR static lv_signal_cb_t ancestor_signal;
 
 /**********************
  *      MACROS
@@ -53,7 +53,7 @@ LV_VAL_OBJX_IMG_ATTR static lv_signal_cb_t ancestor_signal;
  * @param copy pointer to a image object, if not NULL then the new object will be copied from it
  * @return pointer to the created image
  */
-LV_FUNC_OBJX_IMAGE_ATTR lv_obj_t * lv_img_create(lv_obj_t * par, const lv_obj_t * copy)
+LV_FUNC_ATTR lv_obj_t * lv_img_create(lv_obj_t * par, const lv_obj_t * copy)
 {
     LV_LOG_TRACE("image create started");
 
@@ -119,7 +119,7 @@ LV_FUNC_OBJX_IMAGE_ATTR lv_obj_t * lv_img_create(lv_obj_t * par, const lv_obj_t 
  * @param img pointer to an image object
  * @param data the image data
  */
-LV_FUNC_OBJX_IMAGE_ATTR void lv_img_set_src(lv_obj_t * img, const void * src_img)
+LV_FUNC_ATTR void lv_img_set_src(lv_obj_t * img, const void * src_img)
 {
     lv_img_src_t src_type = lv_img_src_get_type(src_img);
     lv_img_ext_t * ext    = lv_obj_get_ext_attr(img);
@@ -199,7 +199,7 @@ LV_FUNC_OBJX_IMAGE_ATTR void lv_img_set_src(lv_obj_t * img, const void * src_img
  * @param img pointer to an image
  * @param en true: auto size enable, false: auto size disable
  */
-LV_FUNC_OBJX_IMAGE_ATTR void lv_img_set_auto_size(lv_obj_t * img, bool en)
+LV_FUNC_ATTR void lv_img_set_auto_size(lv_obj_t * img, bool en)
 {
     lv_img_ext_t * ext = lv_obj_get_ext_attr(img);
 
@@ -212,7 +212,7 @@ LV_FUNC_OBJX_IMAGE_ATTR void lv_img_set_auto_size(lv_obj_t * img, bool en)
  * @param img pointer to an image
  * @param x: the new offset along x axis.
  */
-LV_FUNC_OBJX_IMAGE_ATTR void lv_img_set_offset_x(lv_obj_t * img, lv_coord_t x)
+LV_FUNC_ATTR void lv_img_set_offset_x(lv_obj_t * img, lv_coord_t x)
 {
     lv_img_ext_t * ext = lv_obj_get_ext_attr(img);
 
@@ -228,7 +228,7 @@ LV_FUNC_OBJX_IMAGE_ATTR void lv_img_set_offset_x(lv_obj_t * img, lv_coord_t x)
  * @param img pointer to an image
  * @param y: the new offset along y axis.
  */
-LV_FUNC_OBJX_IMAGE_ATTR void lv_img_set_offset_y(lv_obj_t * img, lv_coord_t y)
+LV_FUNC_ATTR void lv_img_set_offset_y(lv_obj_t * img, lv_coord_t y)
 {
     lv_img_ext_t * ext = lv_obj_get_ext_attr(img);
 
@@ -247,7 +247,7 @@ LV_FUNC_OBJX_IMAGE_ATTR void lv_img_set_offset_y(lv_obj_t * img, lv_coord_t y)
  * @param img pointer to an image object
  * @return the image source (symbol, file name or C array)
  */
-LV_FUNC_OBJX_IMAGE_ATTR const void * lv_img_get_src(lv_obj_t * img)
+LV_FUNC_ATTR const void * lv_img_get_src(lv_obj_t * img)
 {
     lv_img_ext_t * ext = lv_obj_get_ext_attr(img);
 
@@ -259,7 +259,7 @@ LV_FUNC_OBJX_IMAGE_ATTR const void * lv_img_get_src(lv_obj_t * img)
  * @param img pointer to an image
  * @return file name
  */
-LV_FUNC_OBJX_IMAGE_ATTR const char * lv_img_get_file_name(const lv_obj_t * img)
+LV_FUNC_ATTR const char * lv_img_get_file_name(const lv_obj_t * img)
 {
     lv_img_ext_t * ext = lv_obj_get_ext_attr(img);
 
@@ -274,7 +274,7 @@ LV_FUNC_OBJX_IMAGE_ATTR const char * lv_img_get_file_name(const lv_obj_t * img)
  * @param img pointer to an image
  * @return true: auto size is enabled, false: auto size is disabled
  */
-LV_FUNC_OBJX_IMAGE_ATTR bool lv_img_get_auto_size(const lv_obj_t * img)
+LV_FUNC_ATTR bool lv_img_get_auto_size(const lv_obj_t * img)
 {
     lv_img_ext_t * ext = lv_obj_get_ext_attr(img);
 
@@ -286,7 +286,7 @@ LV_FUNC_OBJX_IMAGE_ATTR bool lv_img_get_auto_size(const lv_obj_t * img)
  * @param img pointer to an image
  * @return offset.x value.
  */
-LV_FUNC_OBJX_IMAGE_ATTR lv_coord_t lv_img_get_offset_x(lv_obj_t * img)
+LV_FUNC_ATTR lv_coord_t lv_img_get_offset_x(lv_obj_t * img)
 {
     lv_img_ext_t * ext = lv_obj_get_ext_attr(img);
 
@@ -298,7 +298,7 @@ LV_FUNC_OBJX_IMAGE_ATTR lv_coord_t lv_img_get_offset_x(lv_obj_t * img)
  * @param img pointer to an image
  * @return offset.y value.
  */
-LV_FUNC_OBJX_IMAGE_ATTR lv_coord_t lv_img_get_offset_y(lv_obj_t * img)
+LV_FUNC_ATTR lv_coord_t lv_img_get_offset_y(lv_obj_t * img)
 {
     lv_img_ext_t * ext = lv_obj_get_ext_attr(img);
 
@@ -319,7 +319,7 @@ LV_FUNC_OBJX_IMAGE_ATTR lv_coord_t lv_img_get_offset_y(lv_obj_t * img)
  *             LV_DESIGN_DRAW_POST: drawing after every children are drawn
  * @param return true/false, depends on 'mode'
  */
-LV_FUNC_OBJX_IMAGE_ATTR static bool lv_img_design(lv_obj_t * img, const lv_area_t * mask, lv_design_mode_t mode)
+LV_FUNC_ATTR static bool lv_img_design(lv_obj_t * img, const lv_area_t * mask, lv_design_mode_t mode)
 {
     const lv_style_t * style = lv_obj_get_style(img);
     lv_img_ext_t * ext       = lv_obj_get_ext_attr(img);
@@ -377,7 +377,7 @@ LV_FUNC_OBJX_IMAGE_ATTR static bool lv_img_design(lv_obj_t * img, const lv_area_
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-LV_FUNC_OBJX_IMAGE_ATTR static lv_res_t lv_img_signal(lv_obj_t * img, lv_signal_t sign, void * param)
+LV_FUNC_ATTR static lv_res_t lv_img_signal(lv_obj_t * img, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 

@@ -42,8 +42,8 @@ static void draw_bg(lv_obj_t * roller, const lv_area_t * mask);
 /**********************
  *  STATIC VARIABLES
  **********************/
-LV_VAL_OBJX_ROLLER_ATTR static lv_signal_cb_t ancestor_signal;
-LV_VAL_OBJX_ROLLER_ATTR static lv_signal_cb_t ancestor_scrl_signal;
+LV_BSS_ATTR static lv_signal_cb_t ancestor_signal;
+LV_BSS_ATTR static lv_signal_cb_t ancestor_scrl_signal;
 
 /**********************
  *      MACROS
@@ -59,7 +59,7 @@ LV_VAL_OBJX_ROLLER_ATTR static lv_signal_cb_t ancestor_scrl_signal;
  * @param copy pointer to a roller object, if not NULL then the new object will be copied from it
  * @return pointer to the created roller
  */
-LV_FUNC_OBJX_ROLLER_ATTR lv_obj_t * lv_roller_create(lv_obj_t * par, const lv_obj_t * copy)
+LV_FUNC_ATTR lv_obj_t * lv_roller_create(lv_obj_t * par, const lv_obj_t * copy)
 {
     LV_LOG_TRACE("roller create started");
 
@@ -132,7 +132,7 @@ LV_FUNC_OBJX_ROLLER_ATTR lv_obj_t * lv_roller_create(lv_obj_t * par, const lv_ob
  * @param options a string with '\n' separated options. E.g. "One\nTwo\nThree"
  * @param mode `LV_ROLLER_MODE_NORMAL` or `LV_ROLLER_MODE_INFINITE`
  */
-LV_FUNC_OBJX_ROLLER_ATTR void lv_roller_set_options(lv_obj_t * roller, const char * options, lv_roller_mode_t mode)
+LV_FUNC_ATTR void lv_roller_set_options(lv_obj_t * roller, const char * options, lv_roller_mode_t mode)
 {
     lv_roller_ext_t * ext = lv_obj_get_ext_attr(roller);
 
@@ -173,7 +173,7 @@ LV_FUNC_OBJX_ROLLER_ATTR void lv_roller_set_options(lv_obj_t * roller, const cha
  * @param roller - pointer to a roller object
  * @param align - one of lv_label_align_t values (left, right, center)
  */
-LV_FUNC_OBJX_ROLLER_ATTR void lv_roller_set_align(lv_obj_t * roller, lv_label_align_t align)
+LV_FUNC_ATTR void lv_roller_set_align(lv_obj_t * roller, lv_label_align_t align)
 {
     lv_roller_ext_t * ext = lv_obj_get_ext_attr(roller);
     lv_mem_assert(ext);
@@ -187,7 +187,7 @@ LV_FUNC_OBJX_ROLLER_ATTR void lv_roller_set_align(lv_obj_t * roller, lv_label_al
  * @param sel_opt id of the selected option (0 ... number of option - 1);
  * @param anim_en LV_ANIM_ON: set with animation; LV_ANOM_OFF set immediately
  */
-LV_FUNC_OBJX_ROLLER_ATTR void lv_roller_set_selected(lv_obj_t * roller, uint16_t sel_opt, lv_anim_enable_t anim)
+LV_FUNC_ATTR void lv_roller_set_selected(lv_obj_t * roller, uint16_t sel_opt, lv_anim_enable_t anim)
 {
 #if LV_USE_ANIMATION == 0
     anim = LV_ANIM_OFF;
@@ -204,7 +204,7 @@ LV_FUNC_OBJX_ROLLER_ATTR void lv_roller_set_selected(lv_obj_t * roller, uint16_t
  * @param roller pointer to a roller object
  * @param row_cnt number of desired visible rows
  */
-LV_FUNC_OBJX_ROLLER_ATTR void lv_roller_set_visible_row_count(lv_obj_t * roller, uint8_t row_cnt)
+LV_FUNC_ATTR void lv_roller_set_visible_row_count(lv_obj_t * roller, uint8_t row_cnt)
 {
     lv_roller_ext_t * ext          = lv_obj_get_ext_attr(roller);
     const lv_style_t * style_label = lv_obj_get_style(ext->ddlist.label);
@@ -219,7 +219,7 @@ LV_FUNC_OBJX_ROLLER_ATTR void lv_roller_set_visible_row_count(lv_obj_t * roller,
  * @param type which style should be set
  * @param style pointer to a style
  */
-LV_FUNC_OBJX_ROLLER_ATTR void lv_roller_set_style(lv_obj_t * roller, lv_roller_style_t type, const lv_style_t * style)
+LV_FUNC_ATTR void lv_roller_set_style(lv_obj_t * roller, lv_roller_style_t type, const lv_style_t * style)
 {
     switch(type) {
         case LV_ROLLER_STYLE_BG: lv_obj_set_style(roller, style); break;
@@ -236,7 +236,7 @@ LV_FUNC_OBJX_ROLLER_ATTR void lv_roller_set_style(lv_obj_t * roller, lv_roller_s
  * @param roller pointer to a roller object
  * @return id of the selected option (0 ... number of option - 1);
  */
-LV_FUNC_OBJX_ROLLER_ATTR uint16_t lv_roller_get_selected(const lv_obj_t * roller)
+LV_FUNC_ATTR uint16_t lv_roller_get_selected(const lv_obj_t * roller)
 {
     lv_roller_ext_t * ext = lv_obj_get_ext_attr(roller);
     if(ext->mode == LV_ROLLER_MODE_INIFINITE) {
@@ -252,7 +252,7 @@ LV_FUNC_OBJX_ROLLER_ATTR uint16_t lv_roller_get_selected(const lv_obj_t * roller
  * @param roller pointer to a roller object
  * @return LV_LABEL_ALIGN_LEFT, LV_LABEL_ALIGN_RIGHT or LV_LABEL_ALIGN_CENTER
  */
-LV_FUNC_OBJX_ROLLER_ATTR lv_label_align_t lv_roller_get_align(const lv_obj_t * roller)
+LV_FUNC_ATTR lv_label_align_t lv_roller_get_align(const lv_obj_t * roller)
 {
     lv_roller_ext_t * ext = lv_obj_get_ext_attr(roller);
     lv_mem_assert(ext);
@@ -265,7 +265,7 @@ LV_FUNC_OBJX_ROLLER_ATTR lv_label_align_t lv_roller_get_align(const lv_obj_t * r
  * @param roller pointer to a roller object
  * @return true: auto size enabled; false: manual width settings enabled
  */
-LV_FUNC_OBJX_ROLLER_ATTR bool lv_roller_get_hor_fit(const lv_obj_t * roller)
+LV_FUNC_ATTR bool lv_roller_get_hor_fit(const lv_obj_t * roller)
 {
     return lv_page_get_scrl_fit_left(roller);
 }
@@ -276,7 +276,7 @@ LV_FUNC_OBJX_ROLLER_ATTR bool lv_roller_get_hor_fit(const lv_obj_t * roller)
  * @param type which style should be get
  * @return style pointer to a style
  *  */
-LV_FUNC_OBJX_ROLLER_ATTR const lv_style_t * lv_roller_get_style(const lv_obj_t * roller, lv_roller_style_t type)
+LV_FUNC_ATTR const lv_style_t * lv_roller_get_style(const lv_obj_t * roller, lv_roller_style_t type)
 {
     switch(type) {
         case LV_ROLLER_STYLE_BG: return lv_obj_get_style(roller);
@@ -302,7 +302,7 @@ LV_FUNC_OBJX_ROLLER_ATTR const lv_style_t * lv_roller_get_style(const lv_obj_t *
  *             LV_DESIGN_DRAW_POST: drawing after every children are drawn
  * @param return true/false, depends on 'mode'
  */
-LV_FUNC_OBJX_ROLLER_ATTR static bool lv_roller_design(lv_obj_t * roller, const lv_area_t * mask, lv_design_mode_t mode)
+LV_FUNC_ATTR static bool lv_roller_design(lv_obj_t * roller, const lv_area_t * mask, lv_design_mode_t mode)
 {
     /*Return false if the object is not covers the mask_p area*/
     if(mode == LV_DESIGN_COVER_CHK) {
@@ -381,7 +381,7 @@ LV_FUNC_OBJX_ROLLER_ATTR static bool lv_roller_design(lv_obj_t * roller, const l
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-LV_FUNC_OBJX_ROLLER_ATTR static lv_res_t lv_roller_signal(lv_obj_t * roller, lv_signal_t sign, void * param)
+LV_FUNC_ATTR static lv_res_t lv_roller_signal(lv_obj_t * roller, lv_signal_t sign, void * param)
 {
     lv_res_t res = LV_RES_OK;
 
@@ -476,7 +476,7 @@ LV_FUNC_OBJX_ROLLER_ATTR static lv_res_t lv_roller_signal(lv_obj_t * roller, lv_
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-LV_FUNC_OBJX_ROLLER_ATTR static lv_res_t lv_roller_scrl_signal(lv_obj_t * roller_scrl, lv_signal_t sign, void * param)
+LV_FUNC_ATTR static lv_res_t lv_roller_scrl_signal(lv_obj_t * roller_scrl, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 
@@ -543,7 +543,7 @@ LV_FUNC_OBJX_ROLLER_ATTR static lv_res_t lv_roller_scrl_signal(lv_obj_t * roller
  * @param roller pointer to a roller object
  * @param mask pointer to the current mask (from the design function)
  */
-LV_FUNC_OBJX_ROLLER_ATTR static void draw_bg(lv_obj_t * roller, const lv_area_t * mask)
+LV_FUNC_ATTR static void draw_bg(lv_obj_t * roller, const lv_area_t * mask)
 {
     const lv_style_t * style = lv_roller_get_style(roller, LV_ROLLER_STYLE_BG);
     lv_area_t half_mask;
@@ -595,7 +595,7 @@ LV_FUNC_OBJX_ROLLER_ATTR static void draw_bg(lv_obj_t * roller, const lv_area_t 
  * @param roller pointer to a roller object
  * @param anim_en LV_ANIM_ON: refresh with animation; LV_ANOM_OFF: without animation
  */
-LV_FUNC_OBJX_ROLLER_ATTR static void refr_position(lv_obj_t * roller, lv_anim_enable_t anim_en)
+LV_FUNC_ATTR static void refr_position(lv_obj_t * roller, lv_anim_enable_t anim_en)
 {
 #if LV_USE_ANIMATION == 0
     anim_en = LV_ANIM_OFF;
@@ -646,7 +646,7 @@ LV_FUNC_OBJX_ROLLER_ATTR static void refr_position(lv_obj_t * roller, lv_anim_en
  * Refresh the height of the roller and the scrolable
  * @param roller pointer to roller
  */
-LV_FUNC_OBJX_ROLLER_ATTR static void refr_height(lv_obj_t * roller)
+LV_FUNC_ATTR static void refr_height(lv_obj_t * roller)
 {
     lv_roller_ext_t * ext = lv_obj_get_ext_attr(roller);
     lv_align_t obj_align  = LV_ALIGN_IN_LEFT_MID;
@@ -670,7 +670,7 @@ LV_FUNC_OBJX_ROLLER_ATTR static void refr_height(lv_obj_t * roller)
  * Set the middle page for the roller if inifinte is enabled
  * @param scrl pointer to the roller's scrollable (lv_obj_t *)
  */
-LV_FUNC_OBJX_ROLLER_ATTR static void inf_normalize(void * scrl)
+LV_FUNC_ATTR static void inf_normalize(void * scrl)
 {
     lv_obj_t * roller_scrl = (lv_obj_t *)scrl;
     lv_obj_t * roller      = lv_obj_get_parent(roller_scrl);
@@ -697,7 +697,7 @@ LV_FUNC_OBJX_ROLLER_ATTR static void inf_normalize(void * scrl)
 }
 
 #if LV_USE_ANIMATION
-LV_FUNC_OBJX_ROLLER_ATTR static void scroll_anim_ready_cb(lv_anim_t * a)
+LV_FUNC_ATTR static void scroll_anim_ready_cb(lv_anim_t * a)
 {
     inf_normalize(a->var);
 }

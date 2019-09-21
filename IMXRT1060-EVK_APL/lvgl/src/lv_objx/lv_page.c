@@ -54,8 +54,8 @@ static void edge_flash_anim_end(lv_anim_t * a);
 /**********************
  *  STATIC VARIABLES
  **********************/
-LV_VAL_OBJX_PAGE_ATTR static lv_design_cb_t ancestor_design;
-LV_VAL_OBJX_PAGE_ATTR static lv_signal_cb_t ancestor_signal;
+LV_BSS_ATTR static lv_design_cb_t ancestor_design;
+LV_BSS_ATTR static lv_signal_cb_t ancestor_signal;
 
 /**********************
  *      MACROS
@@ -71,7 +71,7 @@ LV_VAL_OBJX_PAGE_ATTR static lv_signal_cb_t ancestor_signal;
  * @param copy pointer to a page object, if not NULL then the new object will be copied from it
  * @return pointer to the created page
  */
-LV_FUNC_OBJX_PAGE_ATTR lv_obj_t * lv_page_create(lv_obj_t * par, const lv_obj_t * copy)
+LV_FUNC_ATTR lv_obj_t * lv_page_create(lv_obj_t * par, const lv_obj_t * copy)
 {
     LV_LOG_TRACE("page create started");
 
@@ -173,7 +173,7 @@ LV_FUNC_OBJX_PAGE_ATTR lv_obj_t * lv_page_create(lv_obj_t * par, const lv_obj_t 
  * Delete all children of the scrl object, without deleting scrl child.
  * @param obj pointer to an object
  */
-LV_FUNC_OBJX_PAGE_ATTR void lv_page_clean(lv_obj_t * obj)
+LV_FUNC_ATTR void lv_page_clean(lv_obj_t * obj)
 {
     lv_obj_t * scrl = lv_page_get_scrl(obj);
     lv_obj_clean(scrl);
@@ -188,7 +188,7 @@ LV_FUNC_OBJX_PAGE_ATTR void lv_page_clean(lv_obj_t * obj)
  * @param page pointer to a page object
  * @param sb_mode the new mode from 'lv_page_sb.mode_t' enum
  */
-LV_FUNC_OBJX_PAGE_ATTR void lv_page_set_sb_mode(lv_obj_t * page, lv_sb_mode_t sb_mode)
+LV_FUNC_ATTR void lv_page_set_sb_mode(lv_obj_t * page, lv_sb_mode_t sb_mode)
 {
     lv_page_ext_t * ext = lv_obj_get_ext_attr(page);
     if(ext->sb.mode == sb_mode) return;
@@ -214,7 +214,7 @@ LV_FUNC_OBJX_PAGE_ATTR void lv_page_set_sb_mode(lv_obj_t * page, lv_sb_mode_t sb
  * @param page pointer to a page object
  * @param anim_time animation time in milliseconds
  */
-LV_FUNC_OBJX_PAGE_ATTR void lv_page_set_anim_time(lv_obj_t * page, uint16_t anim_time)
+LV_FUNC_ATTR void lv_page_set_anim_time(lv_obj_t * page, uint16_t anim_time)
 {
 #if LV_USE_ANIMATION
     lv_page_ext_t * ext = lv_obj_get_ext_attr(page);
@@ -231,7 +231,7 @@ LV_FUNC_OBJX_PAGE_ATTR void lv_page_set_anim_time(lv_obj_t * page, uint16_t anim
  * @param page pointer to a Page
  * @param en true or false to enable/disable scroll propagation
  */
-LV_FUNC_OBJX_PAGE_ATTR void lv_page_set_scroll_propagation(lv_obj_t * page, bool en)
+LV_FUNC_ATTR void lv_page_set_scroll_propagation(lv_obj_t * page, bool en)
 {
     lv_page_ext_t * ext = lv_obj_get_ext_attr(page);
     ext->scroll_prop    = en ? 1 : 0;
@@ -242,7 +242,7 @@ LV_FUNC_OBJX_PAGE_ATTR void lv_page_set_scroll_propagation(lv_obj_t * page, bool
  * @param page pointer to a Page
  * @param en true or false to enable/disable end flash
  */
-LV_FUNC_OBJX_PAGE_ATTR void lv_page_set_edge_flash(lv_obj_t * page, bool en)
+LV_FUNC_ATTR void lv_page_set_edge_flash(lv_obj_t * page, bool en)
 {
 #if LV_USE_ANIMATION
     lv_page_ext_t * ext     = lv_obj_get_ext_attr(page);
@@ -259,7 +259,7 @@ LV_FUNC_OBJX_PAGE_ATTR void lv_page_set_edge_flash(lv_obj_t * page, bool en)
  * @param type which style should be set
  * @param style pointer to a style
  *  */
-LV_FUNC_OBJX_PAGE_ATTR void lv_page_set_style(lv_obj_t * page, lv_page_style_t type, const lv_style_t * style)
+LV_FUNC_ATTR void lv_page_set_style(lv_obj_t * page, lv_page_style_t type, const lv_style_t * style)
 {
     lv_page_ext_t * ext = lv_obj_get_ext_attr(page);
 
@@ -289,7 +289,7 @@ LV_FUNC_OBJX_PAGE_ATTR void lv_page_set_style(lv_obj_t * page, lv_page_style_t t
  * @param page pointer to a page object
  * @return pointer to a container which is the scrollable part of the page
  */
-LV_FUNC_OBJX_PAGE_ATTR lv_obj_t * lv_page_get_scrl(const lv_obj_t * page)
+LV_FUNC_ATTR lv_obj_t * lv_page_get_scrl(const lv_obj_t * page)
 {
     lv_page_ext_t * ext = lv_obj_get_ext_attr(page);
 
@@ -301,7 +301,7 @@ LV_FUNC_OBJX_PAGE_ATTR lv_obj_t * lv_page_get_scrl(const lv_obj_t * page)
  * @param page pointer to a page object
  * @return the animation time in milliseconds
  */
-LV_FUNC_OBJX_PAGE_ATTR uint16_t lv_page_get_anim_time(const lv_obj_t * page)
+LV_FUNC_ATTR uint16_t lv_page_get_anim_time(const lv_obj_t * page)
 {
 #if LV_USE_ANIMATION
     lv_page_ext_t * ext = lv_obj_get_ext_attr(page);
@@ -317,7 +317,7 @@ LV_FUNC_OBJX_PAGE_ATTR uint16_t lv_page_get_anim_time(const lv_obj_t * page)
  * @param page pointer to a page object
  * @return the mode from 'lv_page_sb.mode_t' enum
  */
-LV_FUNC_OBJX_PAGE_ATTR lv_sb_mode_t lv_page_get_sb_mode(const lv_obj_t * page)
+LV_FUNC_ATTR lv_sb_mode_t lv_page_get_sb_mode(const lv_obj_t * page)
 {
     lv_page_ext_t * ext = lv_obj_get_ext_attr(page);
     return ext->sb.mode;
@@ -328,7 +328,7 @@ LV_FUNC_OBJX_PAGE_ATTR lv_sb_mode_t lv_page_get_sb_mode(const lv_obj_t * page)
  * @param page pointer to a Page
  * @return true or false
  */
-LV_FUNC_OBJX_PAGE_ATTR bool lv_page_get_scroll_propagation(lv_obj_t * page)
+LV_FUNC_ATTR bool lv_page_get_scroll_propagation(lv_obj_t * page)
 {
     lv_page_ext_t * ext = lv_obj_get_ext_attr(page);
     return ext->scroll_prop == 0 ? false : true;
@@ -339,7 +339,7 @@ LV_FUNC_OBJX_PAGE_ATTR bool lv_page_get_scroll_propagation(lv_obj_t * page)
  * @param page pointer to a Page
  * return true or false
  */
-LV_FUNC_OBJX_PAGE_ATTR bool lv_page_get_edge_flash(lv_obj_t * page)
+LV_FUNC_ATTR bool lv_page_get_edge_flash(lv_obj_t * page)
 {
 #if LV_USE_ANIMATION
     lv_page_ext_t * ext = lv_obj_get_ext_attr(page);
@@ -355,7 +355,7 @@ LV_FUNC_OBJX_PAGE_ATTR bool lv_page_get_edge_flash(lv_obj_t * page)
  * @param page pointer to a page object
  * @return the width which still fits into the page
  */
-LV_FUNC_OBJX_PAGE_ATTR lv_coord_t lv_page_get_fit_width(lv_obj_t * page)
+LV_FUNC_ATTR lv_coord_t lv_page_get_fit_width(lv_obj_t * page)
 {
     const lv_style_t * bg_style   = lv_page_get_style(page, LV_PAGE_STYLE_BG);
     const lv_style_t * scrl_style = lv_page_get_style(page, LV_PAGE_STYLE_SCRL);
@@ -369,7 +369,7 @@ LV_FUNC_OBJX_PAGE_ATTR lv_coord_t lv_page_get_fit_width(lv_obj_t * page)
  * @param page pointer to a page object
  * @return the height which still fits into the page
  */
-LV_FUNC_OBJX_PAGE_ATTR lv_coord_t lv_page_get_fit_height(lv_obj_t * page)
+LV_FUNC_ATTR lv_coord_t lv_page_get_fit_height(lv_obj_t * page)
 {
     const lv_style_t * bg_style   = lv_page_get_style(page, LV_PAGE_STYLE_BG);
     const lv_style_t * scrl_style = lv_page_get_style(page, LV_PAGE_STYLE_SCRL);
@@ -384,7 +384,7 @@ LV_FUNC_OBJX_PAGE_ATTR lv_coord_t lv_page_get_fit_height(lv_obj_t * page)
  * @param type which style should be get
  * @return style pointer to a style
  *  */
-LV_FUNC_OBJX_PAGE_ATTR const lv_style_t * lv_page_get_style(const lv_obj_t * page, lv_page_style_t type)
+LV_FUNC_ATTR const lv_style_t * lv_page_get_style(const lv_obj_t * page, lv_page_style_t type)
 {
     const lv_style_t * style = NULL;
     lv_page_ext_t * ext      = lv_obj_get_ext_attr(page);
@@ -412,7 +412,7 @@ LV_FUNC_OBJX_PAGE_ATTR const lv_style_t * lv_page_get_style(const lv_obj_t * pag
  * @param edge Edge to check
  * @return true if the page is on the specified edge
  */
-LV_FUNC_OBJX_PAGE_ATTR bool lv_page_on_edge(lv_obj_t * page, lv_page_edge_t edge)
+LV_FUNC_ATTR bool lv_page_on_edge(lv_obj_t * page, lv_page_edge_t edge)
 {
     const lv_style_t * page_style = lv_obj_get_style(page);
     lv_obj_t * scrl               = lv_page_get_scrl(page);
@@ -435,7 +435,7 @@ LV_FUNC_OBJX_PAGE_ATTR bool lv_page_on_edge(lv_obj_t * page, lv_page_edge_t edge
  * @param obj pointer to an object on a page
  * @param glue true: enable glue, false: disable glue
  */
-LV_FUNC_OBJX_PAGE_ATTR void lv_page_glue_obj(lv_obj_t * obj, bool glue)
+LV_FUNC_ATTR void lv_page_glue_obj(lv_obj_t * obj, bool glue)
 {
     lv_obj_set_drag_parent(obj, glue);
     lv_obj_set_drag(obj, glue);
@@ -447,7 +447,7 @@ LV_FUNC_OBJX_PAGE_ATTR void lv_page_glue_obj(lv_obj_t * obj, bool glue)
  * @param obj pointer to an object to focus (must be on the page)
  * @param anim_en LV_ANIM_ON to focus with animation; LV_ANIM_OFF to focus without animation
  */
-LV_FUNC_OBJX_PAGE_ATTR void lv_page_focus(lv_obj_t * page, const lv_obj_t * obj, lv_anim_enable_t anim_en)
+LV_FUNC_ATTR void lv_page_focus(lv_obj_t * page, const lv_obj_t * obj, lv_anim_enable_t anim_en)
 {
     lv_page_ext_t * ext = lv_obj_get_ext_attr(page);
 
@@ -540,7 +540,7 @@ LV_FUNC_OBJX_PAGE_ATTR void lv_page_focus(lv_obj_t * page, const lv_obj_t * obj,
  * @param page pointer to a page object
  * @param dist the distance to scroll (< 0: scroll right; > 0 scroll left)
  */
-LV_FUNC_OBJX_PAGE_ATTR void lv_page_scroll_hor(lv_obj_t * page, lv_coord_t dist)
+LV_FUNC_ATTR void lv_page_scroll_hor(lv_obj_t * page, lv_coord_t dist)
 {
     lv_obj_t * scrl = lv_page_get_scrl(page);
 
@@ -569,7 +569,7 @@ LV_FUNC_OBJX_PAGE_ATTR void lv_page_scroll_hor(lv_obj_t * page, lv_coord_t dist)
  * @param page pointer to a page object
  * @param dist the distance to scroll (< 0: scroll down; > 0 scroll up)
  */
-LV_FUNC_OBJX_PAGE_ATTR void lv_page_scroll_ver(lv_obj_t * page, lv_coord_t dist)
+LV_FUNC_ATTR void lv_page_scroll_ver(lv_obj_t * page, lv_coord_t dist)
 {
     lv_obj_t * scrl = lv_page_get_scrl(page);
 
@@ -598,7 +598,7 @@ LV_FUNC_OBJX_PAGE_ATTR void lv_page_scroll_ver(lv_obj_t * page, lv_coord_t dist)
  * Start an edge flash animation. Exactly one `ext->edge_flash.xxx_ip` should be set
  * @param page
  */
-LV_FUNC_OBJX_PAGE_ATTR void lv_page_start_edge_flash(lv_obj_t * page)
+LV_FUNC_ATTR void lv_page_start_edge_flash(lv_obj_t * page)
 {
 #if LV_USE_ANIMATION
     lv_page_ext_t * ext = lv_obj_get_ext_attr(page);
@@ -637,7 +637,7 @@ LV_FUNC_OBJX_PAGE_ATTR void lv_page_start_edge_flash(lv_obj_t * page)
  *             LV_DESIGN_DRAW_POST: drawing after every children are drawn
  * @param return true/false, depends on 'mode'
  */
-LV_FUNC_OBJX_PAGE_ATTR static bool lv_page_design(lv_obj_t * page, const lv_area_t * mask, lv_design_mode_t mode)
+LV_FUNC_ATTR static bool lv_page_design(lv_obj_t * page, const lv_area_t * mask, lv_design_mode_t mode)
 {
     if(mode == LV_DESIGN_COVER_CHK) {
         return ancestor_design(page, mask, mode);
@@ -737,7 +737,7 @@ LV_FUNC_OBJX_PAGE_ATTR static bool lv_page_design(lv_obj_t * page, const lv_area
  *             LV_DESIGN_DRAW_POST: drawing after every children are drawn
  * @param return true/false, depends on 'mode'
  */
-LV_FUNC_OBJX_PAGE_ATTR static bool lv_scrl_design(lv_obj_t * scrl, const lv_area_t * mask, lv_design_mode_t mode)
+LV_FUNC_ATTR static bool lv_scrl_design(lv_obj_t * scrl, const lv_area_t * mask, lv_design_mode_t mode)
 {
     if(mode == LV_DESIGN_COVER_CHK) {
         return ancestor_design(scrl, mask, mode);
@@ -785,7 +785,7 @@ LV_FUNC_OBJX_PAGE_ATTR static bool lv_scrl_design(lv_obj_t * scrl, const lv_area
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-LV_FUNC_OBJX_PAGE_ATTR static lv_res_t lv_page_signal(lv_obj_t * page, lv_signal_t sign, void * param)
+LV_FUNC_ATTR static lv_res_t lv_page_signal(lv_obj_t * page, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 
@@ -888,7 +888,7 @@ LV_FUNC_OBJX_PAGE_ATTR static lv_res_t lv_page_signal(lv_obj_t * page, lv_signal
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-LV_FUNC_OBJX_PAGE_ATTR static lv_res_t lv_page_scrollable_signal(lv_obj_t * scrl, lv_signal_t sign, void * param)
+LV_FUNC_ATTR static lv_res_t lv_page_scrollable_signal(lv_obj_t * scrl, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 
@@ -1074,7 +1074,7 @@ LV_FUNC_OBJX_PAGE_ATTR static lv_res_t lv_page_scrollable_signal(lv_obj_t * scrl
  * @param event type of the event
  * @param data data of the event
  */
-LV_FUNC_OBJX_PAGE_ATTR static void scrl_def_event_cb(lv_obj_t * scrl, lv_event_t event)
+LV_FUNC_ATTR static void scrl_def_event_cb(lv_obj_t * scrl, lv_event_t event)
 {
     lv_obj_t * page = lv_obj_get_parent(scrl);
 
@@ -1092,7 +1092,7 @@ LV_FUNC_OBJX_PAGE_ATTR static void scrl_def_event_cb(lv_obj_t * scrl, lv_event_t
  * Refresh the position and size of the scroll bars.
  * @param page pointer to a page object
  */
-LV_FUNC_OBJX_PAGE_ATTR static void lv_page_sb_refresh(lv_obj_t * page)
+LV_FUNC_ATTR static void lv_page_sb_refresh(lv_obj_t * page)
 {
     lv_page_ext_t * ext      = lv_obj_get_ext_attr(page);
     const lv_style_t * style = lv_obj_get_style(page);
@@ -1209,14 +1209,14 @@ LV_FUNC_OBJX_PAGE_ATTR static void lv_page_sb_refresh(lv_obj_t * page)
 }
 
 #if LV_USE_ANIMATION
-LV_FUNC_OBJX_PAGE_ATTR static void edge_flash_anim(void * page, lv_anim_value_t v)
+LV_FUNC_ATTR static void edge_flash_anim(void * page, lv_anim_value_t v)
 {
     lv_page_ext_t * ext   = lv_obj_get_ext_attr(page);
     ext->edge_flash.state = v;
     lv_obj_invalidate(page);
 }
 
-LV_FUNC_OBJX_PAGE_ATTR static void edge_flash_anim_end(lv_anim_t * a)
+LV_FUNC_ATTR static void edge_flash_anim_end(lv_anim_t * a)
 {
     lv_page_ext_t * ext       = lv_obj_get_ext_attr(a->var);
     ext->edge_flash.top_ip    = 0;

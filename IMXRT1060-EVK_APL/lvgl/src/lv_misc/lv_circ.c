@@ -40,7 +40,7 @@
  * @param tmp point to a variable. It will store temporary data
  * @param radius radius of the circle
  */
-LV_FUNC_MISC_CIRC_ATTR void lv_circ_init(lv_point_t * c, lv_coord_t * tmp, lv_coord_t radius)
+LV_FUNC_ATTR void lv_circ_init(lv_point_t * c, lv_coord_t * tmp, lv_coord_t radius)
 {
     c->x = radius;
     c->y = 0;
@@ -52,7 +52,7 @@ LV_FUNC_MISC_CIRC_ATTR void lv_circ_init(lv_point_t * c, lv_coord_t * tmp, lv_co
  * @param c same as in circ_init
  * @return true if the circle is not ready yet
  */
-LV_FUNC_MISC_CIRC_ATTR bool lv_circ_cont(lv_point_t * c)
+LV_FUNC_ATTR bool lv_circ_cont(lv_point_t * c)
 {
     return c->y <= c->x ? true : false;
 }
@@ -62,7 +62,7 @@ LV_FUNC_MISC_CIRC_ATTR bool lv_circ_cont(lv_point_t * c)
  * @param c same as in circ_init. The next point stored here.
  * @param tmp same as in circ_init.
  */
-LV_FUNC_MISC_CIRC_ATTR void lv_circ_next(lv_point_t * c, lv_coord_t * tmp)
+LV_FUNC_ATTR void lv_circ_next(lv_point_t * c, lv_coord_t * tmp)
 {
     c->y++;
 

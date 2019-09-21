@@ -42,8 +42,8 @@ static lv_res_t lv_preload_signal(lv_obj_t * preload, lv_signal_t sign, void * p
 /**********************
  *  STATIC VARIABLES
  **********************/
-LV_VAL_OBJX_PRELOAD_ATTR static lv_signal_cb_t ancestor_signal;
-LV_VAL_OBJX_PRELOAD_ATTR static lv_design_cb_t ancestor_design;
+LV_BSS_ATTR static lv_signal_cb_t ancestor_signal;
+LV_BSS_ATTR static lv_design_cb_t ancestor_design;
 
 /**********************
  *      MACROS
@@ -60,7 +60,7 @@ LV_VAL_OBJX_PRELOAD_ATTR static lv_design_cb_t ancestor_design;
  * it
  * @return pointer to the created pre loader
  */
-LV_FUNC_OBJX_PRELOAD_ATTR lv_obj_t * lv_preload_create(lv_obj_t * par, const lv_obj_t * copy)
+LV_FUNC_ATTR lv_obj_t * lv_preload_create(lv_obj_t * par, const lv_obj_t * copy)
 {
     LV_LOG_TRACE("preload create started");
 
@@ -127,7 +127,7 @@ LV_FUNC_OBJX_PRELOAD_ATTR lv_obj_t * lv_preload_create(lv_obj_t * par, const lv_
  * @param preload pointer to a preload object
  * @param deg length of the arc
  */
-LV_FUNC_OBJX_PRELOAD_ATTR void lv_preload_set_arc_length(lv_obj_t * preload, lv_anim_value_t deg)
+LV_FUNC_ATTR void lv_preload_set_arc_length(lv_obj_t * preload, lv_anim_value_t deg)
 {
     lv_preload_ext_t * ext = lv_obj_get_ext_attr(preload);
 
@@ -139,7 +139,7 @@ LV_FUNC_OBJX_PRELOAD_ATTR void lv_preload_set_arc_length(lv_obj_t * preload, lv_
  * @param preload pointer to a preload object
  * @param time time of one round in milliseconds
  */
-LV_FUNC_OBJX_PRELOAD_ATTR void lv_preload_set_spin_time(lv_obj_t * preload, uint16_t time)
+LV_FUNC_ATTR void lv_preload_set_spin_time(lv_obj_t * preload, uint16_t time)
 {
     lv_preload_ext_t * ext = lv_obj_get_ext_attr(preload);
 
@@ -156,7 +156,7 @@ LV_FUNC_OBJX_PRELOAD_ATTR void lv_preload_set_spin_time(lv_obj_t * preload, uint
  * @param type which style should be set
  * @param style pointer to a style
  *  */
-LV_FUNC_OBJX_PRELOAD_ATTR void lv_preload_set_style(lv_obj_t * preload, lv_preload_style_t type, const lv_style_t * style)
+LV_FUNC_ATTR void lv_preload_set_style(lv_obj_t * preload, lv_preload_style_t type, const lv_style_t * style)
 {
     switch(type) {
         case LV_PRELOAD_STYLE_MAIN: lv_arc_set_style(preload, LV_ARC_STYLE_MAIN, style); break;
@@ -168,7 +168,7 @@ LV_FUNC_OBJX_PRELOAD_ATTR void lv_preload_set_style(lv_obj_t * preload, lv_prelo
  * @param preload pointer to pre loader object
  * @param type animation type of the preload
  *  */
-LV_FUNC_OBJX_PRELOAD_ATTR void lv_preload_set_type(lv_obj_t * preload, lv_preload_type_t type)
+LV_FUNC_ATTR void lv_preload_set_type(lv_obj_t * preload, lv_preload_type_t type)
 {
     lv_preload_ext_t * ext = lv_obj_get_ext_attr(preload);
 
@@ -248,7 +248,7 @@ LV_FUNC_OBJX_PRELOAD_ATTR void lv_preload_set_type(lv_obj_t * preload, lv_preloa
     }
 }
 
-LV_FUNC_OBJX_PRELOAD_ATTR void lv_preload_set_dir(lv_obj_t * preload, lv_preload_dir_t dir)
+LV_FUNC_ATTR void lv_preload_set_dir(lv_obj_t * preload, lv_preload_dir_t dir)
 {
     lv_preload_ext_t * ext = lv_obj_get_ext_attr(preload);
 
@@ -264,7 +264,7 @@ LV_FUNC_OBJX_PRELOAD_ATTR void lv_preload_set_dir(lv_obj_t * preload, lv_preload
  * Get the arc length [degree] of the a pre loader
  * @param preload pointer to a pre loader object
  */
-LV_FUNC_OBJX_PRELOAD_ATTR lv_anim_value_t lv_preload_get_arc_length(const lv_obj_t * preload)
+LV_FUNC_ATTR lv_anim_value_t lv_preload_get_arc_length(const lv_obj_t * preload)
 {
     lv_preload_ext_t * ext = lv_obj_get_ext_attr(preload);
     return ext->arc_length;
@@ -274,7 +274,7 @@ LV_FUNC_OBJX_PRELOAD_ATTR lv_anim_value_t lv_preload_get_arc_length(const lv_obj
  * Get the spin time of the arc
  * @param preload pointer to a pre loader object [milliseconds]
  */
-LV_FUNC_OBJX_PRELOAD_ATTR uint16_t lv_preload_get_spin_time(const lv_obj_t * preload)
+LV_FUNC_ATTR uint16_t lv_preload_get_spin_time(const lv_obj_t * preload)
 {
     lv_preload_ext_t * ext = lv_obj_get_ext_attr(preload);
     return ext->time;
@@ -286,7 +286,7 @@ LV_FUNC_OBJX_PRELOAD_ATTR uint16_t lv_preload_get_spin_time(const lv_obj_t * pre
  * @param type which style should be get
  * @return style pointer to the style
  *  */
-LV_FUNC_OBJX_PRELOAD_ATTR const lv_style_t * lv_preload_get_style(const lv_obj_t * preload, lv_preload_style_t type)
+LV_FUNC_ATTR const lv_style_t * lv_preload_get_style(const lv_obj_t * preload, lv_preload_style_t type)
 {
     const lv_style_t * style = NULL;
 
@@ -303,13 +303,13 @@ LV_FUNC_OBJX_PRELOAD_ATTR const lv_style_t * lv_preload_get_style(const lv_obj_t
  * @param preload pointer to pre loader object
  * @return animation type
  *  */
-LV_FUNC_OBJX_PRELOAD_ATTR lv_preload_type_t lv_preload_get_type(lv_obj_t * preload)
+LV_FUNC_ATTR lv_preload_type_t lv_preload_get_type(lv_obj_t * preload)
 {
     lv_preload_ext_t * ext = lv_obj_get_ext_attr(preload);
     return ext->anim_type;
 }
 
-LV_FUNC_OBJX_PRELOAD_ATTR lv_preload_dir_t lv_preload_get_dir(lv_obj_t * preload)
+LV_FUNC_ATTR lv_preload_dir_t lv_preload_get_dir(lv_obj_t * preload)
 {
     lv_preload_ext_t * ext = lv_obj_get_ext_attr(preload);
     return ext->anim_dir;
@@ -324,7 +324,7 @@ LV_FUNC_OBJX_PRELOAD_ATTR lv_preload_dir_t lv_preload_get_dir(lv_obj_t * preload
  * @param ptr pointer to preloader
  * @param val the current desired value [0..360]
  */
-LV_FUNC_OBJX_PRELOAD_ATTR void lv_preload_spinner_anim(void * ptr, lv_anim_value_t val)
+LV_FUNC_ATTR void lv_preload_spinner_anim(void * ptr, lv_anim_value_t val)
 {
     lv_obj_t * preload     = ptr;
     lv_preload_ext_t * ext = lv_obj_get_ext_attr(preload);
@@ -352,7 +352,7 @@ LV_FUNC_OBJX_PRELOAD_ATTR void lv_preload_spinner_anim(void * ptr, lv_anim_value
  *             LV_DESIGN_DRAW_POST: drawing after every children are drawn
  * @param return true/false, depends on 'mode'
  */
-LV_FUNC_OBJX_PRELOAD_ATTR static bool lv_preload_design(lv_obj_t * preload, const lv_area_t * mask, lv_design_mode_t mode)
+LV_FUNC_ATTR static bool lv_preload_design(lv_obj_t * preload, const lv_area_t * mask, lv_design_mode_t mode)
 {
     /*Return false if the object is not covers the mask_p area*/
     if(mode == LV_DESIGN_COVER_CHK) {
@@ -402,7 +402,7 @@ LV_FUNC_OBJX_PRELOAD_ATTR static bool lv_preload_design(lv_obj_t * preload, cons
  * @param param pointer to a signal specific variable
  * @return LV_RES_OK: the object is not deleted in the function; LV_RES_INV: the object is deleted
  */
-LV_FUNC_OBJX_PRELOAD_ATTR static lv_res_t lv_preload_signal(lv_obj_t * preload, lv_signal_t sign, void * param)
+LV_FUNC_ATTR static lv_res_t lv_preload_signal(lv_obj_t * preload, lv_signal_t sign, void * param)
 {
     lv_res_t res;
 

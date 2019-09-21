@@ -61,7 +61,7 @@ static lv_obj_t * indev_obj_act = NULL;
 /**
  * Initialize the display input device subsystem
  */
-LV_FUNC_CORE_INDEV_ATTR void lv_indev_init(void)
+LV_FUNC_ATTR void lv_indev_init(void)
 {
     lv_indev_reset(NULL); /*Reset all input devices*/
 }
@@ -70,7 +70,7 @@ LV_FUNC_CORE_INDEV_ATTR void lv_indev_init(void)
  * Called periodically to read the input devices
  * @param param pointer to and input device to read
  */
-LV_FUNC_CORE_INDEV_ATTR void lv_indev_read_task(lv_task_t * task)
+LV_FUNC_ATTR void lv_indev_read_task(lv_task_t * task)
 {
     LV_LOG_TRACE("indev read task started");
 
@@ -128,7 +128,7 @@ LV_FUNC_CORE_INDEV_ATTR void lv_indev_read_task(lv_task_t * task)
  * @return pointer to the currently processed input device or NULL if no input device processing
  * right now
  */
-LV_FUNC_CORE_INDEV_ATTR lv_indev_t * lv_indev_get_act(void)
+LV_FUNC_ATTR lv_indev_t * lv_indev_get_act(void)
 {
     return indev_act;
 }
@@ -138,7 +138,7 @@ LV_FUNC_CORE_INDEV_ATTR lv_indev_t * lv_indev_get_act(void)
  * @param indev pointer to an input device
  * @return the type of the input device from `lv_hal_indev_type_t` (`LV_INDEV_TYPE_...`)
  */
-LV_FUNC_CORE_INDEV_ATTR lv_indev_type_t lv_indev_get_type(const lv_indev_t * indev)
+LV_FUNC_ATTR lv_indev_type_t lv_indev_get_type(const lv_indev_t * indev)
 {
     if(indev == NULL) return LV_INDEV_TYPE_NONE;
 
@@ -148,7 +148,7 @@ LV_FUNC_CORE_INDEV_ATTR lv_indev_type_t lv_indev_get_type(const lv_indev_t * ind
  * Reset one or all input devices
  * @param indev pointer to an input device to reset or NULL to reset all of them
  */
-LV_FUNC_CORE_INDEV_ATTR void lv_indev_reset(lv_indev_t * indev)
+LV_FUNC_ATTR void lv_indev_reset(lv_indev_t * indev)
 {
     if(indev)
         indev->proc.reset_query = 1;
@@ -166,7 +166,7 @@ LV_FUNC_CORE_INDEV_ATTR void lv_indev_reset(lv_indev_t * indev)
  * Reset the long press state of an input device
  * @param indev pointer to an input device
  */
-LV_FUNC_CORE_INDEV_ATTR void lv_indev_reset_long_press(lv_indev_t * indev)
+LV_FUNC_ATTR void lv_indev_reset_long_press(lv_indev_t * indev)
 {
     indev->proc.long_pr_sent         = 0;
     indev->proc.longpr_rep_timestamp = lv_tick_get();
@@ -178,7 +178,7 @@ LV_FUNC_CORE_INDEV_ATTR void lv_indev_reset_long_press(lv_indev_t * indev)
  * @param indev pointer to an input device
  * @param en true: enable; false: disable
  */
-LV_FUNC_CORE_INDEV_ATTR void lv_indev_enable(lv_indev_t * indev, bool en)
+LV_FUNC_ATTR void lv_indev_enable(lv_indev_t * indev, bool en)
 {
     if(!indev) return;
 
@@ -190,7 +190,7 @@ LV_FUNC_CORE_INDEV_ATTR void lv_indev_enable(lv_indev_t * indev, bool en)
  * @param indev pointer to an input device
  * @param cur_obj pointer to an object to be used as cursor
  */
-LV_FUNC_CORE_INDEV_ATTR void lv_indev_set_cursor(lv_indev_t * indev, lv_obj_t * cur_obj)
+LV_FUNC_ATTR void lv_indev_set_cursor(lv_indev_t * indev, lv_obj_t * cur_obj)
 {
     if(indev->driver.type != LV_INDEV_TYPE_POINTER) return;
 
@@ -219,7 +219,7 @@ void lv_indev_set_group(lv_indev_t * indev, lv_group_t * group)
  * @param indev pointer to an input device
  * @param group point to a group
  */
-LV_FUNC_CORE_INDEV_ATTR void lv_indev_set_button_points(lv_indev_t * indev, const lv_point_t * points)
+LV_FUNC_ATTR void lv_indev_set_button_points(lv_indev_t * indev, const lv_point_t * points)
 {
     if(indev->driver.type == LV_INDEV_TYPE_BUTTON) {
         indev->btn_points = points;
@@ -231,7 +231,7 @@ LV_FUNC_CORE_INDEV_ATTR void lv_indev_set_button_points(lv_indev_t * indev, cons
  * @param indev pointer to an input device
  * @param point pointer to a point to store the result
  */
-LV_FUNC_CORE_INDEV_ATTR void lv_indev_get_point(const lv_indev_t * indev, lv_point_t * point)
+LV_FUNC_ATTR void lv_indev_get_point(const lv_indev_t * indev, lv_point_t * point)
 {
     if(indev->driver.type != LV_INDEV_TYPE_POINTER && indev->driver.type != LV_INDEV_TYPE_BUTTON) {
         point->x = -1;
@@ -247,7 +247,7 @@ LV_FUNC_CORE_INDEV_ATTR void lv_indev_get_point(const lv_indev_t * indev, lv_poi
  * @param indev pointer to an input device
  * @return the last pressed key (0 on error)
  */
-LV_FUNC_CORE_INDEV_ATTR uint32_t lv_indev_get_key(const lv_indev_t * indev)
+LV_FUNC_ATTR uint32_t lv_indev_get_key(const lv_indev_t * indev)
 {
     if(indev->driver.type != LV_INDEV_TYPE_KEYPAD)
         return 0;
@@ -261,7 +261,7 @@ LV_FUNC_CORE_INDEV_ATTR uint32_t lv_indev_get_key(const lv_indev_t * indev)
  * @param indev pointer to an input device
  * @return true: drag is in progress
  */
-LV_FUNC_CORE_INDEV_ATTR bool lv_indev_is_dragging(const lv_indev_t * indev)
+LV_FUNC_ATTR bool lv_indev_is_dragging(const lv_indev_t * indev)
 {
     if(indev == NULL) return false;
     if(indev->driver.type != LV_INDEV_TYPE_POINTER && indev->driver.type != LV_INDEV_TYPE_BUTTON) return false;
@@ -274,7 +274,7 @@ LV_FUNC_CORE_INDEV_ATTR bool lv_indev_is_dragging(const lv_indev_t * indev)
  * @param indev pointer to an input device
  * @param point pointer to a point to store the types.pointer.vector
  */
-LV_FUNC_CORE_INDEV_ATTR void lv_indev_get_vect(const lv_indev_t * indev, lv_point_t * point)
+LV_FUNC_ATTR void lv_indev_get_vect(const lv_indev_t * indev, lv_point_t * point)
 {
     if(indev == NULL) {
         point->x = 0;
@@ -295,7 +295,7 @@ LV_FUNC_CORE_INDEV_ATTR void lv_indev_get_vect(const lv_indev_t * indev, lv_poin
  * Do nothing until the next release
  * @param indev pointer to an input device
  */
-LV_FUNC_CORE_INDEV_ATTR void lv_indev_wait_release(lv_indev_t * indev)
+LV_FUNC_ATTR void lv_indev_wait_release(lv_indev_t * indev)
 {
     indev->proc.wait_until_release = 1;
 }
@@ -306,7 +306,7 @@ LV_FUNC_CORE_INDEV_ATTR void lv_indev_wait_release(lv_indev_t * indev)
  * @param indev pointer to an input device
  * @return pointer to the indev read refresher task. (NULL on error)
  */
-LV_FUNC_CORE_INDEV_ATTR lv_task_t * lv_indev_get_read_task(lv_disp_t * indev)
+LV_FUNC_ATTR lv_task_t * lv_indev_get_read_task(lv_disp_t * indev)
 {
     if(!indev) {
         LV_LOG_WARN("lv_indev_get_read_task: indev was NULL");
@@ -320,7 +320,7 @@ LV_FUNC_CORE_INDEV_ATTR lv_task_t * lv_indev_get_read_task(lv_disp_t * indev)
  * Gets a pointer to the currently active object in the currently processed input device.
  * @return pointer to currently active object or NULL if no active object
  */
-LV_FUNC_CORE_INDEV_ATTR lv_obj_t * lv_indev_get_obj_act(void)
+LV_FUNC_ATTR lv_obj_t * lv_indev_get_obj_act(void)
 {
     return indev_obj_act;
 }
@@ -334,7 +334,7 @@ LV_FUNC_CORE_INDEV_ATTR lv_obj_t * lv_indev_get_obj_act(void)
  * @param i pointer to an input device
  * @param data pointer to the data read from the input device
  */
-LV_FUNC_CORE_INDEV_ATTR static void indev_pointer_proc(lv_indev_t * i, lv_indev_data_t * data)
+LV_FUNC_ATTR static void indev_pointer_proc(lv_indev_t * i, lv_indev_data_t * data)
 {
     /*Move the cursor if set and moved*/
     if(i->cursor != NULL &&
@@ -360,7 +360,7 @@ LV_FUNC_CORE_INDEV_ATTR static void indev_pointer_proc(lv_indev_t * i, lv_indev_
  * @param i pointer to an input device
  * @param data pointer to the data read from the input device
  */
-LV_FUNC_CORE_INDEV_ATTR static void indev_keypad_proc(lv_indev_t * i, lv_indev_data_t * data)
+LV_FUNC_ATTR static void indev_keypad_proc(lv_indev_t * i, lv_indev_data_t * data)
 {
 #if LV_USE_GROUP
     if(data->state == LV_INDEV_STATE_PR && i->proc.wait_until_release) return;
@@ -508,7 +508,7 @@ LV_FUNC_CORE_INDEV_ATTR static void indev_keypad_proc(lv_indev_t * i, lv_indev_d
  * @param i pointer to an input device
  * @param data pointer to the data read from the input device
  */
-LV_FUNC_CORE_INDEV_ATTR static void indev_encoder_proc(lv_indev_t * i, lv_indev_data_t * data)
+LV_FUNC_ATTR static void indev_encoder_proc(lv_indev_t * i, lv_indev_data_t * data)
 {
 #if LV_USE_GROUP
 
@@ -657,7 +657,7 @@ LV_FUNC_CORE_INDEV_ATTR static void indev_encoder_proc(lv_indev_t * i, lv_indev_
  * @param x x coordinate of the next point
  * @param y y coordinate of the next point
  */
-LV_FUNC_CORE_INDEV_ATTR static void indev_button_proc(lv_indev_t * i, lv_indev_data_t * data)
+LV_FUNC_ATTR static void indev_button_proc(lv_indev_t * i, lv_indev_data_t * data)
 {
     i->proc.types.pointer.act_point.x = i->btn_points[data->btn_id].x;
     i->proc.types.pointer.act_point.y = i->btn_points[data->btn_id].y;
@@ -680,7 +680,7 @@ LV_FUNC_CORE_INDEV_ATTR static void indev_button_proc(lv_indev_t * i, lv_indev_d
  * @param indev pointer to an input device 'proc'
  * @return LV_RES_OK: no indev reset required; LV_RES_INV: indev reset is required
  */
-LV_FUNC_CORE_INDEV_ATTR static void indev_proc_press(lv_indev_proc_t * proc)
+LV_FUNC_ATTR static void indev_proc_press(lv_indev_proc_t * proc)
 {
     indev_obj_act = proc->types.pointer.act_obj;
 
@@ -823,7 +823,7 @@ LV_FUNC_CORE_INDEV_ATTR static void indev_proc_press(lv_indev_proc_t * proc)
  * Process the released state of LV_INDEV_TYPE_POINER input devices
  * @param proc pointer to an input device 'proc'
  */
-LV_FUNC_CORE_INDEV_ATTR static void indev_proc_release(lv_indev_proc_t * proc)
+LV_FUNC_ATTR static void indev_proc_release(lv_indev_proc_t * proc)
 {
     if(proc->wait_until_release != 0) {
         proc->types.pointer.act_obj  = NULL;
@@ -960,7 +960,7 @@ LV_FUNC_CORE_INDEV_ATTR static void indev_proc_release(lv_indev_proc_t * proc)
  * Reset input device if a reset query has been sent to it
  * @param indev pointer to an input device
  */
-LV_FUNC_CORE_INDEV_ATTR static void indev_proc_reset_query_handler(lv_indev_t * indev)
+LV_FUNC_ATTR static void indev_proc_reset_query_handler(lv_indev_t * indev)
 {
     if(indev->proc.reset_query) {
         indev->proc.types.pointer.act_obj           = NULL;
@@ -985,7 +985,7 @@ LV_FUNC_CORE_INDEV_ATTR static void indev_proc_reset_query_handler(lv_indev_t * 
  * @param obj pointer to a start object, typically the screen
  * @return pointer to the found object or NULL if there was no suitable object
  */
-LV_FUNC_CORE_INDEV_ATTR static lv_obj_t * indev_search_obj(const lv_indev_proc_t * proc, lv_obj_t * obj)
+LV_FUNC_ATTR static lv_obj_t * indev_search_obj(const lv_indev_proc_t * proc, lv_obj_t * obj)
 {
     lv_obj_t * found_p = NULL;
 
@@ -1041,7 +1041,7 @@ LV_FUNC_CORE_INDEV_ATTR static lv_obj_t * indev_search_obj(const lv_indev_proc_t
  * Handle the dragging of indev_proc_p->types.pointer.act_obj
  * @param indev pointer to a input device state
  */
-LV_FUNC_CORE_INDEV_ATTR static void indev_drag(lv_indev_proc_t * state)
+LV_FUNC_ATTR static void indev_drag(lv_indev_proc_t * state)
 {
     lv_obj_t * drag_obj    = state->types.pointer.act_obj;
     bool drag_just_started = false;
@@ -1142,7 +1142,7 @@ LV_FUNC_CORE_INDEV_ATTR static void indev_drag(lv_indev_proc_t * state)
  * Handle throwing by drag if the drag is ended
  * @param indev pointer to an input device state
  */
-LV_FUNC_CORE_INDEV_ATTR static void indev_drag_throw(lv_indev_proc_t * proc)
+LV_FUNC_ATTR static void indev_drag_throw(lv_indev_proc_t * proc)
 {
     if(proc->types.pointer.drag_in_prog == 0) return;
 
@@ -1223,7 +1223,7 @@ LV_FUNC_CORE_INDEV_ATTR static void indev_drag_throw(lv_indev_proc_t * proc)
  * @param proc pointer to an input device 'proc'
  * return true if indev query should be immediately truncated.
  */
-LV_FUNC_CORE_INDEV_ATTR static bool indev_reset_check(lv_indev_proc_t * proc)
+LV_FUNC_ATTR static bool indev_reset_check(lv_indev_proc_t * proc)
 {
     if(proc->reset_query) {
         indev_obj_act = NULL;

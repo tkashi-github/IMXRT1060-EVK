@@ -69,7 +69,7 @@ static inline lv_color_t color_mix_2_alpha(lv_color_t bg_color, lv_opa_t bg_opa,
  * @param color pixel color
  * @param opa opacity of the area (0..255)
  */
-LV_FUNC_DRAW_BASIC_ATTR void lv_draw_px(lv_coord_t x, lv_coord_t y, const lv_area_t * mask_p, lv_color_t color, lv_opa_t opa)
+LV_FUNC_ATTR void lv_draw_px(lv_coord_t x, lv_coord_t y, const lv_area_t * mask_p, lv_color_t color, lv_opa_t opa)
 {
 
     if(opa < LV_OPA_MIN) return;
@@ -120,7 +120,7 @@ LV_FUNC_DRAW_BASIC_ATTR void lv_draw_px(lv_coord_t x, lv_coord_t y, const lv_are
  * @param color fill color
  * @param opa opacity of the area (0..255)
  */
-LV_FUNC_DRAW_BASIC_ATTR void lv_draw_fill(const lv_area_t * cords_p, const lv_area_t * mask_p, lv_color_t color, lv_opa_t opa)
+LV_FUNC_ATTR void lv_draw_fill(const lv_area_t * cords_p, const lv_area_t * mask_p, lv_color_t color, lv_opa_t opa)
 {
     if(opa < LV_OPA_MIN) return;
     if(opa > LV_OPA_MAX) opa = LV_OPA_COVER;
@@ -230,7 +230,7 @@ LV_FUNC_DRAW_BASIC_ATTR void lv_draw_fill(const lv_area_t * cords_p, const lv_ar
  * @param color color of letter
  * @param opa opacity of letter (0..255)
  */
-LV_FUNC_DRAW_BASIC_ATTR void lv_draw_letter(const lv_point_t * pos_p, const lv_area_t * mask_p, const lv_font_t * font_p, uint32_t letter,
+LV_FUNC_ATTR void lv_draw_letter(const lv_point_t * pos_p, const lv_area_t * mask_p, const lv_font_t * font_p, uint32_t letter,
                     lv_color_t color, lv_opa_t opa)
 {
     /*clang-format off*/
@@ -383,7 +383,7 @@ LV_FUNC_DRAW_BASIC_ATTR void lv_draw_letter(const lv_point_t * pos_p, const lv_a
  * @param recolor mix the pixels with this color
  * @param recolor_opa the intense of recoloring
  */
-LV_FUNC_DRAW_BASIC_ATTR void lv_draw_map(const lv_area_t * cords_p, const lv_area_t * mask_p, const uint8_t * map_p, lv_opa_t opa,
+LV_FUNC_ATTR void lv_draw_map(const lv_area_t * cords_p, const lv_area_t * mask_p, const uint8_t * map_p, lv_opa_t opa,
                  bool chroma_key, bool alpha_byte, lv_color_t recolor, lv_opa_t recolor_opa)
 {
 
@@ -564,7 +564,7 @@ LV_FUNC_DRAW_BASIC_ATTR void lv_draw_map(const lv_area_t * cords_p, const lv_are
  * @param length number of pixels in 'src'
  * @param opa opacity (0, LV_OPA_TRANSP: transparent ... 255, LV_OPA_COVER, fully cover)
  */
-LV_FUNC_DRAW_BASIC_ATTR static void sw_mem_blend(lv_color_t * dest, const lv_color_t * src, uint32_t length, lv_opa_t opa)
+LV_FUNC_ATTR static void sw_mem_blend(lv_color_t * dest, const lv_color_t * src, uint32_t length, lv_opa_t opa)
 {
     if(opa == LV_OPA_COVER) {
         memcpy(dest, src, length * sizeof(lv_color_t));
@@ -584,7 +584,7 @@ LV_FUNC_DRAW_BASIC_ATTR static void sw_mem_blend(lv_color_t * dest, const lv_col
  * @param color fill color
  * @param opa opacity (0, LV_OPA_TRANSP: transparent ... 255, LV_OPA_COVER, fully cover)
  */
-LV_FUNC_DRAW_BASIC_ATTR static void sw_color_fill(lv_color_t * mem, lv_coord_t mem_width, const lv_area_t * fill_area, lv_color_t color,
+LV_FUNC_ATTR static void sw_color_fill(lv_color_t * mem, lv_coord_t mem_width, const lv_area_t * fill_area, lv_color_t color,
                           lv_opa_t opa)
 {
     /*Set all row in vdb to the given color*/
@@ -660,7 +660,7 @@ LV_FUNC_DRAW_BASIC_ATTR static void sw_color_fill(lv_color_t * mem, lv_coord_t m
  * @param fg_opa alpha of the foreground color
  * @return the mixed color. the alpha channel (color.alpha) contains the result alpha
  */
-LV_FUNC_DRAW_BASIC_ATTR static inline lv_color_t color_mix_2_alpha(lv_color_t bg_color, lv_opa_t bg_opa, lv_color_t fg_color, lv_opa_t fg_opa)
+LV_FUNC_ATTR static inline lv_color_t color_mix_2_alpha(lv_color_t bg_color, lv_opa_t bg_opa, lv_color_t fg_color, lv_opa_t fg_opa)
 {
     /* Pick the foreground if it's fully opaque or the Background is fully transparent*/
     if(fg_opa > LV_OPA_MAX || bg_opa <= LV_OPA_MIN) {

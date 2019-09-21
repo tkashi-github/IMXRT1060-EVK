@@ -76,7 +76,7 @@ static lv_opa_t antialias_get_opa_circ(lv_coord_t seg, lv_coord_t px_id, lv_opa_
  * @param style pointer to a style
  * @param opa_scale scale down all opacities by the factor
  */
-LV_FUNC_DRAW_RECT_ATTR void lv_draw_rect(const lv_area_t * coords, const lv_area_t * mask, const lv_style_t * style, lv_opa_t opa_scale)
+LV_FUNC_ATTR void lv_draw_rect(const lv_area_t * coords, const lv_area_t * mask, const lv_style_t * style, lv_opa_t opa_scale)
 {
     if(lv_area_get_height(coords) < 1 || lv_area_get_width(coords) < 1) return;
 
@@ -119,7 +119,7 @@ LV_FUNC_DRAW_RECT_ATTR void lv_draw_rect(const lv_area_t * coords, const lv_area
  * @param rects_p pointer to a rectangle style
  * @param opa_scale scale down all opacities by the factor
  */
-LV_FUNC_DRAW_RECT_ATTR static void lv_draw_rect_main_mid(const lv_area_t * coords, const lv_area_t * mask, const lv_style_t * style,
+LV_FUNC_ATTR static void lv_draw_rect_main_mid(const lv_area_t * coords, const lv_area_t * mask, const lv_style_t * style,
                                   lv_opa_t opa_scale)
 {
     uint16_t radius = style->body.radius;
@@ -191,7 +191,7 @@ LV_FUNC_DRAW_RECT_ATTR static void lv_draw_rect_main_mid(const lv_area_t * coord
  * @param rects_p pointer to a rectangle style
  * @param opa_scale scale down all opacities by the factor
  */
-LV_FUNC_DRAW_RECT_ATTR static void lv_draw_rect_main_corner(const lv_area_t * coords, const lv_area_t * mask, const lv_style_t * style,
+LV_FUNC_ATTR static void lv_draw_rect_main_corner(const lv_area_t * coords, const lv_area_t * mask, const lv_style_t * style,
                                      lv_opa_t opa_scale)
 {
     uint16_t radius = style->body.radius;
@@ -502,7 +502,7 @@ LV_FUNC_DRAW_RECT_ATTR static void lv_draw_rect_main_corner(const lv_area_t * co
  * @param rstyle pointer to a rectangle style
  * @param opa_scale scale down all opacities by the factor
  */
-LV_FUNC_DRAW_RECT_ATTR static void lv_draw_rect_border_straight(const lv_area_t * coords, const lv_area_t * mask, const lv_style_t * style,
+LV_FUNC_ATTR static void lv_draw_rect_border_straight(const lv_area_t * coords, const lv_area_t * mask, const lv_style_t * style,
                                          lv_opa_t opa_scale)
 {
     uint16_t radius = style->body.radius;
@@ -702,7 +702,7 @@ LV_FUNC_DRAW_RECT_ATTR static void lv_draw_rect_border_straight(const lv_area_t 
  * @param style pointer to a style
  * @param opa_scale scale down all opacities by the factor
  */
-LV_FUNC_DRAW_RECT_ATTR static void lv_draw_rect_border_corner(const lv_area_t * coords, const lv_area_t * mask, const lv_style_t * style,
+LV_FUNC_ATTR static void lv_draw_rect_border_corner(const lv_area_t * coords, const lv_area_t * mask, const lv_style_t * style,
                                        lv_opa_t opa_scale)
 {
     uint16_t radius       = style->body.radius;
@@ -1112,7 +1112,7 @@ LV_FUNC_DRAW_RECT_ATTR static void lv_draw_rect_border_corner(const lv_area_t * 
  * @param mask pointer to a mask area (from the design functions)
  * @param opa_scale scale down all opacities by the factor
  */
-LV_FUNC_DRAW_RECT_ATTR static void lv_draw_shadow(const lv_area_t * coords, const lv_area_t * mask, const lv_style_t * style,
+LV_FUNC_ATTR static void lv_draw_shadow(const lv_area_t * coords, const lv_area_t * mask, const lv_style_t * style,
                            lv_opa_t opa_scale)
 {
     /* If mask is in the middle of cords do not draw shadow*/
@@ -1141,7 +1141,7 @@ LV_FUNC_DRAW_RECT_ATTR static void lv_draw_shadow(const lv_area_t * coords, cons
     }
 }
 
-LV_FUNC_DRAW_RECT_ATTR static void lv_draw_shadow_full(const lv_area_t * coords, const lv_area_t * mask, const lv_style_t * style,
+LV_FUNC_ATTR static void lv_draw_shadow_full(const lv_area_t * coords, const lv_area_t * mask, const lv_style_t * style,
                                 lv_opa_t opa_scale)
 {
 
@@ -1307,7 +1307,7 @@ LV_FUNC_DRAW_RECT_ATTR static void lv_draw_shadow_full(const lv_area_t * coords,
     }
 }
 
-LV_FUNC_DRAW_RECT_ATTR static void lv_draw_shadow_bottom(const lv_area_t * coords, const lv_area_t * mask, const lv_style_t * style,
+LV_FUNC_ATTR static void lv_draw_shadow_bottom(const lv_area_t * coords, const lv_area_t * mask, const lv_style_t * style,
                                   lv_opa_t opa_scale)
 {
     bool aa           = lv_disp_get_antialiasing(lv_refr_get_disp_refreshing());
@@ -1401,7 +1401,7 @@ LV_FUNC_DRAW_RECT_ATTR static void lv_draw_shadow_bottom(const lv_area_t * coord
     }
 }
 
-LV_FUNC_DRAW_RECT_ATTR static void lv_draw_shadow_full_straight(const lv_area_t * coords, const lv_area_t * mask, const lv_style_t * style,
+LV_FUNC_ATTR static void lv_draw_shadow_full_straight(const lv_area_t * coords, const lv_area_t * mask, const lv_style_t * style,
                                          const lv_opa_t * map)
 {
     bool aa           = lv_disp_get_antialiasing(lv_refr_get_disp_refreshing());
@@ -1462,7 +1462,7 @@ LV_FUNC_DRAW_RECT_ATTR static void lv_draw_shadow_full_straight(const lv_area_t 
 
 #endif
 
-LV_FUNC_DRAW_RECT_ATTR static uint16_t lv_draw_cont_radius_corr(uint16_t r, lv_coord_t w, lv_coord_t h)
+LV_FUNC_ATTR static uint16_t lv_draw_cont_radius_corr(uint16_t r, lv_coord_t w, lv_coord_t h)
 {
     bool aa = lv_disp_get_antialiasing(lv_refr_get_disp_refreshing());
 
@@ -1490,13 +1490,13 @@ LV_FUNC_DRAW_RECT_ATTR static uint16_t lv_draw_cont_radius_corr(uint16_t r, lv_c
  * @param line_opa opacity of the lien (it will be the max opacity)
  * @return the desired opacity of the pixel
  */
-LV_FUNC_DRAW_RECT_ATTR static lv_opa_t antialias_get_opa_circ(lv_coord_t seg, lv_coord_t px_id, lv_opa_t opa)
+LV_FUNC_ATTR static lv_opa_t antialias_get_opa_circ(lv_coord_t seg, lv_coord_t px_id, lv_opa_t opa)
 {
     /*Empirical non-linear values anti-aliasing values*/
-    LV_CVAL_DRAW_REACT_ATTR static const lv_opa_t opa_map2[2] = {210, 80};
-    LV_CVAL_DRAW_REACT_ATTR static const lv_opa_t opa_map3[3] = {230, 150, 60};
-    LV_CVAL_DRAW_REACT_ATTR static const lv_opa_t opa_map4[4] = {235, 185, 125, 50};
-    LV_CVAL_DRAW_REACT_ATTR static const lv_opa_t opa_map8[8] = {250, 242, 219, 191, 158, 117, 76, 40};
+    LV_DATA_ATTR static const lv_opa_t opa_map2[2] = {210, 80};
+    LV_DATA_ATTR static const lv_opa_t opa_map3[3] = {230, 150, 60};
+    LV_DATA_ATTR static const lv_opa_t opa_map4[4] = {235, 185, 125, 50};
+    LV_DATA_ATTR static const lv_opa_t opa_map8[8] = {250, 242, 219, 191, 158, 117, 76, 40};
 
 #if CIRCLE_AA_NON_LINEAR_OPA_THRESHOLD < 1
     if(seg == 1) return 170;
