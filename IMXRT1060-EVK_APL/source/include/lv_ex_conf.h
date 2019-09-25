@@ -39,20 +39,24 @@
 
 /*A demo application with Keyboard, Text area, List and Chart
  * placed on Tab view */
-#define LV_USE_DEMO        0
+#define LV_USE_DEMO        1
 #if LV_USE_DEMO
 #define LV_DEMO_WALLPAPER  1    /*Create a wallpaper too*/
 #define LV_DEMO_SLIDE_SHOW 0    /*Automatically switch between tabs*/
 #endif
 
 /*MCU and memory usage monitoring*/
-#define LV_USE_SYSMON      0
+#define LV_USE_SYSMON      1
 
 /*A terminal to display received characters*/
 #define LV_USE_TERMINAL    0
 
 /*Touch pad calibration with 4 points*/
 #define LV_USE_TPCAL       0
+
+/*Image Map Atteibute*/
+#define LV_ATTRIBUTE_IMG_BENCHMARK __attribute__((section(".data.$SRAM_DTC"))) 
+#define LV_ATTRIBUTE_IMG_BUBBLE 
 
 #endif /*LV_EX_CONF_H*/
 

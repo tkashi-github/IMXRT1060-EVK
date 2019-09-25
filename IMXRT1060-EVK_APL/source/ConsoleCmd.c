@@ -60,7 +60,11 @@
 #include "AudioFile/AudioFileList.h"
 
 #include "ExtLedCtrlTask/ExtLedCtrlTask.h"
-#include "BenchMark/lvgl/benchmark.h"
+
+/* lvgl apps */
+#include "benchmark.h"
+#include "demo.h"
+#include "sysmon.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -321,12 +325,36 @@ static void CmdReboot(uint32_t argc, const char *argv[]){
 
 static void CmdGUI(uint32_t argc, const char *argv[])
 {
-	
-	mimic_printf("\r\nGUI Bench Mark\r\n");
-	benchmark_create();
-	while(benchmark_get_refr_time() == 0)
-	{
-		osDelay(1000);
+	uint32_t cmd;
+
+	if(argc != 2){
+		mimic_printf("gui 0 : Benchmark\r\n");
+		mimic_printf("gui 1 : demo\r\n");
+		mimic_printf("gui 2 : sysmon\r\n");
+		return;
 	}
-	mimic_printf("benchmark_get_refr_time = %lu msec\r\n", benchmark_get_refr_time());
+
+	cmd = mimic_strtoul(argv[1],16,10);
+	switch(cmd)
+	{
+	case 0:
+		mimic_printf("\r\nGUI Bench Mark\r\n");
+		benchmark_create();
+		break;
+	case 1:
+		mimic_printf("\r\nGUI Demo\r\n");
+		demo_create();
+		break;
+	case 2:
+		mimic_printf("\r\nGUI System Monitor\r\n");
+		sysmon_create();
+		break;
+	default:
+		mimic_printf("gui 0 : Benchmark\r\n");
+		mimic_printf("gui 1 : demo\r\n");
+		mimic_printf("gui 2 : sysmon\r\n");
+		break;
+	}
+	
+
 }
