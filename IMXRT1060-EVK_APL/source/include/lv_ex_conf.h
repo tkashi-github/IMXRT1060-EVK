@@ -35,18 +35,18 @@
 
 /* Test the graphical performance of your MCU
  * with different settings*/
-#define LV_USE_BENCHMARK   1
+#define LV_USE_BENCHMARK   0
 
 /*A demo application with Keyboard, Text area, List and Chart
  * placed on Tab view */
-#define LV_USE_DEMO        1
+#define LV_USE_DEMO        0
 #if LV_USE_DEMO
 #define LV_DEMO_WALLPAPER  1    /*Create a wallpaper too*/
 #define LV_DEMO_SLIDE_SHOW 0    /*Automatically switch between tabs*/
 #endif
 
 /*MCU and memory usage monitoring*/
-#define LV_USE_SYSMON      1
+#define LV_USE_SYSMON      0
 
 /*A terminal to display received characters*/
 #define LV_USE_TERMINAL    0

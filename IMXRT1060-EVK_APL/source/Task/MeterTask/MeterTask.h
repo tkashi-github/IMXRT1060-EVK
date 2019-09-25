@@ -51,6 +51,7 @@ extern "C"
 extern void MeterTask(void const *argument);
 extern _Bool PostMsgLcdMeterTask(uint32_t u32X, uint32_t u32Y);
 extern void CreatePeekMeter(void);
+extern void CreatePlayStopBtn(void);
 
 extern _Bool PostMsgMeterTaskPeek16BitStereo(int16_t i16RMax, int16_t i16LMax);
 extern _Bool PostMsgMeterTaskPeek24BitStereo(int32_t i32RMax, int32_t i32LMax);

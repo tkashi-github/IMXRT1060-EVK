@@ -337,17 +337,30 @@ static void CmdGUI(uint32_t argc, const char *argv[])
 	cmd = mimic_strtoul(argv[1],16,10);
 	switch(cmd)
 	{
+
 	case 0:
+#if (LV_USE_BENCHMARK == 0)
+		mimic_printf("\r\nGUI Bench Mark is not implemented.\r\n");
+#else
 		mimic_printf("\r\nGUI Bench Mark\r\n");
 		benchmark_create();
+#endif
 		break;
 	case 1:
+#if (LV_USE_DEMO == 0)
+		mimic_printf("\r\nGUI Demo is not implemented.\r\n");
+#else
 		mimic_printf("\r\nGUI Demo\r\n");
 		demo_create();
+#endif
 		break;
 	case 2:
+#if (LV_USE_SYSMON == 0)
+		mimic_printf("\r\nGUI System Monitor is not implemented.\r\n");
+#else
 		mimic_printf("\r\nGUI System Monitor\r\n");
 		sysmon_create();
+#endif
 		break;
 	default:
 		mimic_printf("gui 0 : Benchmark\r\n");

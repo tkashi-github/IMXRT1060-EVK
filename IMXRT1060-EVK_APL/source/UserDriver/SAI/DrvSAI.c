@@ -955,12 +955,6 @@ _Bool DrvSAIWriteVolume(enSAI_t enSAI, uint16_t u16Vol)
 	}
 	if (WM8960_SetVolume(&s_HndCodec[enSAI], kWM8960_ModuleHP, u16Vol) == kStatus_Success)
 	{
-		if (u16Vol != WM8960_GetVolume(&s_HndCodec[enSAI], kWM8960_ModuleHP))
-		{
-			mimic_printf("[%s (%d)] Verify NG (u16Vol = %lu) \r\n", __func__, __LINE__, u16Vol);
-			return false;
-		}
-
 		return true;
 	}
 	else

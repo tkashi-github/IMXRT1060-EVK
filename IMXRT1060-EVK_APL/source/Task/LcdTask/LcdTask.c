@@ -155,8 +155,7 @@ void LV_Init(void)
 
 
 DefALLOCATE_DATA_DTCM static lv_obj_t *vol_slider;
-DefALLOCATE_DATA_DTCM static lv_obj_t * s_Vollabel1;
-    
+
 #include "Task/SoundTask/SoundTask.h"
 DefALLOCATE_ITCM static void vol_slider_action(lv_obj_t * slider, lv_event_t event)
 {
@@ -165,29 +164,16 @@ DefALLOCATE_ITCM static void vol_slider_action(lv_obj_t * slider, lv_event_t eve
 		SoundTaskWriteCurrentVolume(enSoundTask1, temp);
 		char szstr[32];
 		mimic_sprintf(szstr, sizeof(szstr), "%d", temp);
-		lv_label_set_text(s_Vollabel1, szstr);
 	}
 }
-
-void volume_label_init(void)
-{
-	s_Vollabel1 = lv_label_create(lv_scr_act(), NULL);
-    lv_label_set_long_mode(s_Vollabel1, LV_LABEL_LONG_BREAK);     /*Break the long lines*/
-    lv_label_set_recolor(s_Vollabel1, true);                      /*Enable re-coloring by commands in the text*/
-    lv_label_set_align(s_Vollabel1, LV_LABEL_ALIGN_CENTER);       /*Center aligned lines*/
-    lv_label_set_text(s_Vollabel1, "70");
-    lv_obj_set_width(s_Vollabel1, 150);
-    lv_obj_align(s_Vollabel1, NULL, LV_ALIGN_IN_TOP_RIGHT, -30, 60);
-}
-
 DefALLOCATE_ITCM void VolumeSlider(void)
 {
 	/*Called when a new value id set on the slider*/
 
 	/*Create a default slider*/
 	vol_slider = lv_slider_create(lv_scr_act(), NULL);
-	lv_obj_set_size(vol_slider, 400, 30);
-	lv_obj_align(vol_slider, NULL, LV_ALIGN_IN_TOP_RIGHT, -30, 90);
+	lv_obj_set_size(vol_slider, 300, 30);
+	lv_obj_set_pos(vol_slider, 150, 5);	
 	lv_obj_set_event_cb(vol_slider, vol_slider_action);
 	lv_bar_set_value(vol_slider, 70, LV_ANIM_ON);
 	lv_bar_set_range(vol_slider,0,100);
@@ -241,8 +227,8 @@ DefALLOCATE_ITCM void LcdTask(void const *argument)
 	LV_Init();
 
 #if (LV_USE_BENCHMARK == 0)
-	volume_label_init();
 
+	CreatePlayStopBtn();
 	VolumeSlider();
 
 	CreatePeekMeter();

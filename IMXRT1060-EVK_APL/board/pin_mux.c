@@ -255,7 +255,7 @@ void BOARD_InitBootPins(void)
 	BOARD_InitDEBUG_UART();
 	BOARD_InitUSDHC();
 	BOARD_InitENET();
-	BOARD_InitCSI();
+	//BOARD_InitCSI();
 	BOARD_InitLCD();
 	BOARD_InitLPI2C();
 }
