@@ -117,7 +117,7 @@ static void CmdGUI(uint32_t argc, const char *argv[]);
 	{"REC", CmdRec, "Rec Start"},
 	{"LIST", CmdMakeAudioFileList, "AUdio File List"},
 	{"EXTLED", CmdExtLed, "Ext Led Test"},
-	{"GUIBM", CmdGUI, "GUI BenchMark"},
+	{"GUI", CmdGUI, "GUI BenchMark"},
 	{NULL, NULL, NULL}, /* Terminator */
 };
 
