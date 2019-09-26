@@ -50,7 +50,7 @@ extern "C"
 
 
 extern void DrvSAIClockInit(void);
-extern _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t enPcmBit, _Bool bRec);
+extern _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t enPcmBit);
 extern _Bool DrvSAITx(enSAI_t enSAI, const uint8_t pu8[], uint32_t u32ByteCnt);
 extern _Bool DrvSAIRx(enSAI_t enSAI, uint8_t pu8[], uint32_t *pu32RxCnt);
 extern void DrvSAITxReset(enSAI_t enSAI);
@@ -62,6 +62,8 @@ extern uint32_t DrvSAIReadVolume(enSAI_t enSAI);
 extern _Bool DrvSAIWriteVolume(enSAI_t enSAI, uint16_t u16Vol);
 extern void DrvSAIRxEDMABufferRestart(enSAI_t enSAI);
 extern _Bool DrvSAIIsTxBufferEmpty(enSAI_t enSAI);
+
+#define DEF_CODEC_HP_VOL_MAX (0x7Fu)
 
 #ifdef __cplusplus
 }

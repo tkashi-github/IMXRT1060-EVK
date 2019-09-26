@@ -176,7 +176,7 @@ DefALLOCATE_ITCM static void S0_E0(enSoundTask_t enSoundTaskNo, enSoundTaskEvent
 	{
 		/* NOP */
 	}
-	if (DrvSAIInit(enSoundTaskNo, pstSoundFormat->enSample, pstSoundFormat->enWidth, pstSoundFormat->bRec) == false)
+	if (DrvSAIInit(enSoundTaskNo, pstSoundFormat->enSample, pstSoundFormat->enWidth) == false)
 	{
 		mimic_printf("[%s (%d)] DrvSAIInit NG (SAI%d)!\r\n", __func__, __LINE__, enSoundTaskNo);
 	}
@@ -401,7 +401,7 @@ DefALLOCATE_ITCM void SoundTask(void const *argument)
 	}
 
 
-	if(false == DrvSAIInit(enSoundTaskNo, kSAI_SampleRate44100Hz, kSAI_WordWidth16bits, false))
+	if(false == DrvSAIInit(enSoundTaskNo, kSAI_SampleRate44100Hz, kSAI_WordWidth16bits))
 	{
 		mimic_printf("[%s (%d)] DrvSAIInit NG (%lu msec)\r\n", __func__, __LINE__, xTaskGetTickCount());
 
@@ -789,7 +789,7 @@ DefALLOCATE_ITCM sai_word_width_t SoundTaskGetCurrentWordWidth(enSoundTask_t enS
 	return s_enWordWidth[enSoundTaskNo];
 }
 
-#define kVolumeMaxOfCodecIC (0x7Fu)
+
 
 uint32_t SoundTaskGetCurrentVolume(enSoundTask_t enSoundTaskNo)
 {
@@ -821,9 +821,9 @@ DefALLOCATE_ITCM uint32_t SoundTaskReadCurrentVolume(enSoundTask_t enSoundTaskNo
 	/* ボリュームの際はここで吸収する */
 	u32RawVol = DrvSAIReadVolume(enSoundTaskNo);
 	u32Vol = u32RawVol;
-	u32Vol &= kVolumeMaxOfCodecIC;
+	u32Vol &= DEF_CODEC_HP_VOL_MAX;
 	u32Vol *= 100;
-	u32Vol /= kVolumeMaxOfCodecIC;
+	u32Vol /= DEF_CODEC_HP_VOL_MAX;
 
 	/* この時点でu32Volは0 - 100 */
 
@@ -858,10 +858,13 @@ DefALLOCATE_ITCM _Bool SoundTaskWriteCurrentVolume(enSoundTask_t enSoundTaskNo, 
 	/* この時点でu8Volは0 - 100 */
 	if (u32Vol != 0)
 	{
+#if 0
 		float64_t dfpTmp = (float64_t)u32Vol;
 		dfpTmp /= 100.0;
 		dfpTmp = sqrt(sqrt(dfpTmp));
 		u8Temp = (dfpTmp * 100.0 + 0.5);
+#endif
+		u8Temp = (uint8_t)u32Vol;
 		if (u8Temp > 100)
 		{
 			u8Temp = 100;
@@ -872,17 +875,15 @@ DefALLOCATE_ITCM _Bool SoundTaskWriteCurrentVolume(enSoundTask_t enSoundTaskNo, 
 		u8Temp = 0;
 	}
 	//mimic_printf("%lu -> %lu\r\n", u8Vol, u8Temp);
-
+	/**
+	 * Y = ax + 41
+	 * x = 100 nの時 y = DEF_CODEC_HP_VOL_MAX = 127
+	 * 127 = 100a + 41
+	 * 86 = 100a
+	 * a = 0.86
+	 */
 	/* ボリュームの際はここで吸収する */
-	if (u8Temp > 100u)
-	{
-		u16RawVol = kVolumeMaxOfCodecIC;
-	}
-	else
-	{
-		u16RawVol = kVolumeMaxOfCodecIC * u8Temp;
-		u16RawVol /= 100u;
-	}
+	u16RawVol = 0.86 * u8Temp + 41;
 
 	return DrvSAIWriteVolume(enSoundTaskNo, u16RawVol);
 }

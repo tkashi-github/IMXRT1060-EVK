@@ -358,7 +358,7 @@ static codec_config_t boardCodecConfig = {.I2C_SendFunc = BOARD_Codec_I2C_Send,
                                    .op.SetFormat = WM8960_ConfigDataFormat};
 
 #include "Task/MeterTask/MeterTask.h"
-_Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t enPcmBit, _Bool bRec)
+_Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t enPcmBit)
 {
 	I2S_Type *base[enNumOfSAI] = {SAI1, SAI2};
 	const uint32_t TxIrq[enNumOfSAI] = {SAI1_IRQn, SAI2_IRQn};
@@ -370,6 +370,7 @@ _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t
 
 	sai_transfer_format_t format = {0};
 	uint32_t u32BclkSrcHz = 0;
+	static _Bool s_bInited = false;
 
 	if ((enSAI < enSAI1) || (enSAI >= enNumOfSAI))
 	{
@@ -515,10 +516,13 @@ _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t
 
 	/* Configure the audio format */
 	
-	if(kStatus_Success != CODEC_Init(&s_HndCodec[enSAI], &boardCodecConfig))
+	if(s_bInited == false)
 	{
-		mimic_printf("[%s (%d)] CODEC_Init NG \r\n", __func__, __LINE__);
-		return false;
+		if(kStatus_Success != CODEC_Init(&s_HndCodec[enSAI], &boardCodecConfig))
+		{
+			mimic_printf("[%s (%d)] CODEC_Init NG \r\n", __func__, __LINE__);
+			return false;
+		}
 	}
 	if (kStatus_Success != CODEC_SetFormat(&s_HndCodec[enSAI], u32BclkSrcHz, enSampleRate, enPcmBit))
 	{
@@ -535,7 +539,8 @@ _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t
 	//WM8960_RegDump(&s_HndCodec[enSAI]);
 	MeterTaskRestart();
 	mimic_printf("[%s (%d)] EXIT OK\r\n", __func__, __LINE__);
-	return true;
+	s_bInited = true;
+	return s_bInited;
 }
 
 void DrvSAITxReset(enSAI_t enSAI)
@@ -949,11 +954,12 @@ uint32_t DrvSAIReadVolume(enSAI_t enSAI)
 }
 _Bool DrvSAIWriteVolume(enSAI_t enSAI, uint16_t u16Vol)
 {
-	if ((enSAI < enSAI1) || (enSAI >= enNumOfSAI))
+	if ((enSAI < enSAI1) || (enSAI >= enNumOfSAI) || (u16Vol > DEF_CODEC_HP_VOL_MAX))
 	{
 		return false;
 	}
-	if (WM8960_SetVolume(&s_HndCodec[enSAI], kWM8960_ModuleHP, u16Vol) == kStatus_Success)
+	/* 0x80 = zero cross enable */
+	if (WM8960_SetVolume(&s_HndCodec[enSAI], kWM8960_ModuleHP, u16Vol | 0x80) == kStatus_Success)
 	{
 		return true;
 	}

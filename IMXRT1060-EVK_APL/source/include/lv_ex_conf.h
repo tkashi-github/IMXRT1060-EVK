@@ -57,6 +57,7 @@
 /*Image Map Atteibute*/
 #define LV_ATTRIBUTE_IMG_BENCHMARK __attribute__((section(".data.$SRAM_DTC"))) 
 #define LV_ATTRIBUTE_IMG_BUBBLE 
+#define LV_ATTRIBUTE_IMG_FLOWER_ICON
 
 #endif /*LV_EX_CONF_H*/
 

@@ -142,14 +142,14 @@ status_t WM8960_Init(codec_handle_t *handle, void *wm8960_configure)
     /*
      * Digital DAC volume, 0dB
      */
-    WM8960_WriteReg(handle, WM8960_LDAC, 0x1E0);
-    WM8960_WriteReg(handle, WM8960_RDAC, 0x1E0);
+    WM8960_WriteReg(handle, WM8960_LDAC, 0x1FF);
+    WM8960_WriteReg(handle, WM8960_RDAC, 0x1FF);
 
     /*
      * Headphone volume, LOUT1 and ROUT1, 0dB
      */
-    WM8960_WriteReg(handle, WM8960_LOUT1, 0x16F);
-    WM8960_WriteReg(handle, WM8960_ROUT1, 0x16F);
+    WM8960_WriteReg(handle, WM8960_LOUT1, 0x179);
+    WM8960_WriteReg(handle, WM8960_ROUT1, 0x179);
 
     /* Unmute DAC. */
     WM8960_WriteReg(handle, WM8960_DACCTL1, 0x0000);
