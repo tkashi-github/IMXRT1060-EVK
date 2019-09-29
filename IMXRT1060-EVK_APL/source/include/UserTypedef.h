@@ -99,6 +99,8 @@ typedef enum{
 	enSoundTaskStop,
 	enPlayStop,
 	enPlayStart,
+	enPlayNext,
+	enPlayPrev,
 	enPlaying,
 	enRec,
 	enRecording,

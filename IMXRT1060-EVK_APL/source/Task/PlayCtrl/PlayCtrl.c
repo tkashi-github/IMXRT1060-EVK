@@ -40,6 +40,7 @@
 #include "PlayCtrl/PlayCtrlAudio.h"
 #include "AudioFile/wav/wav.h"
 #include "Task/MeterTask/MeterTask.h"
+
 typedef enum
 {
 	enPlayCtrlStateStop = 0,
@@ -55,6 +56,8 @@ typedef enum
 	enPlayCtrlEventPlaying,
 	enPlayCtrlEventRec,
 	enPlayCtrlEventRecording,
+	enPlayCtrlEventNext,
+	enPlayCtrlEventPrev,
 	enPlayCtrlEventMAX,
 } enPlayCtrlEvent_t;
 
@@ -71,6 +74,10 @@ DefALLOCATE_ITCM static uint8_t *OpenNextPlayFile(uint32_t u32NowTrackNo, TCHAR 
 												  stCodecCondition_t *pst, uint32_t *pu32BufSize,
 												  _Bool bForceInit);
 
+DefALLOCATE_ITCM static _Bool GetNextTrackNo(uint32_t *pu32TrackNo);
+DefALLOCATE_ITCM static _Bool GetPrevTrackNo(uint32_t *pu32TrackNo);
+DefALLOCATE_BSS_DTCM uint32_t s_u32PlayStartTick = 0;
+
 /** Matrix Functions */
 typedef void (*pfnPlayCtrlMatrix_t)(enPlayCtrlEvent_t enEvent, uint32_t param[], uintptr_t inptr, uintptr_t outptr);
 
@@ -80,14 +87,16 @@ DefALLOCATE_ITCM static void S0_E1(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 DefALLOCATE_ITCM static void S0_E3(enPlayCtrlEvent_t enEvent, uint32_t param[], uintptr_t inptr, uintptr_t outptr);
 DefALLOCATE_ITCM static void S1_E0(enPlayCtrlEvent_t enEvent, uint32_t param[], uintptr_t inptr, uintptr_t outptr);
 DefALLOCATE_ITCM static void S1_E2(enPlayCtrlEvent_t enEvent, uint32_t param[], uintptr_t inptr, uintptr_t outptr);
+DefALLOCATE_ITCM static void S1_E5(enPlayCtrlEvent_t enEvent, uint32_t param[], uintptr_t inptr, uintptr_t outptr);
+DefALLOCATE_ITCM static void S1_E6(enPlayCtrlEvent_t enEvent, uint32_t param[], uintptr_t inptr, uintptr_t outptr);
 DefALLOCATE_ITCM static void S2_E0(enPlayCtrlEvent_t enEvent, uint32_t param[], uintptr_t inptr, uintptr_t outptr);
 DefALLOCATE_ITCM static void S2_E4(enPlayCtrlEvent_t enEvent, uint32_t param[], uintptr_t inptr, uintptr_t outptr);
 DefALLOCATE_ITCM static void XXXXX(enPlayCtrlEvent_t enEvent, uint32_t param[], uintptr_t inptr, uintptr_t outptr);
 
 DefALLOCATE_DATA_DTCM static pfnPlayCtrlMatrix_t s_pfnPlayCtrlMatrix[enPlayCtrlStateMAX][enPlayCtrlEventMAX] = {
-	{S0_E0, S0_E1, XXXXX, S0_E3, XXXXX}, /** Stop */
-	{S1_E0, XXXXX, S1_E2, XXXXX, XXXXX}, /** Play */
-	{S2_E0, XXXXX, XXXXX, XXXXX, S2_E4}, /** Rec */
+	{S0_E0, S0_E1, XXXXX, S0_E3, XXXXX, XXXXX, XXXXX}, /** Stop */
+	{S1_E0, XXXXX, S1_E2, XXXXX, XXXXX, S1_E5, S1_E6}, /** Play */
+	{S2_E0, XXXXX, XXXXX, XXXXX, S2_E4, XXXXX, XXXXX}, /** Rec */
 };
 
 /** private member */
@@ -261,6 +270,7 @@ DefALLOCATE_ITCM static void S1_E2(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 			StopPlayRecProcess();
 			return;
 		}
+		s_u32PlayStartTick = osKernelGetTickCount();
 	}
 
 	if (IsPlayAudioFileOpend() != false)
@@ -308,6 +318,59 @@ DefALLOCATE_ITCM static void S1_E2(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 				mimic_printf("*** Play Next\r\n");
 				PostMsgPlayCtrlPlaying();
 			}
+		}
+	}
+}
+
+/**
+ * @brief S1_E5
+ * @param [in]  enEvent Enevt Code
+ * @param [in]  param parameter from T_MSG
+ * @param [in]  inptr Extend Data Pointer from T_MSG
+ * @param [in/out]  outptr Extend Data Pointer from T_MSG
+ * @return void
+ */
+
+DefALLOCATE_ITCM static void S1_E5(enPlayCtrlEvent_t enEvent, uint32_t param[], uintptr_t inptr, uintptr_t outptr)
+{
+	/** つぎのTrackNoは? */
+	if (IsPlayAudioFileOpend() != false)
+	{
+
+
+		if (GetNextTrackNo(&s_u32NowTrackNo) != false)
+		{
+			/** 今のファイルクローズ */
+			ClosePlayProcess();
+	
+			/** 次のファイルへ */
+			mimic_printf("*** Play Next <%03u>\r\n", s_u32NowTrackNo);
+			PostMsgPlayCtrlPlaying();
+		}
+	}
+}
+/**
+ * @brief S1_E6
+ * @param [in]  enEvent Enevt Code
+ * @param [in]  param parameter from T_MSG
+ * @param [in]  inptr Extend Data Pointer from T_MSG
+ * @param [in/out]  outptr Extend Data Pointer from T_MSG
+ * @return void
+ */
+
+DefALLOCATE_ITCM static void S1_E6(enPlayCtrlEvent_t enEvent, uint32_t param[], uintptr_t inptr, uintptr_t outptr)
+{
+	/** つぎのTrackNoは? */
+	if (IsPlayAudioFileOpend() != false)
+	{
+		mimic_printf("[%s (%d)] TP %03u\r\n", __func__, __LINE__, s_u32NowTrackNo);
+		if (GetPrevTrackNo(&s_u32NowTrackNo) != false)
+		{
+			/** 今のファイルクローズ */
+			ClosePlayProcess();
+			/** 前のファイルへ */
+			mimic_printf("*** Play Prev <%03u>\r\n", s_u32NowTrackNo);
+			PostMsgPlayCtrlPlaying();
 		}
 	}
 }
@@ -523,6 +586,12 @@ DefALLOCATE_ITCM static uint8_t *OpenNextPlayFile(uint32_t u32NowTrackNo, TCHAR 
 
 	mimic_printf("*** Now Play[%03d] :  <%s>\r\n\r\n", u32NowTrackNo, szCurrentFilePath);
 
+	{
+		char szTrackNo[8];
+		mimic_sprintf(szTrackNo, sizeof(szTrackNo), "%03u", u32NowTrackNo);
+		SetTextAreaTrackNo(szTrackNo);
+		SetTextAreaTrackName(szCurrentFilePath);
+	}
 	return pu8PCMBuffer;
 }
 
@@ -544,6 +613,8 @@ DefALLOCATE_ITCM static _Bool GetAudioFilePath(uint32_t u32TrackNo, TCHAR szFile
 		return GetAudioFilePathALL(u32TrackNo, szFilePath);
 	}
 }
+
+
 /** 
  * @brief Get Next Track No by Current Track Number
  * @param [in/out]  pu32TrackNo Pointer of Current Track Number and Next Track Number
@@ -581,6 +652,51 @@ DefALLOCATE_ITCM static _Bool GetNextTrackNo(uint32_t *pu32TrackNo)
 	{
 		/* enPlayCtrlRepeatOne */
 		return true;
+	}
+}
+DefALLOCATE_ITCM static _Bool GetPrevTrackNo(uint32_t *pu32TrackNo)
+{
+	if((s_u32PlayStartTick + 1000) < osKernelGetTickCount())
+	{
+		return true;
+	}
+	if(*pu32TrackNo > 0)
+	{
+		
+		if (s_enPlayCtrlRepeat == enPlayCtrlRepeatALL)
+		{
+			*pu32TrackNo -= 1;
+			if (s_enPlayCtrlPlayArea == enPlayCtrlPlayAreaALL)
+			{
+				*pu32TrackNo %= GetAudioFileNumALL();
+			}
+			else
+			{
+				*pu32TrackNo %= GetAudioFileNumCurrentDir();
+			}
+			return true;
+		}
+		else if (s_enPlayCtrlRepeat == enPlayCtrlRepeatOff)
+		{
+			*pu32TrackNo -= 1;
+			if (s_enPlayCtrlPlayArea == enPlayCtrlPlayAreaALL)
+			{
+				return (*pu32TrackNo >= GetAudioFileNumALL()) ? false : true;
+			}
+			else
+			{
+				return (*pu32TrackNo >= GetAudioFileNumCurrentDir()) ? false : true;
+			}
+		}
+		else
+		{
+			/* enPlayCtrlRepeatOne */
+			return true;
+		}
+	}
+	else
+	{
+		return false;
 	}
 }
 
@@ -660,7 +776,6 @@ DefALLOCATE_ITCM _Bool PostSyncMsgPlayCtrlStop(void)
 	/*-- var --*/
 	alignas(8) stTaskMsgBlock_t stTaskMsg = {0};
 	_Bool bret = false;
-	PlayCtrlSoundDeviceStop();
 
 	stTaskMsg.enMsgId = enPlayStop;
 	stTaskMsg.SyncEGHandle = g_eidPlayCtrl;
@@ -685,7 +800,44 @@ DefALLOCATE_ITCM _Bool PostSyncMsgPlayCtrlStop(void)
 	
 	return bret;
 }
+DefALLOCATE_ITCM _Bool PostMsgPlayCtrlNext(void)
+{
+	/*-- var --*/
+	alignas(8) stTaskMsgBlock_t stTaskMsg = {0};
+	_Bool bret = false;
 
+	stTaskMsg.enMsgId = enPlayNext;
+
+	if (osOK == osMessageQueuePut(g_mqidPlayCtrl, &stTaskMsg, 0, 50))
+	{
+		bret = true;
+	}
+	else
+	{
+		mimic_printf("[%s (%d)] osMessageQueuePut NG\r\n", __func__, __LINE__);
+	}
+
+	return bret;
+}
+DefALLOCATE_ITCM _Bool PostMsgPlayCtrlPrev(void)
+{
+	/*-- var --*/
+	alignas(8) stTaskMsgBlock_t stTaskMsg = {0};
+	_Bool bret = false;
+
+	stTaskMsg.enMsgId = enPlayPrev;
+
+	if (osOK == osMessageQueuePut(g_mqidPlayCtrl, &stTaskMsg, 0, 50))
+	{
+		bret = true;
+	}
+	else
+	{
+		mimic_printf("[%s (%d)] osMessageQueuePut NG\r\n", __func__, __LINE__);
+	}
+
+	return bret;
+}
 /**
  * @brief Post Message (enRec)
  * @return true Post OK
@@ -711,34 +863,6 @@ DefALLOCATE_ITCM _Bool PostMsgPlayCtrlRec(void)
 	return bret;
 }
 
-/** TODO 後でイベントとして発行するように改造する */
-void PostSyncMsgPlayCtrlPlayNext(void)
-{
-	uint32_t u32NextTrackNo = s_u32NowTrackNo;
-	/** つぎのTrackNoは? */
-	if (GetNextTrackNo(&u32NextTrackNo) != false)
-	{
-		/** 次のファイルへ */
-		PostSyncMsgPlayCtrlStop();
-		mimic_printf("*** Play Next\r\n");
-		PostMsgPlayCtrlStart(u32NextTrackNo);
-	}
-	else
-	{
-		mimic_printf("*** No Next Track\r\n");
-	}
-}
-void PostSyncMsgPlayCtrlPlayPrev(void)
-{
-	/** 前のTrackNoは? */
-	uint32_t u32PrevTrackNo = s_u32NowTrackNo;
-	if (u32PrevTrackNo > 0)
-	{
-		PostSyncMsgPlayCtrlStop();
-		mimic_printf("*** Play Prev\r\n");
-		PostMsgPlayCtrlStart(u32PrevTrackNo - 1);
-	}
-}
 /**
  * @brief Task Main Loop
  */
@@ -766,6 +890,12 @@ DefALLOCATE_ITCM static void PlayCtrlActual(void)
 			break;
 		case enRecording:
 			enEvent = enPlayCtrlEventRecording;
+			break;
+		case enPlayNext:
+			enEvent = enPlayCtrlEventNext;
+			break;
+		case enPlayPrev:
+			enEvent = enPlayCtrlEventPrev;
 			break;
 		default:
 			mimic_printf("[%s (%d)] Unkown Msg\r\n", __func__, __LINE__);

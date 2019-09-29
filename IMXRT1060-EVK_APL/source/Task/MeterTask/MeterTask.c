@@ -43,22 +43,26 @@ DefALLOCATE_DATA_DTCM static uint32_t s_u32LastPCMMax = INT16_MAX;
 
 static _Bool s_bRun = false;
 
-DefALLOCATE_BSS_DTCM static lv_style_t s_style_Lmeter;
-DefALLOCATE_BSS_DTCM static lv_style_t s_style_Rmeter;
 DefALLOCATE_DATA_DTCM static lv_obj_t *s_pLmeter = NULL;
 DefALLOCATE_DATA_DTCM static lv_obj_t *s_pRmeter = NULL;
 #include "AudioFile/AudioFileList.h"
 
 static void StartBtnOnClecked(lv_obj_t * obj, lv_event_t event) {
 	MakeAudioFileListALL();
-	DumpAudioFileListALL();
+	//DumpAudioFileListALL();
 	MakeAudioFileListCurrentDir();
-	DumpAudioFileListCurrentDir();
+	//DumpAudioFileListCurrentDir();
 
 	PostMsgPlayCtrlStart(UINT32_MAX);
 }
 static void StopBtnOnClecked(lv_obj_t * obj, lv_event_t event){
 	PostSyncMsgPlayCtrlStop();
+}
+static void NextBtnOnClecked(lv_obj_t * obj, lv_event_t event){
+	PostMsgPlayCtrlNext();
+}
+static void PrevBtnOnClecked(lv_obj_t * obj, lv_event_t event){
+	PostMsgPlayCtrlPrev();
 }
 
 void CreatePlayStopBtn(void)
@@ -90,9 +94,9 @@ void CreatePlayStopBtn(void)
 	lv_obj_set_size(StartBtn, 90, 45);									 /* set size of button */
 	lv_obj_set_event_cb(StartBtn, StartBtnOnClecked);
 	/*Add text*/
-	static lv_obj_t *label;
-	label = lv_label_create(StartBtn, NULL); /*Put on 'btn1'*/
-	lv_label_set_text(label, LV_SYMBOL_PLAY);
+	static lv_obj_t *pBtnLabelStart;
+	pBtnLabelStart = lv_label_create(StartBtn, NULL); /*Put on 'btn1'*/
+	lv_label_set_text(pBtnLabelStart, LV_SYMBOL_PLAY);
 
 	/*Add a button*/
 	static lv_obj_t *StopBtn;
@@ -102,44 +106,106 @@ void CreatePlayStopBtn(void)
 	lv_obj_set_pos(StopBtn, 5, 55);									   /*Adjust the position*/
 	lv_obj_set_size(StopBtn, 90, 40);								   /* set size of button */
 	lv_obj_set_event_cb(StopBtn, StopBtnOnClecked);
+
 	/*Add text*/
-	label = lv_label_create(StopBtn, NULL); /*Put on 'btn1'*/
-	lv_label_set_text(label, LV_SYMBOL_STOP);
+	static lv_obj_t *pBtnLabelStop;
+	pBtnLabelStop = lv_label_create(StopBtn, NULL); /*Put on 'btn1'*/
+	lv_label_set_text(pBtnLabelStop, LV_SYMBOL_STOP);
+
+	/*Add a button*/
+	static lv_obj_t *NextBtn;
+	NextBtn = lv_btn_create(lv_scr_act(), NULL); /*Add to the active screen*/
+	lv_btn_set_style(NextBtn, LV_BTN_STYLE_PR, &style_btn_pr);
+	lv_btn_set_style(NextBtn, LV_BTN_STYLE_REL, &style_btn_rel);
+	lv_obj_set_pos(NextBtn, 5, 105);									   /*Adjust the position*/
+	lv_obj_set_size(NextBtn, 90, 40);								   /* set size of button */
+	lv_obj_set_event_cb(NextBtn, NextBtnOnClecked);
+	/*Add text*/
+	static lv_obj_t *pBtnLabelNext;
+	pBtnLabelNext = lv_label_create(NextBtn, NULL); /*Put on 'btn1'*/
+	lv_label_set_text(pBtnLabelNext, LV_SYMBOL_NEXT);
+
+	/*Add a button*/
+	static lv_obj_t *PrevBtn;
+	PrevBtn = lv_btn_create(lv_scr_act(), NULL); /*Add to the active screen*/
+	lv_btn_set_style(PrevBtn, LV_BTN_STYLE_PR, &style_btn_pr);
+	lv_btn_set_style(PrevBtn, LV_BTN_STYLE_REL, &style_btn_rel);
+	lv_obj_set_pos(PrevBtn, 5, 155);									   /*Adjust the position*/
+	lv_obj_set_size(PrevBtn, 90, 40);								   /* set size of button */
+	lv_obj_set_event_cb(PrevBtn, PrevBtnOnClecked);
+	/*Add text*/
+	static lv_obj_t *pBtnLabelPrev;
+	pBtnLabelPrev = lv_label_create(PrevBtn, NULL); /*Put on 'btn1'*/
+	lv_label_set_text(pBtnLabelPrev, LV_SYMBOL_PREV);
 }
 void CreatePeekMeter(void)
 {
 	/*Create a style for the line meter*/
+	/* Create a bar background style */
+	static lv_style_t style_bar_bg;
+	lv_style_copy(&style_bar_bg, &lv_style_plain_color);
+	style_bar_bg.body.radius = 0;
+	style_bar_bg.body.main_color = LV_COLOR_BLACK;          /*White main color*/
+	style_bar_bg.body.grad_color = LV_COLOR_BLACK;           /*Blue gradient color*/
+	style_bar_bg.body.border.color = LV_COLOR_BLACK;         /*Gray border color*/
+	style_bar_bg.body.border.width = 0; 
+	style_bar_bg.body.border.opa = LV_OPA_COVER;
 
-	lv_style_copy(&s_style_Lmeter, &lv_style_pretty_color);
-	s_style_Lmeter.line.width = 2;
-	s_style_Lmeter.line.color = LV_COLOR_SILVER;
-	s_style_Lmeter.body.main_color = lv_color_hex(0x91bfed); /*Light blue*/
-	s_style_Lmeter.body.grad_color = lv_color_hex(0x04386c); /*Dark blue*/
-	s_style_Lmeter.body.padding.left = 16;					 /*Line length*/
+	/* Create a bar indicator style */
+	static lv_style_t style_bar_indic;
+	lv_style_copy(&style_bar_indic, &lv_style_plain_color);
+	style_bar_indic.body.radius = 0;
+	style_bar_indic.body.main_color = LV_COLOR_GREEN;          /*White main color*/
+	style_bar_indic.body.grad_color = LV_COLOR_GREEN;           /*Blue gradient color*/
+	style_bar_indic.body.border.width = 0;
 
 	/*Create a line meter */
 	s_pLmeter = lv_bar_create(lv_scr_act(), NULL);
 	lv_obj_set_size(s_pLmeter, 400, 25);
 	lv_obj_align(s_pLmeter, NULL, LV_ALIGN_IN_TOP_LEFT, 5, 200);
-	//lv_bar_set_style(s_pRmeter, LV_BAR_STYLE_INDIC, &s_style_Lmeter); /*Apply the new style*/
 	lv_bar_set_range(s_pLmeter, 0, 100);		 /*Set the range*/
 	lv_bar_set_value(s_pLmeter, 0, LV_ANIM_OFF); /*Set the current value*/
-
-	lv_style_copy(&s_style_Rmeter, &lv_style_pretty_color);
-	s_style_Rmeter.line.width = 2;
-	s_style_Rmeter.line.color = LV_COLOR_SILVER;
-	s_style_Rmeter.body.main_color = lv_color_hex(0x91bfed); /*Light blue*/
-	s_style_Rmeter.body.grad_color = lv_color_hex(0x04386c); /*Dark blue*/
-	s_style_Rmeter.body.padding.left = 16;					 /*Line length*/
 
 	/*Create a line meter */
 	s_pRmeter = lv_bar_create(lv_scr_act(), NULL);
 	lv_obj_set_size(s_pRmeter, 400, 25);
 	lv_obj_align(s_pRmeter, NULL, LV_ALIGN_IN_TOP_LEFT, 5, 225);
-	//lv_bar_set_style(s_pRmeter, LV_BAR_STYLE_INDIC, &s_style_Rmeter); /*Apply the new style*/
 	lv_bar_set_range(s_pRmeter, 0, 100);		 /*Set the range*/
 	lv_bar_set_value(s_pRmeter, 0, LV_ANIM_OFF); /*Set the current value*/
-	;
+	
+	lv_bar_set_style(s_pLmeter, LV_BAR_STYLE_BG, &style_bar_bg);
+	lv_bar_set_style(s_pLmeter, LV_BAR_STYLE_INDIC, &style_bar_indic);
+	lv_bar_set_style(s_pRmeter, LV_BAR_STYLE_BG, &style_bar_bg);
+	lv_bar_set_style(s_pRmeter, LV_BAR_STYLE_INDIC, &style_bar_indic);
+}
+
+static lv_obj_t *s_pTextAreaTrackNo;
+static lv_obj_t *s_pTextAreaTrackName;
+
+void CreateTextAreaTrack(void)
+{
+	s_pTextAreaTrackNo = lv_label_create(lv_scr_act(), NULL);
+	lv_obj_set_size(s_pTextAreaTrackNo, 50, 50);
+	lv_obj_set_pos(s_pTextAreaTrackNo, 150, 50);	
+	lv_label_set_align(s_pTextAreaTrackNo, LV_LABEL_ALIGN_CENTER);
+
+	s_pTextAreaTrackName = lv_label_create(lv_scr_act(), NULL);
+	lv_obj_set_size(s_pTextAreaTrackName, 250, 50);
+	lv_obj_set_pos(s_pTextAreaTrackName, 200, 50);
+	lv_label_set_align(s_pTextAreaTrackName, LV_LABEL_ALIGN_CENTER);
+
+	lv_label_set_text(s_pTextAreaTrackNo, "XXX");
+	lv_label_set_text(s_pTextAreaTrackName, "--------------------");
+}
+
+void SetTextAreaTrackNo(const char szStr[])
+{
+	lv_label_set_text(s_pTextAreaTrackNo, szStr);
+}
+
+void SetTextAreaTrackName(const char szStr[])
+{
+	lv_label_set_text(s_pTextAreaTrackName, szStr);
 }
 
 static inline float64_t GetPeekdBFS(float64_t dfpPrevPeekdBFS)

@@ -100,7 +100,7 @@ DefALLOCATE_ITCM static void S2_E4(enSoundTask_t enSoundTaskNo, enSoundTaskEvent
 DefALLOCATE_ITCM static void XXXXX(enSoundTask_t enSoundTaskNo, enSoundTaskEvent_t enEvent, uint32_t u32param[], uintptr_t inptr, uintptr_t outptr);
 
 DefALLOCATE_DATA_DTCM static pfnSoundTaskMatrix_t s_pfnSoundTaskMatrix[enSoundTaskStateMAX][enSoundTaskEventMAX] = {
-	/** Init  | Start| Play | Stop | Rec   */
+	/** Init  | Start| Play | Stop | Rec */
 	{S0_E0, XXXXX, XXXXX, XXXXX, XXXXX}, /** enSoundTaskStateNoInit */
 	{S0_E0, S1_E1, XXXXX, S1_E3, XXXXX}, /** enSoundTaskStateStop */
 	{S0_E0, XXXXX, S2_E2, S2_E3, S2_E4}, /** enSoundTaskStatePlay */

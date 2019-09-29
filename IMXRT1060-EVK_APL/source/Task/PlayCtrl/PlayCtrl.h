@@ -63,8 +63,8 @@ extern "C"
 	extern _Bool PostMsgPlayCtrlStart(uint32_t u32TrackNo);
 	extern _Bool PostSyncMsgPlayCtrlStop(void);
 	extern _Bool PostMsgPlayCtrlRec(void);
-	extern void PostSyncMsgPlayCtrlPlayNext(void);
-	extern void PostSyncMsgPlayCtrlPlayPrev(void);
+	extern _Bool PostMsgPlayCtrlNext(void);
+	extern _Bool PostMsgPlayCtrlPrev(void);
 
 	extern _Bool PlayCtrlSoundDeviceStop(void);
 	extern _Bool PlayCtrlSetRepeat(enPlayCtrlRepeat_t enRepeat);

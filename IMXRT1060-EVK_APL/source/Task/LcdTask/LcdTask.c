@@ -232,6 +232,7 @@ DefALLOCATE_ITCM void LcdTask(void const *argument)
 	VolumeSlider();
 
 	CreatePeekMeter();
+	CreateTextAreaTrack();
 #endif
 	for (;;)
 	{
