@@ -159,6 +159,7 @@ void DrvELCDIFInit(void)
 	DrvELCDIFInitLcdifPixelClock();
 
     ELCDIF_RgbModeInit(LCDIF, &config);
+
 	memset(g_u16frameBuffer, 0, sizeof(g_u16frameBuffer));
 	ELCDIF_RgbModeStart(LCDIF);
 

@@ -172,10 +172,10 @@ DefALLOCATE_ITCM static void S0_E0(enSoundTask_t enSoundTaskNo, enSoundTaskEvent
 		return;
 	}
 
-	while (DrvSAIIsTxBufferEmpty(enSoundTaskNo) != false)
-	{
-		/* NOP */
-	}
+	//while (DrvSAIIsTxBufferEmpty(enSoundTaskNo) != false)
+	//{
+	//	/* NOP */
+	//}
 	if (DrvSAIInit(enSoundTaskNo, pstSoundFormat->enSample, pstSoundFormat->enWidth) == false)
 	{
 		mimic_printf("[%s (%d)] DrvSAIInit NG (SAI%d)!\r\n", __func__, __LINE__, enSoundTaskNo);

@@ -35,7 +35,7 @@
 #include "common/common.h"
 #include "fsl_sd.h"
 #include "ff.h"
-
+#include "AudioFile/AudioFileList.h"
 static void StorageInserted(bool isInserted, void *userData);
 static void StorageRemoved(bool isInserted, void *userData);
 
@@ -160,6 +160,9 @@ DefALLOCATE_ITCM static void StorageMount(enSD_t enSlotNo)
 	if (sts == FR_OK)
 	{
 		mimic_printf("f_mount OK (Slot = %d)\r\n", enSlotNo + 1);
+		MakeAudioFileListALL();
+		MakeAudioFileListCurrentDir();
+
 		osEventFlagsSet(g_eidFSReady, 1);
 	}
 	else

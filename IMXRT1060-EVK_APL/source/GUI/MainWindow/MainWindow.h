@@ -1,7 +1,8 @@
 /**
- * @file		PlayCtrl.h
- * @brief		TOOD
- * @date		2019/06/13
+ * @file		MainWindow.h
+ * @brief		MainWindow by lvgl
+ * @author		Takashi Kashiwagi
+ * @date		2019/09/29
  * @version     0.1
  * @details 
  * --
@@ -27,8 +28,9 @@
  * DEALINGS IN THE SOFTWARE.
  *
  * @par Update:
- * - 2019/06/13: Takashi Kashiwagi: v0.1 for IMXRT1060-EVK
+ * - 2019/09/29: Takashi Kashiwagi:
  */
+
 #ifndef __cplusplus
 #if __STDC_VERSION__ < 201112L
 #error /** Only C11 */
@@ -42,40 +44,17 @@ extern "C"
 
 /** User Typedefine */
 #include "UserTypedef.h"
+#include "OSResource.h"
 
+#define DEF_PEEK_METER_REFRESH_RATE	(50u)
 
-	typedef enum
-	{
-		enPlayCtrlPlayAreaDir = 0,
-		enPlayCtrlPlayAreaALL,
-		enPlayCtrlPlayAreaMAX,
-	} enPlayCtrlPlayArea_t;
+extern void MainWindowCreatePlayStopBtn(void);
+extern void MainWindowCreateVolumeSlider(void);
+extern void MainWindowCreateTextAreaTrack(void);
+extern void MainWindowSetTextAreaTrackNo(const char szStr[]);
+extern void MainWindowSetTextAreaTrackName(const char szStr[]);
+extern void MainWindowSetTextAreaTrackTime(const char szStr[]);
 
-	typedef enum
-	{
-		enPlayCtrlRepeatOff = 0,
-		enPlayCtrlRepeatOne,
-		enPlayCtrlRepeatALL,
-		enPlayCtrlRepeatMAX,
-	} enPlayCtrlRepeat_t;
-
-	extern void PlayCtrl(void const *argument);
-	extern _Bool PostMsgPlayCtrlStart(uint32_t u32TrackNo);
-	extern _Bool PostMsgPlayCtrlStop(void);
-	extern _Bool PostSyncMsgPlayCtrlStop(void);
-	extern _Bool PostMsgPlayCtrlRec(void);
-	extern _Bool PostMsgPlayCtrlNext(void);
-	extern _Bool PostMsgPlayCtrlPrev(void);
-
-	extern _Bool PlayCtrlSoundDeviceStop(void);
-	extern _Bool PlayCtrlSetRepeat(enPlayCtrlRepeat_t enRepeat);
-	extern _Bool PlayCtrlSetPlayArea(enPlayCtrlPlayArea_t enPlayArea);
-
-	extern void CmdRepeat(uint32_t argc, const char *argv[]);
-	extern void CmdMode(uint32_t argc, const char *argv[]);
-	extern void CmdPlay(uint32_t argc, const char *argv[]);
-	extern void CmdStop(uint32_t argc, const char *argv[]);
-	extern void CmdRec(uint32_t argc, const char *argv[]);
 #ifdef __cplusplus
 }
 #endif

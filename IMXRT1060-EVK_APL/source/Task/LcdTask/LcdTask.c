@@ -154,61 +154,8 @@ void LV_Init(void)
 }
 
 
-DefALLOCATE_DATA_DTCM static lv_obj_t *vol_slider;
 
-#include "Task/SoundTask/SoundTask.h"
-DefALLOCATE_ITCM static void vol_slider_action(lv_obj_t * slider, lv_event_t event)
-{
-	if(event == LV_EVENT_VALUE_CHANGED) {
-		uint16_t temp = lv_slider_get_value(slider);
-		SoundTaskWriteCurrentVolume(enSoundTask1, temp);
-		char szstr[32];
-		mimic_sprintf(szstr, sizeof(szstr), "%d", temp);
-	}
-}
-DefALLOCATE_ITCM void VolumeSlider(void)
-{
-	/*Called when a new value id set on the slider*/
-
-	/*Create a default slider*/
-	vol_slider = lv_slider_create(lv_scr_act(), NULL);
-	lv_obj_set_size(vol_slider, 300, 30);
-	lv_obj_set_pos(vol_slider, 150, 5);	
-	lv_obj_set_event_cb(vol_slider, vol_slider_action);
-	lv_bar_set_value(vol_slider, 70, LV_ANIM_ON);
-	lv_bar_set_range(vol_slider,0,100);
-
-	SoundTaskWriteCurrentVolume(enSoundTask1, 70);
-
-	/*Create a bar, an indicator and a knob style*/
-	static lv_style_t style_bg;
-	static lv_style_t style_indic;
-	static lv_style_t style_knob;
-
-	lv_style_copy(&style_bg, &lv_style_pretty);
-	style_bg.body.main_color = LV_COLOR_BLACK;
-	style_bg.body.grad_color = LV_COLOR_GRAY;
-	style_bg.body.radius = LV_RADIUS_CIRCLE;
-	style_bg.body.border.color = LV_COLOR_WHITE;
-
-	lv_style_copy(&style_indic, &lv_style_pretty);
-	style_indic.body.grad_color = LV_COLOR_GREEN;
-	style_indic.body.main_color = LV_COLOR_LIME;
-	style_indic.body.radius = LV_RADIUS_CIRCLE;
-	style_indic.body.shadow.width = 10;
-	style_indic.body.shadow.color = LV_COLOR_LIME;
-    style_indic.body.padding.left = 3;
-    style_indic.body.padding.right = 3;
-    style_indic.body.padding.top = 3;
-    style_indic.body.padding.bottom = 3;
-
-	lv_style_copy(&style_knob, &lv_style_pretty);
-	style_knob.body.radius = LV_RADIUS_CIRCLE;
-	style_knob.body.opa = LV_OPA_70;
-	style_knob.body.padding.top = 10;
-	style_knob.body.padding.bottom = 10;
-}
-
+#include "GUI/MainWindow/MainWindow.h"
 #include "Task/MeterTask/MeterTask.h"
 #include "lv_ex_conf.h"
 /**
@@ -223,16 +170,13 @@ DefALLOCATE_ITCM void LcdTask(void const *argument)
 
 	LastTick = xTaskGetTickCount();
 	DrvELCDIFInit();
-	
 	LV_Init();
 
 #if (LV_USE_BENCHMARK == 0)
-
-	CreatePlayStopBtn();
-	VolumeSlider();
-
+	MainWindowCreatePlayStopBtn();
+	MainWindowCreateVolumeSlider();
+	MainWindowCreateTextAreaTrack();
 	CreatePeekMeter();
-	CreateTextAreaTrack();
 #endif
 	for (;;)
 	{
@@ -245,6 +189,7 @@ DefALLOCATE_ITCM void LcdTask(void const *argument)
 				s_u32PosY = stTaskMsg.param[0];
 				s_u32PosX = stTaskMsg.param[1];
 				s_enLastTouchEvent = (touch_event_t)stTaskMsg.param[2];
+				//mimic_printf("%03lu, %03lu, %d\r\n", s_u32PosY, s_u32PosX, s_enLastTouchEvent);
 				break;
 			default:
 				break;

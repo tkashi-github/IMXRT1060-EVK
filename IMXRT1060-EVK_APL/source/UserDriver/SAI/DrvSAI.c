@@ -536,6 +536,7 @@ _Bool DrvSAIInit(enSAI_t enSAI, sai_sample_rate_t enSampleRate, sai_word_width_t
 	WM8960_SetLeftInput(&s_HndCodec[enSAI], kWM8960_InputDifferentialMicInput3);
 	WM8960_SetRightInput(&s_HndCodec[enSAI], kWM8960_InputDifferentialMicInput2);
 	WM8960_SetModule(&s_HndCodec[enSAI], kWM8960_ModuleHP, true);
+	WM8960_SetModule(&s_HndCodec[enSAI], kWM8960_ModuleSpeaker, true);
 	//WM8960_RegDump(&s_HndCodec[enSAI]);
 	MeterTaskRestart();
 	mimic_printf("[%s (%d)] EXIT OK\r\n", __func__, __LINE__);
@@ -959,6 +960,7 @@ _Bool DrvSAIWriteVolume(enSAI_t enSAI, uint16_t u16Vol)
 		return false;
 	}
 	/* 0x80 = zero cross enable */
+	WM8960_SetVolume(&s_HndCodec[enSAI], kWM8960_ModuleSpeaker, u16Vol | 0x80);
 	if (WM8960_SetVolume(&s_HndCodec[enSAI], kWM8960_ModuleHP, u16Vol | 0x80) == kStatus_Success)
 	{
 		return true;

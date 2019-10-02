@@ -40,6 +40,7 @@
 #include "PlayCtrl/PlayCtrlAudio.h"
 #include "AudioFile/wav/wav.h"
 #include "Task/MeterTask/MeterTask.h"
+#include "GUI/MainWindow/MainWindow.h"
 
 typedef enum
 {
@@ -65,7 +66,6 @@ DefALLOCATE_ITCM static void ClosePlayProcess(void);
 DefALLOCATE_ITCM static void CloseRecProcess(void);
 
 DefALLOCATE_ITCM static _Bool GetAudioFilePath(uint32_t u32TrackNo, TCHAR szFilePath[]);
-DefALLOCATE_ITCM static _Bool GetNextTrackNo(uint32_t *pu32TrackNo);
 
 DefALLOCATE_ITCM static _Bool PostMsgPlayCtrlPlaying(void);
 DefALLOCATE_ITCM static _Bool PostMsgPlayCtrlRecording(void);
@@ -74,8 +74,8 @@ DefALLOCATE_ITCM static uint8_t *OpenNextPlayFile(uint32_t u32NowTrackNo, TCHAR 
 												  stCodecCondition_t *pst, uint32_t *pu32BufSize,
 												  _Bool bForceInit);
 
-DefALLOCATE_ITCM static _Bool GetNextTrackNo(uint32_t *pu32TrackNo);
-DefALLOCATE_ITCM static _Bool GetPrevTrackNo(uint32_t *pu32TrackNo);
+DefALLOCATE_ITCM static _Bool getNextTrackNo(void);
+DefALLOCATE_ITCM static _Bool getPrevTrackNo(void);
 DefALLOCATE_BSS_DTCM uint32_t s_u32PlayStartTick = 0;
 
 /** Matrix Functions */
@@ -169,6 +169,10 @@ DefALLOCATE_ITCM static void S0_E1(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 	{
 		s_u32NowTrackNo = param[0];
 	}
+	else
+	{
+		s_u32NowTrackNo = 0;
+	}
 
 	ClosePlayProcess();
 
@@ -182,6 +186,7 @@ DefALLOCATE_ITCM static void S0_E1(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 			StopPlayRecProcess();
 			return;
 		}
+		s_u32PlayStartTick = osKernelGetTickCount();
 	}
 	/** Send Playing */
 	if (PostMsgPlayCtrlPlaying() != false)
@@ -259,7 +264,6 @@ DefALLOCATE_ITCM static void S1_E2(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 	*pBool = true;
 	if (IsPlayAudioFileOpend() == false)
 	{
-		/** Open Audio File */
 		s_pu8PCMBufferPlayPCMBuffer = OpenNextPlayFile(s_u32NowTrackNo, s_szCurrentFilePath, sizeof(s_szCurrentFilePath), &s_stPlayCondition, &s_u32PCMBufferSize, false);
 
 		/** Check PCM Buffer */
@@ -275,6 +279,20 @@ DefALLOCATE_ITCM static void S1_E2(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 
 	if (IsPlayAudioFileOpend() != false)
 	{
+		//mimic_printf("*** playing...[%03d] :  %lu msec\r\n", s_u32NowTrackNo, osKernelGetTickCount()-s_u32PlayStartTick);
+		{
+			char szTime[32];
+			uint32_t u32Tick = osKernelGetTickCount()-s_u32PlayStartTick;
+			uint32_t u32Hour = u32Tick / 3600000;
+			uint32_t u32Min = u32Tick / 60000;
+			u32Min %= 60;
+			uint32_t u32Sec = u32Tick / 1000;
+			u32Sec %= 60;
+
+			uint32_t u32Mi = u32Tick % 1000;
+			mimic_sprintf(szTime, sizeof(szTime),"%02lu:%02lu:%02lu.%03lu", u32Hour, u32Min, u32Sec, u32Mi);
+			MainWindowSetTextAreaTrackTime(szTime);
+		}
 		/** オープンされたファイルからPCMデータを取得 */
 		uint32_t u32ReadByte = ReadPlayAudioFile(&s_stPlayCondition, s_pu8PCMBufferPlayPCMBuffer, s_u32PCMBufferSize);
 		if (u32ReadByte > 0)
@@ -305,7 +323,7 @@ DefALLOCATE_ITCM static void S1_E2(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 			ClosePlayProcess();
 
 			/** つぎのTrackNoは? */
-			if (GetNextTrackNo(&s_u32NowTrackNo) == false)
+			if (getNextTrackNo() == false)
 			{
 				/** ない */
 				mimic_printf("*** Play Stop <%s (%d)>\r\n", __func__, __LINE__);
@@ -336,9 +354,7 @@ DefALLOCATE_ITCM static void S1_E5(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 	/** つぎのTrackNoは? */
 	if (IsPlayAudioFileOpend() != false)
 	{
-
-
-		if (GetNextTrackNo(&s_u32NowTrackNo) != false)
+		if (getNextTrackNo() != false)
 		{
 			/** 今のファイルクローズ */
 			ClosePlayProcess();
@@ -363,8 +379,7 @@ DefALLOCATE_ITCM static void S1_E6(enPlayCtrlEvent_t enEvent, uint32_t param[], 
 	/** つぎのTrackNoは? */
 	if (IsPlayAudioFileOpend() != false)
 	{
-		mimic_printf("[%s (%d)] TP %03u\r\n", __func__, __LINE__, s_u32NowTrackNo);
-		if (GetPrevTrackNo(&s_u32NowTrackNo) != false)
+		if (getPrevTrackNo() != false)
 		{
 			/** 今のファイルクローズ */
 			ClosePlayProcess();
@@ -589,8 +604,8 @@ DefALLOCATE_ITCM static uint8_t *OpenNextPlayFile(uint32_t u32NowTrackNo, TCHAR 
 	{
 		char szTrackNo[8];
 		mimic_sprintf(szTrackNo, sizeof(szTrackNo), "%03u", u32NowTrackNo);
-		SetTextAreaTrackNo(szTrackNo);
-		SetTextAreaTrackName(szCurrentFilePath);
+		MainWindowSetTextAreaTrackNo(szTrackNo);
+		MainWindowSetTextAreaTrackName(szCurrentFilePath);
 	}
 	return pu8PCMBuffer;
 }
@@ -621,31 +636,31 @@ DefALLOCATE_ITCM static _Bool GetAudioFilePath(uint32_t u32TrackNo, TCHAR szFile
  * @return true OK
  * @return false NG
  */
-DefALLOCATE_ITCM static _Bool GetNextTrackNo(uint32_t *pu32TrackNo)
+DefALLOCATE_ITCM static _Bool getNextTrackNo(void)
 {
 	if (s_enPlayCtrlRepeat == enPlayCtrlRepeatALL)
 	{
-		*pu32TrackNo += 1;
+		s_u32NowTrackNo += 1;
 		if (s_enPlayCtrlPlayArea == enPlayCtrlPlayAreaALL)
 		{
-			*pu32TrackNo %= GetAudioFileNumALL();
+			s_u32NowTrackNo %= GetAudioFileNumALL();
 		}
 		else
 		{
-			*pu32TrackNo %= GetAudioFileNumCurrentDir();
+			s_u32NowTrackNo %= GetAudioFileNumCurrentDir();
 		}
 		return true;
 	}
 	else if (s_enPlayCtrlRepeat == enPlayCtrlRepeatOff)
 	{
-		*pu32TrackNo += 1;
+		s_u32NowTrackNo += 1;
 		if (s_enPlayCtrlPlayArea == enPlayCtrlPlayAreaALL)
 		{
-			return (*pu32TrackNo >= GetAudioFileNumALL()) ? false : true;
+			return (s_u32NowTrackNo >= GetAudioFileNumALL()) ? false : true;
 		}
 		else
 		{
-			return (*pu32TrackNo >= GetAudioFileNumCurrentDir()) ? false : true;
+			return (s_u32NowTrackNo >= GetAudioFileNumCurrentDir()) ? false : true;
 		}
 	}
 	else
@@ -654,38 +669,39 @@ DefALLOCATE_ITCM static _Bool GetNextTrackNo(uint32_t *pu32TrackNo)
 		return true;
 	}
 }
-DefALLOCATE_ITCM static _Bool GetPrevTrackNo(uint32_t *pu32TrackNo)
+DefALLOCATE_ITCM static _Bool getPrevTrackNo(void)
 {
-	if((s_u32PlayStartTick + 1000) < osKernelGetTickCount())
+	if((s_u32PlayStartTick + 1000) > osKernelGetTickCount())
 	{
 		return true;
 	}
-	if(*pu32TrackNo > 0)
+
+	if(s_u32NowTrackNo > 0)
 	{
 		
 		if (s_enPlayCtrlRepeat == enPlayCtrlRepeatALL)
 		{
-			*pu32TrackNo -= 1;
+			s_u32NowTrackNo -= 1;
 			if (s_enPlayCtrlPlayArea == enPlayCtrlPlayAreaALL)
 			{
-				*pu32TrackNo %= GetAudioFileNumALL();
+				s_u32NowTrackNo %= GetAudioFileNumALL();
 			}
 			else
 			{
-				*pu32TrackNo %= GetAudioFileNumCurrentDir();
+				s_u32NowTrackNo %= GetAudioFileNumCurrentDir();
 			}
 			return true;
 		}
 		else if (s_enPlayCtrlRepeat == enPlayCtrlRepeatOff)
 		{
-			*pu32TrackNo -= 1;
+			s_u32NowTrackNo -= 1;
 			if (s_enPlayCtrlPlayArea == enPlayCtrlPlayAreaALL)
 			{
-				return (*pu32TrackNo >= GetAudioFileNumALL()) ? false : true;
+				return (s_u32NowTrackNo >= GetAudioFileNumALL()) ? false : true;
 			}
 			else
 			{
-				return (*pu32TrackNo >= GetAudioFileNumCurrentDir()) ? false : true;
+				return (s_u32NowTrackNo >= GetAudioFileNumCurrentDir()) ? false : true;
 			}
 		}
 		else
@@ -696,7 +712,7 @@ DefALLOCATE_ITCM static _Bool GetPrevTrackNo(uint32_t *pu32TrackNo)
 	}
 	else
 	{
-		return false;
+		return true;
 	}
 }
 
@@ -759,6 +775,25 @@ DefALLOCATE_ITCM _Bool PostMsgPlayCtrlStart(uint32_t u32TrackNo)
 
 	stTaskMsg.enMsgId = enPlayStart;
 	stTaskMsg.param[0] = u32TrackNo;
+
+	if (osOK == osMessageQueuePut(g_mqidPlayCtrl, &stTaskMsg, 0, 50))
+	{
+		bret = true;
+	}
+	else
+	{
+		mimic_printf("[%s (%d)] osMessageQueuePut NG\r\n", __func__, __LINE__);
+	}
+
+	return bret;
+}
+DefALLOCATE_ITCM _Bool PostMsgPlayCtrlStop(void)
+{
+	/*-- var --*/
+	alignas(8) stTaskMsgBlock_t stTaskMsg = {0};
+	_Bool bret = false;
+
+	stTaskMsg.enMsgId = enPlayStop;
 
 	if (osOK == osMessageQueuePut(g_mqidPlayCtrl, &stTaskMsg, 0, 50))
 	{
@@ -1032,7 +1067,7 @@ void CmdPlay(uint32_t argc, const char *argv[])
 
 void CmdStop(uint32_t argc, const char *argv[])
 {
-	PostSyncMsgPlayCtrlStop();
+	PostMsgPlayCtrlStop();
 }
 void CmdRec(uint32_t argc, const char *argv[])
 {
