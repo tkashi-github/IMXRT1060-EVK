@@ -36,6 +36,8 @@
 
 #include "arm_math.h"
 
+static _Bool s_bRunning = false;
+
 /**
  * @brief Task Entry
  * @param [in]  argument nouse
@@ -57,7 +59,10 @@ DefALLOCATE_ITCM void ExtLedCtrlTask(void const *argument)
 	if(false == DrvPCA9685Init(LPI2C1))
 	{
 		mimic_printf("[%s (%d)] DrvPCA9685Init NG!\r\n", __func__, __LINE__);
+		osDelay(portMAX_DELAY);
 	}
+
+	s_bRunning = true;
 
 	for(;;)
 	{
@@ -112,7 +117,7 @@ DefALLOCATE_ITCM _Bool PostMsgExtLedCtrlTaskLedVal(enPCA9685PortNo_t enExtLedNo,
 {
 	_Bool bret = false;
 
-	if((enExtLedNo >= enPCA9685Port0) && (enExtLedNo <= enPCA9685Port15))
+	if((enExtLedNo >= enPCA9685Port0) && (enExtLedNo <= enPCA9685Port15) && s_bRunning)
 	{
 		stTaskMsgBlock_t stTaskMsg = {0};
 		stTaskMsg.enMsgId = enExtLedSetVal;
@@ -131,13 +136,16 @@ DefALLOCATE_ITCM _Bool PostMsgExtLedCtrlTaskSetUpdateMode(_Bool bMode)
 {
 	_Bool bret = false;
 
-	stTaskMsgBlock_t stTaskMsg = {0};
-	stTaskMsg.enMsgId = enExtLedUpdate;
-	stTaskMsg.param[0] = bMode;
-
-	if(osOK == osMessageQueuePut(g_mqidExtLedCtrlTask, &stTaskMsg, 0, 50))
+	if(s_bRunning)
 	{
-		bret = true;
+		stTaskMsgBlock_t stTaskMsg = {0};
+		stTaskMsg.enMsgId = enExtLedUpdate;
+		stTaskMsg.param[0] = bMode;
+
+		if(osOK == osMessageQueuePut(g_mqidExtLedCtrlTask, &stTaskMsg, 0, 50))
+		{
+			bret = true;
+		}
 	}
 	return bret;
 }
