@@ -1401,9 +1401,6 @@ FLAC_API static FLAC__StreamEncoderInitStatus init_FIL_internal_(
 	 * must assign the FLAC_FILE pointer before any further error can occur in
 	 * this routine.
 	 */
-	//if(file == stdout)
-	//	file = get_binary_stdout_(); /* just to be safe */
-
 #ifdef _WIN32
 	/*
 	 * Windows can suffer quite badly from disk fragmentation. This can be
@@ -1421,10 +1418,10 @@ FLAC_API static FLAC__StreamEncoderInitStatus init_FIL_internal_(
 
 	init_status = init_stream_internal_(
 		encoder,
-		encoder->private_->file == stdout? 0 : is_ogg? file_read_callback_ : 0,
+		is_ogg? file_read_callback_ : 0,
 		file_write_callback_,
-		encoder->private_->file == stdout? 0 : file_seek_callback_,
-		encoder->private_->file == stdout? 0 : file_tell_callback_,
+		file_seek_callback_,
+		file_tell_callback_,
 		/*metadata_callback=*/0,
 		client_data,
 		is_ogg
@@ -1569,10 +1566,8 @@ FLAC_API FLAC__bool FLAC__stream_encoder_finish(FLAC__StreamEncoder *encoder)
 	}
 
 	if(0 != encoder->private_->file) {
-		if(encoder->private_->file != stdout){
-			f_close(encoder->private_->file);
-			FLAC_FREE(encoder->private_->file);
-		}
+		f_close(encoder->private_->file);
+		FLAC_FREE(encoder->private_->file);
 		encoder->private_->file = 0;
 	}
 
@@ -4608,22 +4603,3 @@ FLAC_API FLAC__StreamEncoderWriteStatus file_write_callback_(const FLAC__StreamE
 		return FLAC__STREAM_ENCODER_WRITE_STATUS_FATAL_ERROR;
 }
 
-/*
- * This will forcibly set stdout to binary mode (for OSes that require it)
- */
-#if 0
-FLAC_FILE *get_binary_stdout_(void)
-{
-	/* if something breaks here it is probably due to the presence or
-	 * absence of an underscore before the identifiers 'setmode',
-	 * 'fileno', and/or 'O_BINARY'; check your system header files.
-	 */
-#if defined _MSC_VER || defined __MINGW32__
-	_setmode(_fileno(stdout), _O_BINARY);
-#elif defined __EMX__
-	setmode(fileno(stdout), O_BINARY);
-#endif
-
-	return stdout;
-}
-#endif
