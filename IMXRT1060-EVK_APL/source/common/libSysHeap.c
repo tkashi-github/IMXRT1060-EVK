@@ -35,6 +35,9 @@
  */
 #include <stdlib.h>
 #include <stdalign.h>
+
+#define configlibSys_HEAP_SIZE (128u*1024u)
+
 #include "common/libSYSHeap.h"
 /* Defining MPU_WRAPPERS_INCLUDED_FROM_API_FILE prevents task.h from redefining
 all the API functions to use the MPU wrappers.  That should only be done when
@@ -57,7 +60,7 @@ task.h is included from an application file. */
 #define heapBITS_PER_BYTE ((size_t)8)
 
 /* Allocate the memory for the heap. */
-DefALLOCATE_BSS_DTCM alignas(256) static uint8_t ucHeap[64 * 1024];
+DefALLOCATE_BSS_DTCM alignas(256) static uint8_t ucHeap[configlibSys_HEAP_SIZE];
 
 /* Define the linked list structure.  This is used to link free blocks in order
 of their memory address. */
@@ -262,7 +265,7 @@ DefKERNEL_SECTION_ITCM static void prvlibSysHeapInit(void)
 	BlockLink_t *pxFirstFreeBlock;
 	uint8_t *pucAlignedHeap;
 	size_t uxAddress;
-	size_t xTotalHeapSize = configTOTAL_HEAP_SIZE;
+	size_t xTotalHeapSize = configlibSys_HEAP_SIZE;
 
 	/* Ensure the heap starts on a correctly aligned boundary. */
 	uxAddress = (size_t)ucHeap;

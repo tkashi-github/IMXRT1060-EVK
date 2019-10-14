@@ -157,7 +157,7 @@ uint8_t * OpenFlacFile(const TCHAR szFilePath[], stCodecCondition_t *pst, uint32
 		mimic_printf("[%s (%d)] stFormat.nChannels = %lu\r\n", __func__, __LINE__, pst->nChannels);
 		mimic_printf("[%s (%d)] *pu32PCMBufferSize = %lu [bytes]\r\n", __func__, __LINE__, *pu32PCMBufferSize);
 	}
-	
+
 	pu8PCMBuffer = (uint8_t *)pvPortMalloc(*pu32PCMBufferSize);
 	if(pu8PCMBuffer == NULL){
 		FLAC__stream_decoder_finish(s_pstFlacDecoder);

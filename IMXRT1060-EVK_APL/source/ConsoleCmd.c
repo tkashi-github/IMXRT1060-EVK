@@ -252,11 +252,15 @@ static void CmdClock(uint32_t argc, const char *argv[])
 
 static void CmdTask(uint32_t argc, const char *argv[])
 {
-	char szStr[2048];
+	char *szStr=pvPortMalloc(8192);
 
-	mimic_printf("TaskName | CurrentState | Priority | StackWM | TaskNo\r\n");
-	vTaskList(szStr);
-	mimic_printf("%s\r\n", szStr);
+	if(szStr != NULL)
+	{
+		mimic_printf("TaskName | CurrentState | Priority | StackWM | TaskNo\r\n");
+		vTaskList(szStr);
+		mimic_printf("%s\r\n", szStr);
+		vPortFree(szStr);
+	}
 }
 
 static void CmdNvic(uint32_t argc, const char *argv[]){

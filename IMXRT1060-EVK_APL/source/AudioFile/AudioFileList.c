@@ -51,7 +51,7 @@ static _Bool IsAudioFile(const TCHAR szFileName[], uint32_t SizeofStr)
 	{
 		return true;
 	}
-	else if (mimic_memcmp((uintptr_t)sztemp, (uintptr_t)_T("FLAC"), 3 * sizeof(TCHAR)) != false)
+	else if (mimic_memcmp((uintptr_t)sztemp, (uintptr_t)_T("FLAC"), 4 * sizeof(TCHAR)) != false)
 	{
 		return true;
 	}

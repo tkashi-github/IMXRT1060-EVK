@@ -144,8 +144,8 @@ static inline void *FlacSysMalloc(size_t xWantedSize, const char pszFunc[], uint
 	
 	void *ptr = pvlibSYSMalloc(xWantedSize);
 	if(ptr != NULL){
-		//AddMallocInfo((uintptr_t)ptr, xWantedSize, pszFunc, u32Line);
-		//flac_printf("[%s (%d)] ptr = 0x%08lX, xWantedSize = %lu\r\n", pszFunc, u32Line, ptr, xWantedSize);
+		AddMallocInfo((uintptr_t)ptr, xWantedSize, pszFunc, u32Line);
+		flac_printf("[%s (%d)] ptr = 0x%08lX, xWantedSize = %lu\r\n", pszFunc, u32Line, ptr, xWantedSize);
 	}else{
 		flac_printf("[%s (%d)] pvlibSYSMalloc NG (Free = %lu, Wanted = %lu)\r\n", pszFunc, u32Line, xlibSYSPortGetFreeHeapSize(), xWantedSize);
 	}
@@ -154,8 +154,8 @@ static inline void *FlacSysMalloc(size_t xWantedSize, const char pszFunc[], uint
 static inline void FlacSysFree(uintptr_t pv, const char pszFile[], uint32_t u32Line){
 	if(pv != 0){
 		vlibSYSPortFree((void*)pv);
-		//DelMallocInfo(pv);
-		//flac_printf("[%s (%d)] ptr = 0x%08lX\r\n", pszFile, u32Line, pv);
+		DelMallocInfo(pv);
+		flac_printf("[%s (%d)] ptr = 0x%08lX\r\n", pszFile, u32Line, pv);
 	}
 }
 

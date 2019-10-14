@@ -101,7 +101,7 @@ DefALLOCATE_DATA_DTCM static pfnPlayCtrlMatrix_t s_pfnPlayCtrlMatrix[enPlayCtrlS
 
 /** private member */
 DefALLOCATE_DATA_DTCM static enPlayCtrlState_t s_enPlayCtrlState = enPlayCtrlStateStop;
-DefALLOCATE_DATA_DTCM static enPlayCtrlPlayArea_t s_enPlayCtrlPlayArea = enPlayCtrlPlayAreaDir;
+DefALLOCATE_DATA_DTCM static enPlayCtrlPlayArea_t s_enPlayCtrlPlayArea = enPlayCtrlPlayAreaALL;
 DefALLOCATE_DATA_DTCM static enPlayCtrlRepeat_t s_enPlayCtrlRepeat = enPlayCtrlRepeatOff;
 
 DefALLOCATE_DATA_DTCM static uint32_t s_u32NowTrackNo = 0;
