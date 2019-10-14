@@ -144,6 +144,7 @@ typedef enum{
 
 typedef enum{
 	enAudioFileWAV = 0,
+	enAudioFileFLAC,
 	enAudioFileMAX,
 }enAudioFileType_t;
 
@@ -194,6 +195,7 @@ typedef char TCHAR;
 
 #if 1
 #define DefALLOCATE_ITCM  __attribute__((section(".ramfunc.$SRAM_ITC"))) 
+#define DefALLOCATE_BSS_ITCM  __attribute__((section(".bss.$SRAM_ITC"))) 
 #define DefALLOCATE_BSS_DTCM  __attribute__((section(".bss.$SRAM_DTC"))) 
 #define DefALLOCATE_DATA_DTCM  __attribute__((section(".data.$SRAM_DTC"))) 
 #else

@@ -118,7 +118,8 @@
 			"fsl_device_registers.h": "c",
 			"metertask.h": "c",
 			"benchmark.h": "c",
-			"sysmon.h": "c"
+			"sysmon.h": "c",
+			"playctrlflac.h": "c"
 		},
 		"C_Cpp.default.defines": [
 			"__GNUC__",

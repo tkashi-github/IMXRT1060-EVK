@@ -51,6 +51,10 @@ static _Bool IsAudioFile(const TCHAR szFileName[], uint32_t SizeofStr)
 	{
 		return true;
 	}
+	else if (mimic_memcmp((uintptr_t)sztemp, (uintptr_t)_T("FLAC"), 3 * sizeof(TCHAR)) != false)
+	{
+		return true;
+	}
 	else
 	{
 		return false;
@@ -254,6 +258,10 @@ enAudioFileType_t GetAudioFileType(const TCHAR szFileName[], uint32_t SizeofStr)
 	if (mimic_memcmp((uintptr_t)sztemp, (uintptr_t)_T("WAV"), 3 * sizeof(TCHAR)) != false)
 	{
 		return enAudioFileWAV;
+	}
+	else if (mimic_memcmp((uintptr_t)sztemp, (uintptr_t)_T("FLAC"), 3 * sizeof(TCHAR)) != false)
+	{
+		return enAudioFileFLAC;
 	}
 	else
 	{

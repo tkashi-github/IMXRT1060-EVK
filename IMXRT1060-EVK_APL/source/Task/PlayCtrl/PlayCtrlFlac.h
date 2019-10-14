@@ -1,7 +1,7 @@
 /**
- * @file		PlaCtrlAudio.h
- * @brief		Interface Class
- * @date		2019/06/13
+ * @file		PlaCtrlflac.h
+ * @brief		Implementation Class
+ * @date		2019/10/14
  * @version     0.1
  * @details 
  * --
@@ -27,7 +27,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  * @par Update:
- * - 2019/06/13: Takashi Kashiwagi: v0.1 for IMXRT1060-EVK
+ * - 2019/10/14: Takashi Kashiwagi:
  */
 #ifndef __cplusplus
 #if __STDC_VERSION__ < 201112L
@@ -43,18 +43,15 @@ extern "C"
 /** User Typedefine */
 #include "UserTypedef.h"
 #include "SoundTask/SoundTask.h"
-#include "PlayCtrl/PlayCtrlWav.h"
-#include "PlayCtrl/PlayCtrlFlac.h"
+#include "FLAC/all.h"
 
-extern uint8_t *OpenPlayAudioFile(const TCHAR szFilePath[], stCodecCondition_t *pst, uint32_t *pu32PCMBufferSize);
-extern uint32_t ReadPlayAudioFile(const stCodecCondition_t *pst, uint8_t pu8PCMBuffer[], uint32_t u32PCMBufferSize);
-extern void ClosePlayAudioFile(const stCodecCondition_t *pst, uint8_t *pu8PCMBuffer);
-extern _Bool IsPlayAudioFileOpend(void);
+extern uint8_t * OpenFlacFile(const TCHAR szFilePath[], stCodecCondition_t *pst, uint32_t *pu32PCMBufferSize);
+extern uint32_t ReadFlacFile(uint8_t pu8PCMBuffer[], uint32_t u32PCMBufferSize);
+extern void CloseFlacFile(void);
 
-extern uint8_t *OpenRecAudioFile(const TCHAR szFilePath[], const stCodecCondition_t *pst, uint32_t *pu32PCMBufferSize, _Bool bForceInit);
-extern _Bool WriteRecAudioFile(const stCodecCondition_t *pst,  const uint8_t pu8PCMBuffer[], uint32_t u32PCMBufferSize);
-extern void CloseRecAudioFile(const stCodecCondition_t *pst, uint8_t *pu8PCMBuffer);
-extern _Bool IsRecAudioFileOpend(void);
+extern _Bool OpenRecFlacFile(const TCHAR szFilePath[], const stCodecCondition_t *pst);
+extern _Bool WriteRecFlacFile(const stCodecCondition_t *pst, const uint8_t pu8PCMBuffer[], uint32_t u32PCMBufferSize);
+extern void CloseRecFlacFile(void);
 
 #ifdef __cplusplus
 }

@@ -114,8 +114,8 @@ DefALLOCATE_ITCM static bool touchpad_read(lv_indev_drv_t * indev_drv, lv_indev_
 DefALLOCATE_DATA_DTCM static lv_indev_drv_t indev_drv; /*Descriptor of an input device driver*/
 DefALLOCATE_DATA_DTCM static lv_disp_drv_t disp_drv;
 DefALLOCATE_BSS_DTCM static lv_disp_buf_t disp_buf_2;
-DefALLOCATE_BSS_DTCM static lv_color_t buf2_1[LV_HOR_RES_MAX * 10];                        /*A buffer for 10 rows*/
-DefALLOCATE_BSS_DTCM static lv_color_t buf2_2[LV_HOR_RES_MAX * 10];                        /*An other buffer for 10 rows*/
+DefALLOCATE_BSS_ITCM static lv_color_t buf2_1[LV_HOR_RES_MAX * 10];                        /*A buffer for 10 rows*/
+DefALLOCATE_BSS_ITCM static lv_color_t buf2_2[LV_HOR_RES_MAX * 10];                        /*An other buffer for 10 rows*/
 
 void LV_Init(void)
 {

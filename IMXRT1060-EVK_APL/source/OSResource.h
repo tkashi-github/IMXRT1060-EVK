@@ -115,7 +115,7 @@ extern osMessageQueueId_t g_mqid##MsgQueueName;
  */
 #define OS_RESOURCE_MACRO_MSGQUEUE_DEFINE(MsgQueueName, SizeOfMessage, NumOfMessages)	\
 DefALLOCATE_BSS_DTCM alignas(4) osMessageQueueId_t g_mqid##MsgQueueName;\
-DefALLOCATE_BSS_DTCM alignas(4) static uint8_t s_mqbuf##MsgQueueName[(SizeOfMessage) * (NumOfMessages)];\
+alignas(4) static uint8_t s_mqbuf##MsgQueueName[(SizeOfMessage) * (NumOfMessages)];\
 DefALLOCATE_BSS_DTCM alignas(4) static StaticQueue_t s_mq##MsgQueueName
 
 /** 
@@ -136,7 +136,7 @@ extern StreamBufferHandle_t g_sbh##StreamName;
  */
 #define OS_RESOURCE_MACRO_STREAM_DEFINE(StreamName, SizeOfStreamBuffer)	\
 DefALLOCATE_BSS_DTCM alignas(4) StreamBufferHandle_t g_sbh##StreamName;\
-DefALLOCATE_BSS_DTCM alignas(4) static uint8_t s_u8Storage##StreamName[(SizeOfStreamBuffer)+1];\
+alignas(4) static uint8_t s_u8Storage##StreamName[(SizeOfStreamBuffer)+1];\
 DefALLOCATE_BSS_DTCM alignas(4) static StaticStreamBuffer_t s_ssb##StreamName
 
 /** 

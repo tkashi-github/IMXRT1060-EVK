@@ -82,6 +82,9 @@ DefALLOCATE_ITCM uint8_t *OpenPlayAudioFile(const TCHAR szFilePath[], stCodecCon
 		case enAudioFileWAV:
 			pu8PCMBuffer = OpenWavFile(szFilePath, pst, pu32PCMBufferSize);
 			break;
+		case enAudioFileFLAC:
+			pu8PCMBuffer = OpenFlacFile(szFilePath, pst, pu32PCMBufferSize);
+			break;
 		default:
 			break;
 		}
@@ -111,6 +114,8 @@ DefALLOCATE_ITCM uint32_t ReadPlayAudioFile(const stCodecCondition_t *pst, uint8
 	{
 	case enAudioFileWAV:
 		return ReadWavFile(pu8PCMBuffer, u32PCMBufferSize);
+	case enAudioFileFLAC:
+		return ReadFlacFile(pu8PCMBuffer, u32PCMBufferSize);
 	default:
 		mimic_printf("[%s (%d)] Param Error\r\n", __func__, __LINE__);
 		return 0;
@@ -136,6 +141,9 @@ DefALLOCATE_ITCM void ClosePlayAudioFile(const stCodecCondition_t *pst, uint8_t 
 		{
 		case enAudioFileWAV:
 			CloseWavFile();
+			break;
+		case enAudioFileFLAC:
+			CloseFlacFile();
 			break;
 		default:
 			break;
@@ -211,6 +219,13 @@ DefALLOCATE_ITCM uint8_t *OpenRecAudioFile(const TCHAR szFilePath[], const stCod
 				pu8PCMBuffer = NULL;
 			}
 			break;
+		case enAudioFileFLAC:
+			if (OpenRecFlacFile(szFilePath, pst) == false)
+			{
+				vPortFree(pu8PCMBuffer);
+				pu8PCMBuffer = NULL;
+			}
+			break;			
 		default:
 			mimic_printf("[%s (%d)] FATAL CODE DESIGN ERROR!!\r\n", __func__, __LINE__);
 			vPortFree(pu8PCMBuffer);
@@ -245,6 +260,8 @@ DefALLOCATE_ITCM _Bool WriteRecAudioFile(const stCodecCondition_t *pst, const ui
 	{
 	case enAudioFileWAV:
 		return WriteRecWavFile(pst, pu8PCMBuffer, u32PCMBufferSize);
+	case enAudioFileFLAC:
+		return WriteRecFlacFile(pst, pu8PCMBuffer, u32PCMBufferSize);
 	default:
 		return false;
 	}
@@ -267,6 +284,9 @@ DefALLOCATE_ITCM void CloseRecAudioFile(const stCodecCondition_t *pst, uint8_t *
 		switch (pst->enFileType)
 		{
 		case enAudioFileWAV:
+			CloseRecWavFile();
+			break;
+		case enAudioFileFLAC:
 			CloseRecWavFile();
 			break;
 		default:
