@@ -48,7 +48,7 @@
 #include <string.h>
 #include <strings.h>
 #include "sys/types.h" /* some flavors of BSD (like OS X) require this to get time_t */
-#include <utime.h> /* for utime() */
+#include <utime.h>	 /* for utime() */
 #include <stdint.h>
 #include <inttypes.h>
 
@@ -101,21 +101,19 @@ typedef FIL FLAC_FILE;
  */
 #include <stdarg.h>
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
-int flac_snprintf(char *str, size_t size, const char *fmt, ...);
-int flac_vsnprintf(char *str, size_t size, const char *fmt, va_list va);
-
 
 #define flac_fopen f_open
 extern UINT flac_fwrite(const void *buf, size_t size, size_t n, FLAC_FILE *fp);
 extern UINT flac_fread(void *buf, size_t size, size_t n, FLAC_FILE *fp);
-
 extern int flac_chmod(const char szFilePath[], int mode);
 #define flac_utime f_utime
 #define flac_unlink f_unlink
 #define flac_rename f_rename
 #define flac_stat f_stat
+#define flac_ftello f_tell
 
 #ifndef SEEK_SET
 #define SEEK_SET 0
@@ -127,54 +125,68 @@ extern int flac_chmod(const char szFilePath[], int mode);
 #define SEEK_END 2
 #endif
 extern int flac_fseeko(FLAC_FILE *fp, int32_t offset, int32_t whence);
-#define flac_ftello f_tell
 
 #include "common/libSysHeap.h"
 
 #define FLAC_FREE(x) FlacSysFree((uintptr_t)(x), __FUNCTION__, __LINE__)
 #define FLAC_MALLOC(x) FlacSysMalloc((x), __FUNCTION__, __LINE__)
-#define FLAC_CALLOC(x,y) FlacSysCalloc((x),(y), __FUNCTION__, __LINE__)
-#define FLAC_REALLOC(x,y) FlacSysRealloc((x),(y), __FUNCTION__, __LINE__)
+#define FLAC_CALLOC(x, y) FlacSysCalloc((x), (y), __FUNCTION__, __LINE__)
+#define FLAC_REALLOC(x, y) FlacSysRealloc((x), (y), __FUNCTION__, __LINE__)
 
-
+#ifdef FLAC_HEAP_DEBUG
 extern void AddMallocInfo(uintptr_t addr, uint32_t u32size, char *psz, uint32_t u32Line);
 extern void DelMallocInfo(uintptr_t addr);
 extern void DumpMallocInfo(void);
+#endif
 
-static inline void *FlacSysMalloc(size_t xWantedSize, const char pszFunc[], uint32_t u32Line){
-	
+static inline void *FlacSysMalloc(size_t xWantedSize, const char pszFunc[], uint32_t u32Line)
+{
+
 	void *ptr = pvlibSYSMalloc(xWantedSize);
-	if(ptr != NULL){
+	if (ptr != NULL)
+	{
+#ifdef FLAC_HEAP_DEBUG
 		AddMallocInfo((uintptr_t)ptr, xWantedSize, pszFunc, u32Line);
 		flac_printf("[%s (%d)] ptr = 0x%08lX, xWantedSize = %lu\r\n", pszFunc, u32Line, ptr, xWantedSize);
-	}else{
+#endif
+	}
+	else
+	{
 		flac_printf("[%s (%d)] pvlibSYSMalloc NG (Free = %lu, Wanted = %lu)\r\n", pszFunc, u32Line, xlibSYSPortGetFreeHeapSize(), xWantedSize);
 	}
 	return ptr;
 }
-static inline void FlacSysFree(uintptr_t pv, const char pszFile[], uint32_t u32Line){
-	if(pv != 0){
-		vlibSYSPortFree((void*)pv);
+static inline void FlacSysFree(uintptr_t pv, const char pszFile[], uint32_t u32Line)
+{
+	if (pv != 0)
+	{
+		vlibSYSPortFree((void *)pv);
+#ifdef FLAC_HEAP_DEBUG
 		DelMallocInfo(pv);
 		flac_printf("[%s (%d)] ptr = 0x%08lX\r\n", pszFile, u32Line, pv);
+#endif
 	}
 }
 
-
-
-static inline void *FlacSysCalloc(uint32_t i, uint32_t j, const char pszFunc[], uint32_t u32Line){
-	void *ptr = FlacSysMalloc(i*j, pszFunc, u32Line);
-	if(ptr != NULL){
-		memset(ptr, 0, i*j);
-	}else{
-		flac_printf("[%s (%d)] pvlibSYSMalloc NG (Free = %lu, Wanted = %lu)\r\n", pszFunc, u32Line, xlibSYSPortGetFreeHeapSize(), i*j);
+static inline void *FlacSysCalloc(uint32_t i, uint32_t j, const char pszFunc[], uint32_t u32Line)
+{
+	void *ptr = FlacSysMalloc(i * j, pszFunc, u32Line);
+	if (ptr != NULL)
+	{
+		memset(ptr, 0, i * j);
+	}
+	else
+	{
+		flac_printf("[%s (%d)] pvlibSYSMalloc NG (Free = %lu, Wanted = %lu)\r\n", pszFunc, u32Line, xlibSYSPortGetFreeHeapSize(), i * j);
 	}
 
 	return ptr;
 }
-static inline void *FlacSysRealloc(void *ptrOld, size_t size, const char pszFunc[], uint32_t u32Line){
+static inline void *FlacSysRealloc(void *ptrOld, size_t size, const char pszFunc[], uint32_t u32Line)
+{
 	void *ptrNew = FlacSysMalloc(size, pszFunc, u32Line);
-	if(ptrNew != NULL){
+	if (ptrNew != NULL)
+	{
 		memcpy(ptrNew, ptrOld, size);
 		FlacSysFree((uintptr_t)ptrOld, pszFunc, u32Line);
 	}
@@ -182,11 +194,14 @@ static inline void *FlacSysRealloc(void *ptrOld, size_t size, const char pszFunc
 	return ptrNew;
 }
 
-static inline char *flac_strdup(const char szStr[]){
+static inline char *flac_strdup(const char szStr[])
+{
 	char *pret = NULL;
-	if(szStr != NULL){
+	if (szStr != NULL)
+	{
 		pret = pvlibSYSMalloc(strlen(szStr) + 1);
-		if(pret != NULL){
+		if (pret != NULL)
+		{
 			strcpy(pret, szStr);
 		}
 	}
@@ -197,5 +212,3 @@ static inline char *flac_strdup(const char szStr[]){
 #ifdef __cplusplus
 };
 #endif
-
-

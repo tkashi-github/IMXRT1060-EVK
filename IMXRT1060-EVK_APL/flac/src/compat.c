@@ -31,6 +31,8 @@
  * - 2019/10/14: Takashi Kashiwagi
  */
 #include "flac/inc/share/compat.h"
+
+#ifdef FLAC_HEAP_DEBUG
 #include "fsl_common.h"
 typedef struct{
 	uintptr_t addr;
@@ -74,6 +76,7 @@ void DumpMallocInfo(void){
 	}
 	flac_printf("[%s (%d)] EXIT\r\n", __FUNCTION__, __LINE__);
 }
+#endif
 
 int flac_chmod(const char szFilePath[], int mode){
 	if(szFilePath == NULL){
