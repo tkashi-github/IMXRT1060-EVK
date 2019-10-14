@@ -84,6 +84,7 @@
 #define flac_printf mimic_printf
 
 #include "ff.h"
+typedef FIL FLAC_FILE;
 
 #ifndef M_LN2
 #define M_LN2 0.69314718055994530942
@@ -107,8 +108,8 @@ int flac_vsnprintf(char *str, size_t size, const char *fmt, va_list va);
 
 
 #define flac_fopen f_open
-extern UINT flac_fwrite(const void *buf, size_t size, size_t n, FIL *fp);
-extern UINT flac_fread(void *buf, size_t size, size_t n, FIL *fp);
+extern UINT flac_fwrite(const void *buf, size_t size, size_t n, FLAC_FILE *fp);
+extern UINT flac_fread(void *buf, size_t size, size_t n, FLAC_FILE *fp);
 
 extern int flac_chmod(const char szFilePath[], int mode);
 #define flac_utime f_utime
@@ -125,7 +126,7 @@ extern int flac_chmod(const char szFilePath[], int mode);
 #ifndef SEEK_END
 #define SEEK_END 2
 #endif
-extern int flac_fseeko(FIL *fp, int32_t offset, int32_t whence);
+extern int flac_fseeko(FLAC_FILE *fp, int32_t offset, int32_t whence);
 #define flac_ftello f_tell
 
 #include "common/libSysHeap.h"

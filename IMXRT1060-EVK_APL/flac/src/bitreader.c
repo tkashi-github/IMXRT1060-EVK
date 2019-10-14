@@ -298,7 +298,7 @@ FLAC__bool FLAC__bitreader_clear(FLAC__BitReader *br)
 	return true;
 }
 
-void FLAC__bitreader_dump(const FLAC__BitReader *br, FIL *out)
+void FLAC__bitreader_dump(const FLAC__BitReader *br, FLAC_FILE *out)
 {
 	uint32_t i, j;
 	if(br == 0) {

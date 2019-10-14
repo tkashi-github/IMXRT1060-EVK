@@ -36,7 +36,7 @@
 #include <stdio.h> /* for FILE */
 #include "export.h"
 #include "format.h"
-#include "ff.h"
+#include "share/compat.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -1203,7 +1203,7 @@ FLAC_API FLAC__StreamDecoderInitStatus FLAC__stream_decoder_init_ogg_stream(
  */
 FLAC_API FLAC__StreamDecoderInitStatus FLAC__stream_decoder_init_FILE(
 	FLAC__StreamDecoder *decoder,
-	FIL *file,
+	FLAC_FILE *file,
 	FLAC__StreamDecoderWriteCallback write_callback,
 	FLAC__StreamDecoderMetadataCallback metadata_callback,
 	FLAC__StreamDecoderErrorCallback error_callback,
@@ -1253,7 +1253,7 @@ FLAC_API FLAC__StreamDecoderInitStatus FLAC__stream_decoder_init_FILE(
  */
 FLAC_API FLAC__StreamDecoderInitStatus FLAC__stream_decoder_init_ogg_FILE(
 	FLAC__StreamDecoder *decoder,
-	FIL *file,
+	FLAC_FILE *file,
 	FLAC__StreamDecoderWriteCallback write_callback,
 	FLAC__StreamDecoderMetadataCallback metadata_callback,
 	FLAC__StreamDecoderErrorCallback error_callback,

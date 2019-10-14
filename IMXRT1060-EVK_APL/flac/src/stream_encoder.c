@@ -303,7 +303,7 @@ static FLAC__StreamEncoderReadStatus file_read_callback_(const FLAC__StreamEncod
 static FLAC__StreamEncoderSeekStatus file_seek_callback_(const FLAC__StreamEncoder *encoder, FLAC__uint64 absolute_byte_offset, void *client_data);
 static FLAC__StreamEncoderTellStatus file_tell_callback_(const FLAC__StreamEncoder *encoder, FLAC__uint64 *absolute_byte_offset, void *client_data);
 static FLAC__StreamEncoderWriteStatus file_write_callback_(const FLAC__StreamEncoder *encoder, const FLAC__byte buffer[], size_t bytes, uint32_t samples, uint32_t current_frame, void *client_data);
-//static FIL *get_binary_stdout_(void);
+//static FLAC_FILE *get_binary_stdout_(void);
 
 
 /***********************************************************************
@@ -376,7 +376,7 @@ typedef struct FLAC__StreamEncoderPrivate {
 	FLAC__StreamEncoderProgressCallback progress_callback;
 	void *client_data;
 	uint32_t first_seekpoint_to_check;
-	FIL *file;                            /* only used when encoding to a file */
+	FLAC_FILE *file;                            /* only used when encoding to a file */
 	FLAC__uint64 bytes_written;
 	FLAC__uint64 samples_written;
 	uint32_t frames_written;
@@ -572,7 +572,7 @@ FLAC_API FLAC__StreamEncoder *FLAC__stream_encoder_new(void)
 
 
 #ifdef FLAC__VALGRIND_TESTING
-FLAC_API static size_t local__fwrite(const void *ptr, size_t size, size_t nmemb, FIL *stream)
+FLAC_API static size_t local__fwrite(const void *ptr, size_t size, size_t nmemb, FLAC_FILE *stream)
 {
 	size_t ret = flac_fwrite(ptr, size, nmemb, stream);
 	if(!f_error(stream))
@@ -584,7 +584,7 @@ FLAC_API static size_t local__fwrite(const void *ptr, size_t size, size_t nmemb,
 #define FLAC_FWRITE_CHACHE_SIZE	(64*1024)
 static alignas(8) uint8_t s_u8FlacWriteChache[FLAC_FWRITE_CHACHE_SIZE];
 static uint32_t s_u32WriteChacheCnt = 0;
-FLAC_API static size_t local__fwrite(const void *ptr, size_t size, size_t nmemb, FIL *stream)
+FLAC_API static size_t local__fwrite(const void *ptr, size_t size, size_t nmemb, FLAC_FILE *stream)
 {
 	size_t ret = 0;
 	uint32_t u32WaterMark = FLAC_FWRITE_CHACHE_SIZE / 2;
@@ -1377,7 +1377,7 @@ FLAC_API FLAC__StreamEncoderInitStatus FLAC__stream_encoder_init_ogg_stream(
 
 FLAC_API static FLAC__StreamEncoderInitStatus init_FIL_internal_(
 	FLAC__StreamEncoder *encoder,
-	FIL *file,
+	FLAC_FILE *file,
 	FLAC__StreamEncoderProgressCallback progress_callback,
 	void *client_data,
 	FLAC__bool is_ogg
@@ -1398,7 +1398,7 @@ FLAC_API static FLAC__StreamEncoderInitStatus init_FIL_internal_(
 
 	/*
 	 * To make sure that our file does not go unclosed after an error, we
-	 * must assign the FIL pointer before any further error can occur in
+	 * must assign the FLAC_FILE pointer before any further error can occur in
 	 * this routine.
 	 */
 	//if(file == stdout)
@@ -1445,7 +1445,7 @@ FLAC_API static FLAC__StreamEncoderInitStatus init_FIL_internal_(
 
 FLAC_API FLAC__StreamEncoderInitStatus FLAC__stream_encoder_init_FIL(
 	FLAC__StreamEncoder *encoder,
-	FIL *file,
+	FLAC_FILE *file,
 	FLAC__StreamEncoderProgressCallback progress_callback,
 	void *client_data
 )
@@ -1455,7 +1455,7 @@ FLAC_API FLAC__StreamEncoderInitStatus FLAC__stream_encoder_init_FIL(
 
 FLAC_API FLAC__StreamEncoderInitStatus FLAC__stream_encoder_init_ogg_FIL(
 	FLAC__StreamEncoder *encoder,
-	FIL *file,
+	FLAC_FILE *file,
 	FLAC__StreamEncoderProgressCallback progress_callback,
 	void *client_data
 )
@@ -1471,13 +1471,13 @@ FLAC_API static FLAC__StreamEncoderInitStatus init_file_internal_(
 	FLAC__bool is_ogg
 )
 {
-	FIL *file;
+	FLAC_FILE *file;
 	FLAC__ASSERT(0 != encoder);
-	file = (FIL*)FLAC_MALLOC(sizeof(FIL));
+	file = (FLAC_FILE*)FLAC_MALLOC(sizeof(FLAC_FILE));
 	/*
 	 * To make sure that our file does not go unclosed after an error, we
 	 * have to do the same entrance checks here that are later performed
-	 * in FLAC__stream_encoder_init_FIL() before the FIL* is assigned.
+	 * in FLAC__stream_encoder_init_FIL() before the FLAC_FILE* is assigned.
 	 */
 	if(encoder->protected_->state != FLAC__STREAM_ENCODER_UNINITIALIZED)
 		return FLAC__STREAM_ENCODER_INIT_STATUS_ALREADY_INITIALIZED;
@@ -4612,7 +4612,7 @@ FLAC_API FLAC__StreamEncoderWriteStatus file_write_callback_(const FLAC__StreamE
  * This will forcibly set stdout to binary mode (for OSes that require it)
  */
 #if 0
-FIL *get_binary_stdout_(void)
+FLAC_FILE *get_binary_stdout_(void)
 {
 	/* if something breaks here it is probably due to the presence or
 	 * absence of an underscore before the identifiers 'setmode',

@@ -190,7 +190,7 @@ FLAC_API void FLAC__bitwriter_clear(FLAC__BitWriter *bw)
 	bw->words = bw->bits = 0;
 }
 
-FLAC_API void FLAC__bitwriter_dump(const FLAC__BitWriter *bw, FIL *out)
+FLAC_API void FLAC__bitwriter_dump(const FLAC__BitWriter *bw, FLAC_FILE *out)
 {
 	uint32_t i, j;
 	if(bw == 0) {

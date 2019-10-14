@@ -84,7 +84,7 @@ int flac_chmod(const char szFilePath[], int mode){
 	return 0;
 }
 
-UINT flac_fwrite(const void *buf, size_t size, size_t n, FIL *fp){
+UINT flac_fwrite(const void *buf, size_t size, size_t n, FLAC_FILE *fp){
 	UINT bw;
 
 	if(FR_OK != f_write(fp, buf, size*n, &bw)){
@@ -94,7 +94,7 @@ UINT flac_fwrite(const void *buf, size_t size, size_t n, FIL *fp){
 	return bw;
 }
 
-UINT flac_fread(void *buf, size_t size, size_t n, FIL *fp){
+UINT flac_fread(void *buf, size_t size, size_t n, FLAC_FILE *fp){
 	UINT br;
 	FRESULT res = f_read(fp, buf, size*n, &br);
 	if(FR_OK != res){
@@ -104,7 +104,7 @@ UINT flac_fread(void *buf, size_t size, size_t n, FIL *fp){
 	return br;
 }
 
-int flac_fseeko(FIL *fp, int32_t offset, int32_t whence){
+int flac_fseeko(FLAC_FILE *fp, int32_t offset, int32_t whence){
 	int64_t i64pos;
 
 	if(fp == NULL){
