@@ -86,7 +86,6 @@
 									<listOptionValue builtIn="false" value="ARM_MATH_CM7"/>
 									<listOptionValue builtIn="false" value="__VFP_FP__"/>
 									<listOptionValue builtIn="false" value="__FPU_PRESENT"/>
-									<listOptionValue builtIn="false" value="FSL_SDK_ENABLE_DRIVER_CACHE_CONTROL"/>
 									<listOptionValue builtIn="false" value="__ARM_ARCH_7M__=1"/>
 									<listOptionValue builtIn="false" value="FSL_FEATURE_PHYKSZ8081_USE_RMII50M_MODE"/>
 									<listOptionValue builtIn="false" value="BOARD_USE_CODEC"/>

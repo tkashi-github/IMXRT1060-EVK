@@ -66,6 +66,8 @@
 #include "demo.h"
 #include "sysmon.h"
 
+#include "common/libSysHeap.h"
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -254,6 +256,8 @@ static void CmdTask(uint32_t argc, const char *argv[])
 {
 	char *szStr=pvPortMalloc(8192);
 
+	mimic_printf("xlibSYSPortGetFreeHeapSize = %lu\r\n", xlibSYSPortGetFreeHeapSize());
+	mimic_printf("xPortGetFreeHeapSize = %lu\r\n", xPortGetFreeHeapSize());
 	if(szStr != NULL)
 	{
 		mimic_printf("TaskName | CurrentState | Priority | StackWM | TaskNo\r\n");
