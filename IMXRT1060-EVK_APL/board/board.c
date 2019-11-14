@@ -427,9 +427,9 @@ void BOARD_ConfigMPU(void)
     MPU->RBAR = ARM_MPU_RBAR(8, 0x80000000U);
     MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 1, 0, 1, 1, 0, ARM_MPU_REGION_SIZE_2MB);	/** for .text section */
 
-	/* Region 9 setting: Memory with Normal type, not shareable   outer and inner write back write/read acllocate  */
+	/* Region 9 setting: Memory with Normal type, shareable   outer and inner write back write/read acllocate  */
     MPU->RBAR = ARM_MPU_RBAR(9, 0x80200000U);
-    MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 1, 0, 1, 1, 0, ARM_MPU_REGION_SIZE_2MB);
+    MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 1, 1, 1, 1, 0, ARM_MPU_REGION_SIZE_2MB);
     /* Enable MPU */
     ARM_MPU_Enable(MPU_CTRL_PRIVDEFENA_Msk);
 

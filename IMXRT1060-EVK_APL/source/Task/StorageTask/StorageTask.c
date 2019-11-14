@@ -123,6 +123,13 @@ DefALLOCATE_ITCM static _Bool StorageInit(enSD_t enSlotNo, sd_card_t *card)
 	else
 	{
 		mimic_printf("[%s (%d)] SD_CardInit NG <%d> (Slot = %d)!\r\n", __func__, __LINE__, sts, enSlotNo + 1);
+		mimic_printf("SD_HOST_CLK_FREQ       = %lu\r\n", BOARD_SD_HOST_CLK_FREQ);
+		mimic_printf("card->busClock_Hz      = %lu\r\n", card->busClock_Hz);
+		mimic_printf("card->version          = %lu\r\n", card->version);
+		mimic_printf("card->currentTiming    = %lu\r\n", card->currentTiming);
+		mimic_printf("card->operationVoltage = %lu\r\n", card->operationVoltage);
+		mimic_printf("card->blockCount       = %lu\r\n", card->blockCount);
+		mimic_printf("card->blockSize        = %lu\r\n", card->blockSize);
 	}
 	return bret;
 }
