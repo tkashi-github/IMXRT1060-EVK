@@ -190,10 +190,10 @@ static status_t USDHC_WaitCommandDone(USDHC_Type *base, usdhc_command_t *command
  * Variables
  ******************************************************************************/
 /*! @brief USDHC base pointer array */
-static USDHC_Type *const s_usdhcBase[] = USDHC_BASE_PTRS;
+__attribute__((section(".data.$SRAM_DTC"))) static USDHC_Type *const s_usdhcBase[] = USDHC_BASE_PTRS;
 
 /*! @brief USDHC internal handle pointer array */
-static usdhc_handle_t *s_usdhcHandle[ARRAY_SIZE(s_usdhcBase)] = {NULL};
+__attribute__((section(".data.$SRAM_DTC"))) static usdhc_handle_t *s_usdhcHandle[ARRAY_SIZE(s_usdhcBase)] = {NULL};
 
 /*! @brief USDHC IRQ name array */
 static const IRQn_Type s_usdhcIRQ[] = USDHC_IRQS;
@@ -204,7 +204,7 @@ static const clock_ip_name_t s_usdhcClock[] = USDHC_CLOCKS;
 #endif /* FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL */
 
 /* USDHC ISR for transactional APIs. */
-static usdhc_isr_t s_usdhcIsr;
+__attribute__((section(".bss.$SRAM_DTC"))) static usdhc_isr_t s_usdhcIsr;
 
 /*******************************************************************************
  * Code

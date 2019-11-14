@@ -39,7 +39,7 @@
 static void StorageInserted(bool isInserted, void *userData);
 static void StorageRemoved(bool isInserted, void *userData);
 
-static sd_card_t s_stSD[enNumOfSD];
+__attribute__((section("NonCacheable"))) static sd_card_t s_stSD[enNumOfSD];
 static const sdmmchost_detect_card_t s_sdCardDetect[enNumOfSD] = {
 	{
 		.cdType = kSDMMCHOST_DetectCardByGpioCD,
@@ -140,7 +140,7 @@ DefALLOCATE_ITCM static void StorageDeinit(enSD_t enSlotNo, sd_card_t *card)
 	mimic_printf("[%s (%d)] StorageDeinit OK (Slot = %d)!\r\n", __func__, __LINE__, enSlotNo + 1);
 }
 
-static FATFS s_stFS[enNumOfSD]; /* File system object */
+static FATFS s_stFS[enNumOfSD] __attribute__((section("NonCacheable"))) ; /* File system object */
 
 static const TCHAR *s_pszDriverLetter[enNumOfSD] = {
 	"A:/",

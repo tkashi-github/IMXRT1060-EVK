@@ -57,11 +57,13 @@
 #endif
 
 /*! @brief SD/MMC error log. */
+#include "mimiclib.h"
 #if defined SDMMC_ENABLE_LOG_PRINT
 #include "fsl_debug_console.h"
 #define SDMMC_LOG(...) PRINTF(__VA_ARGS__)
 #else
-#define SDMMC_LOG(format, ...)
+//#define SDMMC_LOG(format, ...)
+#define SDMMC_LOG(...) mimic_printf(__VA_ARGS__)
 #endif
 
 /*! @brief SD/MMC card API's running status. */

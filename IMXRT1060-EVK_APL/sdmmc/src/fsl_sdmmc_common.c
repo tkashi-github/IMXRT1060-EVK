@@ -10,8 +10,8 @@
 /*******************************************************************************
  * Variables
  ******************************************************************************/
-SDK_ALIGN(uint32_t g_sdmmc[SDK_SIZEALIGN(SDMMC_GLOBAL_BUFFER_SIZE, SDMMC_DATA_BUFFER_ALIGN_CACHE)],
-          MAX(SDMMC_DATA_BUFFER_ALIGN_CACHE, SDMMCHOST_DMA_BUFFER_ADDR_ALIGN));
+alignas(256)  __attribute__((section("NonCacheable"))) uint32_t g_sdmmc[SDK_SIZEALIGN(SDMMC_GLOBAL_BUFFER_SIZE, SDMMC_DATA_BUFFER_ALIGN_CACHE)];
+
 /*******************************************************************************
  * Code
  ******************************************************************************/
