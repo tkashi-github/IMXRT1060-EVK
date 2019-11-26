@@ -39,7 +39,7 @@
 static void StorageInserted(bool isInserted, void *userData);
 static void StorageRemoved(bool isInserted, void *userData);
 
-__attribute__((section("NonCacheable"))) static sd_card_t s_stSD[enNumOfSD];
+__attribute__((section(".bss.$SharedDATA"))) static sd_card_t s_stSD[enNumOfSD];
 static const sdmmchost_detect_card_t s_sdCardDetect[enNumOfSD] = {
 	{
 		.cdType = kSDMMCHOST_DetectCardByGpioCD,

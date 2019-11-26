@@ -10,7 +10,7 @@
 /*******************************************************************************
  * Variables
  ******************************************************************************/
-alignas(256)  __attribute__((section("NonCacheable"))) uint32_t g_sdmmc[SDK_SIZEALIGN(SDMMC_GLOBAL_BUFFER_SIZE, SDMMC_DATA_BUFFER_ALIGN_CACHE)];
+alignas(256) __attribute__((section(".bss.$SharedDATA"))) uint32_t g_sdmmc[SDK_SIZEALIGN(SDMMC_GLOBAL_BUFFER_SIZE, SDMMC_DATA_BUFFER_ALIGN_CACHE)];
 
 /*******************************************************************************
  * Code

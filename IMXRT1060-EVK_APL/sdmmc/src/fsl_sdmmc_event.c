@@ -34,9 +34,9 @@ static SemaphoreHandle_t *SDMMCEVENT_GetInstance(sdmmc_event_t eventType);
  * Variables
  ******************************************************************************/
 /*! @brief Transfer complete event. */
-__attribute__((section("NonCacheable"))) static SemaphoreHandle_t g_eventTransferComplete;
+__attribute__((section("bss.$SharedDATA"))) static SemaphoreHandle_t g_eventTransferComplete;
 /*! @brief Card detect event. */
-__attribute__((section("NonCacheable"))) static SemaphoreHandle_t g_eventCardDetect;
+__attribute__((section("bss.$SharedDATA"))) static SemaphoreHandle_t g_eventCardDetect;
 
 /*******************************************************************************
  * Code

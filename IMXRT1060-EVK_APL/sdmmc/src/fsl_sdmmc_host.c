@@ -81,10 +81,10 @@ static status_t SDMMCHOST_CardDetectInit(SDMMCHOST_TYPE *base, const sdmmchost_d
 /* DMA descriptor should allocate at non-cached memory */
 AT_NONCACHEABLE_SECTION_ALIGN(uint32_t g_usdhcAdma2Table[USDHC_ADMA_TABLE_WORDS], USDHC_ADMA2_ADDR_ALIGN);
 
-__attribute__((section("NonCacheable"))) static usdhc_handle_t s_usdhcHandle;
-__attribute__((section("NonCacheable"))) static volatile status_t s_usdhcTransferStatus = kStatus_Success;
-__attribute__((section("NonCacheable"))) static volatile bool s_sdInsertedFlag = false;
-__attribute__((section("NonCacheable"))) static volatile status_t s_reTuningFlag = false;
+__attribute__((section(".bss.$SharedDATA"))) static usdhc_handle_t s_usdhcHandle;
+__attribute__((section(".data.$SharedDATA"))) static volatile status_t s_usdhcTransferStatus = kStatus_Success;
+__attribute__((section(".data.$SharedDATA"))) static volatile bool s_sdInsertedFlag = false;
+__attribute__((section(".data.$SharedDATA"))) static volatile status_t s_reTuningFlag = false;
 /*******************************************************************************
  * Code
  ******************************************************************************/
