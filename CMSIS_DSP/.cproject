@@ -136,7 +136,7 @@
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="com.nxp.mcuxpresso.core.datamodels">
 		<sdkName>SDK_2.x_EVK-MIMXRT1060</sdkName>
-		<sdkVersion>2.6.0</sdkVersion>
+		<sdkVersion>2.7.0</sdkVersion>
 	</storageModule>
 	<storageModule moduleId="com.crt.config">
 		<projectStorage>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#13;

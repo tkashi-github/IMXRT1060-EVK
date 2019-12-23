@@ -1,5 +1,7 @@
 ExitOnError 1
 r
 h
-loadfile "D:\Workspace\IMXRT1060-EVK\IMXRT1060-EVK_APL\Debug\IMXRT1060-EVK_APL_crc16.bin" 0x60400000 
+loadfile "D:\Workspace\IMXRT1060-EVK\IMXRT1060-EVK_APL\Debug\IMXRT1060-EVK_APL_crc16.bin" 0x60200000 
+qc
+
 qc
