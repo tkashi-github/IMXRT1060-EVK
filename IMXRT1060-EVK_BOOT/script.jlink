@@ -1,7 +1,7 @@
 ExitOnError 1
 r
 h
-loadfile "D:\Workspace\IMXRT1060-EVK\IMXRT1060-EVK_BOOT\Debug\IMXRT1060-EVK_BOOT.bin"  0x60000000 
+loadfile "D:\Workspace\IMXRT1060-EVK\IMXRT1060-EVK_BOOT\Debug\IMXRT1060-EVK_BOOT.bin" 0x60000000 
 qc
 
 qc
