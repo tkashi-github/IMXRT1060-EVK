@@ -41,7 +41,6 @@
 #include "UserTypedef.h"
 #include "OSResource.h"
 #include "UART/DrvLPUART.h"
-#include "CameraTask/CameraTask.h"
 #include "ELCDIF/DrvELCDIF.h"
 
 #ifdef __cplusplus
@@ -175,7 +174,7 @@ DefALLOCATE_ITCM static void GPIOMonitor(void){
 				u32SWPinCnt++;
 			}else if(u32SWPinCnt == 100){
 				if(u32LastSWPin == 0){
-					PostMsgCameraTaskBtnPushed();
+					//PostMsgCameraTaskBtnPushed();
 				}
 				u32SWPinCnt++;
 			}else{

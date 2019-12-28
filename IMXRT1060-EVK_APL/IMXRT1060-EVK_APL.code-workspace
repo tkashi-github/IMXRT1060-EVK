@@ -121,7 +121,8 @@
 			"sysmon.h": "c",
 			"playctrlflac.h": "c",
 			"libsysheap.h": "c",
-			"fsl_cache.h": "c"
+			"fsl_cache.h": "c",
+			"fsl_gpio.h": "c"
 		},
 		"C_Cpp.default.defines": [
 			"__GNUC__",

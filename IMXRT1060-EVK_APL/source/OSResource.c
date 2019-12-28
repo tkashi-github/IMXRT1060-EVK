@@ -42,7 +42,6 @@
 #include "Task/StorageTask/StorageTask.h"
 #include "Task/LanTask/LanTask.h"
 #include "Task/SensorTask/SensorTask.h"
-#include "Task/CameraTask/CameraTask.h"
 #include "Task/LcdTask/LcdTask.h"
 #include "Task/TouchScreenTask/TouchScreenTask.h"
 #include "Task/TempMoniTask/TempMoniTask.h"
