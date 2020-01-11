@@ -1,36 +1,10 @@
 /*
- * The Clear BSD License
  * Copyright (c) 2016, Freescale Semiconductor, Inc.
- * Copyright 2016 NXP
+ * Copyright 2016-2019 NXP
  * All rights reserved.
  *
- * 
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted (subject to the limitations in the disclaimer below) provided
- *  that the following conditions are met:
  *
- * o Redistributions of source code must retain the above copyright notice, this list
- *   of conditions and the following disclaimer.
- *
- * o Redistributions in binary form must reproduce the above copyright notice, this
- *   list of conditions and the following disclaimer in the documentation and/or
- *   other materials provided with the distribution.
- *
- * o Neither the name of the copyright holder nor the names of its
- *   contributors may be used to endorse or promote products derived from this
- *   software without specific prior written permission.
- *
- * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS LICENSE.
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 /*
 *   HTTPSRV support functions.
@@ -85,6 +59,8 @@ static const HTTPSRV_TABLE_ROW content_type[] = {{HTTPSRV_CONTENT_TYPE_PLAIN, "t
                                                  {HTTPSRV_CONTENT_TYPE_ZIP, "application/zip"},
                                                  {HTTPSRV_CONTENT_TYPE_PDF, "application/pdf"},
                                                  {HTTPSRV_CONTENT_TYPE_OCTETSTREAM, "application/octet-stream"},
+                                                 {HTTPSRV_CONTENT_TYPE_FORMURLENC, "application/x-www-form-urlencoded"},
+                                                 {HTTPSRV_CONTENT_TYPE_FORMDATA, "multipart/form-data"},
                                                  {0, 0}};
 
 /*
@@ -287,6 +263,7 @@ HTTPSRV_STRUCT *httpsrv_create_server(HTTPSRV_PARAM_STRUCT *params)
 
 EXIT:
     httpsrv_destroy_server(server);
+    httpsrv_mem_free(server);
     return (NULL);
 }
 
@@ -431,7 +408,7 @@ static int32_t httpsrv_init_socket(HTTPSRV_STRUCT *server)
     }
 
     /* Listen */
-    error = listen(server->sock, server->params.max_ses);
+    error = listen(server->sock, 0);
     if (error == -1)
     {
         return (HTTPSRV_LISTEN_FAIL);
@@ -528,7 +505,7 @@ static int32_t httpsrv_set_params(HTTPSRV_STRUCT *server, HTTPSRV_PARAM_STRUCT *
 #if HTTPSRV_CFG_WOLFSSL_ENABLE || HTTPSRV_CFG_MBEDTLS_ENABLE
         if(params->tls_param)
         {
-            server->tls_ctx = httpsrv_tls_init(params->tls_param); 
+            server->tls_ctx = httpsrv_tls_init(params->tls_param);
             if(server->tls_ctx  == NULL)
             {
                 return(HTTPSRV_ERR);
@@ -549,7 +526,7 @@ static int32_t httpsrv_set_params(HTTPSRV_STRUCT *server, HTTPSRV_PARAM_STRUCT *
             else if(server->params.address.sa_family == AF_INET6)
             {
                 if (((struct sockaddr_in6 *)(&params->address))->sin_port == 0)
-                
+
                     ((struct sockaddr_in6 *)(&server->params.address))->sin6_port = PP_HTONS(HTTPSRV_CFG_DEFAULT_HTTPS_PORT);
             }
         #endif
@@ -605,7 +582,7 @@ int httpsrv_recv(HTTPSRV_SESSION_STRUCT *session, char *buffer, size_t length, i
     if (session->tls_sock != 0)
     {
         result = httpsrv_tls_recv(session->tls_sock, buffer, length, flags);
-    }    
+    }
     else
 #endif
     {
@@ -625,7 +602,7 @@ int httpsrv_send(HTTPSRV_SESSION_STRUCT *session, const char *buffer, size_t len
     if (session->tls_sock != 0)
     {
         result = httpsrv_tls_send(session->tls_sock, buffer, length, flags);
-    }    
+    }
     else
 #endif
     {
@@ -1187,20 +1164,20 @@ static void httpsrv_print(HTTPSRV_SESSION_STRUCT *session, char *format, ...)
     va_list ap;
     char *buffer = session->buffer.data;
     int buffer_space;
- 
-#if !defined ( __CC_ARM )	/* Workarounfd for Keil vsnprintf()*/	
+
+#if !defined ( __CC_ARM )	/* Workarounfd for Keil vsnprintf()*/
 	  uint32_t req_space = 0;
-	
+
 	  buffer_space = HTTPSRV_SES_BUF_SIZE_PRV - session->buffer.offset;
-	
+
     va_start(ap, format);
     /* First we always test if there is enough space in buffer. If there is not,
     ** we flush it first and then write. */
     req_space = vsnprintf(buffer + session->buffer.offset, 0, format, ap);
     va_end(ap);
-   
+
     if (req_space > buffer_space)
-#endif			
+#endif
     {
         httpsrv_ses_flush(session);
         buffer_space = HTTPSRV_SES_BUF_SIZE_PRV;
@@ -1633,7 +1610,7 @@ void httpsrv_url_decode(char *url)
 
     while (*src != '\0')
     {
-        if ((*src == '%') && (isxdigit((int)*(src + 1))) && (isxdigit((int)*(src + 2))))
+        if ((*src == '%') && (isxdigit((unsigned char)*(src + 1))) && (isxdigit((unsigned char)*(src + 2))))
         {
             *src = *(src + 1);
             *(src + 1) = *(src + 2);
@@ -1788,7 +1765,7 @@ static int httpsrv_get_table_int(HTTPSRV_TABLE_ROW *table, char *str)
 {
     HTTPSRV_TABLE_ROW *ptr = table;
 
-    while ((ptr->id) && (!strstr(ptr->str, str)))
+    while ((ptr->id) && (!strstr(str, ptr->str)))
     {
         ptr++;
     }

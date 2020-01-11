@@ -32,41 +32,17 @@
 
 /*
  * Copyright (c) 2013-2016, Freescale Semiconductor, Inc.
- * Copyright 2016-2017 NXP
+ * Copyright 2016-2019 NXP
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * o Redistributions of source code must retain the above copyright notice, this list
- *   of conditions and the following disclaimer.
- *
- * o Redistributions in binary form must reproduce the above copyright notice, this
- *   list of conditions and the following disclaimer in the documentation and/or
- *   other materials provided with the distribution.
- *
- * o Neither the name of the copyright holder nor the names of its
- *   contributors may be used to endorse or promote products derived from this
- *   software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SDRVL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#ifndef ETHERNETIF_H
-#define ETHERNETIF_H
+#ifndef ENET_ETHERNETIF_H
+#define ENET_ETHERNETIF_H
 
 #include "lwip/err.h"
 #include "fsl_enet.h"
-#include "OSResource.h"
 
 /*******************************************************************************
  * Definitions
@@ -82,14 +58,17 @@
 #endif
 #endif
 #ifndef ENET_RXBUFF_SIZE
-    #define ENET_RXBUFF_SIZE (ENET_FRAME_MAX_FRAMELEN)
+#if defined(FSL_FEATURE_SOC_LPC_ENET_COUNT) && (FSL_FEATURE_SOC_LPC_ENET_COUNT > 0)
+    #define ENET_RXBUFF_SIZE (ENET_FRAME_MAX_FRAMELEN + ETH_PAD_SIZE)
+#else
+    #define ENET_RXBUFF_SIZE ENET_FRAME_MAX_FRAMELEN
 #endif
+#endif
+   
 #ifndef ENET_TXBUFF_SIZE
     #define ENET_TXBUFF_SIZE (ENET_FRAME_MAX_FRAMELEN)
 #endif
 
-#define ENET_OK             (0U)
-#define ENET_ERROR          (0xFFU)
 #define ENET_TIMEOUT        (0xFFFU)
 
 /* ENET IRQ priority. Used in FreeRTOS. */
@@ -103,10 +82,10 @@
 #endif
 #else
 #ifndef ENET_PRIORITY
-    #define ENET_PRIORITY       (6)
+    #define ENET_PRIORITY       (6U)
 #endif
 #ifndef ENET_1588_PRIORITY
-    #define ENET_1588_PRIORITY  (5)
+    #define ENET_1588_PRIORITY  (5U)
 #endif
 #endif
 
@@ -116,6 +95,41 @@
     #define ENET_ATONEGOTIATION_TIMEOUT     (0xFFFU)
 #endif
 
+/* Define those to better describe your network interface. */
+#define IFNAME0 'e'
+#define IFNAME1 'n'
+
+#if defined(FSL_SDK_ENABLE_DRIVER_CACHE_CONTROL) && FSL_SDK_ENABLE_DRIVER_CACHE_CONTROL
+    #if defined(FSL_FEATURE_L2CACHE_LINESIZE_BYTE) \
+        && ((!defined(FSL_SDK_DISBLE_L2CACHE_PRESENT)) || (FSL_SDK_DISBLE_L2CACHE_PRESENT == 0))
+        #if defined(FSL_FEATURE_L1DCACHE_LINESIZE_BYTE)
+            #define FSL_CACHE_LINESIZE_MAX MAX(FSL_FEATURE_L1DCACHE_LINESIZE_BYTE, FSL_FEATURE_L2CACHE_LINESIZE_BYTE)
+            #define FSL_ENET_BUFF_ALIGNMENT MAX(ENET_BUFF_ALIGNMENT, FSL_CACHE_LINESIZE_MAX)
+        #else
+            #define FSL_ENET_BUFF_ALIGNMENT MAX(ENET_BUFF_ALIGNMENT, FSL_FEATURE_L2CACHE_LINESIZE_BYTE)
+        #endif
+    #elif defined(FSL_FEATURE_L1DCACHE_LINESIZE_BYTE)
+        #define FSL_ENET_BUFF_ALIGNMENT MAX(ENET_BUFF_ALIGNMENT, FSL_FEATURE_L1DCACHE_LINESIZE_BYTE)
+    #else
+        #define FSL_ENET_BUFF_ALIGNMENT ENET_BUFF_ALIGNMENT
+    #endif
+#else
+    #define FSL_ENET_BUFF_ALIGNMENT ENET_BUFF_ALIGNMENT
+#endif
+
+#define ENET_RING_NUM 1U
+
+typedef uint8_t rx_buffer_t[SDK_SIZEALIGN(ENET_RXBUFF_SIZE, FSL_ENET_BUFF_ALIGNMENT)];
+typedef uint8_t tx_buffer_t[SDK_SIZEALIGN(ENET_TXBUFF_SIZE, FSL_ENET_BUFF_ALIGNMENT)];
+
+#if (defined(FSL_FEATURE_SOC_LPC_ENET_COUNT) && (FSL_FEATURE_SOC_LPC_ENET_COUNT > 0))
+typedef struct mem_range
+{
+    uint32_t start;
+    uint32_t end;
+} mem_range_t;
+#endif /* FSL_FEATURE_SOC_LPC_ENET_COUNT */
+
 /**
  * Helper struct to hold data for configuration of ethernet interface.
  */
@@ -124,6 +138,9 @@ typedef struct ethernetif_config
     uint32_t phyAddress;
     clock_name_t clockName;
     uint8_t macAddress[NETIF_MAX_HWADDR_LEN];
+#if (defined(FSL_FEATURE_SOC_LPC_ENET_COUNT) && (FSL_FEATURE_SOC_LPC_ENET_COUNT > 0))
+    const mem_range_t *non_dma_memory;
+#endif /* FSL_FEATURE_SOC_LPC_ENET_COUNT */
 } ethernetif_config_t;
 
 #if defined(__cplusplus)
@@ -158,4 +175,4 @@ void ethernetif_input( struct netif *netif);
 }
 #endif /* __cplusplus */
 
-#endif
+#endif /* ENET_ETHERNETIF_H */

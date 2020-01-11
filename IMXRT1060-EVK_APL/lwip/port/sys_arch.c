@@ -32,33 +32,10 @@
  
 /*
  * Copyright (c) 2013-2016, Freescale Semiconductor, Inc.
- * Copyright 2016 NXP
+ * Copyright 2016-2019 NXP
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * o Redistributions of source code must retain the above copyright notice, this list
- *   of conditions and the following disclaimer.
- *
- * o Redistributions in binary form must reproduce the above copyright notice, this
- *   list of conditions and the following disclaimer in the documentation and/or
- *   other materials provided with the distribution.
- *
- * o Neither the name of the copyright holder nor the names of its
- *   contributors may be used to endorse or promote products derived from this
- *   software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SDRVL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 //*****************************************************************************
@@ -88,6 +65,7 @@ int errno = 0;
 #endif
 #endif
 
+#include "mimiclib.h"
 /*
  * Prints an assertion messages and aborts execution.
  */
@@ -203,17 +181,13 @@ void sys_mbox_post( sys_mbox_t *pxMailBox, void *pxMessageToPost )
 err_t sys_mbox_trypost( sys_mbox_t *pxMailBox, void *pxMessageToPost )
 {
     portBASE_TYPE taskToWake = pdFALSE;
-    if( xQueueIsQueueFullFromISR( *pxMailBox ))
-    {
-        return ERR_VAL;
-    }
 #ifdef __CA7_REV
     if (SystemGetIRQNestingLevel())
 #else
     if (__get_IPSR())
 #endif
     {
-        if (pdTRUE == xQueueSendFromISR(*pxMailBox, &pxMessageToPost, &taskToWake))
+        if (pdTRUE == xQueueSendToBackFromISR(*pxMailBox, &pxMessageToPost, &taskToWake))
         {
             if(taskToWake == pdTRUE)
             {
@@ -230,7 +204,7 @@ err_t sys_mbox_trypost( sys_mbox_t *pxMailBox, void *pxMessageToPost )
     }
     else
     {
-        if(pdTRUE == xQueueSend(*pxMailBox, &pxMessageToPost, 0) )
+        if(pdTRUE == xQueueSendToBack(*pxMailBox, &pxMessageToPost, 0) )
         {
             return ERR_OK;
         }
@@ -241,6 +215,24 @@ err_t sys_mbox_trypost( sys_mbox_t *pxMailBox, void *pxMessageToPost )
             return ERR_MEM;
         }
     }
+}
+
+/*---------------------------------------------------------------------------*
+ * Routine:  sys_mbox_trypost_fromisr
+ *---------------------------------------------------------------------------*
+ * Description:
+ *      Try to post the "msg" to the mailbox.  Returns immediately with
+ *      error if cannot. To be be used from ISR.
+ * Inputs:
+ *      sys_mbox_t mbox         -- Handle of mailbox
+ *      void *msg               -- Pointer to data to post
+ * Outputs:
+ *      err_t                   -- ERR_OK if message posted, else ERR_MEM
+ *                                  if not.
+ *---------------------------------------------------------------------------*/
+err_t sys_mbox_trypost_fromisr(sys_mbox_t *mbox, void *msg)
+{
+    return sys_mbox_trypost(mbox, msg);
 }
 
 /*---------------------------------------------------------------------------*
@@ -374,7 +366,7 @@ err_t xReturn = ERR_MEM;
     }
     else
     {
-        vSemaphoreCreateBinary( ( *pxSemaphore ) );
+        *pxSemaphore = xSemaphoreCreateBinary();
     }
 
     if( *pxSemaphore != NULL )
@@ -547,29 +539,32 @@ u32_t sys_now(void)
  * Routine:  sys_thread_new
  *---------------------------------------------------------------------------*
  * Description:
- *      Starts a new thread with priority "prio" that will begin its
- *      execution in the function "thread()". The "arg" argument will be
- *      passed as an argument to the thread() function. The id of the new
+ *      Starts a new thread with priority "iPriority" that will begin its
+ *      execution in the function "pxThread()". The "pvArg" argument will be
+ *      passed as an argument to the pxThread() function. The id of the new
  *      thread is returned. Both the id and the priority are system
  *      dependent.
  * Inputs:
- *      char *name              -- Name of thread
- *      void (* thread)(void *arg) -- Pointer to function to run.
- *      void *arg               -- Argument passed into function
- *      int stacksize           -- Required stack amount in bytes
- *      int prio                -- Thread priority
+ *      char *pcName            -- Name of thread
+ *      void (* pxThread)(void *pvParameters)  -- Pointer to function to run.
+ *      void *pvArg             -- Argument passed into function
+ *      int iStackSize          -- Required stack amount in words (not bytes!)
+ *      int iPriority           -- Thread priority
  * Outputs:
- *      sys_thread_t            -- Pointer to per-thread timeouts.
+ *      sys_thread_t            -- Pointer to the new thread's structure.
  *---------------------------------------------------------------------------*/
-sys_thread_t sys_thread_new( const char *pcName, void( *pxThread )( void *pvParameters ), void *pvArg, int iStackSize, int iPriority )
+sys_thread_t sys_thread_new(const char *pcName, void(*pxThread)(void *pvParameters), void *pvArg, int iStackSize, int iPriority)
 {
-TaskHandle_t xCreatedTask;
-portBASE_TYPE xResult;
-sys_thread_t xReturn;
+    TaskHandle_t xCreatedTask;
+    portBASE_TYPE xResult;
+    sys_thread_t xReturn;
 
-    xResult = xTaskCreate( pxThread, pcName, iStackSize, pvArg, iPriority, &xCreatedTask );
+    LWIP_ASSERT("invalid stacksize", iStackSize > 0);
 
-    if( xResult == pdPASS )
+    xResult = xTaskCreate(pxThread, pcName, (configSTACK_DEPTH_TYPE)iStackSize, pvArg, iPriority, &xCreatedTask);
+    LWIP_ASSERT("task creation failed", xResult == pdPASS);
+
+    if (xResult == pdPASS)
     {
         xReturn = xCreatedTask;
     }

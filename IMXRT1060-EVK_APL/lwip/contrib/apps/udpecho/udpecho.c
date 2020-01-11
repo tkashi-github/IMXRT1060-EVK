@@ -58,31 +58,19 @@ udpecho_thread(void *arg)
 #endif /* LWIP_IPV6 */
   LWIP_ERROR("udpecho: invalid conn", (conn != NULL), return;);
 
-#if LWIP_IGMP /* Only for testing of multicast join*/
-{
-  #include "lwip\netif.h"
-
-  ip4_addr_t multiaddr;
-  IP4_ADDR(&multiaddr, 224, 5, 6, 7);
-
-  err = netconn_join_leave_group(conn, &multiaddr, &netif_default->ip_addr, NETCONN_JOIN);
-  LWIP_ERROR("udpecho: join group is failed", (err == ERR_OK), return;);
-}
-#endif
-
   while (1) {
     err = netconn_recv(conn, &buf);
     if (err == ERR_OK) {
       /*  no need netconn_connect here, since the netbuf contains the address */
       if(netbuf_copy(buf, buffer, sizeof(buffer)) != buf->p->tot_len) {
-        LWIP_DEBUGF(LWIP_DBG_ON, ("netbuf_copy failed\r\n"));
+        LWIP_DEBUGF(LWIP_DBG_ON, ("netbuf_copy failed\n"));
       } else {
         buffer[buf->p->tot_len] = '\0';
         err = netconn_send(conn, buf);
         if(err != ERR_OK) {
-          LWIP_DEBUGF(LWIP_DBG_ON, ("netconn_send failed: %d\r\n", (int)err));
+          LWIP_DEBUGF(LWIP_DBG_ON, ("netconn_send failed: %d\n", (int)err));
         } else {
-          LWIP_DEBUGF(LWIP_DBG_ON, ("got %s\r\n", buffer));
+          LWIP_DEBUGF(LWIP_DBG_ON, ("got %s\n", buffer));
         }
       }
       netbuf_delete(buf);

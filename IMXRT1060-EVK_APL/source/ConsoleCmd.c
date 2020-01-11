@@ -317,7 +317,7 @@ static void CmdPing(uint32_t argc, const char *argv[])
 		if (ping_send(s, &ping_addr) == ERR_OK)
 		{
 			mimic_printf("ping: send %s OK\r\n", argv[1]);
-			ping_recv(s, sys_now());
+			ping_recv(s);
 		}
 		else
 		{

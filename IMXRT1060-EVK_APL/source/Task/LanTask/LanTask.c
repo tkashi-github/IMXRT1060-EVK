@@ -42,7 +42,7 @@
 #include "lwip/dhcp.h"
 #include "lwip/prot/dhcp.h"
 #include "netif/ethernet.h"
-#include "ethernetif.h"
+#include "enet_ethernetif.h"
 #include "ping/ping.h"
 #include "udpecho_raw/udpecho_raw.h"
 
