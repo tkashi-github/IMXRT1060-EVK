@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="1">
+    <builddir>apl-cppcheck-build-dir</builddir>
+    <platform>Unspecified</platform>
+    <analyze-all-vs-configs>false</analyze-all-vs-configs>
+    <check-headers>true</check-headers>
+    <check-unused-templates>false</check-unused-templates>
+    <max-ctu-depth>10</max-ctu-depth>
+    <includedir>
+        <dir name="amazon-freertos/include/"/>
+        <dir name="board/"/>
+        <dir name="CMSIS/"/>
+        <dir name="CMSIS_driver/"/>
+        <dir name="CMSIS-RTOS2/"/>
+        <dir name="components/codec/wm8960/"/>
+        <dir name="components/ft5406_rt/"/>
+        <dir name="devices/"/>
+        <dir name="fatfs/fatfs_include/"/>
+        <dir name="flac/inc/"/>
+        <dir name="lv_apps/benchmark/"/>
+        <dir name="lv_apps/demo/"/>
+        <dir name="lv_apps/sysmon/"/>
+        <dir name="lv_apps/terminal/"/>
+        <dir name="lv_apps/tpcal/"/>
+        <dir name="lvgl/"/>
+        <dir name="lwip/src/include/"/>
+        <dir name="sdmmc/inc/"/>
+        <dir name="source/include/"/>
+        <dir name="source/Task/"/>
+        <dir name="source/UserDriver/"/>
+        <dir name="startup/"/>
+        <dir name="../mimiclib/source/"/>
+    </includedir>
+    <defines>
+        <define name="__STDC_VERSION__=201112L"/>
+        <define name="__GNUC__"/>
+        <define name="FSL_RTOS_BM&#10;SDK_I2C_BASED_COMPONENT_USED=1"/>
+        <define name="XIP_EXTERNAL_FLASH=1"/>
+        <define name="XIP_BOOT_HEADER_ENABLE=1"/>
+        <define name="XIP_BOOT_HEADER_DCD_ENABLE=1"/>
+        <define name="FSL_RTOS_FREE_RTOS"/>
+        <define name="SDK_OS_FREE_RTOS"/>
+        <define name="CPU_MIMXRT1062DVL6A&#10;CPU_MIMXRT1062DVL6A_cm7"/>
+        <define name="__MCUXPRESSO"/>
+        <define name="__USE_CMSIS"/>
+        <define name="DEBUG"/>
+        <define name="__NEWLIB__"/>
+        <define name="ENABLE_RAM_VECTOR_TABLE"/>
+        <define name="ARM_MATH_CM7"/>
+        <define name="__VFP_FP__"/>
+        <define name="__FPU_PRESENT"/>
+        <define name="__ARM_ARCH_7M__=1"/>
+        <define name="FSL_FEATURE_PHYKSZ8081_USE_RMII50M_MODE"/>
+        <define name="BOARD_USE_CODEC"/>
+        <define name="LV_CONF_INCLUDE_SIMPLE"/>
+        <define name="FSL_SDK_ENABLE_DRIVER_CACHE_CONTROL=1"/>
+    </defines>
+    <paths>
+        <dir name="./source"/>
+    </paths>
+    <addons>
+        <addon>threadsafety</addon>
+        <addon>y2038</addon>
+        <addon>cert</addon>
+        <addon>misra</addon>
+    </addons>
+</project>
